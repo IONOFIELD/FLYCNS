@@ -96,8 +96,27 @@ probability falls from 0.80 to 0.50, still within von Reyn's range. The dF/F-to-
 (5 Hz for the strongest type) is the one remaining free parameter of the stimulus and is
 declared as such.
 
+## The ear-to-flight pathway: structural finding, not a benchmark (11 September 2026)
+Traced in `benchmarks/auditory_wing_trace.py` (results/auditory_wing/trace.json). The route
+exists and is four hops: 114 auditory Johnston's organ afferents (MaleCNS `subclass` annotation,
+which does not follow the JO-A/JO-B type split) project to SAD and WED relays, consistent with
+the AMMC-to-wedge projection of aPN1 (Tootoonian et al. 2012; Vaughan et al. 2014), though no
+cell is named aPN1 or AMMC-B1 in this dataset. Four descending neurons sit two hops from those
+afferents and project onto the VNC premotor interneurons that drive the wing muscles: DNp02 (818
+synapses), DNp06 (806), DNp11 (568 plus 96 direct onto motor neurons) and DNg108 (430). The
+giant fiber does not (6 synapses), consistent with it driving the jump rather than steering
+(Tanouye & Wyman 1980).
+
+Two things stop this becoming a benchmark, and both are findings. First, all four descending
+neurons are **loom-dominated** in two-hop signed input by 3x (DNp02) to 32x (DNp06), so MaleCNS
+does not show a dedicated auditory-to-flight channel; these are visual escape descending neurons
+that also receive auditory input. Second, under measured loom drive none of them fires (DNp06
+once in six trials, the others zero) and the entire wing motor pool is silent, so the
+multisensory test that the anatomy suggests would compare zero against zero. **That is the fourth
+independent circuit blocked by the same missing ingredient.**
+
 ## A general limitation: this model class cannot express disinhibition
-Three independent circuits in this connectome turn out to work by sign inversion, and a network
+Four independent circuits in this connectome turn out to work by sign inversion, and a network
 with no spontaneous activity cannot represent any of them:
 - **Taste to MN9**: signed path products negative at two hops, positive at three to five.
 - **Lamina to Mi1 (the canonical ON pathway)**: Mi1's largest input is L1 with 141,873
@@ -105,6 +124,8 @@ with no spontaneous activity cannot represent any of them:
   photoreceptors, histamine inhibiting L1, L1 releasing less glutamate and Mi1 being released.
 - **AstA release**: Pm3 is GABAergic, so activating it in a silent network produces nothing at
   all, in the model or in principle.
+- **Auditory input to the wing motor system**: the descending neurons carrying it are silent
+  under measured loom drive, so there is no response for sound to modulate.
 This is why the feeding failure is not a quirk of one pathway. Any circuit whose output is
 carried by the removal of inhibition is invisible to a zero-baseline LIF, and a uniform baseline
 does not fix it (it destroys stimulus specificity and abolishes escape;

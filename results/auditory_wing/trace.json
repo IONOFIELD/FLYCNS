@@ -1,0 +1,159 @@
+{
+  "benchmark": "auditory_wing_trace",
+  "tuning_source": "MEASURED (all trials): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09)",
+  "n_auditory_afferents": 114,
+  "n_wind_afferents": 475,
+  "n_wing_motor": 52,
+  "auditory_first_order": {
+    "SAD001": {
+      "w": 979,
+      "cells": 5
+    },
+    "SAD108": {
+      "w": 789,
+      "cells": 2
+    },
+    "SAD097": {
+      "w": 713,
+      "cells": 2
+    },
+    "DNp01": {
+      "w": 689,
+      "cells": 2
+    },
+    "GNG301": {
+      "w": 683,
+      "cells": 2
+    },
+    "SAD103": {
+      "w": 608,
+      "cells": 1
+    },
+    "WED196": {
+      "w": 583,
+      "cells": 1
+    },
+    "CB1076": {
+      "w": 552,
+      "cells": 4
+    },
+    "SAD107": {
+      "w": 511,
+      "cells": 2
+    },
+    "DNg29": {
+      "w": 508,
+      "cells": 2
+    },
+    "SAD064": {
+      "w": 502,
+      "cells": 3
+    },
+    "AN08B007": {
+      "w": 483,
+      "cells": 2
+    }
+  },
+  "wing_motor_drivers": {
+    "IN19B043": 15030,
+    "IN19B067": 12355,
+    "dMS2": 5947,
+    "AN19B001": 5034,
+    "IN19B075": 4097,
+    "IN17A071,IN17A081": 3639,
+    "IN19B008": 3537,
+    "IN19B040": 3453,
+    "IN12A052_b": 3241,
+    "DNp31": 3019
+  },
+  "dn_to_wing": [
+    {
+      "dn": "DNp02",
+      "onto_wing_premotor": 818,
+      "onto_wing_motor_direct": 18
+    },
+    {
+      "dn": "DNp06",
+      "onto_wing_premotor": 806,
+      "onto_wing_motor_direct": 0
+    },
+    {
+      "dn": "DNp11",
+      "onto_wing_premotor": 568,
+      "onto_wing_motor_direct": 96
+    },
+    {
+      "dn": "DNg108",
+      "onto_wing_premotor": 489,
+      "onto_wing_motor_direct": 32
+    },
+    {
+      "dn": "DNp01",
+      "onto_wing_premotor": 6,
+      "onto_wing_motor_direct": 0
+    }
+  ],
+  "modality_dominance": [
+    {
+      "dn": "DNp02",
+      "auditory": 703723.0,
+      "wind": 589953.0,
+      "loom": 2437293.0,
+      "loom_over_auditory": 3.5
+    },
+    {
+      "dn": "DNp06",
+      "auditory": 306386.0,
+      "wind": 269857.0,
+      "loom": 11707490.0,
+      "loom_over_auditory": 38.2
+    },
+    {
+      "dn": "DNp11",
+      "auditory": 470971.0,
+      "wind": 319118.0,
+      "loom": 4581603.0,
+      "loom_over_auditory": 9.7
+    },
+    {
+      "dn": "DNg108",
+      "auditory": 377767.0,
+      "wind": 184672.0,
+      "loom": 9784515.0,
+      "loom_over_auditory": 25.9
+    },
+    {
+      "dn": "DNp01",
+      "auditory": 686643.0,
+      "wind": 430695.0,
+      "loom": 10869522.0,
+      "loom_over_auditory": 15.8
+    }
+  ],
+  "under_measured_loom": {
+    "n_trials": 6,
+    "dn_spikes": {
+      "DNp02": 0,
+      "DNp06": 1,
+      "DNp11": 0,
+      "DNg108": 0,
+      "DNp01": 10
+    },
+    "wing_motor_spikes": 0,
+    "note": "nothing downstream of GF fires under physiological loom drive, so a multisensory test at the wing motor output would compare zero against zero; fourth circuit blocked by the absence of cell-specific spontaneous activity"
+  },
+  "conclusion": "The ear-to-flight route in MaleCNS v1.0 is four hops (auditory JO afferents -> SAD/WED relays -> DNp02/DNp06/DNp11/DNg108 -> VNC premotor interneurons -> wing motor neurons) and runs through descending neurons shared with the visual escape system rather than a dedicated auditory channel: all four are loom-dominated by 3x to 32x in two-hop signed input. The giant fiber does not participate (6 synapses onto the premotor pool), consistent with its role in the jump rather than steering. The model cannot test the pathway because none of those descending neurons, and no wing motor neuron, fires under measured loom drive.",
+  "citations": [
+    "Kamikouchi A, Inagaki HK, Effertz T, Hendrich O, Fiala A, Goepfert MC, Ito K (2009). The neural basis of Drosophila gravity-sensing and hearing. Nature 458:165-171. JO subgroup organisation and AMMC projection zones.",
+    "Tootoonian S, Coen P, Kawadler JM, Murthy M (2012). Neural representations of courtship song in the Drosophila brain. J Neurosci 32:787-798. AMMC-A1/B1/B2 graded non-spiking sound responses; GF spikes to current injection and sound summates with subthreshold injection (Fig. 2D); AMMC-B1 cholinergic, B2 GABAergic.",
+    "Vaughan AG, Zhou C, Manoli DS, Baker BS (2014). Neural pathways for the detection and discrimination of conspecific song in Drosophila melanogaster. Curr Biol 24:1039-1049. aPN1 (= AMMC-B1) necessary for behavioural song responses; AMMC-to-wedge projection.",
+    "Tanouye MA, Wyman RJ (1980). Motor outputs of giant nerve fiber in Drosophila. J Neurophysiol 44:405-421. GF drives TTM and, via PSI, DLM.",
+    "von Reyn CR, Breads P, Peek MY, et al. (2014). A spike-timing mechanism for action selection. Nat Neurosci 17:962-970. GF escape behaviour and its visual drive.",
+    "Turner MH, Krieger A, Pang MM, Clandinin TR (2022). Visual and motor signatures of locomotion dynamically shape a population code for feature detection in Drosophila. eLife 11:e82587. Source of the measured loom amplitudes used for the drive here."
+  ],
+  "provenance": {
+    "written_at": "2026-09-15T20:59:02",
+    "git_commit": "61e2f14",
+    "env": {}
+  }
+}

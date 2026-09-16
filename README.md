@@ -50,19 +50,23 @@ estimate. Not applicable with this annotation: bitter suppression and Shiu's lab
 contralateral bias (MaleCNS does not annotate taste modality).
 
 ## A general limitation, stated plainly
-Three independent circuits in this connectome carry their output by removing inhibition: taste to
-MN9 (signed path products negative at two hops, positive at three to five), the canonical ON
-pathway (Mi1's largest input is L1 with 141,873 glutamatergic synapses; the ON response is a
-double inversion), and AstA release (Pm3 is GABAergic, so activating it in a silent network does
-nothing). A zero-baseline LIF cannot represent any of them, and a uniform tonic baseline does not
+Four independent circuits fail for one reason. Three carry their output by removing inhibition:
+taste to MN9 (signed path products negative at two hops, positive at three to five), the
+canonical ON pathway (Mi1's largest input is L1 with 141,873 glutamatergic synapses; the ON
+response is a double inversion), and AstA release (Pm3 is GABAergic, so activating it in a silent
+network does nothing). The fourth, auditory input to the wing motor system, has the pathway in
+the wiring (four hops via DNp02, DNp06, DNp11 and DNg108 onto the VNC premotor pool) but its
+descending neurons never fire under measured loom drive, so there is nothing for sound to
+modulate. A zero-baseline LIF cannot represent any of them, and a uniform tonic baseline does not
 help: it destroys stimulus specificity and abolishes the escape response. Cell-specific
 spontaneous activity is the single missing ingredient behind all three. It is measured for at
 least one motor pool (Azevedo et al. 2020) and for the feeding circuit's key modulator, TH-VUM
 (1 Hz fed, 25 Hz starved; Marella et al. 2012), but **MaleCNS v1.0 contains no identifiable
 aminergic modulator in the SEZ**: no dopaminergic or octopaminergic neuron has even 20% of its
 synapses in SEZ compartments, and none of the 862 output-dominated midline SEZ bodies is
-dopamine-predicted (`fit/check_modulators.py`). `benchmarks/feeding_mechanism.py` and
-`benchmarks/peptide_asta.py` document the two cases in detail.
+dopamine-predicted (`fit/check_modulators.py`). `benchmarks/feeding_mechanism.py`,
+`benchmarks/peptide_asta.py` and `benchmarks/auditory_wing_trace.py` document three of the four
+in detail.
 
 ## Robustness
 
@@ -115,11 +119,13 @@ remaining free parameter of the stimulus and is declared as such.
     flycns/model.py       Brian2 LIF (chemical + electrical synapses, adaptation, gains, optional baseline)
     flycns/protocols.py   stimulus protocols with provenance; measured loom tuning when available
     flycns/anatomy.py     braille projection of the CNS for terminal views
-    benchmarks/           gf_escape, auditory, feeding; feeding_mechanism (the negative result);
+    benchmarks/           gf_escape, auditory, feeding; feeding_mechanism and auditory_wing_trace
+                          (documented negatives with their structural traces);
                           fit_gains, fit_regional, fit_gf_adapt, fit_baseline; screen_afferents,
                           diagnose_feeding; summarize -> results/SUITE.md
-    fit/                  extraction from published data: Turner loom tuning, per-synapse
-                          transmitter confidence, neuropil ROI membership
+    fit/                  extraction from published data and dataset audits: Turner loom tuning,
+                          per-synapse transmitter confidence, neuropil ROI membership,
+                          check_modulators (is there an aminergic modulator in the SEZ? no)
     viz/                  cascade_3d (skeletons, synapses, camera presets), cascade_ascii,
                           explore (interactive), neuron_ascii, fetch_cascade_synapses
     export_brainsets.py   simulated sessions as brainsets-style HDF5 for POYO+, with connectome
