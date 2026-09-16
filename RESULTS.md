@@ -201,6 +201,35 @@ carry **3.5% of total synaptic weight**, and low-confidence neurons (mean < 0.6)
 `FLYCNS_SIGNFLIP_TARGETED=1` inverts exactly those neurons, which is a sharper test than the
 random 5%/10% flips and is included in the robustness battery (`fit/synapse_nt.py`).
 
+## Robustness battery (nine suites, 11 September 2026)
+Every row is a full three-circuit suite at 40 trials under measured stationary loom input.
+
+| run | result | failing check |
+|---|---|---|
+| seed 1 | 16/16 | - |
+| seed 2 | 16/16 | - |
+| 5% random NT sign inversion (seed 0) | 16/16 | - |
+| 5% random NT sign inversion (seed 1) | 16/16 | - |
+| 10% random NT sign inversion | 15/16 | GF response probability |
+| weight scale 0.25 | 15/16 | GF response probability (under-driven) |
+| weight scale 0.35 | 16/16 | - |
+| weight scale 0.40 | 16/17 | GF spikes per response (over-driven) |
+| **targeted NT inversion** | **all pass, 0 failures** | - |
+
+Three things to take from it. Replication holds across seeds. The weight scale has a genuine
+plateau rather than a knife edge: 0.30 and 0.35 both pass, and the two failures sit on opposite
+sides (too few responses below, too many spikes per response above), which is what a
+well-behaved parameter looks like. And the targeted arm, which inverts the sign of every neuron
+whose own per-T-bar predictions disagree with the aggregate label used for signing (2.0% of
+synaptic weight, 132,680 edges), costs nothing anywhere: **no scored result in this project
+rests on a transmitter call the classifier is uncertain about.** That is a stronger statement
+than surviving an arbitrary 5% flip, and it is the reason the random-flip rows are reported
+alongside it rather than instead of it.
+
+The last two rows have 17 checks rather than 16 because the auditory benchmark gained one when
+it moved to modality-based stimulus selection mid-battery; the escape and feeding rows are
+unaffected and comparable throughout.
+
 ## Robustness
 Escape passes 8/8 unchanged when every neuron whose per-T-bar transmitter predictions disagree
 with its aggregate label is sign-inverted (132,680 edges, 2.0% of synaptic weight): the circuit

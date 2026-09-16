@@ -25,66 +25,64 @@
     "MN8"
   ],
   "arms": {
-    "F2b_nonSEZ_rate_hz": 0.0020781001187672025,
-    "F2c_motor_mean_hz": 3.3000000000000003,
+    "F2b_nonSEZ_rate_hz": 0.0007460069435139476,
+    "F2c_motor_mean_hz": 3.2,
     "motor_types_active": {
-      "MN2Db": 131,
-      "MN2Da": 105,
-      "GNG648": 16,
-      "MNx01": 7
+      "MN2Db": 83,
+      "MN2Da": 45
     },
     "ALL_gustatory_50Hz": {
       "n_types": 42,
       "MN9_spikes_per_cell": 0.0,
-      "pop_rate_hz": 0.019205178885021424
+      "pop_rate_hz": 0.01127788794187303
     },
     "F2_dose": [
       {
         "sugar_hz": 10,
         "MN9_spikes_per_cell": 0.0,
-        "pop_rate_hz": 0.0005927495947299173
+        "pop_rate_hz": 0.00018512560656520875
       },
       {
         "sugar_hz": 25,
         "MN9_spikes_per_cell": 0.0,
-        "pop_rate_hz": 0.0038612739973413177
+        "pop_rate_hz": 0.0016125338437276242
       },
       {
         "sugar_hz": 50,
         "MN9_spikes_per_cell": 0.0,
-        "pop_rate_hz": 0.01240225679413149
+        "pop_rate_hz": 0.005853619531533713
       },
       {
         "sugar_hz": 100,
-        "MN9_spikes_per_cell": 0.5125,
-        "pop_rate_hz": 0.043065315008312545
+        "MN9_spikes_per_cell": 0.0,
+        "pop_rate_hz": 0.017487851313138805
       },
       {
         "sugar_hz": 200,
-        "MN9_spikes_per_cell": 1.5875,
-        "pop_rate_hz": 0.11882572423150782
+        "MN9_spikes_per_cell": 0.0,
+        "pop_rate_hz": 0.04863009223977503
       }
     ],
     "F2_reported": {
       "monotonic": true,
-      "max_mn9": 1.5875,
+      "max_mn9": 0.0,
       "note": "reported, not scored: MN9 firing from afferent drive requires a mechanism the model lacks (see mechanism.json)"
     },
     "F1_left_sugar": {
       "rate_hz": 100.0,
-      "MN9_ipsi_L": 0.125,
+      "MN9_ipsi_L": 0.0,
       "MN9_contra_R": 0.0,
-      "pop_rate_hz": 0.012483665707190679,
-      "wall_s": 214.7,
+      "pop_rate_hz": 0.005650531816037295,
+      "wall_s": 561.1,
       "structural_2hop_L": 25650.0,
       "structural_2hop_R": 350.0,
       "note": "Shiu 2024 contralateral prediction concerns labellar sugar GRNs; not testable without a modality annotation"
     },
     "F4_sufficiency": {
-      "DNge062": 1.9,
-      "GNG120": 1.3875,
-      "GNG117": 0.05,
-      "GNG108": 1.4875
+      "DNge062": 1.375,
+      "GNG120": 1.025,
+      "GNG117": 0.825,
+      "GNG108": 0.9
     },
     "F5_null": {
       "MN9": 0.0
@@ -94,7 +92,7 @@
     "F2b_extra_SEZ_quiet": true,
     "F2c_motor_rate_physiological": true,
     "F2_dose_response_REPORTED": null,
-    "F1_laterality_matches_wiring": true,
+    "F1_laterality_matches_wiring": null,
     "F1_shiu_contralateral_bias": null,
     "F3_bitter_suppresses": null,
     "F4_second_order_sufficient": true,
@@ -103,13 +101,14 @@
   "pass": true,
   "mechanism": "taste -> MN9 in MaleCNS is disinhibitory; a silent network cannot express that, and no uniform manipulation restores it with specificity. Reproducing feeding needs cell-specific spontaneous activity, i.e. the state-dependent modulation this model omits (cf. Shiu et al. 2024, which reported the same limitation for inhibitory neurons at 0 Hz baseline).",
   "provenance": {
-    "written_at": "2026-09-11T12:13:37",
-    "git_commit": "52b8bb7",
+    "written_at": "2026-09-11T14:16:21",
+    "git_commit": "f5ab72b",
     "env": {
       "FLYCNS_SEED": "0",
-      "FLYCNS_RUN_TAG": "wscale040",
+      "FLYCNS_SIGNFLIP_TARGETED": "1",
+      "FLYCNS_RUN_TAG": "signflip_targeted",
       "FLYCNS_SIGNFLIP": "0",
-      "FLYCNS_WSCALE": "0.40"
+      "FLYCNS_WSCALE": "0.3"
     }
   }
 }

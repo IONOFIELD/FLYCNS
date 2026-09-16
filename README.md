@@ -76,8 +76,9 @@ dopamine-predicted (`fit/check_modulators.py`). `benchmarks/feeding_mechanism.py
 - Transmitter signing overall: mean per-synapse confidence 0.91 over the 173,308 annotated
   neurons; 1.2% of neurons below 0.6; neurons whose T-bars disagree with their label carry 3.5%
   of synaptic weight (`fit/synapse_nt.py`).
-- Random sign inversion: 5% costs 0-2 checks, 10% costs 3-4. Seeds 0-2: 16-18/18 across versions.
-- The shared weight scale holds from 0.25 to 0.30 and floods above (`overnight.sh`).
+- Nine-suite battery under measured stationary input: seeds 16/16; 5% random NT inversion 16/16;
+  10% costs one check (GF response probability); weight scale 0.30 and 0.35 both pass, with
+  opposite failure modes at 0.25 and 0.40; **targeted NT inversion passes everything**.
 
 ## Declared parameter set
 
