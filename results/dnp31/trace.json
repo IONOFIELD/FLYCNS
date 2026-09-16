@@ -1,0 +1,207 @@
+{
+  "target": "DNp31",
+  "n_cells": 2,
+  "tuning_source": "MEASURED (all trials): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09)",
+  "cells": [
+    {
+      "bodyId": 10264,
+      "instance": "DNp31_R",
+      "somaSide": "R",
+      "consensusNt": "acetylcholine",
+      "superclass": "descending_neuron"
+    },
+    {
+      "bodyId": 10249,
+      "instance": "DNp31_L",
+      "somaSide": "L",
+      "consensusNt": "acetylcholine",
+      "superclass": "descending_neuron"
+    }
+  ],
+  "input_balance": {
+    "excitatory": 22989,
+    "inhibitory": 8421,
+    "net": 14568
+  },
+  "top_inputs": [
+    {
+      "type": "LLPC2",
+      "superclass": "visual_projection",
+      "signed_weight": 2501
+    },
+    {
+      "type": "LPLC4",
+      "superclass": "visual_projection",
+      "signed_weight": 1988
+    },
+    {
+      "type": "AN07B004",
+      "superclass": "ascending_neuron",
+      "signed_weight": 901
+    },
+    {
+      "type": "LC36",
+      "superclass": "visual_projection",
+      "signed_weight": 643
+    },
+    {
+      "type": "AOTU023",
+      "superclass": "cb_intrinsic",
+      "signed_weight": 636
+    },
+    {
+      "type": "GNG544",
+      "superclass": "cb_intrinsic",
+      "signed_weight": 599
+    },
+    {
+      "type": "PS042",
+      "superclass": "cb_intrinsic",
+      "signed_weight": 591
+    },
+    {
+      "type": "LPC2",
+      "superclass": "visual_projection",
+      "signed_weight": 590
+    },
+    {
+      "type": "vCal3",
+      "superclass": "visual_projection",
+      "signed_weight": 576
+    },
+    {
+      "type": "PS238",
+      "superclass": "cb_intrinsic",
+      "signed_weight": 540
+    },
+    {
+      "type": "PVLP144",
+      "superclass": "cb_intrinsic",
+      "signed_weight": 503
+    },
+    {
+      "type": "PS058",
+      "superclass": "cb_intrinsic",
+      "signed_weight": 406
+    }
+  ],
+  "modality_two_hop": {
+    "auditory (JO)": 5686.0,
+    "wind/gravity (JO)": 642257.0,
+    "loom (LC types)": 306541.0,
+    "gustatory": 0.0,
+    "leg/body bristle": 265.0,
+    "chordotonal / campaniform": 1070139.0
+  },
+  "dominant_modality": "chordotonal / campaniform",
+  "top_outputs": [
+    {
+      "type": "DLMn c-f",
+      "superclass": "vnc_motor",
+      "signed_weight": 1128
+    },
+    {
+      "type": "MNwm36",
+      "superclass": "vnc_motor",
+      "signed_weight": 722
+    },
+    {
+      "type": "IN06B066",
+      "superclass": "vnc_intrinsic",
+      "signed_weight": 720
+    },
+    {
+      "type": "ps1 MN",
+      "superclass": "vnc_motor",
+      "signed_weight": 593
+    },
+    {
+      "type": "DVMn 1a-c",
+      "superclass": "vnc_motor",
+      "signed_weight": 461
+    },
+    {
+      "type": "IN19B043",
+      "superclass": "vnc_intrinsic",
+      "signed_weight": 332
+    },
+    {
+      "type": "DVMn 3a, b",
+      "superclass": "vnc_motor",
+      "signed_weight": 320
+    },
+    {
+      "type": "IN06B013",
+      "superclass": "vnc_intrinsic",
+      "signed_weight": 301
+    },
+    {
+      "type": "DVMn 2a, b",
+      "superclass": "vnc_motor",
+      "signed_weight": 296
+    },
+    {
+      "type": "IN11B014",
+      "superclass": "vnc_intrinsic",
+      "signed_weight": 288
+    },
+    {
+      "type": "IN19B056",
+      "superclass": "vnc_intrinsic",
+      "signed_weight": 262
+    },
+    {
+      "type": "IN06B042",
+      "superclass": "vnc_intrinsic",
+      "signed_weight": 255
+    }
+  ],
+  "onto_wing_motor": {
+    "DLMn c-f": {
+      "signed": 1128,
+      "synapses": 1128
+    },
+    "ps1 MN": {
+      "signed": 593,
+      "synapses": 593
+    },
+    "DVMn 1a-c": {
+      "signed": 461,
+      "synapses": 461
+    },
+    "DVMn 3a, b": {
+      "signed": 320,
+      "synapses": 320
+    },
+    "DVMn 2a, b": {
+      "signed": 296,
+      "synapses": 296
+    },
+    "DLMn a, b": {
+      "signed": 156,
+      "synapses": 156
+    },
+    "b2 MN": {
+      "signed": 48,
+      "synapses": 48
+    },
+    "hg4 MN": {
+      "signed": 11,
+      "synapses": 11
+    },
+    "b1 MN": {
+      "signed": 6,
+      "synapses": 6
+    }
+  },
+  "under_measured_loom": {
+    "n_trials": 6,
+    "dnp31_spikes": 0,
+    "wing_motor_spikes": 0
+  },
+  "provenance": {
+    "written_at": "2026-09-15T21:03:16",
+    "git_commit": "4bc46d6",
+    "env": {}
+  }
+}
