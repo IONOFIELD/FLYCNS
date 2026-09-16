@@ -103,12 +103,12 @@ which does not follow the JO-A/JO-B type split) project to SAD and WED relays, c
 the AMMC-to-wedge projection of aPN1 (Tootoonian et al. 2012; Vaughan et al. 2014), though no
 cell is named aPN1 or AMMC-B1 in this dataset. Four descending neurons sit two hops from those
 afferents and project onto the VNC premotor interneurons that drive the wing muscles: DNp02 (818
-synapses), DNp06 (806), DNp11 (568 plus 96 direct onto motor neurons) and DNg108 (430). The
+synapses), DNp06 (806), DNp11 (568 plus 96 direct onto motor neurons) and DNg108 (489 plus 32 direct). The
 giant fiber does not (6 synapses), consistent with it driving the jump rather than steering
 (Tanouye & Wyman 1980).
 
 Two things stop this becoming a benchmark, and both are findings. First, all four descending
-neurons are **loom-dominated** in two-hop signed input by 3x (DNp02) to 32x (DNp06), so MaleCNS
+neurons are **loom-dominated** in two-hop signed input by 3.5x (DNp02) to 38x (DNp06), so MaleCNS
 does not show a dedicated auditory-to-flight channel; these are visual escape descending neurons
 that also receive auditory input. Second, under measured loom drive none of them fires (DNp06
 once in six trials, the others zero) and the entire wing motor pool is silent, so the

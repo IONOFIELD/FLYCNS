@@ -55,7 +55,7 @@ taste to MN9 (signed path products negative at two hops, positive at three to fi
 canonical ON pathway (Mi1's largest input is L1 with 141,873 glutamatergic synapses; the ON
 response is a double inversion), and AstA release (Pm3 is GABAergic, so activating it in a silent
 network does nothing). The fourth, auditory input to the wing motor system, has the pathway in
-the wiring (four hops via DNp02, DNp06, DNp11 and DNg108 onto the VNC premotor pool) but its
+the wiring (four hops via DNp02, DNp06, DNp11 and DNg108 onto the VNC premotor pool, all loom-dominated 3.5x to 38x) but its
 descending neurons never fire under measured loom drive, so there is nothing for sound to
 modulate. A zero-baseline LIF cannot represent any of them, and a uniform tonic baseline does not
 help: it destroys stimulus specificity and abolishes the escape response. Cell-specific
