@@ -1,0 +1,201 @@
+{
+  "gate": "embodiment_surrogate_loop",
+  "questions": {
+    "q1_afferents": {
+      "n_total": 851,
+      "by_subclass_nerve": {
+        "campaniform sensilla | ADMN": 218,
+        "campaniform sensilla | DMetaN": 195,
+        "chordotonal organ | MetaLN": 193,
+        "chordotonal organ | MesoLN": 163,
+        "chordotonal organ | ProLN": 36,
+        "chordotonal organ | ProCN": 33,
+        "campaniform sensilla | MesoLN": 4,
+        "campaniform sensilla | MetaLN": 4,
+        "campaniform sensilla | ProLN": 4,
+        "campaniform sensilla | ": 1
+      },
+      "types_by_nerve": {
+        "ADMN": [
+          "SApp04",
+          "SApp10",
+          "SApp11,SApp18",
+          "SApp13",
+          "SApp14",
+          "SApp19",
+          "SApp20",
+          "SApp21",
+          "SNpp04",
+          "SNpp05",
+          "SNpp06",
+          "SNpp07"
+        ],
+        "DMetaN": [
+          "SApp01",
+          "SApp02,SApp03",
+          "SApp05",
+          "SApp06,SApp15",
+          "SApp07",
+          "SApp08",
+          "SApp09,SApp22",
+          "SNpp20,SApp02",
+          "SNpp24",
+          "SNpp34,SApp16"
+        ],
+        "MesoLN": [
+          "SApp23",
+          "SNpp39",
+          "SNpp40",
+          "SNpp41",
+          "SNpp43",
+          "SNpp44",
+          "SNpp47",
+          "SNpp48",
+          "SNpp49",
+          "SNpp50",
+          "SNpp51",
+          "SNpp53"
+        ],
+        "MetaLN": [
+          "SApp23",
+          "SApp23,SNpp56",
+          "SNpp39",
+          "SNpp40",
+          "SNpp41",
+          "SNpp42",
+          "SNpp43",
+          "SNpp44",
+          "SNpp46",
+          "SNpp47",
+          "SNpp48",
+          "SNpp50"
+        ],
+        "ProCN": [
+          "SNpp17",
+          "SNpp18",
+          "SNpp22"
+        ],
+        "ProLN": [
+          "SApp23",
+          "SNpp39",
+          "SNpp40",
+          "SNpp41",
+          "SNpp43",
+          "SNpp47",
+          "SNpp50",
+          "SNpp51",
+          "SNpp53",
+          "SNpp57",
+          "SNpp59",
+          "SNpp60"
+        ]
+      }
+    },
+    "q2_to_DNp31": {
+      "direct_synapses": 0,
+      "by_nerve": {
+        "ADMN": {
+          "n_afferents": 218,
+          "two_hop_to_DNp31": 1045551.0,
+          "direct_to_DNp31": 0
+        },
+        "DMetaN": {
+          "n_afferents": 195,
+          "two_hop_to_DNp31": 24588.0,
+          "direct_to_DNp31": 0
+        },
+        "MesoLN": {
+          "n_afferents": 167,
+          "two_hop_to_DNp31": 0.0,
+          "direct_to_DNp31": 0
+        },
+        "MetaLN": {
+          "n_afferents": 197,
+          "two_hop_to_DNp31": 0.0,
+          "direct_to_DNp31": 0
+        },
+        "ProCN": {
+          "n_afferents": 33,
+          "two_hop_to_DNp31": 0.0,
+          "direct_to_DNp31": 0
+        },
+        "ProLN": {
+          "n_afferents": 40,
+          "two_hop_to_DNp31": 0.0,
+          "direct_to_DNp31": 0
+        }
+      }
+    },
+    "q3_to_wing_pool": {
+      "direct_synapses": 11412,
+      "via_relays_synapses": 181661,
+      "n_relay_interneurons": 1112,
+      "top_relays": {
+        "IN19B043": 13616,
+        "AN19B001": 5034,
+        "IN19B067": 3836,
+        "IN17A071,IN17A081": 3639,
+        "IN19B008": 3537,
+        "IN19B075": 3283,
+        "IN08B051_d": 2186,
+        "IN17A049": 1899,
+        "IN17A064": 1644,
+        "IN01A020": 1616
+      }
+    },
+    "q4_loop_closure": {
+      "dnp31_targets": {
+        "DLMn c-f": 1128,
+        "ps1 MN": 593,
+        "DVMn 1a-c": 461,
+        "DVMn 3a, b": 320,
+        "DVMn 2a, b": 296,
+        "DLMn a, b": 156,
+        "b2 MN": 48,
+        "hg4 MN": 11,
+        "b1 MN": 6
+      },
+      "proprioceptor_targets": {
+        "DLMn c-f": 27721,
+        "i2 MN": 16364,
+        "ps1 MN": 15466,
+        "b2 MN": 14938,
+        "b1 MN": 13371,
+        "i1 MN": 11844,
+        "b3 MN": 10628,
+        "hg3 MN": 10236,
+        "hg4 MN": 9670,
+        "DVMn 1a-c": 9460,
+        "hg1 MN": 9084,
+        "DLMn a, b": 8441,
+        "tp1 MN": 7383,
+        "iii1 MN": 6993,
+        "tp2 MN": 6411,
+        "DVMn 3a, b": 4839,
+        "iii3 MN": 4748,
+        "DVMn 2a, b": 3249,
+        "hg2 MN": 2227
+      },
+      "shared_motor_types": [
+        "DLMn a, b",
+        "DLMn c-f",
+        "DVMn 1a-c",
+        "DVMn 2a, b",
+        "DVMn 3a, b",
+        "b1 MN",
+        "b2 MN",
+        "hg4 MN",
+        "ps1 MN"
+      ],
+      "loop_closed": true
+    }
+  },
+  "verdict": {
+    "q1_afferents_identifiable": true,
+    "q2_reach_DNp31": true,
+    "q3_reach_wing_pool": true,
+    "q4_loop_closes": true,
+    "buildable": true,
+    "next_step": "If buildable: the surrogate needs firing rates for wing and haltere campaniform afferents during flight, from the literature, with the wingbeat phase relationship. Without a cited rate the loop is a guess and should not be built. Fenton/Dickinson haltere campaniform work and Dickerson et al. on wing campaniform fields are the places to look. If not buildable: record which question failed and stop."
+  }
+}
