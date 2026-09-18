@@ -106,6 +106,42 @@ connectome-derived prediction, and the surrogate loop below is the test of it.
 
 ---
 
+### The flight loop, run: monosynaptic drive works, disynaptic drive does not
+
+`benchmarks/flight_loop.py` supplies the missing proprioceptive input as a surrogate body: the 218
+wing (ADMN) and 195 haltere (DMetaN) campaniform afferents fire one spike per cycle at the
+Drosophila wingbeat frequency of 202 Hz (Vogel 1967) with 0.8 ms jitter (Fox, Fairhall & Daniel
+2010), a recruited fraction set by a scalar load, and uniform phase, since no Drosophila phase
+map exists. The drive is injected into the afferent neurons themselves, so everything downstream
+runs through the connectome's own synapses. Measured targets: DLM and DVM motor neurons at 2 to 12
+Hz (Harcombe & Wyman 1977; Huerkey et al. 2023), b1 at one spike per wingbeat (Fayyazuddin &
+Dickinson 1996). Afferent parameters are from crane fly, flesh fly and blowfly, stated as such.
+
+What happened:
+- **The steering system is driven by the wiring, not by the volume of input.** At the anchor load
+  the real network gives 31 Hz across steering motor neurons and 128 Hz in b1; the rewired null
+  gives zero for both. b1 fires 0.6 to 0.9 spikes per wingbeat across loads, in range; its phase
+  locking is untestable while afferent phase is uniform by assumption.
+- **The connectome's sign prediction holds for steering.** The four most-inhibited types in the
+  wiring (tp1, ps1, hg3, hg2) are silent or near it; the excited ones fire (b1, i2, b2, iii1, i1).
+  Three mild exceptions each way.
+- **DVMn 1a-c fires, DLMn c-f never does**, at any load. DVMn receives 1,017 campaniform synapses
+  directly. DLMn c-f receives 75 directly and depends on relays, where its structural balance is
+  favourable (18,982 excitatory against 8,639 inhibitory). The diagnostic shows why that fails:
+  of 92 excitatory relay interneurons onto DLMn c-f, **3 are active, at 0.4 Hz**. The relay layer
+  of a silent cord does not relay. In the rewired null, where DLM acquires random direct input,
+  it is the one motor neuron that fires.
+- **DNp31 stays silent** under all 413 afferents at 202 Hz, its own dominant input.
+- **Closing the loop saturates**, because the surrogate body maps power output monotonically to
+  load, which is positive feedback by construction; that is a property of the body model, not a
+  finding about the fly.
+
+This is the fifth circuit to point at missing background activity, and the first where the
+missing activity sits in identified premotor interneurons rather than in a modulatory neuron
+the dataset lacks. In a flying fly those interneurons are presumably driven by descending flight
+command; in a silent cord they are subthreshold, and the disynaptic half of the flight motor
+system is unreachable.
+
 ## 3. The missing ingredient is not obtainable from this dataset
 
 Feeding needs cell-specific spontaneous activity. The one neuron with a measured, hunger-gated

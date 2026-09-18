@@ -65,7 +65,7 @@ N_CYCLES = int(sys.argv[1]) if len(sys.argv) > 1 else 400
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
 OUT = Path("results/flight_loop"); OUT.mkdir(parents=True, exist_ok=True)
 WINGBEAT_HZ, JITTER_MS = 202.0, 0.8
-LOADS = [0.125, 0.25, 0.5, 1.0]
+LOADS = [0.125, 0.25, 0.3, 0.35, 0.4, 0.5, 1.0]   # 0.3-0.4 added: DVMn jumps 1.9 -> 18.6 Hz between 0.25 and 0.5
 WING_MN = r"^(DLMn|DVMn|b[123] MN|hg[1-4] MN|i[12] MN|iii[13] MN|tp[12] MN|ps1 MN)"
 POWER = r"^(DLMn|DVMn)"
 STEER = r"^(b[123] MN|hg[1-4] MN|i[12] MN|iii[13] MN|tp[12] MN|ps1 MN)"

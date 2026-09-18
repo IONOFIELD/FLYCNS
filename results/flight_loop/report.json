@@ -51,7 +51,93 @@
         "i2 MN": 105.55,
         "iii3 MN": 33.33
       },
-      "wall_s": 29
+      "wall_s": 25
+    },
+    "open_load_0.3": {
+      "arm": "open_load_0.3",
+      "load": 0.3,
+      "closed": false,
+      "n_afferents": 413,
+      "wingbeat_hz": 202.0,
+      "power_mn_hz": 0.2525,
+      "n_power": 24,
+      "steer_mn_hz": 24.402321428571426,
+      "n_steer": 28,
+      "b1_hz": 84.335,
+      "b1_vector_strength": 0.015862801475245544,
+      "dnp31_hz": 0.0,
+      "leg_mn_hz": 0.8612403100775193,
+      "pop_rate_hz": 0.17623000889512044,
+      "per_wing_type_hz": {
+        "DVMn 1a-c": 1.01,
+        "b1 MN": 84.33,
+        "b2 MN": 28.03,
+        "b3 MN": 87.36,
+        "hg3 MN": 2.52,
+        "hg4 MN": 12.62,
+        "i1 MN": 22.98,
+        "i2 MN": 35.1,
+        "iii1 MN": 41.16,
+        "ps1 MN": 27.52
+      },
+      "wall_s": 25
+    },
+    "open_load_0.35": {
+      "arm": "open_load_0.35",
+      "load": 0.35,
+      "closed": false,
+      "n_afferents": 413,
+      "wingbeat_hz": 202.0,
+      "power_mn_hz": 2.356666666666667,
+      "n_power": 24,
+      "steer_mn_hz": 38.596428571428575,
+      "n_steer": 28,
+      "b1_hz": 140.895,
+      "b1_vector_strength": 0.04291020885733536,
+      "dnp31_hz": 0.0,
+      "leg_mn_hz": 0.24271317829457364,
+      "pop_rate_hz": 0.19025789982759747,
+      "per_wing_type_hz": {
+        "DVMn 1a-c": 9.43,
+        "b1 MN": 140.9,
+        "b2 MN": 85.6,
+        "b3 MN": 77.27,
+        "hg4 MN": 34.09,
+        "i1 MN": 43.18,
+        "i2 MN": 105.04,
+        "iii1 MN": 9.09,
+        "iii3 MN": 33.84,
+        "ps1 MN": 11.36
+      },
+      "wall_s": 26
+    },
+    "open_load_0.4": {
+      "arm": "open_load_0.4",
+      "load": 0.4,
+      "closed": false,
+      "n_afferents": 413,
+      "wingbeat_hz": 202.0,
+      "power_mn_hz": 5.449791666666666,
+      "n_power": 24,
+      "steer_mn_hz": 38.84892857142857,
+      "n_steer": 28,
+      "b1_hz": 155.035,
+      "b1_vector_strength": 0.015355668096359562,
+      "dnp31_hz": 0.0,
+      "leg_mn_hz": 0.0,
+      "pop_rate_hz": 0.22122690085839503,
+      "per_wing_type_hz": {
+        "DVMn 1a-c": 21.8,
+        "b1 MN": 155.03,
+        "b2 MN": 101.25,
+        "b3 MN": 60.85,
+        "hg4 MN": 30.3,
+        "i1 MN": 20.45,
+        "i2 MN": 124.73,
+        "iii1 MN": 51.01,
+        "iii3 MN": 0.25
+      },
+      "wall_s": 26
     },
     "open_load_0.5": {
       "arm": "open_load_0.5",
@@ -81,7 +167,7 @@
         "ps1 MN": 1.01,
         "tp2 MN": 0.25
       },
-      "wall_s": 24
+      "wall_s": 26
     },
     "open_load_1.0": {
       "arm": "open_load_1.0",
@@ -114,13 +200,13 @@
       },
       "wall_s": 26
     },
-    "rewired_null_load_0.25": {
-      "arm": "rewired_null_load_0.25",
-      "load": 0.25,
+    "rewired_null_load_0.35": {
+      "arm": "rewired_null_load_0.35",
+      "load": 0.35,
       "closed": false,
       "n_afferents": 413,
       "wingbeat_hz": 202.0,
-      "power_mn_hz": 1.01,
+      "power_mn_hz": 1.578125,
       "n_power": 24,
       "steer_mn_hz": 0.0,
       "n_steer": 28,
@@ -128,66 +214,67 @@
       "b1_vector_strength": NaN,
       "dnp31_hz": 0.0,
       "leg_mn_hz": 0.0,
-      "pop_rate_hz": 0.10365381921859337,
+      "pop_rate_hz": 0.15288228546174573,
       "per_wing_type_hz": {
-        "DLMn c-f": 3.03
+        "DLMn c-f": 4.73
       },
-      "wall_s": 25
+      "wall_s": 26
     },
-    "closed_from_0.25": {
-      "arm": "closed_from_0.25",
-      "load": 0.25,
+    "closed_from_0.35": {
+      "arm": "closed_from_0.35",
+      "load": 0.35,
       "closed": true,
       "n_afferents": 413,
       "wingbeat_hz": 202.0,
-      "power_mn_hz": 23.124791666666667,
+      "power_mn_hz": 23.756041666666665,
       "n_power": 24,
-      "steer_mn_hz": 62.331428571428575,
+      "steer_mn_hz": 62.89053571428572,
       "n_steer": 28,
-      "b1_hz": 249.975,
-      "b1_vector_strength": 0.013679108227426535,
+      "b1_hz": 251.7425,
+      "b1_vector_strength": 0.008693572877999932,
       "dnp31_hz": 0.0,
-      "leg_mn_hz": 0.4775968992248062,
-      "pop_rate_hz": 0.5396347314560417,
+      "leg_mn_hz": 0.44236434108527134,
+      "pop_rate_hz": 0.5466362849257178,
       "per_wing_type_hz": {
-        "DLMn a, b": 4.04,
-        "DVMn 1a-c": 76.59,
-        "DVMn 3a, b": 21.84,
-        "b1 MN": 249.97,
-        "b2 MN": 162.36,
-        "b3 MN": 105.04,
-        "hg4 MN": 63.38,
-        "i1 MN": 44.95,
-        "i2 MN": 189.12,
-        "iii1 MN": 52.02,
-        "iii3 MN": 4.8,
-        "tp2 MN": 1.01
+        "DLMn a, b": 4.29,
+        "DVMn 1a-c": 78.44,
+        "DVMn 3a, b": 22.73,
+        "b1 MN": 251.74,
+        "b2 MN": 163.37,
+        "b3 MN": 107.31,
+        "hg4 MN": 64.64,
+        "i1 MN": 45.2,
+        "i2 MN": 189.38,
+        "iii1 MN": 52.27,
+        "iii3 MN": 3.79,
+        "ps1 MN": 0.25,
+        "tp2 MN": 2.52
       },
       "wall_s": 30,
       "load_trace": [
         {
           "t_ms": 250.0,
-          "power_hz": 0.0,
-          "load": 0.5
+          "power_hz": 0.8333333333333333,
+          "load": 0.5694444444444444
         },
         {
           "t_ms": 300.0,
-          "power_hz": 2.5,
-          "load": 0.7083333333333334
+          "power_hz": 10.833333333333332,
+          "load": 1.0
         },
         {
           "t_ms": 349.99999999999994,
-          "power_hz": 9.166666666666666,
+          "power_hz": 23.333333333333332,
           "load": 1.0
         },
         {
           "t_ms": 399.99999999999994,
-          "power_hz": 22.5,
+          "power_hz": 24.166666666666664,
           "load": 1.0
         },
         {
           "t_ms": 449.99999999999994,
-          "power_hz": 26.666666666666664,
+          "power_hz": 25.0,
           "load": 1.0
         },
         {
@@ -197,77 +284,77 @@
         },
         {
           "t_ms": 549.9999999999999,
-          "power_hz": 25.0,
+          "power_hz": 25.833333333333332,
           "load": 1.0
         },
         {
           "t_ms": 600.0,
-          "power_hz": 25.0,
+          "power_hz": 24.166666666666664,
           "load": 1.0
         },
         {
           "t_ms": 650.0,
-          "power_hz": 27.5,
+          "power_hz": 26.666666666666664,
           "load": 1.0
         },
         {
           "t_ms": 700.0,
-          "power_hz": 22.5,
+          "power_hz": 25.833333333333332,
           "load": 1.0
         },
         {
           "t_ms": 750.0000000000001,
-          "power_hz": 25.833333333333332,
+          "power_hz": 22.5,
           "load": 1.0
         },
         {
           "t_ms": 800.0000000000001,
-          "power_hz": 23.333333333333332,
+          "power_hz": 26.666666666666664,
           "load": 1.0
         },
         {
           "t_ms": 850.0000000000002,
-          "power_hz": 25.833333333333332,
+          "power_hz": 23.333333333333332,
           "load": 1.0
         },
         {
           "t_ms": 900.0000000000002,
-          "power_hz": 24.166666666666664,
+          "power_hz": 28.333333333333332,
           "load": 1.0
         },
         {
           "t_ms": 950.0000000000002,
-          "power_hz": 25.0,
+          "power_hz": 22.5,
           "load": 1.0
         },
         {
           "t_ms": 1000.0000000000002,
-          "power_hz": 25.0,
+          "power_hz": 24.166666666666664,
           "load": 1.0
         },
         {
           "t_ms": 1050.0000000000002,
-          "power_hz": 24.166666666666664,
+          "power_hz": 25.833333333333332,
           "load": 1.0
         },
         {
           "t_ms": 1100.0000000000002,
-          "power_hz": 25.0,
+          "power_hz": 25.833333333333332,
           "load": 1.0
         },
         {
           "t_ms": 1150.0000000000002,
-          "power_hz": 25.0,
+          "power_hz": 27.5,
           "load": 1.0
         },
         {
           "t_ms": 1200.0000000000005,
-          "power_hz": 24.166666666666664,
+          "power_hz": 22.5,
           "load": 1.0
         },
         {
           "t_ms": 1250.0000000000005,
-          "power_hz": 25.0,
+          "power_hz": 26.666666666666664,
           "load": 1.0
         },
         {
@@ -277,32 +364,32 @@
         },
         {
           "t_ms": 1350.0000000000005,
-          "power_hz": 25.833333333333332,
+          "power_hz": 22.5,
           "load": 1.0
         },
         {
           "t_ms": 1400.0000000000005,
-          "power_hz": 24.166666666666664,
+          "power_hz": 27.5,
           "load": 1.0
         },
         {
           "t_ms": 1450.0000000000007,
-          "power_hz": 25.0,
+          "power_hz": 21.666666666666664,
           "load": 1.0
         },
         {
           "t_ms": 1500.0000000000007,
-          "power_hz": 25.833333333333332,
-          "load": 1.0
-        },
-        {
-          "t_ms": 1550.0000000000007,
           "power_hz": 25.0,
           "load": 1.0
         },
         {
-          "t_ms": 1600.0000000000007,
+          "t_ms": 1550.0000000000007,
           "power_hz": 25.833333333333332,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1600.0000000000007,
+          "power_hz": 25.0,
           "load": 1.0
         },
         {
@@ -312,81 +399,81 @@
         },
         {
           "t_ms": 1700.000000000001,
-          "power_hz": 25.833333333333332,
+          "power_hz": 25.0,
           "load": 1.0
         },
         {
           "t_ms": 1750.000000000001,
-          "power_hz": 23.333333333333332,
-          "load": 1.0
-        },
-        {
-          "t_ms": 1800.000000000001,
-          "power_hz": 24.166666666666664,
-          "load": 1.0
-        },
-        {
-          "t_ms": 1850.000000000001,
-          "power_hz": 28.333333333333332,
-          "load": 1.0
-        },
-        {
-          "t_ms": 1900.000000000001,
-          "power_hz": 24.166666666666664,
-          "load": 1.0
-        },
-        {
-          "t_ms": 1950.0000000000011,
           "power_hz": 26.666666666666664,
           "load": 1.0
         },
         {
+          "t_ms": 1800.000000000001,
+          "power_hz": 25.0,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1850.000000000001,
+          "power_hz": 24.166666666666664,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1900.000000000001,
+          "power_hz": 25.833333333333332,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1950.0000000000011,
+          "power_hz": 24.166666666666664,
+          "load": 1.0
+        },
+        {
           "t_ms": 2000.000000000001,
-          "power_hz": 22.5,
+          "power_hz": 24.166666666666664,
           "load": 1.0
         },
         {
           "t_ms": 2050.0000000000005,
-          "power_hz": 28.333333333333332,
+          "power_hz": 26.666666666666664,
           "load": 1.0
         },
         {
           "t_ms": 2100.0000000000005,
-          "power_hz": 23.333333333333332,
+          "power_hz": 24.166666666666664,
           "load": 1.0
         },
         {
           "t_ms": 2150.0000000000005,
-          "power_hz": 25.833333333333332,
+          "power_hz": 27.5,
           "load": 1.0
         }
       ]
     }
   },
   "checks": {
-    "L1a_DVMn_2_to_12_hz": false,
+    "L1a_DVMn_2_to_12_hz": true,
     "L1b_DLMn_cf_2_to_12_hz": false,
     "L2_b1_0.5_to_1.2_spikes_per_wingbeat": true,
     "L3_leg_mn_not_entrained": true,
     "L4_steering_specific_vs_null": true
   },
   "anchor": {
-    "load": 0.25,
+    "load": 0.35,
     "rule": "smallest load with DVMn 1a-c in 2-12 Hz",
-    "in_band": false
+    "in_band": true
   },
   "dlm_gating": {
     "excitatory_relays": {
       "n": 92,
-      "n_active": 3,
-      "hz_per_cell": 0.40619565217391307,
-      "first_spike_ms": 232.1
+      "n_active": 4,
+      "hz_per_cell": 1.1472282608695652,
+      "first_spike_ms": 220.10000000000002
     },
     "inhibitory_relays": {
       "n": 85,
-      "n_active": 6,
-      "hz_per_cell": 1.414,
-      "first_spike_ms": 236.3
+      "n_active": 13,
+      "hz_per_cell": 3.0181176470588236,
+      "first_spike_ms": 231.20000000000002
     },
     "dlmn_cf": {
       "n": 8,
@@ -402,18 +489,20 @@
     "note": "if excitatory relays are largely silent the gate is a threshold problem in the relay layer; if they fire but inhibitory relays fire earlier/harder the gate is dynamic competition"
   },
   "reported": {
-    "b1_vector_strength": 0.03868432998707378,
+    "b1_vector_strength": 0.04291020885733536,
     "b1_phase_locking_note": "uniform afferent phase by assumption; no Drosophila phase map exists, so locking is untestable here",
     "dnp31_hz": 0.0,
     "per_type_hz_at_anchor": {
-      "DVMn 1a-c": 1.94,
-      "b1 MN": 128.27,
-      "b2 MN": 57.06,
-      "b3 MN": 58.83,
-      "hg4 MN": 8.59,
-      "i1 MN": 41.41,
-      "i2 MN": 105.55,
-      "iii3 MN": 33.33
+      "DVMn 1a-c": 9.43,
+      "b1 MN": 140.9,
+      "b2 MN": 85.6,
+      "b3 MN": 77.27,
+      "hg4 MN": 34.09,
+      "i1 MN": 43.18,
+      "i2 MN": 105.04,
+      "iii1 MN": 9.09,
+      "iii3 MN": 33.84,
+      "ps1 MN": 11.36
     },
     "sign_split_prediction": {
       "predicted_inhibited": [
@@ -445,8 +534,8 @@
   },
   "pass": false,
   "provenance": {
-    "written_at": "2026-09-17T21:10:34",
-    "git_commit": "de5f5ca",
+    "written_at": "2026-09-17T21:18:50",
+    "git_commit": "47ae915",
     "env": {}
   }
 }
