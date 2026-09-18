@@ -128,7 +128,7 @@ What happened:
 - **DVMn 1a-c fires, DLMn c-f never does**, at any load. DVMn receives 1,017 campaniform synapses
   directly. DLMn c-f receives 75 directly and depends on relays, where its structural balance is
   favourable (18,982 excitatory against 8,639 inhibitory). The diagnostic shows why that fails:
-  of 92 excitatory relay interneurons onto DLMn c-f, **3 are active, at 0.4 Hz**. The relay layer
+  of 92 excitatory relay interneurons onto DLMn c-f, **4 are active, at 1.1 Hz**, against 13 of 85 inhibitory relays at 3.0 Hz. The relay layer
   of a silent cord does not relay. In the rewired null, where DLM acquires random direct input,
   it is the one motor neuron that fires.
 - **DNp31 stays silent** under all 413 afferents at 202 Hz, its own dominant input.
