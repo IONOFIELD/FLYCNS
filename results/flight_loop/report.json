@@ -1,0 +1,452 @@
+{
+  "benchmark": "flight_loop",
+  "n_cycles": 400,
+  "arms": {
+    "open_load_0.125": {
+      "arm": "open_load_0.125",
+      "load": 0.125,
+      "closed": false,
+      "n_afferents": 413,
+      "wingbeat_hz": 202.0,
+      "power_mn_hz": 0.0,
+      "n_power": 24,
+      "steer_mn_hz": 11.77732142857143,
+      "n_steer": 28,
+      "b1_hz": 80.5475,
+      "b1_vector_strength": 0.014129073334442688,
+      "dnp31_hz": 0.0,
+      "leg_mn_hz": 0.0,
+      "pop_rate_hz": 0.06269593281067473,
+      "per_wing_type_hz": {
+        "b1 MN": 80.55,
+        "b2 MN": 34.84,
+        "b3 MN": 0.51,
+        "i2 MN": 43.43,
+        "iii1 MN": 5.55
+      },
+      "wall_s": 23
+    },
+    "open_load_0.25": {
+      "arm": "open_load_0.25",
+      "load": 0.25,
+      "closed": false,
+      "n_afferents": 413,
+      "wingbeat_hz": 202.0,
+      "power_mn_hz": 0.4839583333333334,
+      "n_power": 24,
+      "steer_mn_hz": 30.93125,
+      "n_steer": 28,
+      "b1_hz": 128.27,
+      "b1_vector_strength": 0.03868432998707378,
+      "dnp31_hz": 0.0,
+      "leg_mn_hz": 0.0,
+      "pop_rate_hz": 0.1274335878672415,
+      "per_wing_type_hz": {
+        "DVMn 1a-c": 1.94,
+        "b1 MN": 128.27,
+        "b2 MN": 57.06,
+        "b3 MN": 58.83,
+        "hg4 MN": 8.59,
+        "i1 MN": 41.41,
+        "i2 MN": 105.55,
+        "iii3 MN": 33.33
+      },
+      "wall_s": 29
+    },
+    "open_load_0.5": {
+      "arm": "open_load_0.5",
+      "load": 0.5,
+      "closed": false,
+      "n_afferents": 413,
+      "wingbeat_hz": 202.0,
+      "power_mn_hz": 4.6502083333333335,
+      "n_power": 24,
+      "steer_mn_hz": 41.752678571428575,
+      "n_steer": 28,
+      "b1_hz": 176.4975,
+      "b1_vector_strength": 0.02795440512831644,
+      "dnp31_hz": 0.0,
+      "leg_mn_hz": 0.0,
+      "pop_rate_hz": 0.2806121329051747,
+      "per_wing_type_hz": {
+        "DVMn 1a-c": 18.6,
+        "b1 MN": 176.5,
+        "b2 MN": 96.45,
+        "b3 MN": 78.78,
+        "hg4 MN": 28.79,
+        "i1 MN": 22.98,
+        "i2 MN": 122.46,
+        "iii1 MN": 37.62,
+        "iii3 MN": 19.7,
+        "ps1 MN": 1.01,
+        "tp2 MN": 0.25
+      },
+      "wall_s": 24
+    },
+    "open_load_1.0": {
+      "arm": "open_load_1.0",
+      "load": 1.0,
+      "closed": false,
+      "n_afferents": 413,
+      "wingbeat_hz": 202.0,
+      "power_mn_hz": 25.355208333333334,
+      "n_power": 24,
+      "steer_mn_hz": 65.68607142857144,
+      "n_steer": 28,
+      "b1_hz": 261.59,
+      "b1_vector_strength": 0.02639540663268025,
+      "dnp31_hz": 0.0,
+      "leg_mn_hz": 0.4697674418604651,
+      "pop_rate_hz": 0.5722229025763095,
+      "per_wing_type_hz": {
+        "DLMn a, b": 4.54,
+        "DVMn 1a-c": 83.58,
+        "DVMn 3a, b": 24.49,
+        "b1 MN": 261.59,
+        "b2 MN": 170.94,
+        "b3 MN": 109.59,
+        "hg4 MN": 67.67,
+        "i1 MN": 48.73,
+        "i2 MN": 198.47,
+        "iii1 MN": 56.05,
+        "iii3 MN": 4.29,
+        "tp2 MN": 2.27
+      },
+      "wall_s": 26
+    },
+    "rewired_null_load_0.25": {
+      "arm": "rewired_null_load_0.25",
+      "load": 0.25,
+      "closed": false,
+      "n_afferents": 413,
+      "wingbeat_hz": 202.0,
+      "power_mn_hz": 1.01,
+      "n_power": 24,
+      "steer_mn_hz": 0.0,
+      "n_steer": 28,
+      "b1_hz": 0.0,
+      "b1_vector_strength": NaN,
+      "dnp31_hz": 0.0,
+      "leg_mn_hz": 0.0,
+      "pop_rate_hz": 0.10365381921859337,
+      "per_wing_type_hz": {
+        "DLMn c-f": 3.03
+      },
+      "wall_s": 25
+    },
+    "closed_from_0.25": {
+      "arm": "closed_from_0.25",
+      "load": 0.25,
+      "closed": true,
+      "n_afferents": 413,
+      "wingbeat_hz": 202.0,
+      "power_mn_hz": 23.124791666666667,
+      "n_power": 24,
+      "steer_mn_hz": 62.331428571428575,
+      "n_steer": 28,
+      "b1_hz": 249.975,
+      "b1_vector_strength": 0.013679108227426535,
+      "dnp31_hz": 0.0,
+      "leg_mn_hz": 0.4775968992248062,
+      "pop_rate_hz": 0.5396347314560417,
+      "per_wing_type_hz": {
+        "DLMn a, b": 4.04,
+        "DVMn 1a-c": 76.59,
+        "DVMn 3a, b": 21.84,
+        "b1 MN": 249.97,
+        "b2 MN": 162.36,
+        "b3 MN": 105.04,
+        "hg4 MN": 63.38,
+        "i1 MN": 44.95,
+        "i2 MN": 189.12,
+        "iii1 MN": 52.02,
+        "iii3 MN": 4.8,
+        "tp2 MN": 1.01
+      },
+      "wall_s": 30,
+      "load_trace": [
+        {
+          "t_ms": 250.0,
+          "power_hz": 0.0,
+          "load": 0.5
+        },
+        {
+          "t_ms": 300.0,
+          "power_hz": 2.5,
+          "load": 0.7083333333333334
+        },
+        {
+          "t_ms": 349.99999999999994,
+          "power_hz": 9.166666666666666,
+          "load": 1.0
+        },
+        {
+          "t_ms": 399.99999999999994,
+          "power_hz": 22.5,
+          "load": 1.0
+        },
+        {
+          "t_ms": 449.99999999999994,
+          "power_hz": 26.666666666666664,
+          "load": 1.0
+        },
+        {
+          "t_ms": 499.99999999999994,
+          "power_hz": 25.0,
+          "load": 1.0
+        },
+        {
+          "t_ms": 549.9999999999999,
+          "power_hz": 25.0,
+          "load": 1.0
+        },
+        {
+          "t_ms": 600.0,
+          "power_hz": 25.0,
+          "load": 1.0
+        },
+        {
+          "t_ms": 650.0,
+          "power_hz": 27.5,
+          "load": 1.0
+        },
+        {
+          "t_ms": 700.0,
+          "power_hz": 22.5,
+          "load": 1.0
+        },
+        {
+          "t_ms": 750.0000000000001,
+          "power_hz": 25.833333333333332,
+          "load": 1.0
+        },
+        {
+          "t_ms": 800.0000000000001,
+          "power_hz": 23.333333333333332,
+          "load": 1.0
+        },
+        {
+          "t_ms": 850.0000000000002,
+          "power_hz": 25.833333333333332,
+          "load": 1.0
+        },
+        {
+          "t_ms": 900.0000000000002,
+          "power_hz": 24.166666666666664,
+          "load": 1.0
+        },
+        {
+          "t_ms": 950.0000000000002,
+          "power_hz": 25.0,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1000.0000000000002,
+          "power_hz": 25.0,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1050.0000000000002,
+          "power_hz": 24.166666666666664,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1100.0000000000002,
+          "power_hz": 25.0,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1150.0000000000002,
+          "power_hz": 25.0,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1200.0000000000005,
+          "power_hz": 24.166666666666664,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1250.0000000000005,
+          "power_hz": 25.0,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1300.0000000000005,
+          "power_hz": 26.666666666666664,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1350.0000000000005,
+          "power_hz": 25.833333333333332,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1400.0000000000005,
+          "power_hz": 24.166666666666664,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1450.0000000000007,
+          "power_hz": 25.0,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1500.0000000000007,
+          "power_hz": 25.833333333333332,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1550.0000000000007,
+          "power_hz": 25.0,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1600.0000000000007,
+          "power_hz": 25.833333333333332,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1650.0000000000007,
+          "power_hz": 24.166666666666664,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1700.000000000001,
+          "power_hz": 25.833333333333332,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1750.000000000001,
+          "power_hz": 23.333333333333332,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1800.000000000001,
+          "power_hz": 24.166666666666664,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1850.000000000001,
+          "power_hz": 28.333333333333332,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1900.000000000001,
+          "power_hz": 24.166666666666664,
+          "load": 1.0
+        },
+        {
+          "t_ms": 1950.0000000000011,
+          "power_hz": 26.666666666666664,
+          "load": 1.0
+        },
+        {
+          "t_ms": 2000.000000000001,
+          "power_hz": 22.5,
+          "load": 1.0
+        },
+        {
+          "t_ms": 2050.0000000000005,
+          "power_hz": 28.333333333333332,
+          "load": 1.0
+        },
+        {
+          "t_ms": 2100.0000000000005,
+          "power_hz": 23.333333333333332,
+          "load": 1.0
+        },
+        {
+          "t_ms": 2150.0000000000005,
+          "power_hz": 25.833333333333332,
+          "load": 1.0
+        }
+      ]
+    }
+  },
+  "checks": {
+    "L1a_DVMn_2_to_12_hz": false,
+    "L1b_DLMn_cf_2_to_12_hz": false,
+    "L2_b1_0.5_to_1.2_spikes_per_wingbeat": true,
+    "L3_leg_mn_not_entrained": true,
+    "L4_steering_specific_vs_null": true
+  },
+  "anchor": {
+    "load": 0.25,
+    "rule": "smallest load with DVMn 1a-c in 2-12 Hz",
+    "in_band": false
+  },
+  "dlm_gating": {
+    "excitatory_relays": {
+      "n": 92,
+      "n_active": 3,
+      "hz_per_cell": 0.40619565217391307,
+      "first_spike_ms": 232.1
+    },
+    "inhibitory_relays": {
+      "n": 85,
+      "n_active": 6,
+      "hz_per_cell": 1.414,
+      "first_spike_ms": 236.3
+    },
+    "dlmn_cf": {
+      "n": 8,
+      "n_active": 0,
+      "hz_per_cell": 0.0,
+      "first_spike_ms": null
+    },
+    "structural": {
+      "exc_synapses": 18982,
+      "inh_synapses": 8639,
+      "direct_from_afferents": 75
+    },
+    "note": "if excitatory relays are largely silent the gate is a threshold problem in the relay layer; if they fire but inhibitory relays fire earlier/harder the gate is dynamic competition"
+  },
+  "reported": {
+    "b1_vector_strength": 0.03868432998707378,
+    "b1_phase_locking_note": "uniform afferent phase by assumption; no Drosophila phase map exists, so locking is untestable here",
+    "dnp31_hz": 0.0,
+    "per_type_hz_at_anchor": {
+      "DVMn 1a-c": 1.94,
+      "b1 MN": 128.27,
+      "b2 MN": 57.06,
+      "b3 MN": 58.83,
+      "hg4 MN": 8.59,
+      "i1 MN": 41.41,
+      "i2 MN": 105.55,
+      "iii3 MN": 33.33
+    },
+    "sign_split_prediction": {
+      "predicted_inhibited": [
+        "tp1 MN",
+        "ps1 MN",
+        "hg3 MN",
+        "hg4 MN",
+        "hg2 MN",
+        "b3 MN",
+        "iii3 MN"
+      ],
+      "predicted_excited": [
+        "iii1 MN",
+        "b2 MN",
+        "i1 MN",
+        "hg1 MN",
+        "b1 MN",
+        "i2 MN",
+        "DLMn c-f",
+        "DVMn 1a-c"
+      ]
+    },
+    "closed_loop": {
+      "final_load": 1.0,
+      "saturated": true,
+      "note": "the surrogate body maps power output monotonically to load, which is positive feedback by construction; saturation reflects that choice, not the biology"
+    },
+    "afferent_params_cross_species": "Holorusia (Fox & Daniel 2008; Fox et al. 2010), Sarcophaga (Yarger & Fox 2018), Calliphora (Fayyazuddin & Dickinson 1996)"
+  },
+  "pass": false,
+  "provenance": {
+    "written_at": "2026-09-17T21:10:34",
+    "git_commit": "de5f5ca",
+    "env": {}
+  }
+}

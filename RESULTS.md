@@ -80,11 +80,29 @@ DNp31 is the strongest descending input to the wing motor pool (3,019 synapses) 
 neuron examined here with a large excitatory surplus (net +14,568). All of its wing output is
 excitatory and spans the whole flight apparatus: DLMn c-f (1,128) and DLMn a,b (156) for the
 downstroke, DVMn 1a-c, 2a,b, 3a,b (1,077) for the upstroke, ps1 (593), b2, b1 and hg4 for
-steering. Its dominant input is not visual but proprioceptive: chordotonal and campaniform
-afferents 1,070,139 on the two-hop measure, against wind/gravity 642,257 and loom 306,541. It
-fires zero spikes under loom because haltere and wing campaniform organs report self-generated
-movement, which exists only when the animal is already flying. This is an argument for embodiment,
-not for more parameters (`benchmarks/dnp31_trace.py`).
+steering. Its dominant input is proprioceptive and specifically from the **wing**: campaniform
+afferents entering through ADMN, the anterior dorsal mesothoracic (wing) nerve, give 1,045,551
+on the two-hop measure, with 24,588 from DMetaN, the dorsal metathoracic (haltere) nerve, and
+nothing from any leg nerve (`benchmarks/embodiment_gate.py`). It fires zero spikes under loom
+because wing campaniform organs report self-generated wing load, which exists only when the
+animal is already flying. This is an argument for embodiment, not for more parameters.
+
+A correction is recorded here rather than hidden. An earlier draft read ADMN as an abdominal
+nerve and called DNp31 abdominal-load-driven; that was wrong. Court et al. 2020 (Neuron
+107:1071-1079) and the wing sensory reconstruction of Lesser, Moussa et al. (eLife 107867) place
+wing afferents in ADMN and haltere afferents in DMetaN, and the dataset confirms it: abdominal
+afferents enter through AbN1 to AbN4 and AbNT (1,145 cells, all subclass `abdomen`). The
+consequence is good news: the haltere campaniform population is present in MaleCNS v1.0 as the
+195 DMetaN afferents, under a nerve-based label rather than a "haltere" subclass.
+
+**The proprioceptive-to-wing-motor loop, as wired.** Wing and haltere campaniform afferents
+contact wing motor neurons directly with 11,412 synapses, all excitatory, and through 1,112
+relay interneurons with 181,661 (101,272 excitatory, 80,389 inhibitory). The net drive splits
+along a functional line: power muscles are excited (DLMn c-f +10,352, DVMn 1a-c +4,711, DLMn a,b
++3,732, DVMn 3a,b +1,649, DVMn 2a,b +1,629) and most steering muscles are inhibited (tp1 -4,697,
+ps1 -2,285, hg3 -2,136, hg4 -1,352, hg2 -944), with iii1 (+4,277), b2, i1 and hg1 as excited
+exceptions. No physiological counterpart to that split was found in the literature; it is a
+connectome-derived prediction, and the surrogate loop below is the test of it.
 
 ---
 

@@ -219,6 +219,7 @@ class CNSModel:
             self.vmon_ids = self.lif_ids[mon_idx]
             objs.append(self.vmon)
         self.G, self.P = G, P
+        self.G = G
         self.net = Network(*objs)
         self.n_chem = len(rec)
         self.n_stim_syn = len(se)

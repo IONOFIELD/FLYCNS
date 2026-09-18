@@ -11,13 +11,14 @@ This script decides whether that is buildable at all. It answers four questions 
 of them fails, because a loop built on unidentifiable afferents would be a guess dressed as a
 model:
 
-  0. NOTE (11 Sept 2026): they do not. The 851 campaniform and chordotonal afferents in MaleCNS
-     v1.0 enter through ADMN (218), DMetaN (195), MetaLN (193), MesoLN (163), ProLN and ProCN
-     (69): abdominal, thoracic and LEG nerves. No haltere nerve and no wing campaniform
-     population appears. DNp31's proprioceptive dominance is therefore leg and body load
-     sensing, not wingbeat feedback, and a surrogate WINGBEAT loop would drive the wrong
-     afferents. The questions below still run, because a leg-load to flight-muscle loop is a
-     different and possibly more interesting circuit, but the original premise is withdrawn.
+  0. NOTE (15 Sept 2026, correcting an 11 Sept draft): they DO exist, under nerve-based
+     labels. In Drosophila VNC nomenclature (Court et al. 2020, Neuron 107:1071-1079) ADMN is
+     the anterior dorsal mesothoracic nerve, the WING nerve, and DMetaN is the dorsal
+     metathoracic nerve, the HALTERE nerve; abdominal afferents enter through AbN1-AbN4 and
+     AbNT, which this dataset also has (1,145 cells, subclass "abdomen"). So the 218 ADMN
+     campaniform afferents are wing campaniform sensilla and the 195 DMetaN campaniform are
+     haltere campaniform sensilla. An earlier draft of this header read ADMN as abdominal;
+     that was wrong and is recorded here.
 
   1. Do the wing and haltere mechanosensors exist as identifiable types in MaleCNS v1.0?
      MaleCNS annotates sensory `subclass`, including "campaniform sensilla" and
