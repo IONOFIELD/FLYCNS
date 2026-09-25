@@ -45,6 +45,242 @@
         0.0
       ],
       "dvmn_in_band": 0
+    },
+    {
+      "k": 2,
+      "dvmn_mean": 0.0,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.0022403394913101025,
+      "dvmn_per_draw": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dvmn_in_band": 0
+    },
+    {
+      "k": 3,
+      "dvmn_mean": 1.1951666666666667,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.0036920320442692237,
+      "dvmn_per_draw": [
+        0.0,
+        0.0,
+        0.0,
+        5.98,
+        0.0
+      ],
+      "dvmn_in_band": 1
+    },
+    {
+      "k": 4,
+      "dvmn_mean": 0.0,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.13707142857142857,
+      "b1_mean": 0.0,
+      "cns_mean": 0.005655832998754955,
+      "dvmn_per_draw": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dvmn_in_band": 0
+    },
+    {
+      "k": 5,
+      "dvmn_mean": 3.8885000000000005,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.11903571428571429,
+      "b1_mean": 0.0,
+      "cns_mean": 0.008150609506402489,
+      "dvmn_per_draw": [
+        0.0,
+        4.88,
+        4.97,
+        6.57,
+        3.03
+      ],
+      "dvmn_in_band": 4
+    },
+    {
+      "k": 6,
+      "dvmn_mean": 4.460833333333333,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.18035714285714285,
+      "b1_mean": 0.0,
+      "cns_mean": 0.011044830567240782,
+      "dvmn_per_draw": [
+        5.47,
+        7.66,
+        6.9,
+        0.0,
+        2.27
+      ],
+      "dvmn_in_band": 4
+    },
+    {
+      "k": 7,
+      "dvmn_mean": 7.389833333333334,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.012893811427489497,
+      "dvmn_per_draw": [
+        10.27,
+        7.24,
+        6.06,
+        6.65,
+        6.73
+      ],
+      "dvmn_in_band": 5
+    },
+    {
+      "k": 8,
+      "dvmn_mean": 9.0395,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.015745985693255075,
+      "dvmn_per_draw": [
+        7.15,
+        9.6,
+        9.68,
+        7.58,
+        11.19
+      ],
+      "dvmn_in_band": 5
+    },
+    {
+      "k": 9,
+      "dvmn_mean": 14.6955,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.01862726927868638,
+      "dvmn_per_draw": [
+        16.5,
+        15.65,
+        13.47,
+        16.08,
+        11.78
+      ],
+      "dvmn_in_band": 1
+    },
+    {
+      "k": 10,
+      "dvmn_mean": 17.944333333333336,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.02238722306884229,
+      "dvmn_per_draw": [
+        19.44,
+        16.83,
+        21.13,
+        17.34,
+        14.98
+      ],
+      "dvmn_in_band": 0
+    },
+    {
+      "k": 11,
+      "dvmn_mean": 22.50616666666667,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.026370348309768744,
+      "dvmn_per_draw": [
+        27.69,
+        21.63,
+        22.73,
+        18.43,
+        22.05
+      ],
+      "dvmn_in_band": 0
+    },
+    {
+      "k": 12,
+      "dvmn_mean": 29.071166666666663,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.030536754452294194,
+      "dvmn_per_draw": [
+        30.89,
+        29.71,
+        25.25,
+        30.72,
+        28.79
+      ],
+      "dvmn_in_band": 0
+    },
+    {
+      "k": 13,
+      "dvmn_mean": 33.548833333333334,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.03492094143083728,
+      "dvmn_per_draw": [
+        33.67,
+        33.25,
+        33.41,
+        33.67,
+        33.75
+      ],
+      "dvmn_in_band": 0
     }
-  ]
+  ],
+  "k_star": 5,
+  "null_at_k_star": {
+    "k": 5,
+    "dvmn_mean": 0.0,
+    "dlmn_mean": 0.0,
+    "steer_mean": 0.0,
+    "b1_mean": 0.0,
+    "cns_mean": 0.005404630351269269,
+    "dvmn_per_draw": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "dvmn_in_band": 0
+  },
+  "checks": {
+    "G1_graded": false,
+    "G2_in_band_window": true,
+    "G3_selective_at_k_star": true,
+    "G4_wiring_specific_at_k_star": true,
+    "G5_reliable_at_k_star": true
+  },
+  "reported": {
+    "partner_alone": {
+      "dvmn": 3.535,
+      "dlmn": 0.0,
+      "steer": 1.5751190476190475,
+      "b1": 0.0,
+      "cns": 0.017656958623162272
+    },
+    "k_star_plus_partner": {
+      "dvmn": 28.684000000000005,
+      "steer": 1.5510714285714284,
+      "b1": 0.0
+    },
+    "summation_ratio": 3.863945578231293
+  },
+  "provenance": {
+    "written_at": "2026-09-25T15:05:22",
+    "git_commit": "64d665b",
+    "env": {}
+  }
 }
