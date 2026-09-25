@@ -1,0 +1,50 @@
+{
+  "benchmark": "flight_snpp16_graded",
+  "criteria": {
+    "hypothesis": "SNpp16 selectively drives the DVM motor neurons",
+    "G1": "mean DVMn 1a-c non-decreasing in k, tolerance 0.5 Hz",
+    "G2": "some k gives mean DVMn in 2.0-12.0 Hz; smallest such k is k*",
+    "G3": "at k*: mean steering, b1 and DLMn c-f each below 1 Hz",
+    "G4": "at k*: rewired null gives DVMn below 1 Hz",
+    "G5": "at k*: DVMn in band in at least 4 of 5 draws",
+    "n_draws": 5,
+    "n_cycles": 400,
+    "wingbeat_hz": 202.0,
+    "jitter_ms": 0.8
+  },
+  "registration": {
+    "criteria": {
+      "hypothesis": "SNpp16 selectively drives the DVM motor neurons",
+      "G1": "mean DVMn 1a-c non-decreasing in k, tolerance 0.5 Hz",
+      "G2": "some k gives mean DVMn in 2.0-12.0 Hz; smallest such k is k*",
+      "G3": "at k*: mean steering, b1 and DLMn c-f each below 1 Hz",
+      "G4": "at k*: rewired null gives DVMn below 1 Hz",
+      "G5": "at k*: DVMn in band in at least 4 of 5 draws",
+      "n_draws": 5,
+      "n_cycles": 400,
+      "wingbeat_hz": 202.0,
+      "jitter_ms": 0.8
+    },
+    "registered_at": "2026-09-25T14:22:00",
+    "git_commit": "fae9fdb",
+    "script_uncommitted": false
+  },
+  "sweep": [
+    {
+      "k": 1,
+      "dvmn_mean": 0.0,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.0010684198440270988,
+      "dvmn_per_draw": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dvmn_in_band": 0
+    }
+  ]
+}
