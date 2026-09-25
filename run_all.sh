@@ -3,7 +3,9 @@
 # Usage: ./run_all.sh [n_trials] [data_dir]
 set -e
 source .venv/bin/activate 2>/dev/null || true
-N=${1:-20}; D=${2:-data}
+N=${1:-40}; D=${2:-data}
+# refuse to start if any benchmark's stimulus set resolves to no neurons (see fit/audit_stimuli.py)
+python fit/audit_stimuli.py "$D" || { echo "stimulus audit failed: fix the lists above before running"; exit 1; }
 python benchmarks/gf_escape.py "$N" "$D"
 python benchmarks/auditory.py "$N" "$D"
 python benchmarks/feeding.py 6 "$D" || echo "feeding benchmark did not complete (see above)"

@@ -80,6 +80,21 @@ class CNSModel:
         if electrical:
             edges = drop_mixed_chemical(edges, neurons)
         stim = neurons[neurons["type"].isin(stim_types)][["bodyId", "type"]].reset_index(drop=True)
+        # Stimulus types are matched by EXACT name. MaleCNS splits many populations into
+        # subtypes (DNg02 is DNg02_a..g), so an unsplit name silently matches nothing and the
+        # run proceeds without its input. That happened once (flight_loop, commit ce8b9d2);
+        # it is now an error when nothing resolves and a loud warning when part does not.
+        requested = [s for s in dict.fromkeys(stim_types) if s]
+        found = set(stim["type"])
+        self.stim_missing = [s for s in requested if s not in found]
+        if requested and not found:
+            near = sorted({x for x in neurons["type"].dropna().unique()
+                           if any(str(x).startswith(str(r)) for r in requested)})[:10]
+            raise ValueError(f"[model] stimulus types {requested} matched 0 neurons (exact-name match)."
+                             + (f" Did you mean subtypes: {near}?" if near else ""))
+        if self.stim_missing:
+            print(f"[model] WARNING: {len(self.stim_missing)} of {len(requested)} stimulus types matched "
+                  f"no neurons and are NOT driven: {self.stim_missing[:10]}")
         self.stim = stim
         self.stim_index = pd.Series(np.arange(len(stim)), index=stim["bodyId"].values)
         all_ids = pd.unique(pd.concat([edges["pre"], edges["post"]]))

@@ -264,6 +264,13 @@ benchmark.
 
 ---
 
+**Stimulus-set integrity** (`fit/audit_stimuli.py`, run automatically by `run_all.sh` and
+`overnight.sh`). Stimulus neurons are selected by exact type name, and MaleCNS splits many
+populations into subtypes, so a correct-looking name can match nothing. That happened once: the
+first DNg02 run selected "DNg02", which matches none of the 29 DNg02_a to _g cells, and those arms
+ran without their input. The model now raises when a stimulus set matches no neurons and warns
+when part of one does not, and every long run audits all sets first.
+
 ## 6. The declared parameter set
 
 Shiu et al. 2024 LIF parameters (tau_m 20 ms, threshold -45 mV, rest and reset -52 mV, refractory

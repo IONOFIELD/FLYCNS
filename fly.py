@@ -63,6 +63,7 @@ MENU = """
   MODULATION    29  AstA: separate Pm3's synaptic and peptidergic effects (exploratory)
   TRACES        30  ear to wing motor pathway (structural finding, not a benchmark)
                 32  DNp31: the strongest descending drive to the wing muscles
+  CHECKS        35  audit every stimulus set against the dataset (seconds; run before long jobs)
   EMBODIMENT    33  gate: are the wing and haltere afferents identifiable and do they form a loop
                 34  flight loop: phase-locked campaniform drive at 202 Hz, open then closed (surrogate body)
                 31  is there an aminergic modulator in the SEZ? (dataset audit)
@@ -150,6 +151,7 @@ while True:
     elif c == "30": run("benchmarks/auditory_wing_trace.py")
     elif c == "32": run("benchmarks/dnp31_trace.py")
     elif c == "33": run("benchmarks/embodiment_gate.py")
+    elif c == "35": run("fit/audit_stimuli.py")
     elif c == "34": run("benchmarks/flight_loop.py", ask("wingbeat cycles per arm", "400"))
     elif c == "31": run("fit/check_modulators.py")
     elif c == "17": run("less", "RESULTS.md")

@@ -5,6 +5,7 @@
 set -u
 source .venv/bin/activate 2>/dev/null || true
 mkdir -p results/overnight
+python fit/audit_stimuli.py data || { echo "stimulus audit failed; battery not started"; exit 1; }
 run () {   # run TAG SEED SIGNFLIP WSCALE
   local tag=$1; export FLYCNS_SEED=$2 FLYCNS_SIGNFLIP=$3 FLYCNS_WSCALE=$4 FLYCNS_RUN_TAG=$tag
   echo "=== $(date '+%H:%M') start $tag (seed $2, signflip $3, wscale $4)"
