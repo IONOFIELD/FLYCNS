@@ -15,3 +15,4 @@ data/loom_tuning_measured.json
 results/**/*.parquet
 results/**/*.html
 overnight*.log
+*.log
