@@ -1,0 +1,7 @@
+criteria registered at commit fae9fdb
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 110,136 unknown-NT pairs and modulatory amines)
+SNpp16: 13 cells | SNpp07: 12 cells | DVMn 1a-c 6
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
