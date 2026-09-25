@@ -21,6 +21,11 @@ DRIVE (per afferent)
                                            displacement. Mapping load -> fraction is an ASSUMPTION.
   phase           afferents spread uniformly over the cycle (no measured phase map for Drosophila)
 
+RECRUITMENT DRAWS: which afferents a given load recruits is random, and DVMn's drive is
+concentrated in few of them (41 of 413 afferents, top 20 carry 83%), so every scored arm runs
+over RECRUIT_SEEDS (default 5) and criteria use the mean; per-type spread and per-seed DVMn,
+DLMn and b1 values are recorded. Single-draw values from runs before 23 Sept 2026 are superseded.
+
 ANCHOR (the one free parameter): the load -> recruitment mapping is not measured in any
 species, so LOAD is chosen by rule, like PEAK_HZ for the loom: the smallest load at which
 DVMn 1a-c (the power neuron with direct afferent input) sits in the measured 2-12 Hz band.
@@ -95,7 +100,15 @@ meta = neurons.set_index("bodyId")
 t = meta["type"].fillna(""); sub = meta["subclass"].fillna(""); nerve = meta["entryNerve"].fillna("")
 aff_wing = meta.index[(sub == "campaniform sensilla") & (nerve == "ADMN")]
 aff_halt = meta.index[(sub == "campaniform sensilla") & (nerve == "DMetaN")]
-aff = list(aff_wing) + list(aff_halt)
+# Sorted by bodyId so every script that recruits from this list draws the same afferents for a
+# given seed. (An earlier version listed wing before haltere, another script used dataset order,
+# and the same seed recruited different subsets.)
+aff = sorted(list(aff_wing) + list(aff_halt))
+# DVMn 1a-c's whole proprioceptive drive comes from 41 of the 413 afferents (all ADMN), 20 of which
+# carry 83% of it, so a random 35% recruitment is a lottery over whether those few fire. Each arm is
+# therefore run over several independent recruitment draws and reported as mean and spread.
+import os as _os
+RECRUIT_SEEDS = [int(x) for x in _os.environ.get("FLYCNS_RECRUIT_SEEDS", "0,1,2,3,4").split(",")]
 print(f"wing campaniform (ADMN) {len(aff_wing)}, haltere campaniform (DMetaN) {len(aff_halt)}")
 if len(aff) < 50:
     raise SystemExit("too few campaniform afferents identified; check entryNerve annotation")
@@ -121,9 +134,9 @@ def phase_locked_spikes(n_aff, n_cycles, load, rng, t0_ms=0.0):
     return ids[keep], times[keep] + t0_ms
 
 
-def run_arm(label, edge_df, load, closed=False, dn_hz=0.0):
+def run_arm(label, edge_df, load, closed=False, dn_hz=0.0, seed=0, quiet=False):
     t0 = time.time()
-    rng = np.random.default_rng(0)
+    rng = np.random.default_rng(seed)
     p = LIFParams()
     stim = DNG02_TYPES if dn_hz > 0 else []
     m = CNSModel(neurons, edge_df, stim, p, electrical=True)        # afferent spikes are injected below
@@ -212,15 +225,43 @@ def run_arm(label, edge_df, load, closed=False, dn_hz=0.0):
     if closed:
         rec["load_trace"] = trace
     rec["_spikes"] = rec_sp
+    rec["seed"] = seed
+    if quiet:
+        return rec
     print(f"[{label}] load {load:.2f} DNg02 {dn_hz:>5.0f} Hz ({n_src} src, {n_src_syn} syn) | power MN {power_hz:6.2f} Hz | steering MN {steer_hz:6.2f} Hz | "
           f"b1 {b1_hz:6.1f} Hz (VS {vs if vs == vs else 0:.2f}) | DNp31 {dn31_hz:5.1f} Hz | leg MN {leg_hz if leg_hz == leg_hz else 0:.2f} Hz | "
           f"CNS {rec['pop_rate_hz']:.3f} Hz | {rec['wall_s']}s")
     return rec
 
 
-report = dict(benchmark="flight_loop", n_cycles=N_CYCLES, arms={}, checks={})
+def run_multi(label, edge_df, load, dn_hz=0.0):
+    """Run one arm across RECRUIT_SEEDS; report the mean, with per-type spread and per-seed values."""
+    recs = [run_arm(label, edge_df, load, dn_hz=dn_hz, seed=sd, quiet=True) for sd in RECRUIT_SEEDS]
+    types = sorted({k for r in recs for k in r["per_wing_type_hz"]})
+    per = {k: [r["per_wing_type_hz"].get(k, 0.0) for r in recs] for k in types}
+    out = dict(recs[0])
+    out["per_wing_type_hz"] = {k: round(float(np.mean(v)), 3) for k, v in per.items()}
+    out["per_wing_type_sd"] = {k: round(float(np.std(v)), 3) for k, v in per.items()}
+    out["per_seed"] = {k: [round(float(x), 2) for x in v] for k, v in per.items()
+                       if k in ("DVMn 1a-c", "DLMn c-f", "b1 MN")}
+    for f in ("power_mn_hz", "steer_mn_hz", "b1_hz", "dnp31_hz", "leg_mn_hz", "pop_rate_hz"):
+        vals = [r[f] for r in recs if r[f] == r[f]]
+        out[f] = float(np.mean(vals)) if vals else float("nan")
+    vs = [r["b1_vector_strength"] for r in recs if r["b1_vector_strength"] == r["b1_vector_strength"]]
+    out["b1_vector_strength"] = float(np.mean(vs)) if vs else float("nan")
+    out["seeds"] = RECRUIT_SEEDS
+    out["wall_s"] = sum(r["wall_s"] for r in recs)
+    dv = per.get("DVMn 1a-c", [0.0]); dl = per.get("DLMn c-f", [0.0])
+    print(f"[{label}] load {load:.2f} DNg02 {dn_hz:>5.0f} Hz | DVMn 1a-c {np.mean(dv):6.2f} +/- {np.std(dv):5.2f} "
+          f"(range {min(dv):.1f}-{max(dv):.1f}) | DLMn c-f {np.mean(dl):5.2f} | steering {out['steer_mn_hz']:6.1f} | "
+          f"b1 {out['b1_hz']:6.1f} | DNp31 {out['dnp31_hz']:4.1f} | CNS {out['pop_rate_hz']:.3f} | "
+          f"{len(RECRUIT_SEEDS)} draws, {out['wall_s']}s")
+    return out
+
+
+report = dict(benchmark="flight_loop", n_cycles=N_CYCLES, recruit_seeds=RECRUIT_SEEDS, arms={}, checks={})
 for L in LOADS:
-    report["arms"][f"open_load_{L}"] = run_arm(f"open_load_{L}", edges, L)
+    report["arms"][f"open_load_{L}"] = run_multi(f"open_load_{L}", edges, L)
 
 # ---- anchor by rule: smallest load with DVMn 1a-c in the measured band
 def dvmn_rate(arm):
@@ -233,8 +274,11 @@ anchor = min(in_band, key=lambda a: a["load"]) if in_band else min(open_arms, ke
 ANCHOR_LOAD = anchor["load"]
 print(f"\nanchor load by rule (smallest with DVMn 1a-c in 2-12 Hz): {ANCHOR_LOAD}"
       + ("" if in_band else "  (no load in band; nearest to 6 Hz used and flagged)"))
-report["anchor"] = dict(load=ANCHOR_LOAD, rule="smallest load with DVMn 1a-c in 2-12 Hz", in_band=bool(in_band))
-null = run_arm(f"rewired_null_load_{ANCHOR_LOAD}", rewire_null(edges, seed=0), ANCHOR_LOAD)
+report["anchor"] = dict(load=ANCHOR_LOAD, rule="smallest load with mean DVMn 1a-c (across recruitment draws) in 2-12 Hz",
+                        in_band=bool(in_band), dvmn_mean=dvmn_rate(anchor),
+                        dvmn_sd=anchor.get("per_wing_type_sd", {}).get("DVMn 1a-c"),
+                        dvmn_per_seed=anchor.get("per_seed", {}).get("DVMn 1a-c"))
+null = run_multi(f"rewired_null_load_{ANCHOR_LOAD}", rewire_null(edges, seed=0), ANCHOR_LOAD)
 report["arms"][null["arm"]] = null
 closed = run_arm(f"closed_from_{ANCHOR_LOAD}", edges, ANCHOR_LOAD, closed=True)
 report["arms"][closed["arm"]] = closed
@@ -268,7 +312,7 @@ print(f"DLM gating at anchor: excitatory relays {g['excitatory_relays']['n_activ
 print("\nSTAGE 2: proprioceptive loop at anchor + DNg02 descending command")
 stage2 = []
 for hz in DNG02_HZ:
-    a = run_arm(f"anchor_plus_DNg02_{hz:.0f}Hz", edges, ANCHOR_LOAD, dn_hz=hz)
+    a = run_multi(f"anchor_plus_DNg02_{hz:.0f}Hz", edges, ANCHOR_LOAD, dn_hz=hz)
     a["dlmn_cf_hz"] = dlmn_rate(a); a["dvmn_hz"] = dvmn_rate(a)
     report["arms"][a["arm"]] = a
     stage2.append(a)

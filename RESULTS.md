@@ -108,6 +108,18 @@ connectome-derived prediction, and the surrogate loop below is the test of it.
 
 ### The flight loop, run: monosynaptic drive works, disynaptic drive does not
 
+> **Pending re-measurement (23 Sept 2026).** The DVMn 1a-c values quoted in this section and in
+> Stage 2 below (9.4 Hz at the anchor, the L1a pass, the stage-2 DVMn column) are single random
+> recruitment draws. DVMn's whole proprioceptive drive comes from 41 of the 413 afferents, all
+> wing (ADMN), and 20 of them carry 83% of it, so a random 35% recruitment decides whether DVMn
+> fires: a sensitivity sweep reproducing the anchor with a different afferent ordering gave
+> DVMn 0.0 Hz. The benchmark now runs every scored arm over five draws and reports mean and
+> spread; these numbers will be replaced by that rerun. The DLMn c-f result does not depend on
+> the draw (it has almost no direct afferent input) and was confirmed separately: it stays below
+> 2 Hz across the whole relay-layer parameter sweep (`benchmarks/sensitivity_flight.py`).
+
+
+
 `benchmarks/flight_loop.py` supplies the missing proprioceptive input as a surrogate body: the 218
 wing (ADMN) and 195 haltere (DMetaN) campaniform afferents fire one spike per cycle at the
 Drosophila wingbeat frequency of 202 Hz (Vogel 1967) with 0.8 ms jitter (Fox, Fairhall & Daniel

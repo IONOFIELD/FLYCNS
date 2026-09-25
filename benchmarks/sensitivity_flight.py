@@ -60,7 +60,7 @@ sub = meta["subclass"].fillna("")
 nerve = meta["entryNerve"].fillna("")
 sc = meta["superclass"].fillna("")
 
-aff = list(meta.index[(sub == "campaniform sensilla") & nerve.isin(["ADMN", "DMetaN"])])
+aff = sorted(meta.index[(sub == "campaniform sensilla") & nerve.isin(["ADMN", "DMetaN"])])   # same order as flight_loop
 dlm = meta.index[t == "DLMn c-f"]
 dvm = meta.index[t == "DVMn 1a-c"]
 steer = meta.index[t.str.match(STEER)]
