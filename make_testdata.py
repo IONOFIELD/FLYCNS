@@ -14,7 +14,7 @@ add("JO-A1", 20, "cb_sensory"); add("JO-B1", 20, "cb_sensory")
 add("Gr64f_sugar_GRN", 20, "cb_sensory"); add("Gr66a_bitter_GRN", 10, "cb_sensory")
 add("GNG001", 4, "cb_intrinsic"); add("Bract", 4, "descending_neuron"); add("MN9", 2, "cb_motor")
 add("JO-FV", 10, "cb_sensory"); add("aPhM2a", 5, "cb_sensory"); add("BM_Taste", 10, "cb_sensory")
-add("SApp10", 30, "vnc_sensory"); add("SApp02", 20, "vnc_sensory"); add("DLMn c-f", 8, "vnc_motor"); add("b1 MN", 2, "vnc_motor"); add("IN19B043", 20, "vnc_intrinsic"); add("Pm3", 6, "ol_intrinsic"); add("Mi1", 20, "ol_intrinsic"); add("Tm2", 10, "ol_intrinsic")
+add("DNg02", 6, "descending_neuron"); add("SApp10", 30, "vnc_sensory"); add("SApp02", 20, "vnc_sensory"); add("DLMn c-f", 8, "vnc_motor"); add("b1 MN", 2, "vnc_motor"); add("IN19B043", 20, "vnc_intrinsic"); add("Pm3", 6, "ol_intrinsic"); add("Mi1", 20, "ol_intrinsic"); add("Tm2", 10, "ol_intrinsic")
 add("filler", 300, "cb_intrinsic")
 n = pd.DataFrame(rows)
 n["subclass"] = None
@@ -36,7 +36,7 @@ def chain(pre_t, post_t, w, contra=False):
         for b in n[n.type==post_t].itertuples():
             if contra and a.somaSide == b.somaSide: continue
             e.append(dict(pre=a.bodyId, post=b.bodyId, weight=w, nt="acetylcholine"))
-chain("SApp10","IN19B043",40); chain("SApp02","IN19B043",30); chain("IN19B043","DLMn c-f",25); chain("SApp10","b1 MN",60); chain("L1","Mi1",30); chain("Pm3","Mi1",20); chain("L2","Pm3",30); chain("Gr64f_sugar_GRN", "GNG001", 120); chain("aPhM2a", "GNG001", 150); chain("BM_Taste", "GNG001", 60); chain("GNG001", "MN9", 400, contra=True); chain("Bract", "MN9", 400)
+chain("DNg02","DLMn c-f",30); chain("SApp10","IN19B043",40); chain("SApp02","IN19B043",30); chain("IN19B043","DLMn c-f",25); chain("SApp10","b1 MN",60); chain("L1","Mi1",30); chain("Pm3","Mi1",20); chain("L2","Pm3",30); chain("Gr64f_sugar_GRN", "GNG001", 120); chain("aPhM2a", "GNG001", 150); chain("BM_Taste", "GNG001", 60); chain("GNG001", "MN9", 400, contra=True); chain("Bract", "MN9", 400)
 for a in n[n.type=="Gr66a_bitter_GRN"].bodyId:
     for b in n[n.type=="Fdg"].bodyId: e.append(dict(pre=a, post=b, weight=40, nt="gaba"))
 for a in n[n.type=="JO-B1"].bodyId[:5]:

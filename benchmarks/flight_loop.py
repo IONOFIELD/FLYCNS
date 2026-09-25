@@ -34,6 +34,20 @@ power pool hid a silent DLM behind an active DVM in the first run:
   L3  leg motor neurons are not entrained by the wingbeat
   L4  specificity vs rewired null at the anchor load: real steering (b1 + others) rate at
       least 5x the null's
+STAGE 2, DESCENDING FLIGHT COMMAND. Under proprioceptive drive alone the DLMn c-f relay
+layer is subthreshold (4 of 92 excitatory relays active at the anchor). DNg02 is a population
+of ~15 homomorphic descending neuron pairs whose optogenetic activation raises wingbeat
+amplitude linearly with the number of cells recruited and, at maximum, drives the indirect
+flight muscle motor neurons to a constant-power ceiling (Namiki, Ros, Morrow, Rowell, Card,
+Korff & Dickinson 2022, Curr Biol 32:1189-1196, Figs 1, 3). In MaleCNS v1.0 there are 29
+cholinergic DNg02 cells contacting DLMn c-f directly (423 synapses), 20 of its 92 excitatory
+relays (1,060) and the wing motor pool (3,670). The paper gives no firing rate (optogenetic
+activation, kinematic and calcium readout), so DNg02_HZ is this stage's declared free
+parameter, swept, and chosen by rule: the smallest rate at which DLMn c-f enters the measured
+2-12 Hz band while DVMn stays in band. The proprioceptive loop runs at its anchor load.
+  L5  DLMn c-f in 2-12 Hz with DNg02 drive at the rule-chosen rate
+  L6  DVMn 1a-c still in 2-12 Hz under the same drive (the command does not saturate power output)
+
   REPORTED (not scored): b1 phase locking (vector strength), untestable while afferent phase
   is uniform by assumption; DNp31 rate; the per-type sign split; closed-loop behaviour; and
   the DLM gating diagnostic (do DLMn c-f's excitatory relays fire at all, and do the
@@ -65,7 +79,8 @@ N_CYCLES = int(sys.argv[1]) if len(sys.argv) > 1 else 400
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
 OUT = Path("results/flight_loop"); OUT.mkdir(parents=True, exist_ok=True)
 WINGBEAT_HZ, JITTER_MS = 202.0, 0.8
-LOADS = [0.125, 0.25, 0.3, 0.35, 0.4, 0.5, 1.0]   # 0.3-0.4 added: DVMn jumps 1.9 -> 18.6 Hz between 0.25 and 0.5
+LOADS = [0.125, 0.25, 0.3, 0.35, 0.4, 0.5, 1.0]
+DNG02_HZ = [10.0, 25.0, 50.0, 100.0]     # swept; no measured rate exists (Namiki 2022 is optogenetic)   # 0.3-0.4 added: DVMn jumps 1.9 -> 18.6 Hz between 0.25 and 0.5
 WING_MN = r"^(DLMn|DVMn|b[123] MN|hg[1-4] MN|i[12] MN|iii[13] MN|tp[12] MN|ps1 MN)"
 POWER = r"^(DLMn|DVMn)"
 STEER = r"^(b[123] MN|hg[1-4] MN|i[12] MN|iii[13] MN|tp[12] MN|ps1 MN)"
@@ -98,11 +113,12 @@ def phase_locked_spikes(n_aff, n_cycles, load, rng, t0_ms=0.0):
     return ids[keep], times[keep] + t0_ms
 
 
-def run_arm(label, edge_df, load, closed=False):
+def run_arm(label, edge_df, load, closed=False, dn_hz=0.0):
     t0 = time.time()
     rng = np.random.default_rng(0)
     p = LIFParams()
-    m = CNSModel(neurons, edge_df, [], p, electrical=True)          # no Poisson stim; we inject spikes
+    stim = ["DNg02"] if dn_hz > 0 else []
+    m = CNSModel(neurons, edge_df, stim, p, electrical=True)        # afferent spikes are injected below
     lif_idx = [m.lif_index[b] for b in aff if b in m.lif_index.index]
     n_aff = len(lif_idx)
     G = m.G
@@ -114,7 +130,13 @@ def run_arm(label, edge_df, load, closed=False):
         S = Synapses(gen, G, on_pre="v_post += kick", namespace=dict(kick=8.0 * mV))
         S.connect(i=np.arange(n_aff), j=np.array(lif_idx))
         m.net.add(gen, S)
-        m.run(pre_ms + dur_ms + 200)
+        m.run(pre_ms)
+        if dn_hz > 0:
+            m.set_stim_rates(np.full(len(m.stim), dn_hz))
+        m.run(dur_ms)
+        if dn_hz > 0:
+            m.set_stim_rates(np.zeros(len(m.stim)))
+        m.run(200)
     else:
         # closed loop: recruitment fraction follows recent power-MN output, updated every 50 ms
         power_ids = set(m.lif_ids[[m.lif_index[b] for b in wing if t[b].startswith(("DLMn", "DVMn")) and b in m.lif_index.index]])
@@ -165,7 +187,7 @@ def run_arm(label, edge_df, load, closed=False):
     b1_sp = sp[sp.bodyId.isin(b1_ids)].t_ms.values
     vs = float(np.abs(np.mean(np.exp(2j * np.pi * (b1_sp % period) / period)))) if len(b1_sp) > 5 else np.nan
     rec_sp = sp  # keep for diagnostics
-    rec = dict(arm=label, load=load, closed=closed, n_afferents=n_aff, wingbeat_hz=WINGBEAT_HZ,
+    rec = dict(arm=label, load=load, closed=closed, dng02_hz=dn_hz, n_afferents=n_aff, wingbeat_hz=WINGBEAT_HZ,
                power_mn_hz=power_hz, n_power=n_power, steer_mn_hz=steer_hz, n_steer=n_steer,
                b1_hz=b1_hz, b1_vector_strength=vs, dnp31_hz=dn31_hz, leg_mn_hz=leg_hz,
                pop_rate_hz=float(m.population_rate_hz()), per_wing_type_hz=per_type,
@@ -173,7 +195,7 @@ def run_arm(label, edge_df, load, closed=False):
     if closed:
         rec["load_trace"] = trace
     rec["_spikes"] = rec_sp
-    print(f"[{label}] load {load:.2f} | power MN {power_hz:6.2f} Hz | steering MN {steer_hz:6.2f} Hz | "
+    print(f"[{label}] load {load:.2f} DNg02 {dn_hz:>5.0f} Hz | power MN {power_hz:6.2f} Hz | steering MN {steer_hz:6.2f} Hz | "
           f"b1 {b1_hz:6.1f} Hz (VS {vs if vs == vs else 0:.2f}) | DNp31 {dn31_hz:5.1f} Hz | leg MN {leg_hz if leg_hz == leg_hz else 0:.2f} Hz | "
           f"CNS {rec['pop_rate_hz']:.3f} Hz | {rec['wall_s']}s")
     return rec
@@ -225,6 +247,30 @@ print(f"DLM gating at anchor: excitatory relays {g['excitatory_relays']['n_activ
       f"{g['inhibitory_relays']['n_active']}/{g['inhibitory_relays']['n']} active at {g['inhibitory_relays']['hz_per_cell']:.1f} Hz "
       f"(first {g['inhibitory_relays']['first_spike_ms']}) | DLMn c-f {g['dlmn_cf']['hz_per_cell']:.2f} Hz")
 
+# ---- STAGE 2: descending flight command onto the silent relay layer
+print("\nSTAGE 2: proprioceptive loop at anchor + DNg02 descending command")
+stage2 = []
+for hz in DNG02_HZ:
+    a = run_arm(f"anchor_plus_DNg02_{hz:.0f}Hz", edges, ANCHOR_LOAD, dn_hz=hz)
+    a["dlmn_cf_hz"] = dlmn_rate(a); a["dvmn_hz"] = dvmn_rate(a)
+    report["arms"][a["arm"]] = a
+    stage2.append(a)
+ok2 = [a for a in stage2 if 2.0 <= a["dlmn_cf_hz"] <= 12.0 and 2.0 <= a["dvmn_hz"] <= 12.0]
+chosen = min(ok2, key=lambda a: a["dng02_hz"]) if ok2 else None
+report["stage2"] = dict(rule="smallest DNg02 rate with DLMn c-f AND DVMn 1a-c both in 2-12 Hz",
+                        chosen_dng02_hz=(chosen["dng02_hz"] if chosen else None),
+                        sweep=[dict(dng02_hz=a["dng02_hz"], dlmn_cf_hz=a["dlmn_cf_hz"], dvmn_hz=a["dvmn_hz"],
+                                    b1_hz=a["b1_hz"], steer_hz=a["steer_mn_hz"], cns_hz=a["pop_rate_hz"]) for a in stage2],
+                        source="Namiki et al. 2022 Curr Biol 32:1189-1196: DNg02 activation drives indirect flight muscle motor neurons; rate not measured",
+                        connectome=dict(n_dng02=29, onto_dlmn_cf_direct=423, onto_dlm_exc_relays=1060, onto_wing_mn=3670))
+print("DNg02 rate rule:", "chosen %.0f Hz" % chosen["dng02_hz"] if chosen else "no rate puts both DLMn c-f and DVMn in band")
+if chosen:
+    g2 = chosen["_spikes"]
+    exc_act = g2[g2.bodyId.isin(exc_relays)].bodyId.nunique(); inh_act = g2[g2.bodyId.isin(inh_relays)].bodyId.nunique()
+    report["stage2"]["dlm_relays_with_command"] = dict(excitatory_active=int(exc_act), of=len(exc_relays),
+                                                      inhibitory_active=int(inh_act), of_inh=len(inh_relays))
+    print(f"  with command: excitatory DLM relays active {exc_act}/{len(exc_relays)}, inhibitory {inh_act}/{len(inh_relays)}")
+
 steer_real = best["steer_mn_hz"]; steer_null = null["steer_mn_hz"]
 report["checks"] = {
     "L1a_DVMn_2_to_12_hz": bool(2.0 <= dvmn_rate(best) <= 12.0),
@@ -232,6 +278,8 @@ report["checks"] = {
     "L2_b1_0.5_to_1.2_spikes_per_wingbeat": bool(0.5 * WINGBEAT_HZ <= best["b1_hz"] <= 1.2 * WINGBEAT_HZ),
     "L3_leg_mn_not_entrained": bool((best["leg_mn_hz"] if best["leg_mn_hz"] == best["leg_mn_hz"] else 0) < 0.1 * WINGBEAT_HZ),
     "L4_steering_specific_vs_null": bool(steer_real > 5.0 * max(steer_null, 0.2)),
+    "L5_DLMn_cf_2_to_12_hz_with_DNg02": bool(chosen is not None),
+    "L6_DVMn_still_in_band_with_DNg02": bool(chosen is not None and 2.0 <= chosen["dvmn_hz"] <= 12.0),
 }
 report["reported"] = dict(
     b1_vector_strength=best["b1_vector_strength"],
@@ -252,6 +300,9 @@ report["provenance"] = provenance()
 print("\nCHECKS")
 for k, v in report["checks"].items():
     print(f"  {'PASS' if v else 'FAIL'}  {k}")
+if chosen:
+    print(f"STAGE 2  DNg02 {chosen['dng02_hz']:.0f} Hz: DLMn c-f {chosen['dlmn_cf_hz']:.1f} Hz, DVMn {chosen['dvmn_hz']:.1f} Hz, "
+          f"b1 {chosen['b1_hz']:.0f} Hz, steering {chosen['steer_mn_hz']:.0f} Hz, CNS {chosen['pop_rate_hz']:.3f} Hz")
 print(f"\nREPORTED  anchor load {ANCHOR_LOAD} | DVMn {dvmn_rate(best):.1f} Hz DLMn c-f {dlmn_rate(best):.2f} Hz | b1 {best['b1_hz']:.0f} Hz VS {best['b1_vector_strength'] or 0:.2f} | "
       f"DNp31 {best['dnp31_hz']:.1f} Hz | closed loop saturated={report['reported']['closed_loop']['saturated']}")
 print(f"\nBENCHMARK {'PASS' if report['pass'] else 'FAIL'}  -> {OUT / 'report.json'}")
