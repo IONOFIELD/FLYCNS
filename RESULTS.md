@@ -128,13 +128,26 @@ connectome-derived prediction, and the surrogate loop below is the test of it.
 > also confirmed independently of the draw: it stays below 2 Hz across the whole relay-layer
 > parameter sweep (`benchmarks/sensitivity_flight.py`).
 >
-> **The variance names a cell type.** One wing campaniform type, **SNpp16** (13 cells, ADMN),
-> carries 664 of DVMn 1a-c's 1,017 afferent synapses, 65%; SNpp07 adds 130. The random draw was a
-> lottery over whether those 13 cells fired. `benchmarks/flight_snpp16.py` removes the lottery by
-> driving identified sets deterministically: SNpp16 alone (sufficiency), every other afferent with
-> SNpp16 withheld (necessity), and all afferents, each over several phase seeds, plus a rewired
-> null. If both hold, the model predicts that DVM motor neuron activity during flight is set by
-> this one campaniform field, which a silencing experiment in a flying fly could test directly.
+> **The variance names a cell type, and the named type is selective, not necessary.** One wing
+> campaniform type, **SNpp16** (13 cells, ADMN), carries 664 of DVMn 1a-c's 1,017 afferent
+> synapses, 65%. `benchmarks/flight_snpp16.py` drove identified sets deterministically, all cells
+> firing once per wingbeat, three phase seeds each. The two pre-stated checks **both failed**:
+>
+> | arm | DVMn 1a-c | steering | b1 | DLMn c-f |
+> |---|---|---|---|---|
+> | SNpp16 alone (13 cells) | 33.6 Hz | 0 | 0 | 0 |
+> | every other afferent (400) | 14.9 Hz | 71.5 | 263 | 0 |
+> | all 413 afferents | 83.5 Hz | 65.5 | 261 | 0 |
+> | SNpp16 alone, rewired null | 0 | 0 | 0 | 0 |
+>
+> N1 (SNpp16 alone puts DVMn in the 2-12 Hz band) failed: it drives DVMn three times over band.
+> N2 (withholding SNpp16 drops DVMn below 2 Hz) failed: the other afferents still give 14.9 Hz. So
+> the necessity prediction was wrong. What the arms show instead, reported and not scored: SNpp16
+> is a **selective** driver, reaching DVMn and nothing else in the flight system, through its real
+> wiring (the rewired null gives zero); and inputs to DVMn sum **supralinearly**, 83.5 Hz together
+> against 48.5 for the two parts, which is why random recruitment swung so widely. The criteria
+> were not rewritten after the fact; a graded-recruitment test with criteria stated in advance
+> would be the way to score the selectivity claim.
 
 
 

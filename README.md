@@ -55,7 +55,10 @@ wingbeat, and the DNg02 descending flight command (Namiki et al. 2022) is added 
 Monosynaptic pathways behave as wired: steering motor neurons follow the sign of their input, b1
 fires about 0.5 spikes per wingbeat, and DVMn lands in the measured 2 to 12 Hz band on average
 across recruitment draws but not reliably in any one, because 65% of its afferent drive comes
-from a single wing campaniform type, SNpp16 (`benchmarks/flight_snpp16.py` tests it directly). The downstroke
+from a single wing campaniform type, SNpp16. Driven alone, SNpp16 activates DVMn and no other
+flight motor neuron, but it is not necessary for DVMn activity and its effect is amplified by
+convergence with other afferents (`benchmarks/flight_snpp16.py`; both pre-stated checks failed,
+reported as such). The downstroke
 power motor neurons do not: DLMn c-f receives about twice DVMn's descending drive per cell, almost
 all of it disynaptic, and no command rate puts both power pools in band together
 (`benchmarks/flight_loop.py`).

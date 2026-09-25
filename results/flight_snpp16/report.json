@@ -1,0 +1,106 @@
+{
+  "benchmark": "flight_snpp16",
+  "target_type": "SNpp16",
+  "n_target": 13,
+  "n_others": 400,
+  "target_share_of_dvmn_synapses": 0.6529006882989183,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "arms": {
+    "S1_snpp16_alone": {
+      "arm": "S1 SNpp16 alone",
+      "n_driven": 13,
+      "dvmn_mean": 33.5825,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.034990480361149844,
+      "dvmn_per_seed": [
+        33.67,
+        33.41,
+        33.67
+      ],
+      "dlmn_per_seed": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "S2_all_but_snpp16": {
+      "arm": "S2 all but SNpp16",
+      "n_driven": 400,
+      "dvmn_mean": 14.869444444444445,
+      "dlmn_mean": 0.0,
+      "steer_mean": 71.4695238095238,
+      "b1_mean": 263.0208333333333,
+      "cns_mean": 0.5960860934548463,
+      "dvmn_per_seed": [
+        14.98,
+        14.81,
+        14.81
+      ],
+      "dlmn_per_seed": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "S3_all_afferents": {
+      "arm": "S3 all afferents",
+      "n_driven": 413,
+      "dvmn_mean": 83.46527777777779,
+      "dlmn_mean": 0.0,
+      "steer_mean": 65.52976190476191,
+      "b1_mean": 261.4216666666666,
+      "cns_mean": 0.6246940859485489,
+      "dvmn_per_seed": [
+        83.41,
+        83.58,
+        83.41
+      ],
+      "dlmn_per_seed": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "null_snpp16_alone": {
+      "arm": "null: SNpp16 alone",
+      "n_driven": 13,
+      "dvmn_mean": 0.0,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.014007512435441053,
+      "dvmn_per_seed": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dlmn_per_seed": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "checks": {
+    "N1_snpp16_sufficient_dvmn_in_band": false,
+    "N2_snpp16_necessary_dvmn_below_2hz": false
+  },
+  "reported": {
+    "specificity": {
+      "real": 33.5825,
+      "rewired_null": 0.0
+    },
+    "prediction": "silencing SNpp16 in a flying fly should suppress DVM motor neuron activity; the model's DVMn output under proprioceptive drive is set by this one wing campaniform type"
+  },
+  "provenance": {
+    "written_at": "2026-09-25T13:57:00",
+    "git_commit": "b1e9e41",
+    "env": {}
+  }
+}
