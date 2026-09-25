@@ -1,0 +1,20 @@
+{
+  "relay_superclasses_varied": [
+    "vnc_intrinsic",
+    "ascending_neuron",
+    "descending_neuron",
+    "vnc_sensory"
+  ],
+  "n_exc_relays": 92,
+  "load": 0.35,
+  "dng02_hz": 10.0,
+  "n_settings": 11,
+  "dlm_woke_at": [],
+  "both_in_band_unflooded": [],
+  "verdict": "DLMn c-f stays below 2 Hz across the whole sweep of relay-layer tau_m, threshold gap and refractory period, with and without the DNg02 command: the flight claim does not rest on the relay layer's inherited parameters.",
+  "provenance": {
+    "written_at": "2026-09-24T21:50:13",
+    "git_commit": "8a9cee3",
+    "env": {}
+  }
+}
