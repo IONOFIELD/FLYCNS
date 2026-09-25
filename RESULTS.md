@@ -142,6 +142,41 @@ the dataset lacks. In a flying fly those interneurons are presumably driven by d
 command; in a silent cord they are subthreshold, and the disynaptic half of the flight motor
 system is unreachable.
 
+### Stage 2: the descending flight command, and a structural advantage the dynamics cannot use
+
+DNg02 is the descending population whose activation drives the indirect flight muscle motor
+neurons (Namiki et al. 2022, Curr Biol 32:1189-1196). In MaleCNS v1.0 it is 29 cholinergic cells
+across seven subtypes (DNg02_a to _g), and delivering it matters: an earlier run selected it by
+the exact name "DNg02", which matches nothing, so those arms ran without the command (commit
+ce8b9d2, corrected in cbbdba7; an empty stimulus set now aborts the run). With the command
+delivered to 1,327 connections and the proprioceptive loop at its anchor, mean power output rises
+with command rate (2.9, 4.0, 6.6, 25.6 Hz at 10, 25, 50, 100 Hz), so DNg02 does drive the power
+system. But the two power pools separate:
+
+| DNg02 rate | DLMn c-f | DVMn 1a-c |
+|---|---|---|
+| 10 Hz | 0.0 Hz | 11.7 Hz (in band) |
+| 25 Hz | 0.0 Hz | 15.9 Hz |
+| 50 Hz | 0.1 Hz | 23.2 Hz |
+| 100 Hz | 14.4 Hz | 50.8 Hz |
+
+**No command rate places both the downstroke (DLM) and upstroke (DVM) power motor neurons in the
+measured 2 to 12 Hz range together**, whereas in the fly both fire in that range during flight.
+Lowering proprioceptive load does not rescue it: the 100 Hz command alone contributes about 41 Hz
+to DVMn. A joint sweep of load and command against these two targets was not run, because two
+free parameters fitted to two criteria will find a point by construction and predict nothing.
+
+The wiring predicts the opposite of what the model does. Per cell, DLMn c-f receives 1,841 units
+of net DNg02-derived drive and DVMn 1a-c 902, so the connectome gives DLM about twice the
+descending command. The difference is where it sits: DLM's is almost entirely disynaptic (15,616
+synapses through DNg02's targets against 423 direct), DVMn is already held near threshold by 1,017
+direct proprioceptive synapses. In a cord with no background activity the relay layer stays
+subthreshold until the command is very strong, so a two-to-one structural advantage becomes the
+weakest firing in the pool. This is the sixth circuit to point at missing background activity and
+the most precisely localised: the gap is a named relay layer with a measured advantage that the
+dynamics cannot use. The DLM gap junctions described by Huerkey et al. 2023 would pool the five
+DLM motor neurons but add no net drive, so they are not a fix for this.
+
 ## 3. The missing ingredient is not obtainable from this dataset
 
 Feeding needs cell-specific spontaneous activity. The one neuron with a measured, hunger-gated

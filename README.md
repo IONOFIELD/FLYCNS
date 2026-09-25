@@ -49,6 +49,15 @@ loom, at a working point calibrated per run. At 40 trials per arm the difference
 estimate. Not applicable with this annotation: bitter suppression and Shiu's labellar-sugar
 contralateral bias (MaleCNS does not annotate taste modality).
 
+## Flight: monosynaptic drive works, disynaptic drive does not
+A surrogate body drives the 413 wing and haltere campaniform afferents phase-locked at the 202 Hz
+wingbeat, and the DNg02 descending flight command (Namiki et al. 2022) is added in a second stage.
+Monosynaptic pathways behave as wired: steering motor neurons follow the sign of their input, b1
+fires about 0.7 spikes per wingbeat, DVMn lands in the measured 2 to 12 Hz band. The downstroke
+power motor neurons do not: DLMn c-f receives about twice DVMn's descending drive per cell, almost
+all of it disynaptic, and no command rate puts both power pools in band together
+(`benchmarks/flight_loop.py`).
+
 ## A general limitation, stated plainly
 Four independent circuits fail for one reason. Three carry their output by removing inhibition:
 taste to MN9 (signed path products negative at two hops, positive at three to five), the
