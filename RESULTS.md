@@ -147,7 +147,42 @@ connectome-derived prediction, and the surrogate loop below is the test of it.
 > wiring (the rewired null gives zero); and inputs to DVMn sum **supralinearly**, 83.5 Hz together
 > against 48.5 for the two parts, which is why random recruitment swung so widely. The criteria
 > were not rewritten after the fact; a graded-recruitment test with criteria stated in advance
-> would be the way to score the selectivity claim.
+> would be the way to score the selectivity claim. That test has now been run.
+>
+> **Graded test, criteria registered before the run** (`benchmarks/flight_snpp16_graded.py`;
+> criteria committed in `11dcc6a` before any result existed; final results in `0eb3416`;
+> `64d665b` holds an intermediate state). k of the 13 SNpp16 cells were recruited, k = 1 to 13,
+> five draws each randomising which cells fire and their phase. Result: **four of five criteria
+> pass.**
+>
+> | k | DVMn 1a-c mean | draws in band | steering | b1 | DLMn c-f |
+> |---|---|---|---|---|---|
+> | 1-2 | 0.0 Hz | 0/5 | 0 | 0 | 0 |
+> | 3 | 1.2 Hz | 1/5 | 0 | 0 | 0 |
+> | 4 | 0.0 Hz | 0/5 | 0.14 | 0 | 0 |
+> | **5 (k*)** | **3.9 Hz** | **4/5** | 0.12 | 0 | 0 |
+> | 6 | 4.5 Hz | 4/5 | 0.18 | 0 | 0 |
+> | 7 | 7.4 Hz | 5/5 | 0 | 0 | 0 |
+> | 8 | 9.0 Hz | 5/5 | 0 | 0 | 0 |
+> | 9-13 | 14.7 to 33.6 Hz | above band | 0 | 0 | 0 |
+>
+> - **G1 graded: FAIL.** The mean at k=4 falls below k=3 by more than the 0.5 Hz tolerance.
+>   SNpp16's cells contribute unequally, so at small k which cells fire matters more than how
+>   many. The criterion was fixed in advance and stands.
+> - **G2 in-band window: pass** (k=5 to 8). **G3 selective at k*: pass**, and at every k: with
+>   all 13 cells driving DVMn to 33.6 Hz, steering never exceeds 0.2 Hz and b1 and DLMn stay at
+>   zero. **G4 wiring-specific: pass** (rewired null 0 Hz). **G5 reliable: pass** (4/5 at k*,
+>   5/5 at k=7 and 8).
+>
+> Reported, not scored. SNpp07 (12 cells; an earlier note here called it 5, which was the number
+> among DVMn's top 20 contributors) is **not** selective: alone it gives DVMn 3.5 Hz but also
+> drives steering at 1.6 Hz. Supralinearity is strong at physiological rates: SNpp16 at k*=5 plus
+> SNpp07 gives 28.7 Hz against 7.4 for the parts, 3.9 times the sum (1.7 at full recruitment).
+>
+> **Claim, scored and specific:** one named wing campaniform type, SNpp16, drives the DVM motor
+> neurons without recruiting any steering muscle, reliably from about seven of its thirteen cells,
+> through its actual wiring. Prediction: activating SNpp16 in a flying fly should raise DVM motor
+> neuron activity without engaging the direct steering muscles.
 
 
 

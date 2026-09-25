@@ -57,8 +57,11 @@ fires about 0.5 spikes per wingbeat, and DVMn lands in the measured 2 to 12 Hz b
 across recruitment draws but not reliably in any one, because 65% of its afferent drive comes
 from a single wing campaniform type, SNpp16. Driven alone, SNpp16 activates DVMn and no other
 flight motor neuron, but it is not necessary for DVMn activity and its effect is amplified by
-convergence with other afferents (`benchmarks/flight_snpp16.py`; both pre-stated checks failed,
-reported as such). The downstroke
+convergence with other afferents. A graded test with criteria registered before the run
+(`benchmarks/flight_snpp16_graded.py`) passes four of five: SNpp16 drives DVMn without recruiting
+any steering muscle at every recruitment level, reliably from about seven of its 13 cells, and the
+effect vanishes on rewired wiring; it fails the monotonicity criterion because its cells
+contribute unequally. The next strongest type, SNpp07, is not selective. The downstroke
 power motor neurons do not: DLMn c-f receives about twice DVMn's descending drive per cell, almost
 all of it disynaptic, and no command rate puts both power pools in band together
 (`benchmarks/flight_loop.py`).
