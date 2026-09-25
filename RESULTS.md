@@ -108,15 +108,33 @@ connectome-derived prediction, and the surrogate loop below is the test of it.
 
 ### The flight loop, run: monosynaptic drive works, disynaptic drive does not
 
-> **Pending re-measurement (23 Sept 2026).** The DVMn 1a-c values quoted in this section and in
-> Stage 2 below (9.4 Hz at the anchor, the L1a pass, the stage-2 DVMn column) are single random
-> recruitment draws. DVMn's whole proprioceptive drive comes from 41 of the 413 afferents, all
-> wing (ADMN), and 20 of them carry 83% of it, so a random 35% recruitment decides whether DVMn
-> fires: a sensitivity sweep reproducing the anchor with a different afferent ordering gave
-> DVMn 0.0 Hz. The benchmark now runs every scored arm over five draws and reports mean and
-> spread; these numbers will be replaced by that rerun. The DLMn c-f result does not depend on
-> the draw (it has almost no direct afferent input) and was confirmed separately: it stays below
-> 2 Hz across the whole relay-layer parameter sweep (`benchmarks/sensitivity_flight.py`).
+> **Re-measured across recruitment draws (23 Sept 2026).** An earlier version of this section
+> quoted single random draws. DVMn 1a-c's proprioceptive drive is concentrated in a few
+> afferents, so which ones a given load recruits decides whether it fires. Across five draws:
+>
+> | load | DVMn 1a-c mean +/- SD | range across draws | DLMn c-f |
+> |---|---|---|---|
+> | 0.25 (anchor) | 6.8 +/- 6.2 Hz | 0 to 15.2 | 0 |
+> | 0.35 | 9.2 +/- 9.7 Hz | 0 to 25.9 | 0 |
+> | 0.40 | 18.9 +/- 7.6 Hz | 11.2 to 31.7 | 0 |
+> | 1.00 (all recruited) | 83.6 +/- 0.2 Hz | 83.5 to 83.9 | 0 |
+>
+> So DVMn is in band **on average** at the anchor but no single run reliably puts it there; only
+> at full recruitment, where nothing is left to chance, is it stable, and there it is seven times
+> over band. The anchor moved from 0.35 to 0.25 under the same rule applied to the mean. Everything
+> else survived the draws: DLMn c-f silent at every load in every draw; steering wiring-specific in
+> every draw (null 0); b1 at the anchor 105 Hz, 0.52 spikes per wingbeat; and stage 2 unchanged
+> (the 100 Hz command that brings DLMn c-f to 12.5 Hz drives DVMn to 40.5 Hz). DLM's silence was
+> also confirmed independently of the draw: it stays below 2 Hz across the whole relay-layer
+> parameter sweep (`benchmarks/sensitivity_flight.py`).
+>
+> **The variance names a cell type.** One wing campaniform type, **SNpp16** (13 cells, ADMN),
+> carries 664 of DVMn 1a-c's 1,017 afferent synapses, 65%; SNpp07 adds 130. The random draw was a
+> lottery over whether those 13 cells fired. `benchmarks/flight_snpp16.py` removes the lottery by
+> driving identified sets deterministically: SNpp16 alone (sufficiency), every other afferent with
+> SNpp16 withheld (necessity), and all afferents, each over several phase seeds, plus a rewired
+> null. If both hold, the model predicts that DVM motor neuron activity during flight is set by
+> this one campaniform field, which a silencing experiment in a flying fly could test directly.
 
 
 

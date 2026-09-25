@@ -53,7 +53,9 @@ contralateral bias (MaleCNS does not annotate taste modality).
 A surrogate body drives the 413 wing and haltere campaniform afferents phase-locked at the 202 Hz
 wingbeat, and the DNg02 descending flight command (Namiki et al. 2022) is added in a second stage.
 Monosynaptic pathways behave as wired: steering motor neurons follow the sign of their input, b1
-fires about 0.7 spikes per wingbeat, DVMn lands in the measured 2 to 12 Hz band. The downstroke
+fires about 0.5 spikes per wingbeat, and DVMn lands in the measured 2 to 12 Hz band on average
+across recruitment draws but not reliably in any one, because 65% of its afferent drive comes
+from a single wing campaniform type, SNpp16 (`benchmarks/flight_snpp16.py` tests it directly). The downstroke
 power motor neurons do not: DLMn c-f receives about twice DVMn's descending drive per cell, almost
 all of it disynaptic, and no command rate puts both power pools in band together
 (`benchmarks/flight_loop.py`).

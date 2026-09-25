@@ -65,6 +65,7 @@ MENU = """
                 32  DNp31: the strongest descending drive to the wing muscles
   CHECKS        35  audit every stimulus set against the dataset (seconds; run before long jobs)
                 36  flight sensitivity: does DLM's silence depend on the relay layer's parameters?
+                37  SNpp16: is DVMn's drive carried by one named wing campaniform type?
   EMBODIMENT    33  gate: are the wing and haltere afferents identifiable and do they form a loop
                 34  flight loop: phase-locked campaniform drive at 202 Hz, open then closed (surrogate body)
                 31  is there an aminergic modulator in the SEZ? (dataset audit)
@@ -154,6 +155,7 @@ while True:
     elif c == "33": run("benchmarks/embodiment_gate.py")
     elif c == "35": run("fit/audit_stimuli.py")
     elif c == "36": run("benchmarks/sensitivity_flight.py", ask("wingbeat cycles per arm", "400"))
+    elif c == "37": run("benchmarks/flight_snpp16.py", ask("wingbeat cycles per arm", "400"))
     elif c == "34": run("benchmarks/flight_loop.py", ask("wingbeat cycles per arm", "400"))
     elif c == "31": run("fit/check_modulators.py")
     elif c == "17": run("less", "RESULTS.md")
