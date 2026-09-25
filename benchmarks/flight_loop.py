@@ -45,6 +45,10 @@ relays (1,060) and the wing motor pool (3,670). The paper gives no firing rate (
 activation, kinematic and calcium readout), so DNg02_HZ is this stage's declared free
 parameter, swept, and chosen by rule: the smallest rate at which DLMn c-f enters the measured
 2-12 Hz band while DVMn stays in band. The proprioceptive loop runs at its anchor load.
+  NOTE: commit ce8b9d2 ran this stage with the command selected by exact type "DNg02", which
+  matches no neuron in MaleCNS (the population is split into subtypes); those arms ran without
+  their input and are not a DNg02 experiment. The subtype list is now resolved from the data and
+  an empty stimulus set aborts the run.
   L5  DLMn c-f in 2-12 Hz with DNg02 drive at the rule-chosen rate
   L6  DVMn 1a-c still in 2-12 Hz under the same drive (the command does not saturate power output)
 
@@ -98,6 +102,10 @@ if len(aff) < 50:
 
 wing = meta.index[t.str.match(WING_MN)]
 print(f"wing motor neurons: {len(wing)} across {t[wing].nunique()} types")
+# MaleCNS splits the DNg02 population into subtypes, so an exact "DNg02" match finds nothing;
+# the model selects stimulus neurons by exact type, so every subtype must be listed.
+DNG02_TYPES = sorted(meta.loc[t.str.match(r"^DNg02"), "type"].dropna().unique())
+print(f"DNg02 subtypes: {DNG02_TYPES} ({int(t.str.match(r'^DNg02').sum())} cells)")
 
 
 def phase_locked_spikes(n_aff, n_cycles, load, rng, t0_ms=0.0):
@@ -117,8 +125,11 @@ def run_arm(label, edge_df, load, closed=False, dn_hz=0.0):
     t0 = time.time()
     rng = np.random.default_rng(0)
     p = LIFParams()
-    stim = ["DNg02"] if dn_hz > 0 else []
+    stim = DNG02_TYPES if dn_hz > 0 else []
     m = CNSModel(neurons, edge_df, stim, p, electrical=True)        # afferent spikes are injected below
+    if dn_hz > 0 and len(m.stim) == 0:
+        raise SystemExit(f"[{label}] ABORT: DNg02 command resolved to 0 stimulus neurons; the arm would "
+                         f"silently run without its input (this happened in commit ce8b9d2)")
     lif_idx = [m.lif_index[b] for b in aff if b in m.lif_index.index]
     n_aff = len(lif_idx)
     G = m.G
@@ -187,7 +198,13 @@ def run_arm(label, edge_df, load, closed=False, dn_hz=0.0):
     b1_sp = sp[sp.bodyId.isin(b1_ids)].t_ms.values
     vs = float(np.abs(np.mean(np.exp(2j * np.pi * (b1_sp % period) / period)))) if len(b1_sp) > 5 else np.nan
     rec_sp = sp  # keep for diagnostics
-    rec = dict(arm=label, load=load, closed=closed, dng02_hz=dn_hz, n_afferents=n_aff, wingbeat_hz=WINGBEAT_HZ,
+    # A stimulated type is removed from the spiking population and replaced by a Poisson source
+    # firing at exactly the commanded rate through the neurons' real synapses (Shiu et al. 2024
+    # convention). Delivery is therefore evidenced by source count and synapse count, not by
+    # counting DNg02 spikes, which do not exist as LIF spikes.
+    n_src = int(len(m.stim)); n_src_syn = int(getattr(m, "n_stim_syn", 0))
+    rec = dict(arm=label, load=load, closed=closed, dng02_hz=dn_hz, dng02_sources=n_src, dng02_synapses=n_src_syn,
+               n_afferents=n_aff, wingbeat_hz=WINGBEAT_HZ,
                power_mn_hz=power_hz, n_power=n_power, steer_mn_hz=steer_hz, n_steer=n_steer,
                b1_hz=b1_hz, b1_vector_strength=vs, dnp31_hz=dn31_hz, leg_mn_hz=leg_hz,
                pop_rate_hz=float(m.population_rate_hz()), per_wing_type_hz=per_type,
@@ -195,7 +212,7 @@ def run_arm(label, edge_df, load, closed=False, dn_hz=0.0):
     if closed:
         rec["load_trace"] = trace
     rec["_spikes"] = rec_sp
-    print(f"[{label}] load {load:.2f} DNg02 {dn_hz:>5.0f} Hz | power MN {power_hz:6.2f} Hz | steering MN {steer_hz:6.2f} Hz | "
+    print(f"[{label}] load {load:.2f} DNg02 {dn_hz:>5.0f} Hz ({n_src} src, {n_src_syn} syn) | power MN {power_hz:6.2f} Hz | steering MN {steer_hz:6.2f} Hz | "
           f"b1 {b1_hz:6.1f} Hz (VS {vs if vs == vs else 0:.2f}) | DNp31 {dn31_hz:5.1f} Hz | leg MN {leg_hz if leg_hz == leg_hz else 0:.2f} Hz | "
           f"CNS {rec['pop_rate_hz']:.3f} Hz | {rec['wall_s']}s")
     return rec
@@ -259,7 +276,7 @@ ok2 = [a for a in stage2 if 2.0 <= a["dlmn_cf_hz"] <= 12.0 and 2.0 <= a["dvmn_hz
 chosen = min(ok2, key=lambda a: a["dng02_hz"]) if ok2 else None
 report["stage2"] = dict(rule="smallest DNg02 rate with DLMn c-f AND DVMn 1a-c both in 2-12 Hz",
                         chosen_dng02_hz=(chosen["dng02_hz"] if chosen else None),
-                        sweep=[dict(dng02_hz=a["dng02_hz"], dlmn_cf_hz=a["dlmn_cf_hz"], dvmn_hz=a["dvmn_hz"],
+                        sweep=[dict(dng02_hz=a["dng02_hz"], sources=a["dng02_sources"], synapses=a["dng02_synapses"], dlmn_cf_hz=a["dlmn_cf_hz"], dvmn_hz=a["dvmn_hz"],
                                     b1_hz=a["b1_hz"], steer_hz=a["steer_mn_hz"], cns_hz=a["pop_rate_hz"]) for a in stage2],
                         source="Namiki et al. 2022 Curr Biol 32:1189-1196: DNg02 activation drives indirect flight muscle motor neurons; rate not measured",
                         connectome=dict(n_dng02=29, onto_dlmn_cf_direct=423, onto_dlm_exc_relays=1060, onto_wing_mn=3670))

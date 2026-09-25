@@ -7,6 +7,8 @@
       "load": 0.125,
       "closed": false,
       "dng02_hz": 0.0,
+      "dng02_sources": 0,
+      "dng02_synapses": 0,
       "n_afferents": 413,
       "wingbeat_hz": 202.0,
       "power_mn_hz": 0.0,
@@ -25,13 +27,15 @@
         "i2 MN": 43.43,
         "iii1 MN": 5.55
       },
-      "wall_s": 33
+      "wall_s": 65
     },
     "open_load_0.25": {
       "arm": "open_load_0.25",
       "load": 0.25,
       "closed": false,
       "dng02_hz": 0.0,
+      "dng02_sources": 0,
+      "dng02_synapses": 0,
       "n_afferents": 413,
       "wingbeat_hz": 202.0,
       "power_mn_hz": 0.4839583333333334,
@@ -53,13 +57,15 @@
         "i2 MN": 105.55,
         "iii3 MN": 33.33
       },
-      "wall_s": 33
+      "wall_s": 39
     },
     "open_load_0.3": {
       "arm": "open_load_0.3",
       "load": 0.3,
       "closed": false,
       "dng02_hz": 0.0,
+      "dng02_sources": 0,
+      "dng02_synapses": 0,
       "n_afferents": 413,
       "wingbeat_hz": 202.0,
       "power_mn_hz": 0.2525,
@@ -83,13 +89,15 @@
         "iii1 MN": 41.16,
         "ps1 MN": 27.52
       },
-      "wall_s": 34
+      "wall_s": 19
     },
     "open_load_0.35": {
       "arm": "open_load_0.35",
       "load": 0.35,
       "closed": false,
       "dng02_hz": 0.0,
+      "dng02_sources": 0,
+      "dng02_synapses": 0,
       "n_afferents": 413,
       "wingbeat_hz": 202.0,
       "power_mn_hz": 2.356666666666667,
@@ -113,13 +121,15 @@
         "iii3 MN": 33.84,
         "ps1 MN": 11.36
       },
-      "wall_s": 34
+      "wall_s": 19
     },
     "open_load_0.4": {
       "arm": "open_load_0.4",
       "load": 0.4,
       "closed": false,
       "dng02_hz": 0.0,
+      "dng02_sources": 0,
+      "dng02_synapses": 0,
       "n_afferents": 413,
       "wingbeat_hz": 202.0,
       "power_mn_hz": 5.449791666666666,
@@ -142,13 +152,15 @@
         "iii1 MN": 51.01,
         "iii3 MN": 0.25
       },
-      "wall_s": 36
+      "wall_s": 19
     },
     "open_load_0.5": {
       "arm": "open_load_0.5",
       "load": 0.5,
       "closed": false,
       "dng02_hz": 0.0,
+      "dng02_sources": 0,
+      "dng02_synapses": 0,
       "n_afferents": 413,
       "wingbeat_hz": 202.0,
       "power_mn_hz": 4.6502083333333335,
@@ -173,13 +185,15 @@
         "ps1 MN": 1.01,
         "tp2 MN": 0.25
       },
-      "wall_s": 33
+      "wall_s": 19
     },
     "open_load_1.0": {
       "arm": "open_load_1.0",
       "load": 1.0,
       "closed": false,
       "dng02_hz": 0.0,
+      "dng02_sources": 0,
+      "dng02_synapses": 0,
       "n_afferents": 413,
       "wingbeat_hz": 202.0,
       "power_mn_hz": 25.355208333333334,
@@ -205,13 +219,15 @@
         "iii3 MN": 4.29,
         "tp2 MN": 2.27
       },
-      "wall_s": 25
+      "wall_s": 19
     },
     "rewired_null_load_0.35": {
       "arm": "rewired_null_load_0.35",
       "load": 0.35,
       "closed": false,
       "dng02_hz": 0.0,
+      "dng02_sources": 0,
+      "dng02_synapses": 0,
       "n_afferents": 413,
       "wingbeat_hz": 202.0,
       "power_mn_hz": 1.578125,
@@ -226,13 +242,15 @@
       "per_wing_type_hz": {
         "DLMn c-f": 4.73
       },
-      "wall_s": 24
+      "wall_s": 19
     },
     "closed_from_0.35": {
       "arm": "closed_from_0.35",
       "load": 0.35,
       "closed": true,
       "dng02_hz": 0.0,
+      "dng02_sources": 0,
+      "dng02_synapses": 0,
       "n_afferents": 413,
       "wingbeat_hz": 202.0,
       "power_mn_hz": 23.756041666666665,
@@ -259,7 +277,7 @@
         "ps1 MN": 0.25,
         "tp2 MN": 2.52
       },
-      "wall_s": 29,
+      "wall_s": 25,
       "load_trace": [
         {
           "t_ms": 250.0,
@@ -463,128 +481,148 @@
       "load": 0.35,
       "closed": false,
       "dng02_hz": 10.0,
+      "dng02_sources": 29,
+      "dng02_synapses": 1327,
       "n_afferents": 413,
       "wingbeat_hz": 202.0,
-      "power_mn_hz": 2.356666666666667,
+      "power_mn_hz": 2.9247916666666667,
       "n_power": 24,
-      "steer_mn_hz": 38.596428571428575,
+      "steer_mn_hz": 39.15553571428572,
       "n_steer": 28,
       "b1_hz": 140.895,
-      "b1_vector_strength": 0.04291020885733536,
+      "b1_vector_strength": 0.03932054047906805,
       "dnp31_hz": 0.0,
-      "leg_mn_hz": 0.24271317829457364,
-      "pop_rate_hz": 0.19025789982759744,
+      "leg_mn_hz": 0.2662015503875969,
+      "pop_rate_hz": 0.1905421912976646,
       "per_wing_type_hz": {
-        "DVMn 1a-c": 9.43,
+        "DVMn 1a-c": 11.7,
         "b1 MN": 140.9,
         "b2 MN": 85.6,
-        "b3 MN": 77.27,
-        "hg4 MN": 34.09,
-        "i1 MN": 43.18,
-        "i2 MN": 105.04,
-        "iii1 MN": 9.09,
+        "b3 MN": 76.0,
+        "hg4 MN": 34.59,
+        "i1 MN": 42.17,
+        "i2 MN": 103.02,
+        "iii1 MN": 8.08,
         "iii3 MN": 33.84,
-        "ps1 MN": 11.36
+        "ps1 MN": 15.65,
+        "tp2 MN": 8.33
       },
-      "wall_s": 24,
+      "wall_s": 30,
       "dlmn_cf_hz": 0.0,
-      "dvmn_hz": 9.43
+      "dvmn_hz": 11.7
     },
     "anchor_plus_DNg02_25Hz": {
       "arm": "anchor_plus_DNg02_25Hz",
       "load": 0.35,
       "closed": false,
       "dng02_hz": 25.0,
+      "dng02_sources": 29,
+      "dng02_synapses": 1327,
       "n_afferents": 413,
       "wingbeat_hz": 202.0,
-      "power_mn_hz": 2.356666666666667,
+      "power_mn_hz": 4.018958333333333,
       "n_power": 24,
-      "steer_mn_hz": 38.596428571428575,
+      "steer_mn_hz": 41.590357142857144,
       "n_steer": 28,
-      "b1_hz": 140.895,
-      "b1_vector_strength": 0.04291020885733536,
+      "b1_hz": 139.1275,
+      "b1_vector_strength": 0.01408520733736105,
       "dnp31_hz": 0.0,
-      "leg_mn_hz": 0.24271317829457364,
-      "pop_rate_hz": 0.19025789982759744,
+      "leg_mn_hz": 0.2387984496124031,
+      "pop_rate_hz": 0.19127062022274574,
       "per_wing_type_hz": {
-        "DVMn 1a-c": 9.43,
-        "b1 MN": 140.9,
-        "b2 MN": 85.6,
-        "b3 MN": 77.27,
-        "hg4 MN": 34.09,
-        "i1 MN": 43.18,
-        "i2 MN": 105.04,
-        "iii1 MN": 9.09,
+        "DVMn 1a-c": 15.91,
+        "DVMn 3a, b": 0.25,
+        "b1 MN": 139.13,
+        "b2 MN": 83.33,
+        "b3 MN": 77.01,
+        "hg4 MN": 33.58,
+        "i1 MN": 42.67,
+        "i2 MN": 102.52,
+        "iii1 MN": 8.08,
         "iii3 MN": 33.84,
-        "ps1 MN": 11.36
+        "ps1 MN": 26.01,
+        "tp2 MN": 36.11
       },
-      "wall_s": 24,
+      "wall_s": 30,
       "dlmn_cf_hz": 0.0,
-      "dvmn_hz": 9.43
+      "dvmn_hz": 15.91
     },
     "anchor_plus_DNg02_50Hz": {
       "arm": "anchor_plus_DNg02_50Hz",
       "load": 0.35,
       "closed": false,
       "dng02_hz": 50.0,
+      "dng02_sources": 29,
+      "dng02_synapses": 1327,
       "n_afferents": 413,
       "wingbeat_hz": 202.0,
-      "power_mn_hz": 2.356666666666667,
+      "power_mn_hz": 6.586041666666667,
       "n_power": 24,
-      "steer_mn_hz": 38.596428571428575,
+      "steer_mn_hz": 44.83678571428572,
       "n_steer": 28,
-      "b1_hz": 140.895,
-      "b1_vector_strength": 0.04291020885733536,
+      "b1_hz": 138.1175,
+      "b1_vector_strength": 0.028294914741069346,
       "dnp31_hz": 0.0,
       "leg_mn_hz": 0.24271317829457364,
-      "pop_rate_hz": 0.19025789982759744,
+      "pop_rate_hz": 0.19414482791357435,
       "per_wing_type_hz": {
-        "DVMn 1a-c": 9.43,
-        "b1 MN": 140.9,
-        "b2 MN": 85.6,
-        "b3 MN": 77.27,
-        "hg4 MN": 34.09,
-        "i1 MN": 43.18,
-        "i2 MN": 105.04,
-        "iii1 MN": 9.09,
+        "DLMn a, b": 2.27,
+        "DLMn c-f": 0.13,
+        "DVMn 1a-c": 23.15,
+        "DVMn 3a, b": 3.41,
+        "b1 MN": 138.12,
+        "b2 MN": 82.82,
+        "b3 MN": 76.76,
+        "hg4 MN": 33.58,
+        "i1 MN": 42.42,
+        "i2 MN": 99.74,
+        "iii1 MN": 7.07,
         "iii3 MN": 33.84,
-        "ps1 MN": 11.36
+        "ps1 MN": 38.38,
+        "tp2 MN": 74.99
       },
-      "wall_s": 25,
-      "dlmn_cf_hz": 0.0,
-      "dvmn_hz": 9.43
+      "wall_s": 19,
+      "dlmn_cf_hz": 0.13,
+      "dvmn_hz": 23.15
     },
     "anchor_plus_DNg02_100Hz": {
       "arm": "anchor_plus_DNg02_100Hz",
       "load": 0.35,
       "closed": false,
       "dng02_hz": 100.0,
+      "dng02_sources": 29,
+      "dng02_synapses": 1327,
       "n_afferents": 413,
       "wingbeat_hz": 202.0,
-      "power_mn_hz": 2.356666666666667,
+      "power_mn_hz": 25.565625,
       "n_power": 24,
-      "steer_mn_hz": 38.596428571428575,
+      "steer_mn_hz": 49.003035714285716,
       "n_steer": 28,
-      "b1_hz": 140.895,
-      "b1_vector_strength": 0.04291020885733536,
+      "b1_hz": 135.34,
+      "b1_vector_strength": 0.016540649873568937,
       "dnp31_hz": 0.0,
-      "leg_mn_hz": 0.24271317829457364,
-      "pop_rate_hz": 0.19025789982759744,
+      "leg_mn_hz": 0.23488372093023255,
+      "pop_rate_hz": 0.20419467782910056,
       "per_wing_type_hz": {
-        "DVMn 1a-c": 9.43,
-        "b1 MN": 140.9,
-        "b2 MN": 85.6,
-        "b3 MN": 77.27,
-        "hg4 MN": 34.09,
-        "i1 MN": 43.18,
-        "i2 MN": 105.04,
-        "iii1 MN": 9.09,
-        "iii3 MN": 33.84,
-        "ps1 MN": 11.36
+        "DLMn a, b": 36.61,
+        "DLMn c-f": 14.39,
+        "DVMn 1a-c": 50.75,
+        "DVMn 2a, b": 3.79,
+        "DVMn 3a, b": 26.39,
+        "b1 MN": 135.34,
+        "b2 MN": 79.54,
+        "b3 MN": 64.14,
+        "hg4 MN": 35.35,
+        "i1 MN": 35.35,
+        "i2 MN": 88.63,
+        "iii1 MN": 6.82,
+        "iii3 MN": 36.61,
+        "ps1 MN": 69.94,
+        "tp2 MN": 134.33
       },
-      "wall_s": 25,
-      "dlmn_cf_hz": 0.0,
-      "dvmn_hz": 9.43
+      "wall_s": 19,
+      "dlmn_cf_hz": 14.39,
+      "dvmn_hz": 50.75
     }
   },
   "checks": {
@@ -633,35 +671,43 @@
     "sweep": [
       {
         "dng02_hz": 10.0,
+        "sources": 29,
+        "synapses": 1327,
         "dlmn_cf_hz": 0.0,
-        "dvmn_hz": 9.43,
+        "dvmn_hz": 11.7,
         "b1_hz": 140.895,
-        "steer_hz": 38.596428571428575,
-        "cns_hz": 0.19025789982759744
+        "steer_hz": 39.15553571428572,
+        "cns_hz": 0.1905421912976646
       },
       {
         "dng02_hz": 25.0,
+        "sources": 29,
+        "synapses": 1327,
         "dlmn_cf_hz": 0.0,
-        "dvmn_hz": 9.43,
-        "b1_hz": 140.895,
-        "steer_hz": 38.596428571428575,
-        "cns_hz": 0.19025789982759744
+        "dvmn_hz": 15.91,
+        "b1_hz": 139.1275,
+        "steer_hz": 41.590357142857144,
+        "cns_hz": 0.19127062022274574
       },
       {
         "dng02_hz": 50.0,
-        "dlmn_cf_hz": 0.0,
-        "dvmn_hz": 9.43,
-        "b1_hz": 140.895,
-        "steer_hz": 38.596428571428575,
-        "cns_hz": 0.19025789982759744
+        "sources": 29,
+        "synapses": 1327,
+        "dlmn_cf_hz": 0.13,
+        "dvmn_hz": 23.15,
+        "b1_hz": 138.1175,
+        "steer_hz": 44.83678571428572,
+        "cns_hz": 0.19414482791357435
       },
       {
         "dng02_hz": 100.0,
-        "dlmn_cf_hz": 0.0,
-        "dvmn_hz": 9.43,
-        "b1_hz": 140.895,
-        "steer_hz": 38.596428571428575,
-        "cns_hz": 0.19025789982759744
+        "sources": 29,
+        "synapses": 1327,
+        "dlmn_cf_hz": 14.39,
+        "dvmn_hz": 50.75,
+        "b1_hz": 135.34,
+        "steer_hz": 49.003035714285716,
+        "cns_hz": 0.20419467782910056
       }
     ],
     "source": "Namiki et al. 2022 Curr Biol 32:1189-1196: DNg02 activation drives indirect flight muscle motor neurons; rate not measured",
@@ -718,8 +764,8 @@
   },
   "pass": false,
   "provenance": {
-    "written_at": "2026-09-24T18:56:06",
-    "git_commit": "78e5ef1",
+    "written_at": "2026-09-24T21:19:46",
+    "git_commit": "ce8b9d2",
     "env": {}
   }
 }
