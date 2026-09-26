@@ -67,6 +67,7 @@ MENU = """
                 36  flight sensitivity: does DLM's silence depend on the relay layer's parameters?
                 37  SNpp16: is DVMn's drive carried by one named wing campaniform type?
                 38  SNpp16 graded test (criteria registered before the run)
+                39  SNpp16 robustness battery: transmitter uncertainty, cord parameters, fresh draws
   EMBODIMENT    33  gate: are the wing and haltere afferents identifiable and do they form a loop
                 34  flight loop: phase-locked campaniform drive at 202 Hz, open then closed (surrogate body)
                 31  is there an aminergic modulator in the SEZ? (dataset audit)
@@ -158,6 +159,7 @@ while True:
     elif c == "36": run("benchmarks/sensitivity_flight.py", ask("wingbeat cycles per arm", "400"))
     elif c == "37": run("benchmarks/flight_snpp16.py", ask("wingbeat cycles per arm", "400"))
     elif c == "38": run("benchmarks/flight_snpp16_graded.py", ask("wingbeat cycles per arm", "400"))
+    elif c == "39": run("benchmarks/flight_snpp16_robustness.py", ask("wingbeat cycles per arm", "400"))
     elif c == "34": run("benchmarks/flight_loop.py", ask("wingbeat cycles per arm", "400"))
     elif c == "31": run("fit/check_modulators.py")
     elif c == "17": run("less", "RESULTS.md")
