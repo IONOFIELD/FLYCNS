@@ -1,0 +1,427 @@
+{
+  "benchmark": "flight_snpp16_robustness",
+  "criteria": {
+    "claim": "SNpp16 selectively drives DVM motor neurons, reliably from k=7",
+    "R1": "targeted NT sign inversion, k=7: DVMn in band in >=4/5 draws; steering, b1, DLMn each < 1 Hz",
+    "R2": "relay-layer parameter sweep [('tau_m_ms', 5.0), ('tau_m_ms', 10.0), ('tau_m_ms', 40.0), ('v_thresh_gap_mV', 4.0), ('v_thresh_gap_mV', 10.0), ('refractory_ms', 1.0), ('refractory_ms', 5.0)], k=7: steering, b1, DLMn each < 1 Hz at every setting",
+    "R3": "fresh draws (seed base 50000): k* within 1 of 5, and k=7 in band in >=4/5",
+    "band": [
+      2.0,
+      12.0
+    ],
+    "n_draws": 5,
+    "n_cycles": 400
+  },
+  "checks": {
+    "R1_survives_transmitter_uncertainty": true,
+    "R2_selectivity_holds_across_cord_params": false,
+    "R3_replicates_with_fresh_draws": true
+  },
+  "arms": {
+    "R1": {
+      "k": 7,
+      "dvmn_mean": 7.389833333333334,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "dlmn_max": 0.0,
+      "steer_max": 0.0,
+      "b1_max": 0.0,
+      "dvmn_per_draw": [
+        10.27,
+        7.24,
+        6.06,
+        6.65,
+        6.73
+      ],
+      "dvmn_in_band": 5
+    },
+    "R2": [
+      {
+        "k": 7,
+        "dvmn_mean": 33.44783333333333,
+        "dlmn_mean": 15.301499999999999,
+        "steer_mean": 2.7450357142857142,
+        "b1_mean": 0.0,
+        "dlmn_max": 23.60875,
+        "steer_max": 3.535,
+        "b1_max": 0.0,
+        "dvmn_per_draw": [
+          36.78,
+          35.35,
+          33.92,
+          32.4,
+          28.79
+        ],
+        "dvmn_in_band": 0,
+        "param": "tau_m_ms",
+        "value": 5.0
+      },
+      {
+        "k": 7,
+        "dvmn_mean": 7.170999999999999,
+        "dlmn_mean": 0.0,
+        "steer_mean": 2.059678571428571,
+        "b1_mean": 0.0,
+        "dlmn_max": 0.0,
+        "steer_max": 2.6873214285714284,
+        "b1_max": 0.0,
+        "dvmn_per_draw": [
+          9.68,
+          6.99,
+          6.23,
+          6.31,
+          6.65
+        ],
+        "dvmn_in_band": 5,
+        "param": "tau_m_ms",
+        "value": 10.0
+      },
+      {
+        "k": 7,
+        "dvmn_mean": 7.255166666666668,
+        "dlmn_mean": 0.0,
+        "steer_mean": 0.0,
+        "b1_mean": 0.0,
+        "dlmn_max": 0.0,
+        "steer_max": 0.0,
+        "b1_max": 0.0,
+        "dvmn_per_draw": [
+          9.93,
+          7.15,
+          5.98,
+          6.57,
+          6.65
+        ],
+        "dvmn_in_band": 5,
+        "param": "tau_m_ms",
+        "value": 40.0
+      },
+      {
+        "k": 7,
+        "dvmn_mean": 10.638666666666666,
+        "dlmn_mean": 0.02525,
+        "steer_mean": 2.1715,
+        "b1_mean": 0.0,
+        "dlmn_max": 0.063125,
+        "steer_max": 3.3185714285714285,
+        "b1_max": 0.0,
+        "dvmn_per_draw": [
+          14.56,
+          9.68,
+          9.93,
+          9.17,
+          9.85
+        ],
+        "dvmn_in_band": 4,
+        "param": "v_thresh_gap_mV",
+        "value": 4.0
+      },
+      {
+        "k": 7,
+        "dvmn_mean": 0.0,
+        "dlmn_mean": 0.0,
+        "steer_mean": 0.0,
+        "b1_mean": 0.0,
+        "dlmn_max": 0.0,
+        "steer_max": 0.0,
+        "b1_max": 0.0,
+        "dvmn_per_draw": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "dvmn_in_band": 0,
+        "param": "v_thresh_gap_mV",
+        "value": 10.0
+      },
+      {
+        "k": 7,
+        "dvmn_mean": 7.591833333333334,
+        "dlmn_mean": 0.0,
+        "steer_mean": 0.0,
+        "b1_mean": 0.0,
+        "dlmn_max": 0.0,
+        "steer_max": 0.0,
+        "b1_max": 0.0,
+        "dvmn_per_draw": [
+          10.61,
+          7.41,
+          6.4,
+          6.73,
+          6.82
+        ],
+        "dvmn_in_band": 5,
+        "param": "refractory_ms",
+        "value": 1.0
+      },
+      {
+        "k": 7,
+        "dvmn_mean": 0.9595,
+        "dlmn_mean": 0.0,
+        "steer_mean": 0.0,
+        "b1_mean": 0.0,
+        "dlmn_max": 0.0,
+        "steer_max": 0.0,
+        "b1_max": 0.0,
+        "dvmn_per_draw": [
+          3.2,
+          0.93,
+          0.0,
+          0.25,
+          0.42
+        ],
+        "dvmn_in_band": 1,
+        "param": "refractory_ms",
+        "value": 5.0
+      }
+    ],
+    "R3": {
+      "sweep": [
+        {
+          "k": 1,
+          "dvmn_mean": 0.0,
+          "dlmn_mean": 0.0,
+          "steer_mean": 0.0,
+          "b1_mean": 0.0,
+          "dlmn_max": 0.0,
+          "steer_max": 0.0,
+          "b1_max": 0.0,
+          "dvmn_per_draw": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dvmn_in_band": 0
+        },
+        {
+          "k": 2,
+          "dvmn_mean": 0.0,
+          "dlmn_mean": 0.0,
+          "steer_mean": 0.0,
+          "b1_mean": 0.0,
+          "dlmn_max": 0.0,
+          "steer_max": 0.0,
+          "b1_max": 0.0,
+          "dvmn_per_draw": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dvmn_in_band": 0
+        },
+        {
+          "k": 3,
+          "dvmn_mean": 0.0,
+          "dlmn_mean": 0.0,
+          "steer_mean": 0.0,
+          "b1_mean": 0.0,
+          "dlmn_max": 0.0,
+          "steer_max": 0.0,
+          "b1_max": 0.0,
+          "dvmn_per_draw": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dvmn_in_band": 0
+        },
+        {
+          "k": 4,
+          "dvmn_mean": 0.4208333333333334,
+          "dlmn_mean": 0.0,
+          "steer_mean": 0.0,
+          "b1_mean": 0.0,
+          "dlmn_max": 0.0,
+          "steer_max": 0.0,
+          "b1_max": 0.0,
+          "dvmn_per_draw": [
+            0.0,
+            0.0,
+            2.1,
+            0.0,
+            0.0
+          ],
+          "dvmn_in_band": 1
+        },
+        {
+          "k": 5,
+          "dvmn_mean": 2.861666666666667,
+          "dlmn_mean": 0.0,
+          "steer_mean": 0.0,
+          "b1_mean": 0.0,
+          "dlmn_max": 0.0,
+          "steer_max": 0.0,
+          "b1_max": 0.0,
+          "dvmn_per_draw": [
+            4.54,
+            0.0,
+            3.2,
+            0.0,
+            6.57
+          ],
+          "dvmn_in_band": 3
+        },
+        {
+          "k": 6,
+          "dvmn_mean": 3.0131666666666668,
+          "dlmn_mean": 0.0,
+          "steer_mean": 0.0,
+          "b1_mean": 0.0,
+          "dlmn_max": 0.0,
+          "steer_max": 0.0,
+          "b1_max": 0.0,
+          "dvmn_per_draw": [
+            5.64,
+            0.0,
+            0.0,
+            4.21,
+            5.22
+          ],
+          "dvmn_in_band": 3
+        },
+        {
+          "k": 7,
+          "dvmn_mean": 8.568166666666666,
+          "dlmn_mean": 0.0,
+          "steer_mean": 0.0,
+          "b1_mean": 0.0,
+          "dlmn_max": 0.0,
+          "steer_max": 0.0,
+          "b1_max": 0.0,
+          "dvmn_per_draw": [
+            5.47,
+            12.29,
+            10.27,
+            10.27,
+            4.54
+          ],
+          "dvmn_in_band": 4
+        },
+        {
+          "k": 8,
+          "dvmn_mean": 10.924833333333334,
+          "dlmn_mean": 0.0,
+          "steer_mean": 0.0,
+          "b1_mean": 0.0,
+          "dlmn_max": 0.0,
+          "steer_max": 0.0,
+          "b1_max": 0.0,
+          "dvmn_per_draw": [
+            10.94,
+            10.27,
+            12.46,
+            11.87,
+            9.09
+          ],
+          "dvmn_in_band": 4
+        },
+        {
+          "k": 9,
+          "dvmn_mean": 16.227333333333334,
+          "dlmn_mean": 0.0,
+          "steer_mean": 0.0,
+          "b1_mean": 0.0,
+          "dlmn_max": 0.0,
+          "steer_max": 0.0,
+          "b1_max": 0.0,
+          "dvmn_per_draw": [
+            16.5,
+            16.16,
+            17.17,
+            16.5,
+            14.81
+          ],
+          "dvmn_in_band": 0
+        },
+        {
+          "k": 10,
+          "dvmn_mean": 17.28783333333333,
+          "dlmn_mean": 0.0,
+          "steer_mean": 0.0,
+          "b1_mean": 0.0,
+          "dlmn_max": 0.0,
+          "steer_max": 0.0,
+          "b1_max": 0.0,
+          "dvmn_per_draw": [
+            14.9,
+            14.39,
+            19.11,
+            19.53,
+            18.52
+          ],
+          "dvmn_in_band": 0
+        },
+        {
+          "k": 11,
+          "dvmn_mean": 20.890166666666666,
+          "dlmn_mean": 0.0,
+          "steer_mean": 0.0,
+          "b1_mean": 0.0,
+          "dlmn_max": 0.0,
+          "steer_max": 0.0,
+          "b1_max": 0.0,
+          "dvmn_per_draw": [
+            25.42,
+            19.7,
+            18.26,
+            19.53,
+            21.55
+          ],
+          "dvmn_in_band": 0
+        },
+        {
+          "k": 12,
+          "dvmn_mean": 29.121666666666663,
+          "dlmn_mean": 0.0,
+          "steer_mean": 0.0,
+          "b1_mean": 0.0,
+          "dlmn_max": 0.0,
+          "steer_max": 0.0,
+          "b1_max": 0.0,
+          "dvmn_per_draw": [
+            29.21,
+            27.35,
+            30.47,
+            27.94,
+            30.64
+          ],
+          "dvmn_in_band": 0
+        },
+        {
+          "k": 13,
+          "dvmn_mean": 33.56566666666667,
+          "dlmn_mean": 0.0,
+          "steer_mean": 0.0,
+          "b1_mean": 0.0,
+          "dlmn_max": 0.0,
+          "steer_max": 0.0,
+          "b1_max": 0.0,
+          "dvmn_per_draw": [
+            33.84,
+            33.41,
+            33.5,
+            33.58,
+            33.5
+          ],
+          "dvmn_in_band": 0
+        }
+      ],
+      "k_star": 5,
+      "monotone_within_0p5": true
+    }
+  },
+  "provenance": {
+    "written_at": "2026-09-26T12:17:55",
+    "git_commit": "77e0cc5",
+    "env": {}
+  }
+}
