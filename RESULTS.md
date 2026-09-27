@@ -453,13 +453,26 @@ from the graph before any simulation. The interpretation of every outcome was wr
 SIP108m drives the sine neuron and not the pulse neuron. The pulse/sine split is present in the
 wiring and survives simulation in both directions.
 
-**A new prediction: activating SIP108m should promote sine song.** It was not proposed in the
-companion paper; the rule found it from the wiring. SIP108m is 4 cholinergic central-brain neurons,
-two per side. DNp13 receives 9,101 excitatory against 7,307 inhibitory synapses, and eight of its ten
-strongest excitatory input types carry the "m" suffix (SIP108m, PVLP204m, SIP109m, SIP110m_a and _b,
-AVLP713m, PVLP214m, AVLP711m). Whether that suffix marks male-specific types, and therefore whether
-the sine pathway is sexually dimorphic, is not established here: the local data carries no
-dimorphism annotation.
+**A new prediction: activating the pIP5 (pIP-e) neurons should promote sine song.** The rule found
+SIP108m from the wiring; MaleCNS's own sex annotations (`fetch_dimorphism.py`, properties
+`dimorphism`, `fruDsx`, `synonyms`) then identify it and every other strong excitatory input to DNp13:
+
+| type | cells | dimorphism | fru/dsx | literature names |
+|---|---|---|---|---|
+| SIP108m | 4 | male-specific | fru_high, coexpress_high | pIP-e (Cachero 2010), pIP5 (Yu 2010), pC2l (Nojima 2021) |
+| PVLP204m, SIP109m | 6, 4 | male-specific | fru_high, coexpress_high | pIP-e / pIP5 / pC2l |
+| SIP110m_a, SIP110m_b, AVLP711m | 2, 2, 5 | male-specific | fru_high | pIP-e / pIP5 |
+| AVLP713m | 2 | male-specific | coexpress_high | pIP-e / pIP5 / pC2l |
+| PVLP214m | 10 | male-specific | fru_low | pIP-e / pIP5 |
+| **DNp13** (sine command) | 2 | **sexually dimorphic** | dsx_high | pMN1 (Kimura 2015), DN1 (Ruta 2010) |
+
+All eight of DNp13's strongest m-suffixed excitatory inputs are male-specific, fruitless-positive, and
+the same literature class. The sine pathway the model found is therefore built from male-specific
+neurons of an already-named class onto a sexually dimorphic command neuron, a prediction only a male
+connectome could make. The pulse pathway is sex-specific too: pMP2 and pIP10 are male-specific and
+fru-high (pIP10 is P2b in Kimura 2008 and Kohatsu 2010), and pC1_14a is annotated potentially
+male-specific. pC1_1b, the input the companion paper links to DNp13 and which drove nothing here, is
+male-specific as well.
 
 ## 3. The missing ingredient is not obtainable from this dataset
 
