@@ -391,6 +391,47 @@ both sides (from the left, -1.4e-3 ipsilateral against -3.2e-4 contralateral), s
 ipsilateral routes counted as "drive" mostly suppress MN9. The dynamic run that appeared to confirm
 it used the SEZ regional gain later retired as a naming artefact. The claim is withdrawn (section 7).
 
+### Courtship song: a male-specific circuit the model reproduces (registered)
+
+The male pC1/pC1x neurons were activated line by line while song was recorded (Current Biology
+36:4697-4716, 2026, Fig. 5): pC1_13 and pC1_14 enhance pulse and suppress sine, pC1_14a alone is
+necessary and sufficient for pulse, pC1_15 with pC1_16 suppress both. The song command neurons are
+pMP2 (pulse), DNp13 (sine) and pIP10 (both). The authors traced two- and three-synapse paths, split
+by transmitter, and concluded that many phenotypes cannot be explained by chemical synaptic
+connections and transmitter predictions alone. `benchmarks/pc1_song.py` asked whether a signed,
+spiking simulation does better (criteria registered at `981a20f`, results `8a9ca3f`). Suppression
+phenotypes were declared untestable in advance: with no background activity there is no song-neuron
+firing to suppress.
+
+| drive (100 Hz) | cells | pMP2 (pulse) | DNp13 (sine) | pIP10 (both) | static signed pMP2 / DNp13 |
+|---|---|---|---|---|---|
+| pC1_14a | 6 | **8.15** | 0.00 | 5.70 | +1.3e-1 / +9.3e-3 |
+| pC1_13a, 14a, 14b | 10 | **11.05** | 0.00 | 6.75 | +1.8e-1 / +1.4e-2 |
+| pC1_15a-c, 16 | 20 | 0.00 | 0.00 | 1.45 | **-2.9e-2 / -1.5e-2** |
+| P1a (12b, 4a, 4b), reported | 12 | 0.00 | 0.00 | 0.00 | +2.1e-3 / +8.9e-3 |
+| pC1_17a-b, reported | 8 | 0.00 | 0.00 | 0.30 | +9.7e-4 / +1.0e-2 |
+| pC1_14a, rewired null | 6 | 0.00 | 0.00 | 0.00 | - |
+
+Units: spikes per cell per 200 ms pulse.
+
+**All four criteria pass.** P1: pC1_14a drives pMP2 far above the 0.5 criterion and above DNp13.
+P2: the pC1_13/14 combination does the same. P3: pC1_14a drives pMP2 more than pC1_15/16, which
+leave it silent. P4: on shuffled wiring pC1_14a drives nothing. This is the first male-specific
+circuit in the project, and one of only two circuits (with escape) where the model reproduces a
+recorded phenotype from wiring alone.
+
+**Sign recovers the phenotypes statically too.** The four-hop signed path products already point
+the right way for every tested group, including the one the dynamics cannot test: pC1_15/16 are net
+NEGATIVE onto both pMP2 and DNp13, matching the suppression of both songs in the fly. For these
+groups, sign and a few more hops are enough; the paper's more pessimistic conclusion was drawn from
+two-synapse paths across many more lines.
+
+**Two caveats.** DNp13 fires in no arm at all, so "pulse over sine" rests partly on the sine neuron
+being silent everywhere rather than on a demonstrated pulse-versus-sine choice; a positive control
+that should drive DNp13 is needed (pC1_1b, which the paper reports takes 13% of its input from LC10a
+and acts on DNp13, is the natural candidate). And the claim covers the five groups tested, not the
+paper's 48 pC1/pC1x types.
+
 ## 3. The missing ingredient is not obtainable from this dataset
 
 Feeding needs cell-specific spontaneous activity. The one neuron with a measured, hunger-gated
