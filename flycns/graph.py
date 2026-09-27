@@ -270,22 +270,6 @@ def gustatory_afferents(neurons):
     return sorted(m["type"].dropna().unique())
 
 
-def infer_side(meta):
-    """somaSide, filled from instance suffix (_L/_R) then soma x relative to the
-    midline of labelled neurons. Sensory neurons often lack soma coordinates."""
-    side = meta["somaSide"].copy()
-    inst = meta["instance"].fillna("")
-    side = side.fillna(inst.str.extract(r"_([LR])(?:$|_|\b)")[0])
-    if "x" in meta and side.isna().any():
-        lab = meta[side.isin(["L", "R"]) & meta["x"].notna()]
-        if len(lab):
-            mid = lab.groupby(side[lab.index])["x"].median().mean()
-            left_is_low = lab.loc[side[lab.index] == "L", "x"].median() < mid
-            guess = np.where(meta["x"] < mid, "L" if left_is_low else "R", "R" if left_is_low else "L")
-            side = side.fillna(pd.Series(guess, index=meta.index).where(meta["x"].notna()))
-    return side
-
-
 def pre_class(superclass):
     """Three presynaptic classes for class-wise synaptic gain (regional fitting)."""
     sc = "" if superclass is None or superclass != superclass else str(superclass)
@@ -341,6 +325,11 @@ def infer_side(meta):
         suf = meta["instance"].fillna("").str.extract(r"_([LR])$")[0]
         side = side.where(side.isin(["L", "R"]), suf)
     if "x" in meta:
+        # KNOWN ASSUMPTION: this fallback takes x below the midline as LEFT without checking the
+        # dataset's orientation. It only applies to neurons with neither an annotated side nor an
+        # _L/_R suffix. Laterality benchmarks should use explicit sides only
+        # (see benchmarks/sugar_laterality.py). An earlier duplicate of this function, which did
+        # check orientation, was dead code and has been removed.
         mid = meta.loc[meta["somaSide"].isin(["L", "R"]), "x"].median()
         guess = pd.Series(np.where(meta["x"] < mid, "L", "R"), index=meta.index)
         guess[meta["x"].isna()] = None
