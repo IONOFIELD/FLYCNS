@@ -1,0 +1,19 @@
+{
+  "criteria": {
+    "source": "Current Biology 36:4697-4716 (2026): pC1_1b acts on DNp13 and takes 13% of input from LC10a",
+    "rule": "best_input = type with largest cholinergic synapse count onto DNp13",
+    "best_input": "SIP108m",
+    "drive_hz": 100.0,
+    "n_trials": 10,
+    "D1": "best_input drives DNp13 >= 0.5 spikes/cell/pulse",
+    "D2": "pC1_1b drives DNp13 >= 0.5 AND DNp13 > pMP2",
+    "interpretation": {
+      "both": "pulse/sine choice real both ways",
+      "D1_only": "pC1_14a selectivity genuine; pC1_1b link not reproduced",
+      "D1_fail": "reword pc1_song P1/P2: pulse driven, sine unreachable"
+    }
+  },
+  "registered_at": "2026-09-26T22:11:50",
+  "git_commit": "c67b98e",
+  "script_uncommitted": false
+}

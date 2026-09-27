@@ -1,0 +1,83 @@
+{
+  "benchmark": "dnp13_control",
+  "criteria": {
+    "source": "Current Biology 36:4697-4716 (2026): pC1_1b acts on DNp13 and takes 13% of input from LC10a",
+    "rule": "best_input = type with largest cholinergic synapse count onto DNp13",
+    "best_input": "SIP108m",
+    "drive_hz": 100.0,
+    "n_trials": 10,
+    "D1": "best_input drives DNp13 >= 0.5 spikes/cell/pulse",
+    "D2": "pC1_1b drives DNp13 >= 0.5 AND DNp13 > pMP2",
+    "interpretation": {
+      "both": "pulse/sine choice real both ways",
+      "D1_only": "pC1_14a selectivity genuine; pC1_1b link not reproduced",
+      "D1_fail": "reword pc1_song P1/P2: pulse driven, sine unreachable"
+    }
+  },
+  "dnp13_input_balance": {
+    "excitatory": 9101,
+    "inhibitory": 7307
+  },
+  "top_excitatory_inputs": {
+    "SIP108m": 870,
+    "PVLP204m": 720,
+    "SIP109m": 698,
+    "SIP110m_a": 338,
+    "AVLP713m": 270,
+    "PVLP214m": 260,
+    "AVLP711m": 257,
+    "SIP110m_b": 256,
+    "pC1_19": 228,
+    "pC1_1a": 173
+  },
+  "static": {
+    "best_input": {
+      "DNp13": 0.1162930370338706,
+      "pMP2": 0.0151805197487247,
+      "pIP10": 0.0024755471042944717
+    },
+    "pC1_1b": {
+      "DNp13": 0.015639632926516676,
+      "pMP2": 0.00021943979715958578,
+      "pIP10": 0.0010222900088796736
+    },
+    "LC10a": {
+      "DNp13": 0.013786266025708942,
+      "pMP2": 0.0057131445605531255,
+      "pIP10": 0.00664749539694233
+    }
+  },
+  "dynamic": {
+    "best_input": {
+      "DNp13": 14.3,
+      "pMP2": 0.0,
+      "pIP10": 0.0,
+      "cns_hz": 0.0008326807341294767,
+      "n_cells": 4
+    },
+    "pC1_1b": {
+      "DNp13": 0.0,
+      "pMP2": 0.0,
+      "pIP10": 0.0,
+      "cns_hz": 1.1087495976624898e-06,
+      "n_cells": 2
+    },
+    "LC10a": {
+      "DNp13": 0.0,
+      "pMP2": 0.0,
+      "pIP10": 0.0,
+      "cns_hz": 0.051316534698546315,
+      "n_cells": 275
+    }
+  },
+  "checks": {
+    "D1_dnp13_reachable": true,
+    "D2_pc1_1b_sine_choice": false
+  },
+  "verdict": "DNp13 reachable, so pC1_14a's pulse-over-sine is genuine selectivity; pC1_1b -> sine not reproduced",
+  "provenance": {
+    "written_at": "2026-09-26T22:15:58",
+    "git_commit": "c67b98e",
+    "env": {}
+  }
+}
