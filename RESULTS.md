@@ -359,6 +359,38 @@ Measure: input-normalised path products, cumulative over hops 1 to 5.
   negative (-1.8e-3), like an aversive one. The classifier-versus-molecular discrepancy therefore
   decides whether this model treats aversive salt as promoting or suppressing feeding.
 
+### Laterality: Shiu's contralateral prediction holds for sugar, and only with sign (registered)
+
+Shiu et al. 2024 predicted that labellar sugar neurons on one side drive the opposite MN9 more
+strongly. This project had recorded that as untestable for lack of a sugar annotation; with LB3b and
+LB3c identified as sugar-sensing (Tastekin et al. 2026), `benchmarks/sugar_laterality.py` tests it
+structurally (criterion registered at `27d36e2`, results `96308aa`). Only explicit sides are used
+(annotated side, else the instance suffix); all 34 sugar cells have one. The criterion required both
+sides positive and the contralateral value at least 10% above the ipsilateral one.
+
+| drive | measure | from left: contra / ipsi | from right: contra / ipsi |
+|---|---|---|---|
+| sugar (LB3b, LB3c) | signed | **3.35** | **1.73** |
+| sugar | unsigned | 1.14 | 0.88 |
+| old mixed proxy | signed | 5.91 | 1.34 |
+| old mixed proxy | unsigned | 1.02 | 0.91 |
+
+**L1: PASS.** Sugar favours the contralateral MN9 on both sides. Unsigned, the same neurons show no
+consistent bias, so the prediction becomes visible only when synaptic sign is included.
+
+**Where the bias comes from.** Sugar has no short route to MN9: at two hops its signed influence is
+at most 1e-5 on either side. Its whole influence arrives at three to five hops, and is contralateral
+at each. This agrees with the modality re-test above, which found sugar reaches MN9 only through
+longer paths.
+
+**This overturns an earlier result.** Earlier versions of this project reported that unilateral
+gustatory drive produced ipsilateral MN9 output, matching a 73 to 1 ipsilateral structural bias.
+That bias was an unsigned count of raw synapses over two hops, on the mixed drive. The signed
+per-hop breakdown shows why it misled: in the mixed drive the two-hop routes are net INHIBITORY on
+both sides (from the left, -1.4e-3 ipsilateral against -3.2e-4 contralateral), so the large
+ipsilateral routes counted as "drive" mostly suppress MN9. The dynamic run that appeared to confirm
+it used the SEZ regional gain later retired as a naming artefact. The claim is withdrawn (section 7).
+
 ## 3. The missing ingredient is not obtainable from this dataset
 
 Feeding needs cell-specific spontaneous activity. The one neuron with a measured, hunger-gated
@@ -474,6 +506,11 @@ Every value is either cited or fitted by a rule stated before the fit. Full list
 
 ## 7. What was retracted
 
+- **"Unilateral gustatory drive gives ipsilateral MN9 output, matching a 73 to 1 structural
+  bias."** Reported in earlier versions and in commit messages from 8 September. The structural
+  bias was an unsigned raw-synapse count whose large ipsilateral routes are net inhibitory once sign
+  is included, and the dynamic confirmation ran under the since-retired SEZ gain. With sign and the
+  identified sugar neurons, the bias is contralateral, as Shiu et al. predicted.
 - **A regional SEZ gain of 2.0.** Fitted while the SEZ was defined by type-name prefixes, where it
   appeared to open the feeding pathway. Defining the SEZ from the connectome's own compartment
   annotations shows the population is net inhibitory onto that pathway under either definition, so

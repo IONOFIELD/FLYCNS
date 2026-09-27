@@ -21,8 +21,12 @@ Two declared drive arms, because MaleCNS does not annotate taste modality:
 Criteria (Shiu 2024; Gordon & Scott 2009; McKellar 2020):
   F1 unilateral drive: MN9 laterality has the same sign as the structural 2-hop
      prediction (dynamics reproduce wiring), at the lowest dose-curve rate giving MN9 >= 2
-     spikes/cell bilaterally. Shiu 2024's contralateral bias was for
-     labellar SUGAR GRNs, which MaleCNS does not annotate: recorded as N/A, not scored.
+     spikes/cell bilaterally. CAUTION (2026-09-25): the "structural 2-hop prediction" here is an
+     UNSIGNED raw-synapse count, and benchmarks/sugar_laterality.py shows that measure misleads:
+     the large ipsilateral 2-hop routes are net inhibitory once sign is included. F1 only runs if
+     MN9 fires, which it does not under the declared parameters, so it is currently skipped.
+     Shiu 2024's contralateral prediction for labellar sugar GRNs is tested properly, with sign
+     and with the modality-identified sugar types LB3b and LB3c, in benchmarks/sugar_laterality.py.
   F2 MN9 response is monotonic in sugar GRN rate over 10-200 Hz
   F3 bitter GRN co-activation suppresses MN9 relative to sugar alone
   F4 each of Fdg/Bract/Roundup/Zorro alone at 50 Hz is sufficient to drive MN9
@@ -189,12 +193,12 @@ report["arms"]["F1_left_sugar"]["structural_2hop_L"] = struct_L
 report["arms"]["F1_left_sugar"]["structural_2hop_R"] = struct_R
 func_sign = np.sign(contra - ipsi); struct_sign = np.sign(struct_R - struct_L)
 report["checks"]["F1_laterality_matches_wiring"] = (bool(func_sign == struct_sign) if (ipsi + contra) > 0 else None)
-# Shiu 2024 predicted contralateral > ipsilateral MN9 for LABELLAR SUGAR GRNs. MaleCNS v1.0
-# has no sugar annotation; the driven subset is pharyngeal/taste-peg/LB3 dominated, so the
-# comparison is not applicable and is recorded as such rather than scored.
+# Shiu 2024 predicted contralateral > ipsilateral MN9 for LABELLAR SUGAR GRNs. This benchmark's
+# drive is pharyngeal/taste-peg/LB3 dominated, so the comparison is not applicable HERE; it is
+# tested with the identified sugar types in benchmarks/sugar_laterality.py (registered; passes).
 report["checks"]["F1_shiu_contralateral_bias"] = None
 report["arms"]["F1_left_sugar"]["note"] = ("Shiu 2024 contralateral prediction concerns labellar sugar GRNs; "
-                                          "not testable without a modality annotation")
+                                          "tested separately with LB3b/LB3c in benchmarks/sugar_laterality.py")
 print(f"   structural 2-hop drive from left afferents: MN9-L {struct_L:,.0f} vs MN9-R {struct_R:,.0f}; "
       f"functional {'ipsi' if ipsi > contra else 'contra'} dominant -> "
       f"{'matches' if report['checks']['F1_laterality_matches_wiring'] else 'does NOT match'} wiring")
