@@ -1,0 +1,47 @@
+{
+  "criteria": {
+    "source": "Tastekin, de Haan Vicente et al. 2026, Cell 189:5527-5551 (valence assignments; their map is unsigned)",
+    "measure": "input-normalised signed path products, cumulative over hops 1..5",
+    "S1": "proboscis (MN9+MN6): mean cumulative signed of LB3a-c > 0 AND mean of LB1a-d below it",
+    "S2": "at least 5 of LB3a-c, LB1a-d have cumulative signed influence on MN9 with sign matching valence",
+    "S3": "LB2 has the largest |cumulative signed| on MN11D+MN11V among labellar groups",
+    "groups": {
+      "LB1a-d": [
+        "LB1a",
+        "LB1b",
+        "LB1c",
+        "LB1d"
+      ],
+      "LB1e": [
+        "LB1e"
+      ],
+      "LB2": [
+        "LB2a",
+        "LB2b",
+        "LB2c",
+        "LB2d"
+      ],
+      "LB3a-c": [
+        "LB3a",
+        "LB3b",
+        "LB3c"
+      ],
+      "LB3d": [
+        "LB3d"
+      ],
+      "LB4": [
+        "LB4a",
+        "LB4b"
+      ]
+    },
+    "required_mn": [
+      "MN9",
+      "MN6",
+      "MN11D",
+      "MN11V"
+    ]
+  },
+  "registered_at": "2026-09-26T19:06:04",
+  "git_commit": "2239201",
+  "script_uncommitted": false
+}
