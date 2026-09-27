@@ -1,0 +1,45 @@
+{
+  "criteria": {
+    "source": "Tastekin, de Haan Vicente et al. 2026, Cell 189:5527-5551, Fig. 2 (modality assignments)",
+    "groups": {
+      "sugar": [
+        "LB3b",
+        "LB3c"
+      ],
+      "bitter": [
+        "LB1a",
+        "LB1b",
+        "LB1c",
+        "LB1d"
+      ],
+      "water": [
+        "LB3a"
+      ],
+      "aversive_salt": [
+        "LB3d"
+      ],
+      "old_mixed_proxy": [
+        "aPhM2a",
+        "aPhM5",
+        "PhG1c",
+        "claw_tpGRN",
+        "LB3a",
+        "LB3b",
+        "LB3c",
+        "LB3d"
+      ]
+    },
+    "F1": "verdict: sugar ratio >= 1.0 OR sugar hop_2 > 0 -> RETRACT feeding negative; else STRENGTHEN",
+    "F2": "sugar ratio > bitter ratio",
+    "F3": "sugar at 100 Hz: MN9 >= 0.5 spikes/cell/pulse",
+    "F4": "bitter at 100 Hz: MN9 below sugar at 100 Hz",
+    "n_trials": 6,
+    "rates_hz": [
+      50.0,
+      100.0
+    ]
+  },
+  "registered_at": "2026-09-26T18:49:17",
+  "git_commit": "4cfae84",
+  "script_uncommitted": false
+}
