@@ -70,6 +70,7 @@ MENU = """
                 40  feeding re-test by taste modality (Tastekin et al. 2026), registered
                 41  signed sensory-to-motor map: every GRN type x every feeding MN (registered)
                 42  sugar laterality: does one-sided sugar favour the opposite MN9? (registered)
+  SOCIAL        43  pC1 song: can the dynamic model explain what static paths could not? (registered)
   FLIGHT        33  gate: are the wing and haltere afferents identifiable and do they form a loop
                 34  flight loop: phase-locked campaniform drive at 202 Hz (surrogate body)
                 37  SNpp16: is DVMn's drive carried by one named wing campaniform type?
@@ -167,6 +168,7 @@ while True:
     elif c == "40": run("benchmarks/feeding_by_modality.py", ask("trials", "6"))
     elif c == "41": run("benchmarks/gustatory_signed_map.py")
     elif c == "42": run("benchmarks/sugar_laterality.py")
+    elif c == "43": run("benchmarks/pc1_song.py", ask("trials", "10"))
     elif c == "34": run("benchmarks/flight_loop.py", ask("wingbeat cycles per arm", "400"))
     elif c == "31": run("fit/check_modulators.py")
     elif c == "17": run("less", "RESULTS.md")
