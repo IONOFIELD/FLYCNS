@@ -1,0 +1,33 @@
+{
+  "criteria": {
+    "source": "Shiu et al. 2024 Nature 634:210-219 (prediction); Tastekin et al. 2026 Cell 189:5527-5551 (LB3b, LB3c sugar)",
+    "L1": "sugar, both sides: contra > 0, ipsi > 0, contra >= 1.10 x ipsi (cumulative signed, hops 1-5)",
+    "margin": 1.1,
+    "sides": "explicit only (somaSide, else _L/_R instance suffix)",
+    "groups": {
+      "sugar": [
+        "LB3b",
+        "LB3c"
+      ],
+      "bitter": [
+        "LB1a",
+        "LB1b",
+        "LB1c",
+        "LB1d"
+      ],
+      "old_mixed_proxy": [
+        "aPhM2a",
+        "aPhM5",
+        "PhG1c",
+        "claw_tpGRN",
+        "LB3a",
+        "LB3b",
+        "LB3c",
+        "LB3d"
+      ]
+    }
+  },
+  "registered_at": "2026-09-26T19:20:25",
+  "git_commit": "27d36e2",
+  "script_uncommitted": false
+}
