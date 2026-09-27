@@ -34,7 +34,11 @@ summary, **27** for the measured account of why feeding fails.
 | auditory to GF | JO-A/JO-B at 150 Hz | DNp01 membrane potential | sound alone subthreshold; the drive is carried by the declared JON-GF contact; null silent; CNS quiet |
 | feeding | gustatory afferents by anatomical subclass | proboscis motor neurons | each of MN9's excitatory second-order inputs drives it directly; MN9 silent on a rewired null; activity confined to the SEZ; motor rates < 100 Hz |
 
-**Feeding does not reproduce sugar-driven extension, and the reason is measured.** MN9's input
+**Feeding does not reproduce sugar-driven extension, and the reason is measured.** Re-tested with
+taste afferents split by modality (Tastekin et al. 2026), the negative holds for sugar alone, but
+the strong inhibitory bias reported below came mostly from pharyngeal and taste-peg afferents in
+the original mixed drive; for sugar the path is weakly inhibition-biased and needs three or more
+hops (`benchmarks/feeding_by_modality.py`). MN9's input
 is balanced to 1.4%; gustatory afferents contact its inhibitory relays about three times more
 strongly than its excitatory ones; signed path products are negative at two hops and positive at
 three to five, so the pathway is disinhibitory; a silent network cannot express that, and a
@@ -61,7 +65,10 @@ convergence with other afferents. A graded test with criteria registered before 
 (`benchmarks/flight_snpp16_graded.py`) passes four of five: SNpp16 drives DVMn without recruiting
 any steering muscle at every recruitment level, reliably from about seven of its 13 cells, and the
 effect vanishes on rewired wiring; it fails the monotonicity criterion because its cells
-contribute unequally. The next strongest type, SNpp07, is not selective. The downstroke
+contribute unequally. The next strongest type, SNpp07, is not selective. A registered robustness
+battery shows the claim is independent of transmitter uncertainty and of the particular cell draws,
+but the selectivity leaks when relay neurons are made faster or more excitable, so it holds under
+the declared relay parameters only. The downstroke
 power motor neurons do not: DLMn c-f receives about twice DVMn's descending drive per cell, almost
 all of it disynaptic, and no command rate puts both power pools in band together
 (`benchmarks/flight_loop.py`).

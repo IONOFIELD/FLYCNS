@@ -183,6 +183,27 @@ connectome-derived prediction, and the surrogate loop below is the test of it.
 > neurons without recruiting any steering muscle, reliably from about seven of its thirteen cells,
 > through its actual wiring. Prediction: activating SNpp16 in a flying fly should raise DVM motor
 > neuron activity without engaging the direct steering muscles.
+>
+> **Robustness battery, criteria registered before the run** (`benchmarks/flight_snpp16_robustness.py`;
+> registered at `77e0cc5`, results `1225b21`). Two of three pass, and the failure qualifies the claim:
+>
+> - **R1 transmitter uncertainty: pass.** With 132,680 edges inverted (every neuron whose own
+>   synapses disagree with its label), k=7 gives exactly the unperturbed draws (10.3, 7.2, 6.1,
+>   6.7, 6.7 Hz). None of the uncertain calls lie on SNpp16's path to DVMn.
+> - **R3 fresh draws: pass.** k* is 5 again, k=7 is in band in 4 of 5, and the curve is
+>   monotone this time, so the k=4 dip that failed G1 was a property of those particular draws.
+>   G1 remains a recorded failure because it was scored on the original draws.
+> - **R2 relay-layer parameters: FAIL.** Selectivity holds at the declared relay values and at
+>   every slower or less excitable setting, but leaks at three of seven: tau_m 5 ms (steering
+>   3.5 Hz, and DLMn c-f fires at 23.6 Hz), tau_m 10 ms (steering 2.7 Hz), and a 4 mV threshold
+>   gap (steering 3.3 Hz). b1 stays at zero throughout. DVMn's in-band rate is also fragile,
+>   falling to zero at a 10 mV gap or a 5 ms refractory period.
+>
+> **The claim, as it now stands:** SNpp16 drives the DVM motor neurons selectively **under the
+> declared relay parameters**; the selectivity does not survive faster or more excitable relay
+> neurons, and because those parameters are inherited from central-brain values rather than
+> measured, the claim is conditional on them. Its independence from transmitter uncertainty and
+> from the particular cell draws is established.
 
 
 
@@ -254,6 +275,45 @@ weakest firing in the pool. This is the sixth circuit to point at missing backgr
 the most precisely localised: the gap is a named relay layer with a measured advantage that the
 dynamics cannot use. The DLM gap junctions described by Huerkey et al. 2023 would pool the five
 DLM motor neurons but add no net drive, so they are not a fix for this.
+
+### Feeding re-tested with taste afferents split by modality (registered)
+
+The feeding drive used above mixed modalities. Tastekin, de Haan Vicente et al. 2026 (Cell
+189:5527-5551, Fig. 2) type the MaleCNS labellar GRNs and assign them by driver-line anatomy:
+LB1a-d bitter, LB3a water, LB3b and LB3c sugar, LB3d aversive high salt / heavy metal. Our
+"sugar proxy" contained LB3a-d plus pharyngeal and taste-peg types. `benchmarks/feeding_by_modality.py`
+re-tested the mechanism by modality, criteria registered at `4cfae84` before any result (results
+`98f2c29`). All five labellar types are cholinergic in MaleCNS.
+
+| group | onto MN9 excitatory / inhibitory relays | ratio | signed 2-hop | MN9 at 100 Hz |
+|---|---|---|---|---|
+| sugar (LB3b, LB3c; 34 cells) | 77 / 114 | 0.68 | ~0 | 0 |
+| bitter (LB1a-d; 38) | 0 / 6 | 0.00 | ~0 | 0 |
+| water (LB3a; 17) | 58 / 0 | 58 | ~0 | - |
+| aversive salt (LB3d; 26) | 119 / 43 | 2.77 | ~0 | - |
+| old mixed proxy (140) | 1,097 / 3,333 | 0.33 | -0.0035 | 0 |
+
+**F1 verdict by the registered rule: STRENGTHEN.** Sugar alone still targets MN9's inhibitory
+relays more than its excitatory ones and its two-hop product is not positive, and MN9 stays silent
+to sugar at 50 and 100 Hz. F2 passes (sugar's ratio exceeds bitter's). F3 and F4 fail: nothing
+drives MN9, so the dynamics show no valence.
+
+**But the mechanism we published needs rewording.** The strong 3:1 inhibitory bias came mostly
+from the non-labellar afferents in the old proxy. Its four labellar types together (sugar, water,
+salt) put 254 synapses on MN9's excitatory relays and 157 on inhibitory; the pharyngeal and
+taste-peg types (aPhM2a, aPhM5, PhG1c, claw_tpGRN) put 843 against 3,176, a ratio of 0.27. For
+sugar specifically the pathway is only weakly inhibition-biased at two hops (its two-hop product
+rounds to zero) and relies on excitation arriving at three hops and beyond, which a network with
+no background activity also cannot deliver. So the feeding negative holds, but its cause for
+sugar is attenuation across hops more than the strong disinhibition the mixed drive suggested.
+
+Two further observations. Bitter barely touches MN9's relays (6 synapses), whereas the companion
+paper's unsigned analysis finds bitter and sugar reach proboscis motor neurons comparably. And
+LB3d is classified cholinergic in MaleCNS, so this model has the aversive-salt type exciting MN9's
+relays (ratio 2.77); the companion paper matches LB3d to glutamatergic driver lines and proposes
+it inhibits attractive circuits. If that is correct, the transmitter call for LB3d is wrong and
+the model signs it backwards: a specific discrepancy between the connectome's prediction and the
+molecular evidence.
 
 ## 3. The missing ingredient is not obtainable from this dataset
 
