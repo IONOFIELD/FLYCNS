@@ -1,0 +1,46 @@
+{
+  "criteria": {
+    "source": "Current Biology 36:4697-4716 (2026), Fig. 5 (pC1/pC1x song phenotypes); pMP2 pulse, DNp13 sine, pIP10 both",
+    "groups": {
+      "pC1_14a": [
+        "pC1_14a"
+      ],
+      "pC1_13_14": [
+        "pC1_13a",
+        "pC1_14a",
+        "pC1_14b"
+      ],
+      "pC1_15_16": [
+        "pC1_15a",
+        "pC1_15b",
+        "pC1_15c",
+        "pC1_16a",
+        "pC1_16b"
+      ],
+      "P1a": [
+        "pC1_12b",
+        "pC1_4a",
+        "pC1_4b"
+      ],
+      "pC1_17": [
+        "pC1_17a",
+        "pC1_17b"
+      ]
+    },
+    "readouts": [
+      "pMP2",
+      "DNp13",
+      "pIP10"
+    ],
+    "drive_hz": 100.0,
+    "n_trials": 10,
+    "P1": "pC1_14a: pMP2 >= 0.5 spikes/cell/pulse AND pMP2 > DNp13",
+    "P2": "pC1_13_14: pMP2 >= 0.5 AND pMP2 > DNp13",
+    "P3": "pMP2 under pC1_14a > pMP2 under pC1_15_16",
+    "P4": "pC1_14a on rewired null: pMP2 < 0.1",
+    "limit": "suppression phenotypes untestable: no background activity"
+  },
+  "registered_at": "2026-09-26T19:32:21",
+  "git_commit": "981a20f",
+  "script_uncommitted": false
+}
