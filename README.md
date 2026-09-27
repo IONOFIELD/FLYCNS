@@ -1,184 +1,161 @@
-# flycns: benchmarked spiking simulation of the Drosophila central nervous system
+# flycns
 
-A leaky integrate-and-fire network built from the complete male fly connectome (Janelia FlyEM
-MaleCNS v1.0: 166,700 neurons, brain and ventral nerve cord, released June 2026), held to
-published circuit physiology by a test suite with numeric pass/fail criteria, null models and
-ablation arms. Three circuits, one declared parameter set, no fitted gains. Every deviation
-from the raw wiring is cited. Status: v0.6, September 2026. Results note: `RESULTS.md`.
+A spiking simulation of the complete male fruit fly nervous system, built from its wiring diagram
+and tested against published physiology.
 
-## Launch
+---
 
-    ./fly
+## Install
 
-That is the whole interface: it activates the environment, loads your neuprint token from
-`~/.neuprint_token`, and opens the menu. To run it from anywhere: `alias flycns=~/flycns/fly`.
-
-First time, from a fresh clone (macOS or Linux, Python 3.10 or newer):
+macOS or Linux, Python 3.10 or newer, and a few gigabytes of free disk.
 
     git clone https://github.com/IONOFIELD/FLYCNS.git flycns && cd flycns
     python3 -m venv .venv && source .venv/bin/activate
     pip install -r requirements.txt
-    echo "PASTE_YOUR_NEUPRINT_TOKEN" > ~/.neuprint_token      # neuprint.janelia.org, account page
+    echo "PASTE_YOUR_NEUPRINT_TOKEN" > ~/.neuprint_token     # neuprint.janelia.org -> Account
     ./fly
 
-In the menu: **1** fetch the connectome (~5 min), **2** fetch sensory annotations, **4** run the
-suite (~40 min). Then **16** for the 3D cascade with real morphology, **11** to stimulate a
-sensory group and watch what fires, **14** for one neuron's skeleton and synapses, **6** for the
-summary, **27** for the measured account of why feeding fails.
+`./fly` opens the menu. The first time, choose **1** (download the connectome, about 5 minutes),
+**2** (sensory annotations), then **4** (run the benchmark suite, about 40 minutes). To launch from
+anywhere, add `alias flycns=~/flycns/fly` to your shell profile.
 
-## What the suite reports (16/16 scored, seeds 0 to 2)
+---
 
-| circuit | stimulus | readout | scored criteria |
-|---|---|---|---|
-| loom escape | 9 loom-sensitive LC types, amplitudes **measured** from Turner et al. 2022 | DNp01 (GF), TTMn, PSI | 1-2 GF spikes per response; response probability 0.5-1.0 with a Wilson CI; 10-60 ms latency; 1:1 TTMn relay at 0.8 ms; relay lost without the electrical synapse; rewired null silent; CNS quiet |
-| auditory to GF | JO-A/JO-B at 150 Hz | DNp01 membrane potential | sound alone subthreshold; the drive is carried by the declared JON-GF contact; null silent; CNS quiet |
-| feeding | gustatory afferents by anatomical subclass | proboscis motor neurons | each of MN9's excitatory second-order inputs drives it directly; MN9 silent on a rewired null; activity confined to the SEZ; motor rates < 100 Hz |
+## What it is
 
-**Feeding does not reproduce sugar-driven extension, and the reason is measured.** Re-tested with
-taste afferents split by modality (Tastekin et al. 2026), the negative holds for sugar alone, but
-the strong inhibitory bias reported below came mostly from pharyngeal and taste-peg afferents in
-the original mixed drive; for sugar the path is weakly inhibition-biased and needs three or more
-hops (`benchmarks/feeding_by_modality.py`). MN9's input
-is balanced to 1.4%; gustatory afferents contact its inhibitory relays about three times more
-strongly than its excitatory ones; signed path products are negative at two hops and positive at
-three to five, so the pathway is disinhibitory; a silent network cannot express that, and a
-uniform tonic baseline that makes it non-silent destroys specificity and abolishes escape. Four
-uniform manipulations were tested and all fail for this reason (`results/feeding/mechanism.json`,
-menu **27**). Reproducing feeding needs cell-specific spontaneous activity, i.e. the
-state-dependent modulation this model omits; Shiu et al. 2024 reported the same limitation.
+Every neuron in the male fly's brain and nerve cord, wired exactly as the MaleCNS v1.0 connectome
+(Janelia FlyEM, 2026) says, simulated as a simple spiking unit. Stimulate a sense organ and watch
+which neurons fire and in what order. The downloaded connectome has 176,422 neurons and 6.1 million
+signed connections.
 
-Also reported, not scored: the effect of auditory drive on GF's response to a near-threshold
-loom, at a working point calibrated per run. At 40 trials per arm the difference is
-**statistically unresolved** (95% CI −0.33 to +0.23); `FLYCNS_A2_TRIALS=120` for a usable
-estimate. Not applicable with this annotation: bitter suppression and Shiu's labellar-sugar
-contralateral bias (MaleCNS does not annotate taste modality).
+What makes it more than a simulation is that it is **scored**. Each circuit is tested against
+numbers from published recordings, with pass/fail criteria, null models (the same neurons with
+shuffled wiring) and ablations. Many tests are pre-registered: their criteria are committed to git
+before they run, so a result cannot be tuned after the fact.
 
-## Flight: monosynaptic drive works, disynaptic drive does not
-A surrogate body drives the 413 wing and haltere campaniform afferents phase-locked at the 202 Hz
-wingbeat, and the DNg02 descending flight command (Namiki et al. 2022) is added in a second stage.
-Monosynaptic pathways behave as wired: steering motor neurons follow the sign of their input, b1
-fires about 0.5 spikes per wingbeat, and DVMn lands in the measured 2 to 12 Hz band on average
-across recruitment draws but not reliably in any one, because 65% of its afferent drive comes
-from a single wing campaniform type, SNpp16. Driven alone, SNpp16 activates DVMn and no other
-flight motor neuron, but it is not necessary for DVMn activity and its effect is amplified by
-convergence with other afferents. A graded test with criteria registered before the run
-(`benchmarks/flight_snpp16_graded.py`) passes four of five: SNpp16 drives DVMn without recruiting
-any steering muscle at every recruitment level, reliably from about seven of its 13 cells, and the
-effect vanishes on rewired wiring; it fails the monotonicity criterion because its cells
-contribute unequally. The next strongest type, SNpp07, is not selective. A registered robustness
-battery shows the claim is independent of transmitter uncertainty and of the particular cell draws,
-but the selectivity leaks when relay neurons are made faster or more excitable, so it holds under
-the declared relay parameters only. The downstroke
-power motor neurons do not: DLMn c-f receives about twice DVMn's descending drive per cell, almost
-all of it disynaptic, and no command rate puts both power pools in band together
-(`benchmarks/flight_loop.py`).
+### What it is not
 
-## A general limitation, stated plainly
-Four independent circuits fail for one reason. Three carry their output by removing inhibition:
-taste to MN9 (signed path products negative at two hops, positive at three to five), the
-canonical ON pathway (Mi1's largest input is L1 with 141,873 glutamatergic synapses; the ON
-response is a double inversion), and AstA release (Pm3 is GABAergic, so activating it in a silent
-network does nothing). The fourth, auditory input to the wing motor system, has the pathway in
-the wiring (four hops via DNp02, DNp06, DNp11 and DNg108 onto the VNC premotor pool) but its
-descending neurons never fire under measured loom drive, so there is nothing for sound to
-modulate. A zero-baseline LIF cannot represent any of them, and a uniform tonic baseline does not
-help: it destroys stimulus specificity and abolishes the escape response. Cell-specific
-spontaneous activity is the single missing ingredient behind all three. It is measured for at
-least one motor pool (Azevedo et al. 2020) and for the feeding circuit's key modulator, TH-VUM
-(1 Hz fed, 25 Hz starved; Marella et al. 2012), but **MaleCNS v1.0 contains no identifiable
-aminergic modulator in the SEZ**: no dopaminergic or octopaminergic neuron has even 20% of its
-synapses in SEZ compartments, and none of the 862 output-dominated midline SEZ bodies is
-dopamine-predicted (`fit/check_modulators.py`). `benchmarks/feeding_mechanism.py`,
-`benchmarks/peptide_asta.py` and `benchmarks/auditory_wing_trace.py` document three of the four
-in detail.
+- **Not a model of how a fly behaves.** There is no body, except a minimal stand-in for flight.
+- **Not fitted to neural recordings.** The single-neuron parameters come from published values; only
+  the stimulus is measured from real data.
+- **Not a complete account of the fly.** Neuromodulators, graded (non-spiking) neurons and
+  spontaneous background activity are absent, and several circuits fail for exactly that reason.
 
-## Robustness
+### What it can be used for
 
-- Escape is **invariant** to cord single-neuron parameters: sweeping tau_m 5-40 ms, threshold gap
-  4-10 mV and refractory 1-5 ms across all 14,153 nerve-cord neurons leaves every check passing
-  and every metric unchanged (`benchmarks/sensitivity_cord.py`). The inherited central-brain
-  parameters are a limitation for circuits that require cord computation, not for this one.
-- Escape passes 8/8 **unchanged** when every neuron whose per-T-bar transmitter predictions
-  disagree with its aggregate label is sign-inverted (132,680 edges, 2.0% of synaptic weight):
-  the circuit does not rest on any uncertain transmitter call.
-- Transmitter signing overall: mean per-synapse confidence 0.91 over the 173,308 annotated
-  neurons; 1.2% of neurons below 0.6; neurons whose T-bars disagree with their label carry 3.5%
-  of synaptic weight (`fit/synapse_nt.py`).
-- Nine-suite battery under measured stationary input: seeds 16/16; 5% random NT inversion 16/16;
-  10% costs one check (GF response probability); weight scale 0.30 and 0.35 both pass, with
-  opposite failure modes at 0.25 and 0.40; **targeted NT inversion passes everything**.
+- **Asking what the wiring alone can explain**, and seeing exactly where it stops.
+- **Generating predictions an experimenter can test**: named cell types and pathways with a
+  specific expected result.
+- **Checking the connectome itself.** The simulation has exposed annotation issues, including a
+  likely transmitter misclassification.
+- **Benchmarking other fly models.** The same tests, run on another model, give a comparable score.
 
-## Declared parameter set
+---
 
-Shiu et al. 2024 LIF parameters (tau_m 20 ms, threshold −45 mV, rest/reset −52 mV, refractory
-2.2 ms, synaptic tau 5 ms, delay 1.8 ms); chemical kick 0.275 mV × 0.3 (MaleCNS rescale, fitted
-by sweep); GF spike-triggered adaptation 15 mV (smallest value satisfying von Reyn 2014's
-constraints under measured tuning, `benchmarks/fit_gf_adapt.py`); proboscis motor neuron
-adaptation 10 mV (sustained rates < 100 Hz), relay motor neurons deliberately not adapted
-(TTMn follows GF 1:1, Tanouye & Wyman 1980); electrical synapses GF-TTMn and GF-PSI (1:1 relay,
-0.8 ms) and JON-GF (calibrated to a 3 mV compound potential); the 679 EM synapses annotated as
-chemical on the JON-GF contact removed when the electrical model is on, so the contact is not
-counted twice; monoamines sign 0 by deliberate scope; regional and class gains all 1.0; no tonic
-baseline. Full list with citations: `flycns/graph.py`, `REFERENCES.md`.
+## The system
 
-## Measured inputs
+### How it is built
 
-The loom stimulus uses per-glomerulus amplitudes and a trial-gain distribution extracted from
-the public Turner, Krieger, Pang & Clandinin 2022 dataset (Dryad doi:10.5061/dryad.h44j0zpp8;
-10 flies, 150 loom trials): LC17 1.00, LC12 0.75, LC26 0.74, LPLC2 0.69, LPLC1 0.51, LC4 0.50,
-LC16 0.49, LC6 0.40, small-object types 0.29-0.37. Trials are split by the authors' own walking
-classification (no video download needed): responses are larger when the fly walks (LC6 0.64 vs
-0.40 stationary; gain sigma 0.44 vs 0.36), reproducing their locomotor-enhancement result. The
-benchmarks use the **stationary** set, matching a simulation with no locomotion;
-`FLYCNS_LOOM_STATE=walking|all` selects the others. Menu **21** gives download
-instructions (Dryad blocks scripted downloads), **22** runs the extraction
-(`fit/extract_turner_loom.py`). The dF/F-to-rate scale (5 Hz for the strongest type) is the one
-remaining free parameter of the stimulus and is declared as such.
+    connectome (neuprint)  ->  signed graph  ->  spiking model (Brian2)  ->  benchmarks  ->  scored report
+                               flycns/graph.py    flycns/model.py           benchmarks/     results/
 
-## Layout
+- **Signed graph.** Each connection's sign comes from the connectome's predicted transmitter of the
+  sending neuron: acetylcholine excites, GABA, glutamate and histamine inhibit, modulatory amines are
+  left out. A few documented electrical synapses are added, each with a citation.
+- **Spiking model.** Leaky integrate-and-fire units with the parameters of Shiu et al. 2024. One
+  parameter set is used for every circuit, and there are no fitted gains.
+- **Benchmarks.** Each is a script that drives a stimulus, reads out named neurons, and scores the
+  result against criteria written in its header.
+- **Guards.** Every stimulus list is checked against the dataset before a long run starts, reports
+  record the commit and settings that produced them, and pre-registered tests refuse to run against
+  changed criteria.
 
-    fly / fly.py          launcher and menu
-    flycns/graph.py       load, NT signing, electrical synapses, intrinsic and regional overrides,
-                          null models, targeted sign perturbation
-    flycns/model.py       Brian2 LIF (chemical + electrical synapses, adaptation, gains, optional baseline)
-    flycns/protocols.py   stimulus protocols with provenance; measured loom tuning when available
-    flycns/anatomy.py     braille projection of the CNS for terminal views
-    benchmarks/           gf_escape, auditory, feeding; feeding_mechanism and auditory_wing_trace
-                          (documented negatives with their structural traces);
-                          fit_gains, fit_regional, fit_gf_adapt, fit_baseline; screen_afferents,
-                          diagnose_feeding; summarize -> results/SUITE.md
-    fit/                  extraction from published data and dataset audits: Turner loom tuning,
-                          per-synapse transmitter confidence, neuropil ROI membership,
-                          check_modulators (is there an aminergic modulator in the SEZ? no)
-    viz/                  cascade_3d (skeletons, synapses, camera presets), cascade_ascii,
-                          explore (interactive), neuron_ascii, fetch_cascade_synapses
-    export_brainsets.py   simulated sessions as brainsets-style HDF5 for POYO+, with connectome
-                          features per unit
-    overnight.sh          robustness battery: seeds, random and targeted sign flips, weight scale
-    RESULTS.md            results note; REFERENCES.md full references
+### The menu
 
-## MaleCNS naming notes (discovered on v1.0)
-- No sugar/bitter GRN split. Gustatory afferents are anatomical subclasses: `labellar bristle`,
-  `taste peg`, `pharyngeal sensillum`. Driving all at once gives no feeding output.
-- Shiu's FlyWire feeding names (Fdg, Bract, ...) do not exist; MN9's inputs are `GNG###`, `DNge###`.
-- Sensory somas lie outside the CNS; side comes from the `_L/_R` instance suffix.
-- Region membership is available per neuron from `roiInfo` (`fit/roi_membership.py`), which is
-  what retired an earlier type-name-prefix definition of the SEZ.
+| group | options | what they do |
+|---|---|---|
+| Setup | 1 to 3 | download the connectome and annotations; show status |
+| Benchmarks | 4 to 7 | run the suite or one circuit; summary; overnight robustness battery |
+| Checks | 28, 35, 36 | audit every stimulus set; test sensitivity to inherited parameters |
+| Fits | 8 to 10, 26 | the fits and sweeps behind each declared value |
+| Recorded data | 21, 22 | fetch the Turner et al. 2022 imaging data; extract measured loom tuning |
+| Connectome detail | 23 to 25 | per-synapse transmitter confidence; neuropil membership |
+| Feeding | 27, 31, 40, 41 | why feeding fails; modulator audit; re-test by taste modality; signed taste map |
+| Flight | 33, 34, 37 to 39 | surrogate-body flight loop; the SNpp16 tests |
+| Traces | 29, 30, 32 | pathway traces that are findings rather than benchmarks |
+| Explore | 11 to 16 | stimulate anything and watch; terminal and 3D views of cascades and neurons |
+| Export | 20 | simulated sessions in a format machine-learning decoders can read |
+| Docs | 17 to 19 | results note, references, provenance of the last run |
 
-## What this builds on and what it adds
-A port and extension of Shiu et al. 2024 (Nature) from FlyWire to MaleCNS. The model, its
-parameters and the feeding validation design are theirs; escape physiology from von Reyn, Ache,
-Tanouye & Wyman, Allen, Augustin; the JON-GF synapse from Pezier & Blagburn; loom tuning from
-Turner, Krieger, Pang & Clandinin. Added here: the test harness with numeric criteria and nulls,
-one parameter set across independent circuits, a spiking sensory-to-motor cascade across the neck
-connective on MaleCNS, measured stimulus tuning from public imaging, an uncertainty-targeted
-perturbation, and a mechanistic account of one circuit the model class cannot reproduce. Where
-the model disagrees with a measurement, the model is presumed wrong.
+### Results at a glance
 
-## Known limits
-Single-neuron parameters are Shiu's central-brain values applied uniformly to brain and cord
-(measured to be irrelevant for the escape benchmark, see Robustness; `CORD_PARAMS` in
-`flycns/graph.py` is an empty stub for values read from Azevedo et al. 2020);
-no parameter is fitted to a neural recording (only the stimulus is measured); modulatory
-transmitters are omitted, which is exactly what the feeding result implicates; gap junctions
-appear only where documented.
+| circuit | outcome |
+|---|---|
+| **Visual escape** (loom to giant fiber to jump muscle) | Passes 8 of 8. The giant fiber fires 1.06 spikes per response with probability 0.68, and each spike drives the jump motor neuron one-to-one 0.9 ms later. Holds when uncertain transmitter calls are inverted and across nerve-cord parameters. |
+| **Hearing to the giant fiber** | Passes 4 of 4. Sound alone stays subthreshold, as recorded, through the documented electrical synapse. |
+| **Feeding** (taste to proboscis) | Does not reproduce feeding. The reason is measured, and the result holds when taste neurons are split by modality. |
+| **Flight** (wing sensors and command to flight muscles) | The upstroke muscles respond; the downstroke muscles, reached mainly through relay neurons, stay silent. One wing sensor type, SNpp16, drives the upstroke muscles selectively under the declared parameters (pre-registered). |
+
+Full numbers, every failure, and every retraction are in [`RESULTS.md`](RESULTS.md).
+
+---
+
+## Limitations and verification of values
+
+### How values are verified
+
+- **Every parameter is cited or fitted by a stated rule.** Fitted values record the rule and the
+  sweep that produced them, and when a value changed, the reason is kept in the code.
+- **Pre-registration.** Scored tests on new claims commit their criteria before running, and a
+  criteria file stamped with that commit proves the order. Failures are reported as failures.
+- **Robustness.** A nine-suite battery covers random seeds, random and targeted transmitter-sign
+  inversion, and the connection-strength scale. The targeted inversion flips every neuron whose own
+  synapses disagree with its transmitter label, and no scored result depends on those calls.
+- **Measured input.** The visual stimulus uses amplitudes extracted from 1,510 recorded trials across
+  21 flies (Turner et al. 2022), taken from the trials in which the fly was not walking, to match a
+  simulation with no locomotion.
+
+### Limitations
+
+- **No background activity.** Neurons are silent at rest, so circuits that work by *removing*
+  inhibition cannot be represented. Feeding, the visual ON pathway and peptide modulation fail for
+  this reason, and the flight relay layer stays silent for a related one.
+- **Borrowed single-neuron parameters.** Every neuron uses central-brain values from Shiu et al.
+  2024. The escape result is insensitive to them; the SNpp16 flight result is not.
+- **Transmitters come from a classifier**, which is less reliable for modulatory neurons (Eckstein
+  et al. 2024) and appears to misclassify at least one taste neuron type.
+- **Spiking only.** Neurons that signal with graded potentials, common in early vision and hearing,
+  are forced to spike.
+- **Some drives are cross-species.** Wing and haltere sensor parameters come from larger flies.
+- **One calibration value is untraced.** The ear-to-giant-fiber synapse is mixed electrical and
+  chemical (Pézier et al. 2014); the model represents it as electrical only, tuned to a 3 mV
+  subthreshold potential whose source figure has not yet been confirmed. The checks score
+  subthreshold behaviour, not the number.
+
+---
+
+## Citations
+
+The connectome, and the paper that assigns taste modality to it:
+
+- FlyEM Project Team et al. 2026. Sexual dimorphism in the complete connectome of the *Drosophila*
+  male central nervous system. *Cell*. doi:10.1016/j.cell.2026.08.015
+- Tastekin I, de Haan Vicente I, et al. 2026. The complete gustatory connectome of adult *Drosophila*
+  reveals how taste guides feeding, foraging, and social behavior. *Cell* 189:5527-5551.
+  doi:10.1016/j.cell.2026.08.016
+
+The model and the principal physiology it is scored against:
+
+- Shiu PK, Sterne GR, et al. 2024. A *Drosophila* computational brain model reveals sensorimotor
+  processing. *Nature* 634:210-219. doi:10.1038/s41586-024-07763-9
+- Turner MH, Krieger A, Pang MM, Clandinin TR 2022. Visual and motor signatures of locomotion
+  dynamically shape a population code for feature detection in *Drosophila*. *eLife* 11:e82587
+- von Reyn CR, Breads P, Peek MY, et al. 2014. A spike-timing mechanism for action selection.
+  *Nat Neurosci* 17:962-970
+- Tanouye MA, Wyman RJ 1980. Motor outputs of giant nerve fiber in *Drosophila*. *J Neurophysiol*
+  44:405-421
+- Eckstein N, Bates AS, Champion A, et al. 2024. Neurotransmitter classification from electron
+  microscopy images at synaptic sites in *Drosophila melanogaster*. *Cell* 187:2574-2594
+
+Every other source, with the specific number taken from it, is in
+[`REFERENCES.md`](REFERENCES.md).

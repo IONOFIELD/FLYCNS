@@ -55,32 +55,33 @@ MENU = """
   SETUP          1  fetch connectome (neurons + edges, ~5 min)
                  2  fetch sensory annotations (subclass, entry nerve)
                  3  status
-  BENCHMARKS     4  run full suite (3 circuits, ~25 min)      5  run one benchmark
+  BENCHMARKS     4  run full suite (3 circuits, ~40 min)      5  run one benchmark
                  6  show suite summary                        7  robustness battery (overnight)
-  FITS           8  GF adaptation sweep       9  SEZ regional gain sweep      10  afferent screen
-                26  tonic baseline sweep      27  why feeding fails: measured mechanism
-                28  cord parameter sensitivity (do brain values distort the nerve cord?)
-  MODULATION    29  AstA: separate Pm3's synaptic and peptidergic effects (exploratory)
-  TRACES        30  ear to wing motor pathway (structural finding, not a benchmark)
-                32  DNp31: the strongest descending drive to the wing muscles
   CHECKS        35  audit every stimulus set against the dataset (seconds; run before long jobs)
+                28  cord parameter sensitivity (do brain values distort the nerve cord?)
                 36  flight sensitivity: does DLM's silence depend on the relay layer's parameters?
+  FITS           8  GF adaptation sweep       9  SEZ regional gain sweep      10  afferent screen
+                26  tonic baseline sweep
+  RECORDED DATA 21  get Turner 2022 glomerulus data (Dryad, browser)   22  extract measured loom tuning
+  CONNECTOME+   23  fetch per-synapse neurotransmitter probabilities (2.7 GB)
+                24  neurotransmitter confidence per edge      25  neuropil ROI membership / meshes
+  FEEDING       27  why feeding fails: measured mechanism
+                31  is there an aminergic modulator in the SEZ? (dataset audit)
+                40  feeding re-test by taste modality (Tastekin et al. 2026), registered
+                41  signed sensory-to-motor map: every GRN type x every feeding MN (registered)
+  FLIGHT        33  gate: are the wing and haltere afferents identifiable and do they form a loop
+                34  flight loop: phase-locked campaniform drive at 202 Hz (surrogate body)
                 37  SNpp16: is DVMn's drive carried by one named wing campaniform type?
                 38  SNpp16 graded test (criteria registered before the run)
                 39  SNpp16 robustness battery: transmitter uncertainty, cord parameters, fresh draws
-  FEEDING       40  feeding re-test by taste modality (Tastekin et al. 2026), registered
-                41  signed sensory-to-motor map: every GRN type x every feeding MN (registered)
-  EMBODIMENT    33  gate: are the wing and haltere afferents identifiable and do they form a loop
-                34  flight loop: phase-locked campaniform drive at 202 Hz, open then closed (surrogate body)
-                31  is there an aminergic modulator in the SEZ? (dataset audit)
+  TRACES        29  AstA: separate Pm3's synaptic and peptidergic effects (exploratory)
+                30  ear to wing motor pathway (structural finding, not a benchmark)
+                32  DNp31: the strongest descending drive to the wing muscles
   EXPLORE       11  interactive: pick a sensory group, stimulate, watch the cascade
-  VISUALIZE     12  whole-CNS cascade (braille, terminal)     13  same, with synapse sites
+                12  whole-CNS cascade (braille, terminal)     13  same, with synapse sites
                 14  single neuron view  (current: {cell})     15  choose cell for neuron view
                 16  3D cascade (html, opens in browser)
   EXPORT        20  simulated sessions in brainsets/POYO+ layout (HDF5 with connectome unit features)
-  RECORDINGS    21  get Turner 2022 glomerulus data (Dryad, browser)   22  extract measured loom tuning
-  CONNECTOME+   23  fetch per-synapse neurotransmitter probabilities (2.7 GB)
-                24  neurotransmitter confidence per edge      25  neuropil ROI membership / meshes
   DOCS          17  results note      18  references      19  provenance of last run
                  q  quit
 """

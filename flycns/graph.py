@@ -18,13 +18,20 @@ SIGN_MAP = {"acetylcholine": 1, "gaba": -1, "glutamate": -1, "histamine": -1,
 # (pre type, post type, ipsilateral, spikelet_mV, citation); trailing * = type prefix
 # spikelet_mV is the postsynaptic jump per presynaptic spike. 9 mV exceeds the
 # 7 mV rest-to-threshold gap: a one-to-one relay, as measured for GF->TTMn.
-# JON->GF is electrical but subthreshold; hundreds of JONs summate to a
-# compound potential of a few mV (Pezier & Blagburn 2013), hence 0.3 mV each.
+# JON->GF is a MIXED synapse, electrical (shakB) plus cholinergic chemical (Pezier, Jezzini,
+# Marie & Blagburn 2014, J Neurosci 34:11691; Jezzini, Merced & Blagburn 2018, PLoS One
+# 13:e0198710), and shakB2 abolishes JON-GF transmission (Pezier, Jezzini, Bacon & Blagburn
+# 2016, PLoS One 11:e0152211). The model represents it as ELECTRICAL ONLY, calibrated to a total
+# subthreshold compound potential, and removes the 679 EM chemical synapses on the contact so it
+# is not counted twice. That is a modelling simplification, not a claim that the synapse is
+# purely electrical.
 ELECTRICAL_SYNAPSES = [
     ("DNp01", "TTMn", True, 9.0, "shakB gap junction, 1:1 relay; Tanouye & Wyman 1980; Allen et al. 2006"),
     ("DNp01", "PSI",  True, 9.0, "shakB gap junction, 1:1 relay; Allen et al. 2006; Phelan et al. 2008"),
-    # calibrated: population drive at 150 Hz yields a compound GF potential of
-    # ~3 mV (Pezier & Blagburn 2013 sound-evoked GF response, subthreshold)
+    # calibrated: population drive at 150 Hz yields a compound GF potential of ~3 mV, kept
+    # subthreshold as sound alone is in vivo. The 3 mV VALUE HAS NOT BEEN TRACED to a specific
+    # figure in the sources above; it is a calibration target pending verification. The escape
+    # and auditory checks score subthreshold behaviour, not this number.
     # The JON->GF mixed synapse is on specific afferents, not the whole organ. In MaleCNS
     # v1.0 the only JO types with chemical contacts onto DNp01 are JO-B1_a (541 synapses,
     # 13 cells) and JO-B1_c (138, 6), both annotated subclass "auditory"; JO-A* contributes
@@ -32,8 +39,8 @@ ELECTRICAL_SYNAPSES = [
     # cells. Note the naming difference from Kamikouchi et al. 2009, who place the GF dendrite
     # in AMMC zone A: MaleCNS's A/B type split is not the modality split (JO-B2/B3/B4 are
     # mostly wind_gravity), so the labels are not directly comparable across datasets.
-    ("JO-B1_a", "DNp01", True, {"compound_mV": 3.0, "at_hz": 150}, "JON->GF electrical; Pezier & Blagburn 2013; Yorozu 2009; contact set from MaleCNS v1.0"),
-    ("JO-B1_c", "DNp01", True, {"compound_mV": 3.0, "at_hz": 150}, "JON->GF electrical; Pezier & Blagburn 2013; Yorozu 2009; contact set from MaleCNS v1.0"),
+    ("JO-B1_a", "DNp01", True, {"compound_mV": 3.0, "at_hz": 150}, "JON->GF mixed synapse modelled as electrical; shakB-dependent (Pezier et al. 2016); mixed (Pezier et al. 2014); 3 mV target untraced; contact set from MaleCNS v1.0"),
+    ("JO-B1_c", "DNp01", True, {"compound_mV": 3.0, "at_hz": 150}, "JON->GF mixed synapse modelled as electrical; shakB-dependent (Pezier et al. 2016); mixed (Pezier et al. 2014); 3 mV target untraced; contact set from MaleCNS v1.0"),
 ]
 # Mixed synapses that EM annotated as chemical: MaleCNS v1.0 has 679 direct
 # JO-A/B -> DNp01 "chemical" synapses. When the electrical model is on, these

@@ -6,3 +6,5 @@ pyarrow
 plotly
 cython
 h5py
+scipy
+networkx

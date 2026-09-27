@@ -1,9 +1,10 @@
 """
 Benchmark 3: Johnston's organ -> giant fiber (mechanosensory input to escape).
 
-Why this circuit: JON -> GF is a documented MIXED synapse that is PRIMARILY
-ELECTRICAL (shakB); shakB2 mutants lose the JON-evoked GF current (Pezier &
-Blagburn 2013; Yorozu et al. 2009). In vivo, sound alone leaves GF
+Why this circuit: JON -> GF is a documented MIXED synapse, electrical (shakB) plus
+cholinergic chemical (Pezier et al. 2014, J Neurosci 34:11691); shakB2 abolishes JON-GF
+transmission (Pezier et al. 2016, PLoS One 11:e0152211). The model represents it as electrical
+only, calibrated to a subthreshold compound potential. In vivo, sound alone leaves GF
 subthreshold and summates with visual drive (von Reyn 2014). That yields
 ablation predictions with opposite signs to the GF->TTMn case:
 
@@ -17,11 +18,11 @@ ablation predictions with opposite signs to the GF->TTMn case:
      -> 0.20 with the ordinal tuning at gain 0.6; 0.00 -> 0.07 with the measured tuning
      at the same gain) before this calibration existed; neither is quotable. The in vivo
      direction is not established in our references (von Reyn 2014 tested visual-visual
-     integration; Pezier & Blagburn 2013 measured the JON-evoked GF potential alone).
+     integration; Pezier and colleagues characterised the JON-GF synapse itself).
   A3 pathway ablation: MaleCNS EM annotates the mixed JON-GF contact as
      chemical (679 synapses). Removing BOTH the electrical model and those
      EM edges must abolish the JO-evoked GF depolarisation (measured from GF
-     membrane voltage, Pezier & Blagburn 2013); with the electrical model it
+     membrane voltage); with the electrical model it
      must exceed 0.5 mV. "chem_only_EM" (EM as annotated, no electrical) is
      reported for reference: it double-counts nothing but mislabels the contact.
   A4 rewired null, chemical only: no JO -> GF depolarisation (the electrical
