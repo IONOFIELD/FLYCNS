@@ -426,11 +426,40 @@ NEGATIVE onto both pMP2 and DNp13, matching the suppression of both songs in the
 groups, sign and a few more hops are enough; the paper's more pessimistic conclusion was drawn from
 two-synapse paths across many more lines.
 
-**Two caveats.** DNp13 fires in no arm at all, so "pulse over sine" rests partly on the sine neuron
-being silent everywhere rather than on a demonstrated pulse-versus-sine choice; a positive control
-that should drive DNp13 is needed (pC1_1b, which the paper reports takes 13% of its input from LC10a
-and acts on DNp13, is the natural candidate). And the claim covers the five groups tested, not the
-paper's 48 pC1/pC1x types.
+**Caveat, resolved.** DNp13 fired in no arm of this test, so "pulse over sine" could have meant only
+that the sine neuron was unreachable. A registered positive control settled it (below): DNp13 is
+reachable, so pC1_14a's pulse-over-sine is genuine selectivity. The claim still covers the five
+groups tested, not the paper's 48 pC1/pC1x types.
+
+### The sine-song neuron is reachable, through a separate pathway (registered)
+
+`benchmarks/dnp13_control.py` (registered at `c67b98e`, results `ccfdff2`) asked whether DNp13 can
+fire at all. Its decisive arm drives DNp13's strongest excitatory input type, chosen by a fixed rule
+from the graph before any simulation. The interpretation of every outcome was written in advance.
+
+| drive (100 Hz) | cells | DNp13 (sine) | pMP2 (pulse) | pIP10 (both) |
+|---|---|---|---|---|
+| SIP108m, rule-chosen strongest input | 4 | **14.30** | 0.00 | 0.00 |
+| pC1_1b | 2 | 0.00 | 0.00 | 0.00 |
+| LC10a | 275 | 0.00 | 0.00 | 0.00 |
+
+- **D1, reachability: PASS.** SIP108m drives DNp13 to 14.3 spikes per cell per pulse with pMP2 and
+  pIP10 silent. By the pre-written interpretation, pC1_14a's pulse-over-sine is genuine selectivity.
+- **D2, pC1_1b drives sine: FAIL.** pC1_1b drives nothing (static signed influence on DNp13 only
+  +1.6e-2), and neither do all 275 LC10a cells. The companion paper's link from pC1_1b to DNp13 is
+  not reproduced.
+
+**Two opposite selective pathways.** pC1_14a drives the pulse neuron and not the sine neuron;
+SIP108m drives the sine neuron and not the pulse neuron. The pulse/sine split is present in the
+wiring and survives simulation in both directions.
+
+**A new prediction: activating SIP108m should promote sine song.** It was not proposed in the
+companion paper; the rule found it from the wiring. SIP108m is 4 cholinergic central-brain neurons,
+two per side. DNp13 receives 9,101 excitatory against 7,307 inhibitory synapses, and eight of its ten
+strongest excitatory input types carry the "m" suffix (SIP108m, PVLP204m, SIP109m, SIP110m_a and _b,
+AVLP713m, PVLP214m, AVLP711m). Whether that suffix marks male-specific types, and therefore whether
+the sine pathway is sexually dimorphic, is not established here: the local data carries no
+dimorphism annotation.
 
 ## 3. The missing ingredient is not obtainable from this dataset
 
