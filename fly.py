@@ -54,6 +54,7 @@ MENU = """
   ------------------------------------------------------------------------------
   SETUP          1  fetch connectome (neurons + edges, ~5 min)
                  2  fetch sensory annotations (subclass, entry nerve)
+                45  fetch sex-related annotations (dimorphism, fruitless, doublesex)
                  3  status
   BENCHMARKS     4  run full suite (3 circuits, ~40 min)      5  run one benchmark
                  6  show suite summary                        7  robustness battery (overnight)
@@ -96,6 +97,7 @@ while True:
         break
     elif c == "1": run("fetch_malecns.py")
     elif c == "2": run("fetch_annotations.py")
+    elif c == "45": run("fetch_dimorphism.py")
     elif c == "3": status()
     elif c == "4": run("bash", "run_all.sh", ask("trials", "40"))
     elif c == "5":

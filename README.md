@@ -74,7 +74,7 @@ before they run, so a result cannot be tuned after the fact.
 
 | group | options | what they do |
 |---|---|---|
-| Setup | 1 to 3 | download the connectome and annotations; show status |
+| Setup | 1 to 3, 45 | download the connectome, sensory and sex-related annotations; show status |
 | Benchmarks | 4 to 7 | run the suite or one circuit; summary; overnight robustness battery |
 | Checks | 28, 35, 36 | audit every stimulus set; test sensitivity to inherited parameters |
 | Fits | 8 to 10, 26 | the fits and sweeps behind each declared value |

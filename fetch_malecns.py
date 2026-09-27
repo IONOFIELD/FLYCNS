@@ -66,7 +66,9 @@ neurons = neurons.drop(columns=["somaLocation"])
 _old = OUT / "neurons.parquet"
 if _old.exists():
     prev = pd.read_parquet(_old)
-    keep = [c for c in ["subclass", "entryNerve", "exitNerve"] if c in prev]
+    # annotation columns added by fetch_annotations.py and fetch_dimorphism.py (any sex-related field)
+    keep = [c for c in prev.columns if c in ("subclass", "entryNerve", "exitNerve")
+            or any(k in c.lower() for k in ("dimorph", "sex", "fru", "dsx", "synonym"))]
     if keep:
         neurons = neurons.merge(prev[["bodyId"] + keep], on="bodyId", how="left")
         print("preserved annotation columns:", keep)
