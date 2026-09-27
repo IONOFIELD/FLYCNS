@@ -94,6 +94,7 @@ before they run, so a result cannot be tuned after the fact.
 | **Visual escape** (loom to giant fiber to jump muscle) | Passes 8 of 8. The giant fiber fires 1.06 spikes per response with probability 0.68, and each spike drives the jump motor neuron one-to-one 0.9 ms later. Holds when uncertain transmitter calls are inverted and across nerve-cord parameters. |
 | **Hearing to the giant fiber** | Passes 4 of 4. Sound alone stays subthreshold, as recorded, through the documented electrical synapse. |
 | **Feeding** (taste to proboscis) | Does not reproduce feeding. The reason is measured, and the result holds when taste neurons are split by modality. |
+| **Taste to feeding motor neurons** (signed map) | Appetitive taste neurons push proboscis extension up and bitter pushes it down (pre-registered pass). Of the 15 strongest unsigned influences on the proboscis motor neuron, 8 reverse to inhibitory once synaptic sign is included. |
 | **Flight** (wing sensors and command to flight muscles) | The upstroke muscles respond; the downstroke muscles, reached mainly through relay neurons, stay silent. One wing sensor type, SNpp16, drives the upstroke muscles selectively under the declared parameters (pre-registered). |
 
 Full numbers, every failure, and every retraction are in [`RESULTS.md`](RESULTS.md).
@@ -123,7 +124,8 @@ Full numbers, every failure, and every retraction are in [`RESULTS.md`](RESULTS.
 - **Borrowed single-neuron parameters.** Every neuron uses central-brain values from Shiu et al.
   2024. The escape result is insensitive to them; the SNpp16 flight result is not.
 - **Transmitters come from a classifier**, which is less reliable for modulatory neurons (Eckstein
-  et al. 2024) and appears to misclassify at least one taste neuron type.
+  et al. 2024) and appears to misclassify at least one taste neuron type, LB3d; its call decides
+  whether the model treats aversive salt as promoting or suppressing feeding.
 - **Spiking only.** Neurons that signal with graded potentials, common in early vision and hearing,
   are forced to spike.
 - **Some drives are cross-species.** Wing and haltere sensor parameters come from larger flies.

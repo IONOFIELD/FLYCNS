@@ -315,6 +315,50 @@ it inhibits attractive circuits. If that is correct, the transmitter call for LB
 the model signs it backwards: a specific discrepancy between the connectome's prediction and the
 molecular evidence.
 
+### A signed sensory-to-motor map for taste (registered)
+
+The companion gustatory paper computes influence from every taste neuron type to the feeding motor
+neurons but states that its metric ignores synaptic sign. `benchmarks/gustatory_signed_map.py`
+computes the same kind of map with sign, and an unsigned version built identically, for 64 GRN
+types against 10 feeding motor neuron types (criteria registered at `2239201`, results `316eb61`).
+Measure: input-normalised path products, cumulative over hops 1 to 5.
+
+| labellar group | MN9 | MN6 | MN11D | MN11V | CEM |
+|---|---|---|---|---|---|
+| LB3a-c (water, sugar) | +5.2e-3 | -1.4e-4 | +4.8e-3 | +2.7e-4 | +7.8e-3 |
+| LB3d (aversive salt) | +4.3e-3 | +1.1e-4 | +2.7e-3 | +7.2e-4 | +2.4e-3 |
+| LB4 | +2.1e-4 | -5.2e-5 | +1.4e-3 | +1.1e-3 | +5.1e-3 |
+| LB2 | -2.6e-4 | +1.9e-4 | +3.7e-4 | +7.7e-4 | **+9.0e-3** |
+| LB1e | -1.3e-3 | -7.0e-4 | +4.9e-5 | +8.0e-4 | +2.7e-3 |
+| LB1a-d (bitter) | -2.7e-4 | -2.4e-3 | -8.5e-4 | +1.6e-3 | -1.2e-2 |
+
+- **S1, valence has a sign: PASS.** On the proboscis-extension motor neurons (MN9, MN6) the
+  appetitive types have net positive influence (+8.5e-4) and bitter net negative (-3.3e-4).
+- **S2, per-type sign agreement on MN9: FAIL** (4 of 7; 5 required). All three appetitive types
+  agree. Of the bitter types only LB1c is negative; LB1a (+4e-6) and LB1d (+1.5e-5) are
+  effectively zero and LB1b is exactly zero. The failure is absence, not wrong sign: bitter taste
+  barely reaches MN9 within five signed hops, consistent with bitter putting only 6 synapses on
+  MN9's relays.
+- **S3, LB2 dominates pharyngeal pumping: FAIL.** With sign, LB2 ranks fourth on MN11D and MN11V,
+  behind the appetitive types. The companion paper's unsigned prediction for pumping does not
+  survive sign. LB2's influence instead concentrates on CEM, the crop-entry motor neuron, where it
+  is the largest positive value in the table; that half of the paper's claim is supported.
+
+**Reported, not scored.**
+
+- **Sign reverses the unsigned picture for more than half of the strongest inputs.** Of the 15
+  gustatory types with the largest unsigned influence on MN9, 8 are net inhibitory once sign is
+  included: every pharyngeal type in the list (aPhM1, aPhM2a, aPhM2b, aPhM3, aPhM4) plus LB1c,
+  LB1e and LgAG1. An unsigned map would rank these among MN9's strongest drivers; with sign they
+  push against it. This is a quantified instance of the limitation the companion paper states in
+  its own discussion, and it agrees with the modality re-test above, which found the pharyngeal
+  afferents strongly inhibition-biased.
+- **The LB3d transmitter call flips its predicted role.** Signed as MaleCNS classifies it
+  (cholinergic), LB3d pushes the proboscis motor neurons positive (+2.2e-3), like an appetitive
+  type. Signed as the companion paper's driver-line match suggests (glutamatergic), it pushes them
+  negative (-1.8e-3), like an aversive one. The classifier-versus-molecular discrepancy therefore
+  decides whether this model treats aversive salt as promoting or suppressing feeding.
+
 ## 3. The missing ingredient is not obtainable from this dataset
 
 Feeding needs cell-specific spontaneous activity. The one neuron with a measured, hunger-gated
