@@ -1,0 +1,19 @@
+{
+  "criteria": {
+    "source": "Tootoonian et al. 2012, J Neurosci 32:787-798, Fig. 2D; builds on the registered A2 result (c097e41)",
+    "gains": [
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8
+    ],
+    "trials_per_arm": 100,
+    "near_threshold": "loom-alone GF probability <= 0.3",
+    "RA2": "at every qualifying gain the 95% CI on the difference lies above zero, and >= 3 gains qualify",
+    "ci_method": "Newcombe 1998 method 10, recomputed from counts"
+  },
+  "registered_at": "2026-09-28T07:24:01",
+  "git_commit": "cc8d759",
+  "script_uncommitted": false
+}

@@ -1,0 +1,68 @@
+{
+  "benchmark": "auditory",
+  "n_trials": 100,
+  "jo_types": [
+    "JO-A1",
+    "JO-A2",
+    "JO-A3",
+    "JO-A4",
+    "JO-B1_a",
+    "JO-B1_b",
+    "JO-B1_c",
+    "JO-B2",
+    "JO-B3",
+    "JO-CA1",
+    "JO-CA2"
+  ],
+  "jo_hz": 150,
+  "arms": {
+    "A2_calibration": {
+      "gains": [],
+      "chosen_gain": 0.6,
+      "rule": "fixed by FLYCNS_A2_GAIN"
+    },
+    "subthreshold_loom_alone": {
+      "gf_per_cell": 0.015,
+      "gf_hit": 0.03,
+      "gf_lat_ms": 32.66666666667637,
+      "pop_rate_hz": 0.0018768716030690327,
+      "wall_s": 560.4,
+      "n_trials": 100,
+      "gf_depol_mV": 4.390906354836471
+    },
+    "A2_loom_plus_jo": {
+      "gf_per_cell": 0.24,
+      "gf_hit": 0.48,
+      "gf_lat_ms": 33.73541666666511,
+      "pop_rate_hz": 0.005945055800213507,
+      "wall_s": 561.4,
+      "n_trials": 100,
+      "gf_depol_mV": 3.684789030532026
+    },
+    "A2_prediction": {
+      "loom_gain": 0.6,
+      "n_trials_per_arm": 100,
+      "loom_alone_hit": 0.03,
+      "loom_plus_jo_hit": 0.48,
+      "difference": 0.44999999999999996,
+      "difference_ci95": [
+        0.3401577850778976,
+        0.5488286000950695
+      ],
+      "loom_alone_depol_mV": 4.390906354836471,
+      "loom_plus_jo_depol_mV": 3.684789030532026,
+      "mode": "A2 only"
+    }
+  },
+  "checks": {},
+  "provenance": {
+    "written_at": "2026-09-28T08:19:57",
+    "git_commit": "cc8d759",
+    "env": {
+      "FLYCNS_A2_ONLY": "1",
+      "FLYCNS_A2_GAIN": "0.6",
+      "FLYCNS_A2_TRIALS": "100",
+      "FLYCNS_AUDITORY_OUT": "results/a2_robustness/gain_0.6"
+    }
+  }
+}

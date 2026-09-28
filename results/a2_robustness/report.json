@@ -1,0 +1,104 @@
+{
+  "benchmark": "a2_robustness",
+  "criteria": {
+    "source": "Tootoonian et al. 2012, J Neurosci 32:787-798, Fig. 2D; builds on the registered A2 result (c097e41)",
+    "gains": [
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8
+    ],
+    "trials_per_arm": 100,
+    "near_threshold": "loom-alone GF probability <= 0.3",
+    "RA2": "at every qualifying gain the 95% CI on the difference lies above zero, and >= 3 gains qualify",
+    "ci_method": "Newcombe 1998 method 10, recomputed from counts"
+  },
+  "rows": [
+    {
+      "gain": 0.4,
+      "n": 100,
+      "k_alone": 0,
+      "k_sound": 24,
+      "p_alone": 0.0,
+      "p_sound": 0.24,
+      "difference": 0.24,
+      "ci": [
+        0.15808263275226442,
+        0.3323251872329213
+      ],
+      "near_threshold": true,
+      "facilitation": true,
+      "depol_alone_mV": 3.097997670333512
+    },
+    {
+      "gain": 0.5,
+      "n": 100,
+      "k_alone": 0,
+      "k_sound": 36,
+      "p_alone": 0.0,
+      "p_sound": 0.36,
+      "difference": 0.36,
+      "ci": [
+        0.2651947804144459,
+        0.4576478001883791
+      ],
+      "near_threshold": true,
+      "facilitation": true,
+      "depol_alone_mV": 3.767551863469583
+    },
+    {
+      "gain": 0.6,
+      "n": 100,
+      "k_alone": 3,
+      "k_sound": 48,
+      "p_alone": 0.03,
+      "p_sound": 0.48,
+      "difference": 0.44999999999999996,
+      "ci": [
+        0.3401577850778976,
+        0.5488286000950695
+      ],
+      "near_threshold": true,
+      "facilitation": true,
+      "depol_alone_mV": 4.390906354836471
+    },
+    {
+      "gain": 0.7,
+      "n": 100,
+      "k_alone": 16,
+      "k_sound": 55,
+      "p_alone": 0.16,
+      "p_sound": 0.55,
+      "difference": 0.39,
+      "ci": [
+        0.261129875257939,
+        0.5008857925691835
+      ],
+      "near_threshold": true,
+      "facilitation": true,
+      "depol_alone_mV": 4.941965140386375
+    },
+    {
+      "gain": 0.8,
+      "n": 100,
+      "k_alone": 36,
+      "k_sound": 63,
+      "p_alone": 0.36,
+      "p_sound": 0.63,
+      "difference": 0.27,
+      "ci": [
+        0.13179995283376322,
+        0.39407558743528437
+      ],
+      "near_threshold": false,
+      "facilitation": true,
+      "depol_alone_mV": 5.492211615621
+    }
+  ],
+  "n_qualifying": 4,
+  "checks": {
+    "RA2_facilitation_at_every_near_threshold_gain": true
+  },
+  "wall_s": 5602
+}
