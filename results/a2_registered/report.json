@@ -1,0 +1,46 @@
+{
+  "benchmark": "a2_registered",
+  "criteria": {
+    "source": "Tootoonian, Coen, Kawadler & Murthy 2012, J Neurosci 32:787-798, Fig. 2D (sound + subthreshold input -> GF spike)",
+    "A2R": "95% CI on P(GF|loom+sound) - P(GF|loom) at the calibrated working point lies entirely above zero",
+    "ci_method": "Newcombe 1998 method 10 (hybrid score), recomputed from counts",
+    "trials_per_arm": 120,
+    "outcomes": {
+      "above": "PASS facilitation",
+      "below": "FAIL suppression (contradicts Tootoonian 2012)",
+      "spans": "FAIL unresolved at this trial count"
+    }
+  },
+  "working_point_loom_gain": 0.6,
+  "n_trials_per_arm": 120,
+  "loom_alone": {
+    "k": 5,
+    "p": 0.041666666666666664,
+    "ci": [
+      0.017926452505837808,
+      0.09384212929543091
+    ]
+  },
+  "loom_plus_sound": {
+    "k": 54,
+    "p": 0.45,
+    "ci": [
+      0.3639158452162006,
+      0.5391861818893925
+    ]
+  },
+  "difference": 0.4083333333333333,
+  "difference_ci95": [
+    0.3076717189743001,
+    0.5006251141613671
+  ],
+  "outcome": "PASS facilitation",
+  "auditory_report_ci": [
+    0.3076717189743001,
+    0.5006251141613671
+  ],
+  "checks": {
+    "A2R_facilitation": true
+  },
+  "wall_s": 3385
+}
