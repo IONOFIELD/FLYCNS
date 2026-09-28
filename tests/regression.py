@@ -38,6 +38,7 @@ RUNS = [  # (label, argv relative to the copy, extra env, sentinel substring or 
     ("dnp13_control", ["benchmarks/dnp13_control.py", "2", "testdata"], {}, None),
     ("flight_snpp16", ["benchmarks/flight_snpp16.py", "20", "testdata"], {"FLYCNS_TARGET_TYPE": "SApp10"}, None),
     ("a2_registered", ["benchmarks/a2_registered.py", "4", "testdata"], {}, None),
+    ("a2_robustness", ["benchmarks/a2_robustness.py", "2", "testdata"], {}, None),
 ]
 
 

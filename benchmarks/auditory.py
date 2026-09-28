@@ -47,7 +47,13 @@ from flycns.graph import afferents_by_subclass
 from flycns.bench import provenance
 from flycns import ascii as A
 
-OUT = Path("results/auditory"); OUT.mkdir(parents=True, exist_ok=True)
+# FLYCNS_AUDITORY_OUT redirects the report (used by benchmarks/a2_robustness.py so a sweep never
+# overwrites the suite's own results/auditory/report.json).
+OUT = Path(os.environ.get("FLYCNS_AUDITORY_OUT", "results/auditory")); OUT.mkdir(parents=True, exist_ok=True)
+# FLYCNS_A2_GAIN fixes the A2 working point instead of calibrating it; FLYCNS_A2_ONLY=1 runs only the
+# two A2 arms. Both exist for the registered robustness sweep; with neither set, behaviour is unchanged.
+A2_GAIN_FIXED = os.environ.get("FLYCNS_A2_GAIN")
+A2_ONLY = os.environ.get("FLYCNS_A2_ONLY") == "1"
 N_TRIALS = int(sys.argv[1]) if len(sys.argv) > 1 else 40
 # A2 compares two response probabilities, so it needs far more trials than the pass/fail
 # checks: 20 trials cannot separate 0.15 from 0.30 (3 vs 6 events). Set FLYCNS_A2_TRIALS
@@ -150,19 +156,35 @@ def run(label, stim_types, electrical=True, edge_df=edges, jo=True, loom=False, 
 # ---- calibrate the near-threshold loom working point
 CAL_GAINS = [0.4, 0.6, 0.8, 1.0, 1.3]
 cal = []
-for g in CAL_GAINS:
+for g in ([] if A2_GAIN_FIXED else CAL_GAINS):
     SUB_LOOM_GAIN = g
     globals()["SUB_LOOM_GAIN"] = g
     c = run(f"cal_loom_gain_{g}", list(LOOM_TUNING), electrical=True, jo=False, loom=True)
     cal.append((g, c["gf_hit"], c["gf_depol_mV"]))
     print(f"  calibration: loom gain {g} -> GF hit {c['gf_hit']:.2f}, depol {c['gf_depol_mV']:.2f} mV")
 ok = [(g, h, d) for g, h, d in cal if h <= 0.3 and d >= 2.0]
-SUB_LOOM_GAIN = max(g for g, _, _ in ok) if ok else CAL_GAINS[0]
+SUB_LOOM_GAIN = float(A2_GAIN_FIXED) if A2_GAIN_FIXED else (max(g for g, _, _ in ok) if ok else CAL_GAINS[0])
 globals()["SUB_LOOM_GAIN"] = SUB_LOOM_GAIN
 report["arms"]["A2_calibration"] = dict(gains=[dict(gain=g, hit=h, depol_mV=d) for g, h, d in cal],
                                         chosen_gain=SUB_LOOM_GAIN,
-                                        rule="largest gain with GF hit <= 0.3 and depol >= 2 mV")
+                                        rule=("fixed by FLYCNS_A2_GAIN" if A2_GAIN_FIXED else
+                                              "largest gain with GF hit <= 0.3 and depol >= 2 mV"))
 print(f"A2 working point: loom gain {SUB_LOOM_GAIN}")
+
+if A2_ONLY:
+    lo = run("subthreshold_loom_alone", list(LOOM_TUNING), electrical=True, jo=False, loom=True, n_trials=A2_TRIALS)
+    a2 = run("A2_loom_plus_jo", list(LOOM_TUNING) + jo_types, electrical=True, jo=True, loom=True, n_trials=A2_TRIALS)
+    k1, n1 = int(round(lo["gf_hit"] * lo["n_trials"])), lo["n_trials"]
+    k2, n2 = int(round(a2["gf_hit"] * a2["n_trials"])), a2["n_trials"]
+    d, dlo, dhi = two_prop_ci(k1, n1, k2, n2)
+    report["arms"]["A2_prediction"] = dict(loom_gain=SUB_LOOM_GAIN, n_trials_per_arm=n1,
+        loom_alone_hit=lo["gf_hit"], loom_plus_jo_hit=a2["gf_hit"], difference=d, difference_ci95=[dlo, dhi],
+        loom_alone_depol_mV=lo["gf_depol_mV"], loom_plus_jo_depol_mV=a2["gf_depol_mV"], mode="A2 only")
+    report["provenance"] = provenance()
+    (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+    print(f"A2 only at gain {SUB_LOOM_GAIN}: {lo['gf_hit']:.3f} -> {a2['gf_hit']:.3f}, difference {d:+.3f} "
+          f"(95% CI {dlo:+.3f} to {dhi:+.3f})")
+    sys.exit(0)
 
 a1 = run("A1_jo_alone_electrical", jo_types, electrical=True)
 a3 = run("A3_jo_alone_no_electrical_no_mixed_edges", jo_types, electrical=False,

@@ -74,6 +74,7 @@ MENU = """
                 42  sugar laterality: does one-sided sugar favour the opposite MN9? (registered)
   SOCIAL        43  pC1 song: can the dynamic model explain what static paths could not? (registered)
   AUDITORY      47  A2 facilitation at 120 trials per arm, scored against Tootoonian 2012 (registered)
+                48  A2 robustness: facilitation across near-threshold working points (registered)
                 44  DNp13 positive control: is the sine-song neuron reachable at all? (registered)
   FLIGHT        33  gate: are the wing and haltere afferents identifiable and do they form a loop
                 34  flight loop: phase-locked campaniform drive at 202 Hz (surrogate body)
@@ -176,6 +177,7 @@ while True:
     elif c == "42": run("benchmarks/sugar_laterality.py")
     elif c == "43": run("benchmarks/pc1_song.py", ask("trials", "10"))
     elif c == "47": run("benchmarks/a2_registered.py", ask("trials per arm", "120"))
+    elif c == "48": run("benchmarks/a2_robustness.py", ask("trials per arm", "100"))
     elif c == "44": run("benchmarks/dnp13_control.py", ask("trials", "10"))
     elif c == "34": run("benchmarks/flight_loop.py", ask("wingbeat cycles per arm", "400"))
     elif c == "31": run("fit/check_modulators.py")

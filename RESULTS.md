@@ -380,6 +380,12 @@ Measure: input-normalised path products, cumulative over hops 1 to 5.
   type. Signed as the companion paper's driver-line match suggests (glutamatergic), it pushes them
   negative (-1.8e-3), like an aversive one. The classifier-versus-molecular discrepancy therefore
   decides whether this model treats aversive salt as promoting or suppressing feeding.
+- **Sign does not always change the answer.** The visual companion paper (Cell 189:5552-5570)
+  predicted ON/OFF selectivity for 54 cell types from L1 versus L2 effective weight (45 of 54
+  correct) and reports that adding negative weights for inhibitory neurons did not systematically
+  improve it; its methods state the signed predictions were about as accurate as the unsigned ones.
+  So a signed ON/OFF classifier would repeat a published test, and was not built. Sign changed the
+  answer for taste, feeding laterality and song here; for that visual classification it did not.
 
 ### Laterality: Shiu's contralateral prediction holds for sugar, and only with sign (registered)
 
