@@ -68,7 +68,8 @@ before they run, so a result cannot be tuned after the fact.
   result against criteria written in its header.
 - **Guards.** Every stimulus list is checked against the dataset before a long run starts, reports
   record the commit and settings that produced them, and pre-registered tests refuse to run against
-  changed criteria.
+  changed criteria. A regression test (`python tests/regression.py`, menu **46**) runs
+  the whole toy suite in an isolated copy, and runs automatically on every push.
 
 ### The menu
 
@@ -76,7 +77,7 @@ before they run, so a result cannot be tuned after the fact.
 |---|---|---|
 | Setup | 1 to 3, 45 | download the connectome, sensory and sex-related annotations; show status |
 | Benchmarks | 4 to 7 | run the suite or one circuit; summary; overnight robustness battery |
-| Checks | 28, 35, 36 | audit every stimulus set; test sensitivity to inherited parameters |
+| Checks | 28, 35, 36, 46 | audit every stimulus set; parameter sensitivity; regression test |
 | Fits | 8 to 10, 26 | the fits and sweeps behind each declared value |
 | Recorded data | 21, 22 | fetch the Turner et al. 2022 imaging data; extract measured loom tuning |
 | Connectome detail | 23 to 25 | per-synapse transmitter confidence; neuropil membership |
@@ -84,7 +85,7 @@ before they run, so a result cannot be tuned after the fact.
 | Flight | 33, 34, 37 to 39 | surrogate-body flight loop; the SNpp16 tests |
 | Traces | 29, 30, 32 | pathway traces that are findings rather than benchmarks |
 | Explore | 11 to 16 | stimulate anything and watch; terminal and 3D views of cascades and neurons |
-| Export | 20 | simulated sessions in a format machine-learning decoders can read |
+| Export | 20 | simulated sessions as temporaldata files, verified to reload with the loader brainsets and POYO+ use |
 | Docs | 17 to 19 | results note, references, provenance of the last run |
 
 ### Results at a glance

@@ -603,7 +603,15 @@ Every value is either cited or fitted by a rule stated before the fit. Full list
   the direction depends entirely on where the loom sits relative to threshold, and across the
   robustness battery at 20 trials per arm the reading was facilitation four times, suppression
   twice and no change twice. The benchmark now calibrates a near-threshold working point and
-  reports the difference with a confidence interval; at 40 trials per arm it is unresolved.
+  reports the difference with a confidence interval; at 40 trials per arm it is unresolved. That
+  interval was itself computed wrongly until 25 September 2026 (the Newcombe bounds used crossed
+  Wilson limits and an extra factor of 1.96, making each interval roughly twice too wide); the
+  method is now verified against Newcombe's 1998 worked example, and a registered test at 120 trials
+  per arm (`benchmarks/a2_registered.py`) scores the question against Tootoonian et al. 2012.
+- **"The export is in a format machine-learning decoders can read."** Tested on 25 September 2026
+  with the real `temporaldata` loader used by brainsets and POYO+: the files could not be read (no
+  object-type attributes). The exporter now builds each session with temporaldata's own classes and
+  reloads every file through `Data.from_hdf5` before accepting it.
 - **A GF adaptation value of 15 mV**, withdrawn as an undersampled fit.
 - **A plan to open the feeding pathway with cell-specific baselines from the literature**,
   withdrawn because the target neuron is not in the dataset.

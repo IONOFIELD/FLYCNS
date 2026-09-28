@@ -21,6 +21,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import h5py
+import temporaldata as td
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from flycns import load_graph, CNSModel, LIFParams
 from flycns.protocols import LOOM_TUNING
@@ -80,30 +81,43 @@ for name, cfg in SESSIONS.items():
     uidx = pd.Series(np.arange(len(recorded)), index=recorded)
 
     f = OUT / f"flycns_sim_{name}.h5"
+    t_end = m.t_ms / 1000.0
+    ts = (sp.t_ms.values / 1000.0).astype("f8")
+    ui = uidx.loc[sp.bodyId].values.astype("i8")
+    order = np.argsort(ts, kind="stable")
+    whole = td.Interval(start=np.array([0.0]), end=np.array([t_end]))
+    spikes = td.IrregularTimeSeries(timestamps=ts[order], unit_index=ui[order], domain=whole)
+    ufields = dict(id=np.array([f"malecns:{b}" for b in recorded]), body_id=np.array(recorded, dtype="i8"))
+    for col in ["type", "superclass", "subclass", "somaSide", "consensusNt"]:
+        if col in meta:
+            ufields[col] = np.array(meta.loc[recorded, col].fillna("").astype(str))
+    ufields.update(in_synapses=deg_in.reindex(recorded).fillna(0).values.astype("f4"),
+                   out_synapses=deg_out.reindex(recorded).fillna(0).values.astype("f4"),
+                   in_degree=nin.reindex(recorded).fillna(0).values.astype("f4"),
+                   out_degree=nout.reindex(recorded).fillna(0).values.astype("f4"),
+                   synaptic_depth_from_stimulus=np.array([seen[b] for b in recorded], dtype="i2"))
+    for c in ["x", "y", "z"]:
+        ufields[f"soma_{c}"] = meta.loc[recorded, c].fillna(np.nan).values.astype("f4")
+    units = td.ArrayDict(**ufields)
+    trial_iv = td.Interval(start=np.array([t["start"] for t in trials], dtype="f8"),
+                           end=np.array([t["end"] for t in trials], dtype="f8"),
+                           condition=np.array([t["condition"] for t in trials]),
+                           value=np.array([t["value"] for t in trials], dtype="f4"))
+    data = td.Data(brainset="flycns_sim", session=f"flycns_sim_{name}", subject="malecns_v1.0_lif",
+                   spikes=spikes, units=units, trials=trial_iv, domain=whole)
     with h5py.File(f, "w") as h:
-        h.attrs.update(dict(session_id=f"flycns_sim_{name}", subject_id="malecns_v1.0_lif", brainset="flycns_sim",
-                            model_params=json.dumps(LIFParams().__dict__), stimulus_types=json.dumps(cfg["stim"]),
-                            note="simulated; connectome-constrained LIF; see flycns RESULTS.md"))
-        g = h.create_group("spikes")
-        g.create_dataset("timestamps", data=(sp.t_ms.values / 1000.0).astype("f8"))
-        g.create_dataset("unit_index", data=uidx.loc[sp.bodyId].values.astype("i4"))
-        u = h.create_group("units")
-        u.create_dataset("id", data=np.array([f"malecns:{b}" for b in recorded], dtype="S"))
-        u.create_dataset("body_id", data=np.array(recorded, dtype="i8"))
-        for col in ["type", "superclass", "subclass", "somaSide", "consensusNt"]:
-            if col in meta:
-                u.create_dataset(col, data=np.array(meta.loc[recorded, col].fillna("").astype(str), dtype="S"))
-        u.create_dataset("in_synapses", data=deg_in.reindex(recorded).fillna(0).values.astype("f4"))
-        u.create_dataset("out_synapses", data=deg_out.reindex(recorded).fillna(0).values.astype("f4"))
-        u.create_dataset("in_degree", data=nin.reindex(recorded).fillna(0).values.astype("f4"))
-        u.create_dataset("out_degree", data=nout.reindex(recorded).fillna(0).values.astype("f4"))
-        u.create_dataset("synaptic_depth_from_stimulus", data=np.array([seen[b] for b in recorded], dtype="i2"))
-        for c in ["x", "y", "z"]:
-            u.create_dataset(f"soma_{c}", data=meta.loc[recorded, c].fillna(np.nan).values.astype("f4"))
-        tr = h.create_group("trials")
-        for key, dt in [("start", "f8"), ("end", "f8"), ("value", "f4")]:
-            tr.create_dataset(key, data=np.array([t[key] for t in trials], dtype=dt))
-        tr.create_dataset("condition", data=np.array([t["condition"] for t in trials], dtype="S"))
-        h.create_dataset("domain/start", data=np.array([0.0])); h.create_dataset("domain/end", data=np.array([m.t_ms / 1000.0]))
-    print(f"  wrote {f}: {len(sp):,} spikes, {len(recorded)} units, {N} trials, {m.t_ms/1000:.1f} s")
-print("\nnext: pip install brainsets torch_brain; load with h5py or adapt brainsets' Data.from_hdf5 and verify field names")
+        data.to_hdf5(h)
+        h.attrs["model_params"] = json.dumps(LIFParams().__dict__, default=str)
+        h.attrs["stimulus_types"] = json.dumps(cfg["stim"])
+        h.attrs["note"] = "simulated; connectome-constrained LIF; see flycns RESULTS.md"
+    # validate with the real loader: a file it cannot read, or reads differently, fails here
+    with h5py.File(f, "r") as h:
+        back = td.Data.from_hdf5(h, lazy=False)
+        ok = (np.array_equal(back.spikes.timestamps, spikes.timestamps)
+              and np.array_equal(back.spikes.unit_index, spikes.unit_index)
+              and len(back.units.id) == len(recorded) and len(back.trials) == len(trials))
+    if not ok:
+        raise SystemExit(f"VALIDATION FAILED: {f} does not round-trip through temporaldata.Data.from_hdf5")
+    print(f"  wrote {f}: {len(sp):,} spikes, {len(recorded)} units, {N} trials, {t_end:.1f} s "
+          f"(validated: reloads with temporaldata {td.__version__})")
+print("\nevery file was reloaded with temporaldata.Data.from_hdf5 and compared to what was written")

@@ -97,11 +97,19 @@ def wilson(k, n, z=1.96):
 
 
 def two_prop_ci(k1, n1, k2, n2, z=1.96):
-    """95% CI on p2 - p1 (Newcombe hybrid score interval)."""
-    l1, u1 = wilson(k1, n1); l2, u2 = wilson(k2, n2)
-    d = k2 / n2 - k1 / n1
-    lo = d - z * np.sqrt((k1 / n1 - l1) ** 2 / z ** 2 * z ** 2 + (u2 - k2 / n2) ** 2 / z ** 2 * z ** 2)
-    hi = d + z * np.sqrt((u1 - k1 / n1) ** 2 / z ** 2 * z ** 2 + (k2 / n2 - l2) ** 2 / z ** 2 * z ** 2)
+    """95% CI on p2 - p1, Newcombe (1998) hybrid score interval, method 10.
+
+    lower = d - sqrt((p2 - l2)^2 + (u1 - p1)^2),  upper = d + sqrt((u2 - p2)^2 + (p1 - l1)^2),
+    with (l, u) the Wilson score limits of each proportion. Checked against Newcombe's worked
+    example (56/70 vs 48/80 -> 0.0524 to 0.3339). CORRECTION 2026-09-25: an earlier version paired
+    each bound with the other bound's Wilson limits and multiplied by an extra z, making every A2
+    interval reported before this date roughly twice too wide.
+    """
+    p1, p2 = k1 / n1, k2 / n2
+    l1, u1 = wilson(k1, n1, z); l2, u2 = wilson(k2, n2, z)
+    d = p2 - p1
+    lo = d - np.sqrt((p2 - l2) ** 2 + (u1 - p1) ** 2)
+    hi = d + np.sqrt((u2 - p2) ** 2 + (p1 - l1) ** 2)
     return d, lo, hi
 
 

@@ -59,6 +59,7 @@ MENU = """
   BENCHMARKS     4  run full suite (3 circuits, ~40 min)      5  run one benchmark
                  6  show suite summary                        7  robustness battery (overnight)
   CHECKS        35  audit every stimulus set against the dataset (seconds; run before long jobs)
+                46  regression test: whole toy suite in an isolated copy (a few minutes)
                 28  cord parameter sensitivity (do brain values distort the nerve cord?)
                 36  flight sensitivity: does DLM's silence depend on the relay layer's parameters?
   FITS           8  GF adaptation sweep       9  SEZ regional gain sweep      10  afferent screen
@@ -72,6 +73,7 @@ MENU = """
                 41  signed sensory-to-motor map: every GRN type x every feeding MN (registered)
                 42  sugar laterality: does one-sided sugar favour the opposite MN9? (registered)
   SOCIAL        43  pC1 song: can the dynamic model explain what static paths could not? (registered)
+  AUDITORY      47  A2 facilitation at 120 trials per arm, scored against Tootoonian 2012 (registered)
                 44  DNp13 positive control: is the sine-song neuron reachable at all? (registered)
   FLIGHT        33  gate: are the wing and haltere afferents identifiable and do they form a loop
                 34  flight loop: phase-locked campaniform drive at 202 Hz (surrogate body)
@@ -164,6 +166,7 @@ while True:
     elif c == "32": run("benchmarks/dnp31_trace.py")
     elif c == "33": run("benchmarks/embodiment_gate.py")
     elif c == "35": run("fit/audit_stimuli.py")
+    elif c == "46": run("tests/regression.py")
     elif c == "36": run("benchmarks/sensitivity_flight.py", ask("wingbeat cycles per arm", "400"))
     elif c == "37": run("benchmarks/flight_snpp16.py", ask("wingbeat cycles per arm", "400"))
     elif c == "38": run("benchmarks/flight_snpp16_graded.py", ask("wingbeat cycles per arm", "400"))
@@ -172,6 +175,7 @@ while True:
     elif c == "41": run("benchmarks/gustatory_signed_map.py")
     elif c == "42": run("benchmarks/sugar_laterality.py")
     elif c == "43": run("benchmarks/pc1_song.py", ask("trials", "10"))
+    elif c == "47": run("benchmarks/a2_registered.py", ask("trials per arm", "120"))
     elif c == "44": run("benchmarks/dnp13_control.py", ask("trials", "10"))
     elif c == "34": run("benchmarks/flight_loop.py", ask("wingbeat cycles per arm", "400"))
     elif c == "31": run("fit/check_modulators.py")

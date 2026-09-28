@@ -8,3 +8,4 @@ cython
 h5py
 scipy
 networkx
+temporaldata
