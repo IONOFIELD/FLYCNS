@@ -33,6 +33,28 @@ drive alone leaves GF subthreshold, as recorded in vivo. Removing both the elect
 the 679 EM synapses annotated as chemical on that contact abolishes the response, identifying
 those synapses as the pathway.
 
+**Sound facilitates the giant fiber's response to a near-threshold loom** (`benchmarks/a2_registered.py`;
+criterion registered at `cbc0cc5`, committed to GitHub before any result in `4b3d746`, results
+`c097e41`). Tootoonian et al. 2012 (J Neurosci 32:787-798, Fig. 2D) showed that sound together with an
+input subthreshold on its own produces a full GF spike. At a working point calibrated per run (the
+largest loom gain leaving GF hit rate at or below 0.3 with at least 2 mV depolarisation; this run
+chose gain 0.6), with 120 trials per arm:
+
+| condition | GF responses | probability (95% CI) |
+|---|---|---|
+| loom alone | 5 / 120 | 0.042 (0.018 to 0.094) |
+| loom + sound | 54 / 120 | 0.450 (0.364 to 0.539) |
+| difference | | **+0.408 (+0.308 to +0.501)** |
+
+**A2R: PASS.** The interval lies entirely above zero, so the model reproduces the facilitation. Sound
+alone stays subthreshold (A1), a near-threshold loom rarely fires the giant fiber, and together they
+fire it on nearly half of trials. This resolves a question the project had carried as "unresolved"
+since its first week; the earlier inconclusive readings came from too few trials and from an interval
+function that was wrong until it was corrected and verified. Caveat: the calibrated working point
+moved from gain 0.8 in earlier runs to 0.6 here, because the loom input changed to the measured
+stationary amplitudes in between, and this run does not show how the effect varies across working
+points.
+
 **Feeding, partially** (`benchmarks/feeding.py`, 4 scored checks). Each of MN9's excitatory
 second-order inputs drives it when stimulated directly; MN9 is silent on a rewired null; activity
 stays inside the SEZ; motor rates stay physiological. What fails is the part that matters, below.
@@ -606,8 +628,9 @@ Every value is either cited or fitted by a rule stated before the fit. Full list
   reports the difference with a confidence interval; at 40 trials per arm it is unresolved. That
   interval was itself computed wrongly until 25 September 2026 (the Newcombe bounds used crossed
   Wilson limits and an extra factor of 1.96, making each interval roughly twice too wide); the
-  method is now verified against Newcombe's 1998 worked example, and a registered test at 120 trials
-  per arm (`benchmarks/a2_registered.py`) scores the question against Tootoonian et al. 2012.
+  method is now verified against Newcombe's 1998 worked example. The registered test at 120 trials
+  per arm then resolved it: sound FACILITATES the near-threshold loom response (+0.41, 95% CI +0.31
+  to +0.50), directly contradicting the withdrawn suppression claim.
 - **"The export is in a format machine-learning decoders can read."** Tested on 25 September 2026
   with the real `temporaldata` loader used by brainsets and POYO+: the files could not be read (no
   object-type attributes). The exporter now builds each session with temporaldata's own classes and
