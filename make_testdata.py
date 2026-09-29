@@ -44,5 +44,7 @@ for a in n[n.type=="JO-B1"].bodyId[:5]:
 for i in range(3000):
     a, b = rng.choice(n.bodyId.values, 2, replace=False)
     e.append(dict(pre=a, post=b, weight=int(rng.integers(5,10)), nt=rng.choice(["acetylcholine","gaba"])))
+import os
+os.makedirs("testdata", exist_ok=True)   # git does not keep empty folders, so a fresh clone has none
 pd.DataFrame(e).to_parquet("testdata/edges.parquet", index=False); n.to_parquet("testdata/neurons.parquet", index=False)
 print(len(n), "neurons", len(e), "edges")

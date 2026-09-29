@@ -14,6 +14,10 @@ What it checks:
 Toy numbers are artificial, so pass/fail on the toy says nothing about the fly; only that the code
 runs and the fixed invariants hold.
 
+The copy is taken from the working tree, so run it on a FRESH CLONE to reproduce CI exactly: on
+27 September 2026 it passed locally but failed on GitHub, because a fresh clone has no testdata/
+folder (git keeps no empty folders) and make_testdata.py did not create one. Both now do.
+
 Run:  python tests/regression.py        (a few minutes; exits non-zero on any failure)
 """
 import shutil
@@ -59,6 +63,7 @@ def main():
         work = Path(tmp) / "repo"
         shutil.copytree(ROOT, work, ignore=shutil.ignore_patterns(".git", "data", "results", ".venv", "__pycache__", "*.log"))
         (work / "results").mkdir(); (work / "data").mkdir()
+        (work / "testdata").mkdir(exist_ok=True)
         r = subprocess.run([sys.executable, "make_testdata.py"], cwd=work, capture_output=True, text=True)
         results.append(("make toy graph", r.returncode == 0, r.stderr.strip()[-200:]))
         for f in (work / "testdata").glob("*.parquet"):
