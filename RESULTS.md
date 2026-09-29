@@ -53,7 +53,31 @@ since its first week; the earlier inconclusive readings came from too few trials
 function that was wrong until it was corrected and verified. Caveat: the calibrated working point
 moved from gain 0.8 in earlier runs to 0.6 here, because the loom input changed to the measured
 stationary amplitudes in between, and this run does not show how the effect varies across working
-points.
+points. That caveat was then tested:
+
+**Facilitation is robust across working points** (`benchmarks/a2_robustness.py`; registered at
+`cc8d759`, results `9949c14`). The same protocol at five fixed loom gains, 100 trials per arm, with
+"near threshold" defined in advance as loom-alone response at most 0.3:
+
+| loom gain | loom alone | loom + sound | difference (95% CI) | regime |
+|---|---|---|---|---|
+| 0.4 | 0 / 100 | 24 / 100 | +0.24 (+0.16 to +0.33) | near threshold |
+| 0.5 | 0 / 100 | 36 / 100 | +0.36 (+0.27 to +0.46) | near threshold |
+| 0.6 | 3 / 100 | 48 / 100 | +0.45 (+0.34 to +0.55) | near threshold |
+| 0.7 | 16 / 100 | 55 / 100 | +0.39 (+0.26 to +0.50) | near threshold |
+| 0.8 | 36 / 100 | 63 / 100 | +0.27 (+0.13 to +0.39) | above threshold, not scored |
+
+**RA2: PASS.** Facilitation at all four near-threshold gains, and at the above-threshold gain too.
+Three observations:
+
+- **Sound makes a loom that never fires the giant fiber fire it.** At gains 0.4 and 0.5 the loom
+  alone gives 0 of 100; with sound, 24 and 36 of 100. This is Tootoonian et al.'s result in its
+  purest form (an input subthreshold on its own produces a spike when paired with sound), shown
+  across a range rather than at one point.
+- **The effect is an inverted U, peaking at gain 0.6**, as summation near threshold should be: too
+  little loom and sound only occasionally lifts it over, too much and the loom already fires alone.
+- **It replicates.** At gain 0.6 the sweep gives 0.030 to 0.480, against 0.042 to 0.450 in the
+  registered 120-trial run.
 
 **Feeding, partially** (`benchmarks/feeding.py`, 4 scored checks). Each of MN9's excitatory
 second-order inputs drives it when stimulated directly; MN9 is silent on a rewired null; activity
