@@ -1,23 +1,24 @@
 # flycns
 
+[![regression](https://github.com/IONOFIELD/FLYCNS/actions/workflows/regression.yml/badge.svg)](https://github.com/IONOFIELD/FLYCNS/actions/workflows/regression.yml)
+
 A spiking simulation of the complete male fruit fly nervous system, built from its wiring diagram
 and tested against published physiology.
 
 ---
 
-## Install
+## Quick start
 
-macOS or Linux, Python 3.10 or newer, and a few gigabytes of free disk.
+Needs macOS or Linux, Python 3.10 or newer, and a C compiler (macOS: `xcode-select --install`).
 
     git clone https://github.com/IONOFIELD/FLYCNS.git flycns && cd flycns
-    python3 -m venv .venv && source .venv/bin/activate
-    pip install -r requirements.txt
-    echo "PASTE_YOUR_NEUPRINT_TOKEN" > ~/.neuprint_token     # neuprint.janelia.org -> Account
-    ./fly
+    ./setup.sh --check                          # installs, runs the toy suite: no account, ~5 min
+    echo "YOUR_TOKEN" > ~/.neuprint_token       # free at neuprint.janelia.org, under Account
+    ./setup.sh                                  # downloads the connectome, ~5 min
+    ./fly                                       # menu: choose 4 to run the full suite, ~40 min
 
-`./fly` opens the menu. The first time, choose **1** (download the connectome, about 5 minutes),
-**2** (sensory annotations), then **4** (run the benchmark suite, about 40 minutes). To launch from
-anywhere, add `alias flycns=~/flycns/fly` to your shell profile.
+`--check` alone is enough to confirm everything installs and runs. Rerunning `./setup.sh` is safe;
+it skips the download if the connectome is already there.
 
 ---
 
