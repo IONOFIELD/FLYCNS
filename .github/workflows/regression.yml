@@ -83,26 +83,36 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
+          function Fail($msg, $detail) {
+            # GitHub annotations carry the evidence to the pull request page
+            $tail = (($detail -split "`n") | Select-Object -Last 12) -join " | "
+            Write-Output "::error title=menu 51::$msg :: $tail"
+            throw $msg
+          }
+          function Git { git @args 2>&1 | Out-String; if ($LASTEXITCODE -ne 0) { Fail "git $args failed" "" } }
           git config --global user.name "ci"; git config --global user.email "ci@example.com"
           $w = Join-Path $env:RUNNER_TEMP "maintainer"
-          git clone -q --bare . "$w\remote.git"
-          git clone -q "$w\remote.git" "$w\clone"
+          # a pull request is checked out as a detached commit: give the stand-in GitHub a real branch
+          Git branch -f ci-main HEAD | Out-Null
+          Git clone -q --bare -b ci-main . "$w\remote.git" | Out-Null
+          Git clone -q "$w\remote.git" "$w\clone" | Out-Null
           cmd /c mklink /J "$w\clone\.venv" "$PWD\.venv" | Out-Null
           Set-Location "$w\clone"
           .\.venv\Scripts\python.exe scripts\make_testdata.py | Out-Null
           Copy-Item testdata\*.parquet data\
           .\.venv\Scripts\python.exe -m flycns.integrity write data | Out-Null
           # registrations made on the real connectome do not fit the toy graph; the toy registers its own
-          git rm -q results/*/criteria.json
-          git add data/MANIFEST.json
-          git commit -qm "CI: toy data pinned in place of the connectome"
-          git push -q
+          Git rm -q "results/*/criteria.json" | Out-Null
+          Git add data/MANIFEST.json | Out-Null
+          Git commit -qm "CI: toy data pinned in place of the connectome" | Out-Null
+          Git push -q | Out-Null
           $before = git -C "$w\remote.git" rev-list --count HEAD
           $out = "51`n`nq`n" | .\fly.cmd 2>&1 | Out-String
           Write-Output $out
-          if ($out.Contains("STOPPED") -or $out.Contains("Traceback")) { throw "menu 51 did not finish" }
+          if ($out.Contains("STOPPED") -or $out.Contains("Traceback")) { Fail "menu 51 did not finish" $out }
           $after = git -C "$w\remote.git" rev-list --count HEAD
           $last = git -C "$w\remote.git" log -1 --format=%s
           Write-Output "remote commits: $before -> $after; last: $last"
-          if ([int]$after -le [int]$before -or -not $last.StartsWith("canonical rerun")) { throw "menu 51 did not push its results" }
-          if ((git status --porcelain --untracked-files=no) -ne $null) { throw "menu 51 left uncommitted changes" }
+          if ([int]$after -le [int]$before -or -not $last.StartsWith("canonical rerun")) { Fail "menu 51 did not push its results" $out }
+          if ((git status --porcelain --untracked-files=no) -ne $null) { Fail "menu 51 left uncommitted changes" (git status --porcelain | Out-String) }
+          Write-Output "::notice title=menu 51::update, pinned data, core suite, stricter null, commit and push all verified ($before -> $after commits)"
