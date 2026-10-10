@@ -99,7 +99,10 @@ def step_environment():
         run([sys.executable, "-m", "venv", ROOT / ".venv"], check=False)
     if not VENV_PY.exists():
         sys.exit("  could not create the .venv folder (if it still exists, close other flycns windows and delete it)")
-    vpy("-m", "pip", "install", "-q", "--upgrade", "pip")
+    if subprocess.run([VENV_PY, "-m", "pip", "--version"], capture_output=True).returncode != 0:
+        vpy("-m", "ensurepip", "--upgrade")              # an environment made without pip gets it back
+    if vpy("-m", "pip", "install", "-q", "--upgrade", "pip") != 0:
+        sys.exit("  pip does not work in the .venv folder; delete the folder and run setup.cmd again")
     if v >= (3, 12):
         # ready-made Windows builds only: a missing one fails here, in seconds, with a clear way out,
         # instead of a long compile that needs the C++ Build Tools
