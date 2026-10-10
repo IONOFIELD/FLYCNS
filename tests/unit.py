@@ -109,7 +109,7 @@ def t_min_weight_and_provenance(tmp):
 
 def t_settings_banner():
     code = "from flycns.integrity import announce_overrides as a; a(); a()"
-    r = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True,
+    r = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace",
                        env={**os.environ, "FLYCNS_WSCALE": "0.9"})
     ok = "FLYCNS_WSCALE=0.9" in r.stderr and r.stderr.count("SETTINGS OVERRIDDEN") == 1
     return ok, "override announced once per process" if ok else r.stderr[-300:]
@@ -127,11 +127,11 @@ def t_clean_tree_guard(tmp):
     subprocess.run([*g, "add", "-A"], cwd=repo, check=True)
     subprocess.run([*g, "commit", "-qm", "x"], cwd=repo, check=True)
     probe = ["-c", "from flycns.integrity import require_clean; require_clean('probe'); print('RAN')"]
-    clean = subprocess.run([sys.executable, *probe], cwd=repo, capture_output=True, text=True, env=env)
-    with open(repo / "flycns" / "model.py", "a") as f:
+    clean = subprocess.run([sys.executable, *probe], cwd=repo, capture_output=True, text=True, encoding="utf-8", errors="replace", env=env)
+    with open(repo / "flycns" / "model.py", "a", encoding="utf-8") as f:
         f.write("\n# edit\n")
-    dirty = subprocess.run([sys.executable, *probe], cwd=repo, capture_output=True, text=True, env=env)
-    allowed = subprocess.run([sys.executable, *probe], cwd=repo, capture_output=True, text=True,
+    dirty = subprocess.run([sys.executable, *probe], cwd=repo, capture_output=True, text=True, encoding="utf-8", errors="replace", env=env)
+    allowed = subprocess.run([sys.executable, *probe], cwd=repo, capture_output=True, text=True, encoding="utf-8", errors="replace",
                              env={**env, "FLYCNS_ALLOW_DIRTY": "1"})
     ok = ("RAN" in clean.stdout and dirty.returncode != 0 and "refuses to run" in dirty.stderr
           and "RAN" in allowed.stdout and "UNCOMMITTED" in allowed.stderr)
@@ -146,12 +146,86 @@ def t_every_check_has_a_role():
     from flycns.calibration import role
     missing = set()
     for rep in sorted((ROOT / "results").glob("*/report.json")):
-        r = json.loads(rep.read_text())
+        r = json.loads(rep.read_text(encoding="utf-8"))
         for k in (r.get("checks") or {}):
             if role(r.get("benchmark", rep.parent.name), k)[0] == "unclassified":
                 missing.add(f"{rep.parent.name}:{k}")
     return not missing, "every check in the committed reports is classified" if not missing else \
         f"classify in flycns/calibration.py: {sorted(missing)}"
+
+
+def t_engines_identical():
+    """The compiled and pure-Python engines must produce the same spikes (the fallback on a Windows
+    machine without the C++ Build Tools must not change any result)."""
+    import tempfile as _tf
+    from flycns import CNSModel, LIFParams, loom_protocol, load_graph
+    from flycns.protocols import LOOM_TUNING
+    from flycns.windows import codegen_target
+    d = Path(_tf.mkdtemp(prefix="flycns_engine_"))
+    try:
+        subprocess.run([sys.executable, str(ROOT / "scripts/make_testdata.py")], cwd=d, capture_output=True, check=True)
+        neurons, edges = load_graph(str(d / "testdata"))
+        engines = ["numpy"] + (["cython"] if codegen_target() == "cython" else [])
+        spikes = {}
+        for eng in engines:
+            m = CNSModel(neurons, edges, list(LOOM_TUNING), LIFParams(), electrical=True, codegen=eng)
+            loom_protocol(m, n_trials=4)
+            spikes[eng] = m.spike_frame().sort_values(["t_ms", "bodyId"]).reset_index(drop=True)
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
+    if len(engines) == 1:
+        return True, f"only the pure-Python engine is available here ({len(spikes['numpy'])} spikes); compared in CI"
+    a, b = spikes["cython"], spikes["numpy"]
+    ok = len(a) > 0 and len(a) == len(b) and (a.bodyId.values == b.bodyId.values).all() \
+        and np.allclose(a.t_ms.values, b.t_ms.values)
+    return ok, f"compiled and pure-Python engines: {len(a)} identical spikes" if ok else \
+        f"engines differ: {len(a)} vs {len(b)} spikes"
+
+
+def t_all_sources_parse():
+    """Every Python file parses on THIS interpreter. CI runs the oldest supported Python (3.10), so
+    syntax that only newer versions accept (e.g. reusing the quote inside an f-string, 3.12+) fails here."""
+    import ast as _ast
+    bad = []
+    for f in sorted(ROOT.rglob("*.py")):
+        if any(p in f.parts for p in (".venv", ".git", "__pycache__")):
+            continue
+        try:
+            _ast.parse(f.read_text(encoding="utf-8"), filename=str(f))
+        except SyntaxError as e:
+            bad.append(f"{f.relative_to(ROOT)}:{e.lineno}")
+    return not bad, (f"every file parses on Python {sys.version.split()[0]}" if not bad else f"syntax errors: {bad}")
+
+
+def t_text_io_is_utf8():
+    """Every text read or write names its encoding. On Windows the default is cp1252, which breaks
+    on characters this repository uses (é, —, ×, braille in the terminal views)."""
+    from flycns.windows import unencoded_text_io
+    bad = []
+    for f in sorted(ROOT.rglob("*.py")):
+        if any(p in f.parts for p in (".venv", ".git", "__pycache__")):
+            continue
+        bad += [f"{f.relative_to(ROOT)}:{line}" for line, _, _ in unencoded_text_io(f.read_text(encoding="utf-8"))]
+    return not bad, "every text read/write is explicitly UTF-8" if not bad else f"add encoding='utf-8': {bad[:8]}"
+
+
+def t_token_file_formats(tmp):
+    """The token is read whether the file was saved as UTF-8, UTF-8 with BOM, or the UTF-16 that
+    PowerShell 5 writes for `echo token > file`."""
+    from flycns import windows as W
+    saved_file, saved_env = W.TOKEN_FILE, os.environ.pop("NEUPRINT_TOKEN", None)
+    tok = "eyJhbGciOiJIUzI1NiJ9." + "x" * 60
+    try:
+        results = []
+        for enc in ("utf-8", "utf-8-sig", "utf-16"):
+            W.TOKEN_FILE = tmp / f"tok_{enc}"
+            W.TOKEN_FILE.write_bytes((tok + "\r\n").encode(enc))
+            results.append(W.neuprint_token() == tok)
+    finally:
+        W.TOKEN_FILE = saved_file
+        if saved_env is not None:
+            os.environ["NEUPRINT_TOKEN"] = saved_env
+    return all(results), "UTF-8, UTF-8 with BOM and PowerShell UTF-16 all read" if all(results) else str(results)
 
 
 def run_all():
@@ -165,7 +239,11 @@ def run_all():
                          ("min_weight override + provenance", lambda: t_min_weight_and_provenance(tmp)),
                          ("settings banner", t_settings_banner),
                          ("registered tests refuse dirty code", lambda: t_clean_tree_guard(tmp)),
-                         ("every scored check has a role", t_every_check_has_a_role)]:
+                         ("every scored check has a role", t_every_check_has_a_role),
+                         ("every file parses on this Python", t_all_sources_parse),
+                         ("text I/O is explicitly UTF-8", t_text_io_is_utf8),
+                         ("token read in every Windows format", lambda: t_token_file_formats(tmp)),
+                         ("both engines give identical spikes", t_engines_identical)]:
             try:
                 ok, msg = fn()
             except Exception as ex:  # a crashing check is a failing check

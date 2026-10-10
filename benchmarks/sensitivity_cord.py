@@ -82,6 +82,6 @@ summary = dict(n_settings=len(df), checks_failing_in_any_setting=moved, metric_s
                cord_superclasses=CORD,
                interpretation=("checks that never fail across a 8x range of cord tau_m, a 4-10 mV threshold "
                                "range and a 5x refractory range do not rest on cord single-neuron parameters"))
-(OUT / "summary.json").write_text(json.dumps(summary, indent=2, default=float))
+(OUT / "summary.json").write_text(json.dumps(summary, indent=2, default=float), encoding="utf-8")
 print("\nchecks failing in at least one setting:", moved)
 print("metric spread across the sweep:", spread)

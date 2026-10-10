@@ -21,10 +21,15 @@ the ones marked **(guard)** are broken.
    - rerun the suite.
 
 ## Settings
-7. Robustness variants run through `FLYCNS_*` environment variables. Each one is announced in a banner, stamped into the report, and flagged PERTURBED in `results/SUITE.md`. The battery (`scripts/overnight.sh`) restores the canonical results when it finishes.
+7. Robustness variants run through `FLYCNS_*` environment variables. Each one is announced in a banner, stamped into the report, and flagged PERTURBED in `results/SUITE.md`. The battery (`scripts/overnight.py`, menu 7) restores the canonical results when it finishes.
 
 ## Verification
-8. `python tests/regression.py` must pass. Run it on a fresh clone, because local state hides missing files. **(CI)** It runs on every push, on Linux and macOS, with the pinned reference environment and with the oldest supported Python.
-9. Dependencies change only through `requirements.lock`, regenerated with:
+8. `.venv\Scripts\python.exe tests\regression.py` must pass (menu 46). Run it on a fresh clone, because local state hides missing files. **(CI)** It runs on every push on Windows:
+   - with the pinned reference environment on Python 3.12 and 3.13;
+   - with the oldest supported Python;
+   - with the pure-Python engine;
+   - and through `setup.cmd` and `fly.cmd`, as a user runs them.
+9. **Windows is the only supported platform.** Every text read or write names `encoding="utf-8"`, because Windows defaults to cp1252. A unit test fails otherwise. Platform-specific code lives in `flycns/windows.py` and nowhere else.
+10. Dependencies change only through `requirements.lock`, regenerated with:
    `uv pip compile requirements.txt --universal --python-version 3.12 -o requirements.lock`
-   Then let CI confirm the new lock on every platform before merging.
+   Then let CI confirm the new lock before merging.

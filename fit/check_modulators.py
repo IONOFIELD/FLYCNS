@@ -162,5 +162,5 @@ report["part_b"] = dict(
                "(output-dominated). Candidates are ranked by that signature only; confirming "
                "identity needs NBLAST against the light-level template."))
 
-(OUT / "modulator_checks.json").write_text(json.dumps(report, indent=2, default=str))
+(OUT / "modulator_checks.json").write_text(json.dumps(report, indent=2, default=str), encoding="utf-8")
 print(f"\nwrote {OUT / 'modulator_checks.json'}")

@@ -98,6 +98,7 @@ on a pre spike, after d_gap = 0.8 ms:  v_post ← v_post + A_spikelet
 ## 6. Numerics
 
 - **Integration:** forward Euler, time step 0.1 ms.
+- **Engine:** Brian2, compiled (Cython, with the Microsoft C++ Build Tools) or pure Python (NumPy). Both run the same generated equations and give identical spikes; the unit tests compare them on every CI run, and each report records which ran.
 - **Initial state:** all neurons start at V_rest with g = a = 0.
 - **Background:** none. There is no tonic background activity and no noise in the declared set.
 - **Randomness:** only in Poisson stimulus spikes and nulls, from a fixed seed (`FLYCNS_SEED`, default 0).

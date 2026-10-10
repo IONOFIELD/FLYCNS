@@ -32,7 +32,7 @@ the escape readouts:
 
 The escape spike-count and response-probability checks are therefore **calibrated**. TTMn one-to-one and lag hold **by construction**. The independent part of escape is its latency, plus two controls. Every check now carries a role (`flycns/calibration.py`), and `results/SUITE.md` counts independent checks separately. The held-out results are the circuits nothing was fitted to: A2 facilitation, pC1 song, the signed taste map, sugar laterality, feeding by modality, flight (except L1a) and SNpp16.
 
-**Committed escape and feeding reports were left in a perturbed state.** The robustness battery wrote into the canonical result folders and did not restore them. The committed `results/gf_escape/report.json` and `results/feeding/report.json` therefore came from the targeted sign-inversion run (seed 0, 11 September), not a canonical run. The battery also copied every benchmark's report into one folder under one name, so each tag kept only the last report. Both are fixed: the battery snapshots and restores the canonical folders, and it keeps one report per benchmark. The escape numbers quoted in this note were recorded from runs before the battery. The committed perturbed report shows 0.65 response probability and 1.19 spikes per response, against 0.68 and 1.06 here. Rerun the core suite (`scripts/run_all.sh`) to replace both reports with canonical ones that carry the new integrity stamp, and to confirm the quoted numbers.
+**Committed escape and feeding reports were left in a perturbed state.** The robustness battery wrote into the canonical result folders and did not restore them. The committed `results/gf_escape/report.json` and `results/feeding/report.json` therefore came from the targeted sign-inversion run (seed 0, 11 September), not a canonical run. The battery also copied every benchmark's report into one folder under one name, so each tag kept only the last report. Both are fixed: the battery snapshots and restores the canonical folders, and it keeps one report per benchmark. The escape numbers quoted in this note were recorded from runs before the battery. The committed perturbed report shows 0.65 response probability and 1.19 spikes per response, against 0.68 and 1.06 here. Rerun the core suite (menu 4, `scripts/run_all.py`) to replace both reports with canonical ones that carry the new integrity stamp, and to confirm the quoted numbers.
 
 **Run integrity.** Reports now record:
 - whether the code matched the stamped commit;
@@ -40,6 +40,14 @@ The escape spike-count and response-probability checks are therefore **calibrate
 - every settings override.
 
 Registered tests refuse uncommitted code and data that differ from `data/MANIFEST.json`. See README, "Integrity".
+
+**Windows only (10 October 2026, later).** The project now runs on Windows alone:
+- `setup.cmd` and `fly.cmd` replace the bash scripts, and the remaining scripts are Python.
+- Every text file is read and written as UTF-8.
+- The simulation engine is compiled when the Microsoft C++ Build Tools are present and pure Python otherwise. The two engines gave identical spikes on every comparison: the toy graph, and a 60,000-neuron synthetic network with 204,135 spikes. The pure-Python engine is about 4 times slower.
+- CI runs on Windows only.
+
+No model equation, parameter or criterion changed.
 
 **New robustness axes, not yet run on the full connectome:**
 - the connection-size threshold (3 and 10 synapses, against the default 5);
@@ -606,7 +614,7 @@ the stimulus and is declared as such.
 ## 5. Robustness
 
 **Nine-suite battery**, each a full three-circuit suite at 40 trials under measured stationary
-input (`scripts/overnight.sh`, `results/overnight/`):
+input (`scripts/overnight.py`, `results/overnight/`):
 
 | run | result | failing check |
 |---|---|---|
@@ -641,8 +649,8 @@ benchmark.
 
 ---
 
-**Stimulus-set integrity** (`fit/audit_stimuli.py`, run automatically by `scripts/run_all.sh` and
-`scripts/overnight.sh`). Stimulus neurons are selected by exact type name, and MaleCNS splits many
+**Stimulus-set integrity** (`fit/audit_stimuli.py`, run automatically by `scripts/run_all.py` and
+`scripts/overnight.py`). Stimulus neurons are selected by exact type name, and MaleCNS splits many
 populations into subtypes, so a correct-looking name can match nothing. That happened once: the
 first DNg02 run selected "DNg02", which matches none of the 29 DNg02_a to _g cells, and those arms
 ran without their input. The model now raises when a stimulus set matches no neurons and warns

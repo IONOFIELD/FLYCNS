@@ -18,7 +18,7 @@ reports = sorted(Path("results").glob("*/report.json"))
 mtimes = {rep: rep.stat().st_mtime for rep in reports}
 newest = max(mtimes.values()) if mtimes else 0
 for rep in reports:
-    r = json.loads(rep.read_text())
+    r = json.loads(rep.read_text(encoding="utf-8"))
     name = r.get("benchmark", rep.parent.name)
     prov = r.get("provenance", {})
     model_env = {k: v for k, v in (prov.get("env") or {}).items() if k not in PLUMBING}
@@ -66,14 +66,14 @@ md = ["# MaleCNS v1.0 LIF benchmark suite" + (f"  [{tag}]" if tag else ""), "",
           "UNSTAMPED = written before integrity stamping, rerun to stamp.",
       "", "Declared deviations from the raw connectome: see each results/*/provenance.md and flycns/graph.py."]
 # citation integrity: every author-year tag in code must resolve in REFERENCES.md
-refs = Path("REFERENCES.md").read_text() if Path("REFERENCES.md").exists() else ""
-code = "".join(f.read_text() for f in list(Path("flycns").glob("*.py")) + list(Path("benchmarks").glob("*.py")))
+refs = Path("REFERENCES.md").read_text(encoding="utf-8") if Path("REFERENCES.md").exists() else ""
+code = "".join(f.read_text(encoding="utf-8") for f in list(Path("flycns").glob("*.py")) + list(Path("benchmarks").glob("*.py")))
 tags = set(re.findall(r"([A-Z][A-Za-zé\-]+(?: et al\.| & [A-Z][A-Za-z]+)?) (19\d\d|20\d\d)", code))
 missing = sorted(f"{a} {y}" for a, y in tags if a.split()[0].rstrip(",") not in refs or y not in refs)
 stale = [b for b, f in flags.items() if "STALE" in f]
 if stale:
     md += ["", f"**WARNING: reports more than an hour older than the newest are included: "
-                f"{', '.join(stale)}. Rerun the suite (`scripts/run_all.sh`) before quoting this table.**"]
+                f"{', '.join(stale)}. Rerun the suite (menu 4, `scripts/run_all.py`) before quoting this table.**"]
 md += ["", "## Report provenance", "| benchmark | written | commit | data (neurons / edges) | env overrides |",
        "|---|---|---|---|---|"]
 md += [f"| {b} | {v['written_at']} | {v['commit']} | "
@@ -82,5 +82,5 @@ md += [f"| {b} | {v['written_at']} | {v['commit']} | "
 md += ["", f"## Citation check: {len(tags)-len(missing)}/{len(tags)} tags resolve in REFERENCES.md"]
 if missing:
     md += ["Unresolved: " + ", ".join(missing)]
-Path("results/SUITE.md").write_text("\n".join(md) + "\n")
+Path("results/SUITE.md").write_text("\n".join(md) + "\n", encoding="utf-8")
 print("\n".join(md))

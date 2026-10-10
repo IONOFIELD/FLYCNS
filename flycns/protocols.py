@@ -21,7 +21,7 @@ import json
 from pathlib import Path
 _meas = Path("data/loom_tuning_measured.json")
 if _meas.exists():
-    _m = json.loads(_meas.read_text())
+    _m = json.loads(_meas.read_text(encoding="utf-8"))
     # Behavioural state: loom responses are larger when the fly walks (Turner, Krieger, Pang &
     # Clandinin 2022, reproduced by fit/extract_turner_loom.py: every glomerulus except LC12 is
     # relatively larger in walking trials, e.g. LC6 0.64 vs 0.40, and the trial-gain sigma is

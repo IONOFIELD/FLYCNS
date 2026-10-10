@@ -9,9 +9,13 @@ import os
 import pandas as pd
 from neuprint import Client, fetch_custom
 
-token = os.environ.get("NEUPRINT_TOKEN")
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from flycns.windows import neuprint_token  # noqa: E402
+token = neuprint_token()
 if not token:
-    raise SystemExit('Set NEUPRINT_TOKEN first: export NEUPRINT_TOKEN="..."')
+    raise SystemExit("No neuPrint token: run setup.cmd once; it asks for the token and saves it")
 c = Client("neuprint.janelia.org", dataset="male-cns:v1.0", token=token)
 q = """MATCH (n:Neuron) RETURN n.bodyId AS bodyId, n.subclass AS subclass,
        n.entryNerve AS entryNerve, n.exitNerve AS exitNerve"""

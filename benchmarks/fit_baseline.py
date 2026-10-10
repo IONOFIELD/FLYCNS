@@ -80,4 +80,4 @@ print("\nsatisfying F,S,E,Q:", ok[["depol_mV","noise_mV","quiet_rate_hz","mn9_ta
     baseline_noise_mV=(float(ok.iloc[0].noise_mV) if len(ok) else None),
     rule="smallest tonic rate with taste->MN9 > 0.5, wind control < 0.2, escape intact, spontaneous rate 0.5-5 Hz",
     rationale="taste->MN9 is disinhibitory (signed path products negative at 2 hops, positive at 3-5); "
-              "a silent network cannot express disinhibition (cf. Shiu et al. 2024 limitation)"), indent=2))
+              "a silent network cannot express disinhibition (cf. Shiu et al. 2024 limitation)"), indent=2), encoding="utf-8")

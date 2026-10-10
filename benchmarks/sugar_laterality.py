@@ -87,11 +87,11 @@ try:
 except Exception:
     commit, dirty = "", True
 if crit_f.exists():
-    if json.loads(crit_f.read_text()).get("criteria") != CRITERIA:
+    if json.loads(crit_f.read_text(encoding="utf-8")).get("criteria") != CRITERIA:
         raise SystemExit("criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test.")
 else:
     crit_f.write_text(json.dumps(dict(criteria=CRITERIA, registered_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
-                                      git_commit=commit, script_uncommitted=dirty), indent=2))
+                                      git_commit=commit, script_uncommitted=dirty), indent=2), encoding="utf-8")
 print(f"criteria registered at commit {commit or '?'}{' (SCRIPT UNCOMMITTED: commit before running)' if dirty else ''}")
 
 e = edges.copy()
@@ -147,7 +147,7 @@ l1 = bool(s["signed_L"]["contralateral"] and s["signed_R"]["contralateral"])
 report = dict(benchmark="sugar_laterality", criteria=CRITERIA, sets={g: {k: (len(v) if isinstance(v, list) else v)
                                                                           for k, v in d.items()} for g, d in sets.items()},
               results=res, checks={"L1_sugar_contralateral_bias": l1}, provenance=provenance())
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECK (criterion registered before the run)")
 print(f"  {'PASS' if l1 else 'FAIL'}  L1_sugar_contralateral_bias")
 print(f"wrote {OUT / 'report.json'}")

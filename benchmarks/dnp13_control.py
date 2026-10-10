@@ -91,11 +91,11 @@ try:
 except Exception:
     commit, dirty = "", True
 if crit_f.exists():
-    if json.loads(crit_f.read_text()).get("criteria") != CRITERIA:
+    if json.loads(crit_f.read_text(encoding="utf-8")).get("criteria") != CRITERIA:
         raise SystemExit("criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test.")
 else:
     crit_f.write_text(json.dumps(dict(criteria=CRITERIA, registered_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
-                                      git_commit=commit, script_uncommitted=dirty), indent=2))
+                                      git_commit=commit, script_uncommitted=dirty), indent=2), encoding="utf-8")
 print(f"criteria registered at commit {commit or '?'}{' (SCRIPT UNCOMMITTED: commit before running)' if dirty else ''}")
 
 ids = pd.Index(sorted(set(e.pre) | set(e.post)))
@@ -139,7 +139,7 @@ report = dict(benchmark="dnp13_control", criteria=CRITERIA, dnp13_input_balance=
               top_excitatory_inputs={k: int(v) for k, v in exc_by_type.head(10).items()},
               static=static, dynamic=dynamic, checks={"D1_dnp13_reachable": d1, "D2_pc1_1b_sine_choice": d2},
               verdict=verdict, provenance=provenance())
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECKS (criteria registered before the run)")
 for k, v in report["checks"].items():
     print(f"  {'PASS' if v else 'FAIL'}  {k}")

@@ -11,7 +11,7 @@
   controls      play/pause, time slider (5 ms), camera presets dorsal / lateral / anterior
 
 Run:  python viz/cascade_3d.py [trial] [data_dir] [--no-skeletons]
-Needs NEUPRINT_TOKEN for the first run (skeletons, meshes); cached afterwards.
+Needs the neuPrint token (saved by setup.cmd) for the first run (skeletons, meshes); cached afterwards.
 Writes results/gf_escape/cascade_3d.html
 """
 import os, sys
@@ -19,6 +19,7 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 argv = sys.argv[1:]
 flags = [a for a in argv if a.startswith("--")]; args = [a for a in argv if not a.startswith("--")]
@@ -50,9 +51,10 @@ def get_client():
     global client
     if client is None:
         from neuprint import Client
-        tok = os.environ.get("NEUPRINT_TOKEN")
+        from flycns.windows import neuprint_token
+        tok = neuprint_token()
         if not tok:
-            raise RuntimeError("NEUPRINT_TOKEN not set")
+            raise RuntimeError("no neuPrint token: run setup.cmd once to save it")
         client = Client("neuprint.janelia.org", dataset="male-cns:v1.0", token=tok)
     return client
 

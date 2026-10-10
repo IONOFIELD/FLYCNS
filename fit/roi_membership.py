@@ -8,7 +8,7 @@ Two uses:
      distribution across compartments (neuprint roiInfo, or the ROI volume).
   2. neuropil surface meshes for viz/cascade_3d.py, instead of the soma cloud.
 
-Run:  python fit/roi_membership.py            (uses neuprint roiInfo; needs NEUPRINT_TOKEN)
+Run:  python fit/roi_membership.py            (uses neuprint roiInfo; needs the neuPrint token saved by setup.cmd)
       python fit/roi_membership.py --meshes   (also builds meshes from the ROI volumes;
                                                needs: pip install cloud-volume trimesh)
 Writes data/roi_membership.parquet (bodyId, dominant ROI, fraction of synapses in it)
@@ -16,6 +16,7 @@ and, with --meshes, data/meshes/<roi>.npz for the 3D viewer.
 """
 import os, sys, json
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np
 import pandas as pd
 
@@ -24,9 +25,10 @@ SEZ_ROIS = ["GNG", "PRW", "SAD", "FLA", "CAN", "AMMC"]   # subesophageal zone co
 
 if "--meshes" not in sys.argv:
     from neuprint import Client, fetch_custom
-    tok = os.environ.get("NEUPRINT_TOKEN")
+    from flycns.windows import neuprint_token
+    tok = neuprint_token()
     if not tok:
-        raise SystemExit('export NEUPRINT_TOKEN=$(cat ~/.neuprint_token) first')
+        raise SystemExit("No neuPrint token: run setup.cmd once; it asks for the token and saves it")
     c = Client("neuprint.janelia.org", dataset="male-cns:v1.0", token=tok)
     print("fetching per-neuron ROI synapse distributions...")
     q = "MATCH (n:Neuron) RETURN n.bodyId AS bodyId, n.roiInfo AS roi"

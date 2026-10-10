@@ -155,5 +155,5 @@ report["citations"] = [
     "the measured loom amplitudes used for the drive here.",
 ]
 report["provenance"] = provenance()
-(OUT / "trace.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "trace.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"\nwrote {OUT / 'trace.json'}")

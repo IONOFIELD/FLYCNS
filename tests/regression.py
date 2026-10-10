@@ -23,6 +23,7 @@ folder (git keeps no empty folders) and scripts/make_testdata.py did not create 
 
 Run:  python tests/regression.py        (a few minutes; exits non-zero on any failure)
 """
+import os
 import shutil
 import subprocess
 import sys
@@ -60,11 +61,13 @@ RUNS = [  # (label, argv relative to the copy, extra env, sentinel substring or 
 # The isolated copy is not a git checkout, so the registered tests' clean-tree guard would refuse to
 # run; the override is the documented escape hatch and is stamped into every toy report.
 # (The guard itself is exercised against a real temporary git repository in tests/unit.py.)
-BASE_ENV = {"FLYCNS_ALLOW_DIRTY": "1"}
+BASE_ENV = {"FLYCNS_ALLOW_DIRTY": "1", "PYTHONUTF8": "1"}
+STEP_TIMEOUT_S = 2400      # generous: the pure-Python engine on a slow Windows machine
+TEXT = dict(capture_output=True, text=True, encoding="utf-8", errors="replace")   # never cp1252 on Windows
 
 
 def newcombe_unit():
-    src = (ROOT / "benchmarks/auditory.py").read_text()
+    src = (ROOT / "benchmarks/auditory.py").read_text(encoding="utf-8")
     ns = {"np": np}
     exec(src[src.index("def wilson("):src.index("def two_prop_ci(")], ns)
     exec(src[src.index("def two_prop_ci("):src.index("    return d, lo, hi\n") + len("    return d, lo, hi\n")], ns)
@@ -81,20 +84,20 @@ def main():
     for label, ok, msg in unit_checks():
         results.append((label, ok, msg))
         print(f"  {'PASS' if ok else 'FAIL'}  {label:<44} {msg}", flush=True)
-    with tempfile.TemporaryDirectory(prefix="flycns_regress_") as tmp:
+    with tempfile.TemporaryDirectory(prefix="flycns_regress_", ignore_cleanup_errors=True) as tmp:
         work = Path(tmp) / "repo"
         shutil.copytree(ROOT, work, ignore=shutil.ignore_patterns(".git", "data", "results", ".venv", "__pycache__", "*.log"))
         (work / "results").mkdir(); (work / "data").mkdir()
         (work / "testdata").mkdir(exist_ok=True)
-        r = subprocess.run([sys.executable, "scripts/make_testdata.py"], cwd=work, capture_output=True, text=True)
+        r = subprocess.run([sys.executable, "scripts/make_testdata.py"], cwd=work, **TEXT, env={**os.environ, **BASE_ENV})
         results.append(("make toy graph", r.returncode == 0, r.stderr.strip()[-200:]))
         for f in (work / "testdata").glob("*.parquet"):
             shutil.copy(f, work / "data" / f.name)          # scripts that read data/ directly
         for label, argv, env, sentinel in RUNS:
             t0 = time.time()
             try:
-                r = subprocess.run([sys.executable, *argv], cwd=work, capture_output=True, text=True,
-                                   timeout=900, env={**__import__("os").environ, **BASE_ENV, **env})
+                r = subprocess.run([sys.executable, *argv], cwd=work, **TEXT,
+                                   timeout=STEP_TIMEOUT_S, env={**os.environ, **BASE_ENV, **env})
                 out = r.stdout + r.stderr
                 ok = r.returncode == 0 and "Traceback" not in out
                 if sentinel:
@@ -108,7 +111,7 @@ def main():
             print(f"  {'PASS' if ok else 'FAIL'}  {label:<34} {note}", flush=True)
         t0 = time.time()
         r = subprocess.run([sys.executable, "scripts/export_brainsets.py", "2", "results/brainsets"], cwd=work,
-                           capture_output=True, text=True, timeout=900, env={**__import__("os").environ, **BASE_ENV})
+                           **TEXT, timeout=STEP_TIMEOUT_S, env={**os.environ, **BASE_ENV})
         ok = r.returncode == 0 and "validated: reloads with temporaldata" in r.stdout
         results.append(("brainsets export reloads", ok, f"exit {r.returncode}, {round(time.time() - t0)}s"))
     print("\nREGRESSION SUMMARY")
@@ -116,6 +119,15 @@ def main():
         print(f"  {'PASS' if ok else 'FAIL'}  {label:<44} {note}")
     failed = [l for l, ok, _ in results if not ok]
     print(f"\n{len(results) - len(failed)}/{len(results)} passed" + (f"; FAILED: {failed}" if failed else ""))
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        # GitHub annotations: the key results show on the pull request page (GitHub caps notices per step)
+        from flycns.windows import codegen_target
+        eng = next((n for l, _, n in results if "engines" in l), "")
+        print(f"::notice title=engine::{codegen_target()} engine on {sys.platform}, Python {sys.version.split()[0]}. {eng}")
+        print(f"::notice title=regression::{len(results) - len(failed)}/{len(results)} passed")
+        for l, ok, n in results:
+            if not ok:
+                print(f"::error title={l}::{n}")
     sys.exit(1 if failed else 0)
 
 

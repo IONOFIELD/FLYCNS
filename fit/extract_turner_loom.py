@@ -191,7 +191,7 @@ for st, cols in by_state.items():
     g = np.concatenate(gain_state[st]) if gain_state[st] else np.array([])
     g = g[np.isfinite(g) & (g > 0)]
     out["gain_sigma_by_state"][st] = round(float(np.std(np.log(g))), 4) if len(g) > 20 else None
-(OUT / "loom_tuning.json").write_text(json.dumps(out, indent=2))
+(OUT / "loom_tuning.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
 if out["amplitude_by_state"]:
     st = pd.DataFrame(out["amplitude_by_state"]).dropna()
     print("\nnormalised amplitude by behavioural state:"); print(st.round(3).to_string())
@@ -210,4 +210,4 @@ print("\nnormalised loom amplitude by glomerulus (fly-averaged):")
 for k, v in out["amplitude"].items():
     print(f"  {k:<6} {v:.3f}")
 print(f"trial gain sigma (log): {out['gain_sigma']}   from {out['gain_n_trials']} loom trials, {out['n_flies']} flies, {out['n_series']} series")
-print(f"\nto activate:  cp {OUT/'loom_tuning.json'} data/loom_tuning_measured.json")
+print("\nto activate: menu option 22 offers to copy it to data\\loom_tuning_measured.json")

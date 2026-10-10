@@ -8,31 +8,34 @@ code, data and settings that produced it.
 
 ---
 
-## Quick start
+## Quick start (Windows)
 
-Needs macOS or Linux, Python 3.12 (3.10 or newer works, unpinned), and a C compiler
-(macOS: `xcode-select --install`). These are **Terminal** commands. Windows PowerShell and cmd cannot
-run them. On Windows, use WSL (Ubuntu) or the Docker route below.
+Open **PowerShell** and paste each block in turn.
 
-    git clone https://github.com/IONOFIELD/FLYCNS.git flycns && cd flycns
-    ./setup.sh --check                          # installs, runs the regression test: no account, ~10 min
-    echo "YOUR_TOKEN" > ~/.neuprint_token       # free at neuprint.janelia.org, under Account
-    ./setup.sh                                  # downloads the connectome, checks it against data/MANIFEST.json
-    ./fly                                       # menu: choose 4 to run the core suite, ~40 min
+**First time only:** install git and Python. Skip any you already have.
 
-`--check` alone is enough to confirm everything installs and runs. Rerunning `./setup.sh` is safe;
-it skips the download if the connectome is already there.
+    winget install -e --id Git.Git
+    winget install -e --id Python.Python.3.12
 
-After an update, **one command** brings everything up to date on the computer that holds the
-connectome. It updates the code, pins the data, reruns the core suite and the stricter null, then
-commits and pushes. It is safe to run again after an interruption, and it is also menu option **51**.
+Close PowerShell and open it again so it finds them. Then:
 
-    git stash; git pull; scripts/canonical_rerun.sh       # about 1 to 1.5 h; keeps a Mac awake
+    git clone https://github.com/IONOFIELD/FLYCNS.git flycns
+    cd flycns
+    .\setup.cmd --check      # installs everything and runs the self-test on a toy graph: no account needed
+    .\setup.cmd              # asks for your neuPrint token once, then downloads the connectome (~5 min)
+    .\fly.cmd                # the menu: option 4 runs the core suite (~40 min)
 
-With Docker instead, using the frozen reference environment:
+- **The neuPrint token** is free: log in at [neuprint.janelia.org](https://neuprint.janelia.org) with Google, then open Account. `setup.cmd` asks for it once and saves it to `%USERPROFILE%\.neuprint_token`.
+- **Speed:** setup offers to install the free **Microsoft C++ Build Tools**, a one-time download. With them, the simulation is compiled. Without them, everything still works, about 4 times slower, and the results are identical (CI checks the two engines spike for spike).
+- **Rerunning `setup.cmd`** is safe. It skips anything already done.
 
-    docker build -t flycns . && docker run --rm flycns          # regression test
-    docker run --rm -it -v "$PWD":/flycns flycns ./fly          # the menu, on your own checkout and data
+**After an update**, one menu option brings everything up to date on your machine. Run `.\fly.cmd` and choose **51**. It:
+- updates the code;
+- pins the data fingerprint;
+- reruns the core suite and the stricter null;
+- commits and pushes the results.
+
+It keeps Windows awake while it runs, and it is safe to run again after an interruption.
 
 ---
 
@@ -96,13 +99,13 @@ Every result has to answer four questions: which code, which data, which setting
 | guard | what it does | where |
 |---|---|---|
 | Code | Every report records the commit and whether any code differed from it. Registered tests refuse to run on uncommitted code. | `flycns/integrity.py` |
-| Data | The fetched tables are fingerprinted by content, so the fingerprint ignores row order and file format. The fingerprint is committed in `data/MANIFEST.json`. The suite and registered tests refuse to run on data that differ, and every report records the fingerprint it ran on. | `flycns/integrity.py`, `setup.sh` |
-| Settings | Any `FLYCNS_*` override prints a banner, is stamped into the report, and is flagged PERTURBED in `results/SUITE.md`. The robustness battery restores the canonical results when it finishes. | `flycns/integrity.py`, `scripts/overnight.sh` |
+| Data | The fetched tables are fingerprinted by content, so the fingerprint ignores row order and file format. The fingerprint is committed in `data/MANIFEST.json`. The suite and registered tests refuse to run on data that differ, and every report records the fingerprint it ran on. | `flycns/integrity.py`, `scripts/setup.py` |
+| Settings | Any `FLYCNS_*` override prints a banner, is stamped into the report, and is flagged PERTURBED in `results/SUITE.md`. The robustness battery restores the canonical results when it finishes. | `flycns/integrity.py`, `scripts/overnight.py` |
 | Evidence | Each check has a role: independent, control, robustness, calibrated or construction. Only independent checks count as tests. CI fails if a check is unclassified. | `flycns/calibration.py`, `docs/CALIBRATION.md` |
 | Stimuli | Every stimulus list is checked against the dataset before a long run, so a renamed cell type cannot silently drop an input. | `fit/audit_stimuli.py` |
 | Registration | Pre-registered tests refuse to run against changed criteria. | each registered script |
-| Environment | Python 3.12 with every package pinned (`requirements.lock`), and a Dockerfile that freezes it. | `requirements.lock`, `Dockerfile` |
-| Verification | On every push, CI runs the unit checks and the whole toy suite in an isolated copy on Linux and macOS. It also tests the pinned environment on Python 3.12 and 3.13, the oldest supported Python, and the container. A weekly run catches outside breakage. | `tests/`, `.github/workflows/` |
+| Environment | Python 3.12 with every package pinned (`requirements.lock`). The engine is compiled when the Microsoft C++ Build Tools are present and pure Python otherwise. Both give identical spikes, and every report records which engine ran. | `requirements.lock`, `flycns/windows.py` |
+| Verification | On every push, CI runs on Windows: the unit checks and the whole toy suite in an isolated copy, on Python 3.12 and 3.13 with the pinned packages, on the oldest supported Python, and on the pure-Python engine. It also runs `setup.cmd` and `fly.cmd` exactly as a user would. A weekly run catches outside breakage. | `tests/`, `.github/workflows/` |
 
 `python -m flycns.integrity status` (menu **49**) shows all three run states at once: code, settings and data.
 The house rules are in [`CONTRIBUTING.md`](CONTRIBUTING.md).

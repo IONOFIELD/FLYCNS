@@ -130,7 +130,7 @@ report["reported"] = dict(
     prediction=(f"silencing {TARGET} in a flying fly should suppress DVM motor neuron activity; the "
                 f"model's DVMn output under proprioceptive drive is set by this one wing campaniform type"))
 report["provenance"] = provenance()
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECKS")
 for k, v in report["checks"].items():
     print(f"  {'PASS' if v else 'FAIL'}  {k}")

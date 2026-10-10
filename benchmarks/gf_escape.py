@@ -106,7 +106,7 @@ checks = {
 report["checks"] = checks
 report["pass"] = all(checks.values())
 report["provenance"] = provenance()
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 
 prov = ["# Provenance: gf_escape", "", "## Neurotransmitter sign map", str(SIGN_MAP), "",
         "## Electrical synapses added (invisible to EM)"]
@@ -116,7 +116,7 @@ prov += ["", f"## Regional gain: SEZ x{LIFParams().region_gains['SEZ']} (fitted,
          f"   SEZ definition: {report['arms']['real_electrical'].get('region_source', 'see flycns/graph.py')}"]
 prov += ["", f"## Loom tuning: {TUNING_SOURCE}; trial gain sigma {GAIN_SIGMA_DEFAULT}; peak rate {PEAK_HZ_DEFAULT} Hz (free dF/F->rate scale)", str(LOOM_TUNING), "",
          "## Checks"] + [f"- {k}: {'PASS' if v else 'FAIL'}" for k, v in checks.items()]
-(OUT / "provenance.md").write_text("\n".join(prov))
+(OUT / "provenance.md").write_text("\n".join(prov), encoding="utf-8")
 
 print("\nCHECKS"); [print(f"  {'PASS' if v else 'FAIL'}  {k}") for k, v in checks.items()]
 print(f"\nBENCHMARK {'PASS' if report['pass'] else 'FAIL'}  -> {OUT}/report.json")

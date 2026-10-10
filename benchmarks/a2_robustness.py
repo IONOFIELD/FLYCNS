@@ -53,11 +53,11 @@ try:
 except Exception:
     commit, dirty = "", True
 if crit_f.exists():
-    if json.loads(crit_f.read_text()).get("criteria") != CRITERIA:
+    if json.loads(crit_f.read_text(encoding="utf-8")).get("criteria") != CRITERIA:
         raise SystemExit("criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test.")
 else:
     crit_f.write_text(json.dumps(dict(criteria=CRITERIA, registered_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
-                                      git_commit=commit, script_uncommitted=dirty), indent=2))
+                                      git_commit=commit, script_uncommitted=dirty), indent=2), encoding="utf-8")
 print(f"criteria registered at commit {commit or '?'}{' (SCRIPTS UNCOMMITTED: commit before running)' if dirty else ''}")
 
 
@@ -73,11 +73,11 @@ for g in GAINS:
     env = dict(os.environ, FLYCNS_A2_ONLY="1", FLYCNS_A2_GAIN=str(g), FLYCNS_A2_TRIALS=str(TRIALS),
                FLYCNS_AUDITORY_OUT=str(sub))
     p = subprocess.run([sys.executable, "-u", "benchmarks/auditory.py", str(TRIALS), DATA], env=env,
-                       capture_output=True, text=True)
-    (OUT / f"gain_{g}.log").write_text(p.stdout + p.stderr)
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    (OUT / f"gain_{g}.log").write_text(p.stdout + p.stderr, encoding="utf-8")
     if p.returncode != 0:
         raise SystemExit(f"auditory.py failed at gain {g}; see {OUT / f'gain_{g}.log'}")
-    a = json.loads((sub / "report.json").read_text())["arms"]["A2_prediction"]
+    a = json.loads((sub / "report.json").read_text(encoding="utf-8"))["arms"]["A2_prediction"]
     n = int(a["n_trials_per_arm"]); k1 = int(round(a["loom_alone_hit"] * n)); k2 = int(round(a["loom_plus_jo_hit"] * n))
     p1, p2 = k1 / n, k2 / n
     l1, u1 = wilson(k1, n); l2, u2 = wilson(k2, n)
@@ -90,7 +90,7 @@ for g in GAINS:
     print(f"gain {g:<4} | alone {k1:>3}/{n} = {p1:.3f} | with sound {k2:>3}/{n} = {p2:.3f} | difference {d:+.3f} "
           f"(95% CI {lo:+.3f} to {hi:+.3f}) | {'near-threshold' if row['near_threshold'] else 'above threshold'}"
           f"{'  FACILITATION' if row['facilitation'] else ''} | {round(time.time() - t0)}s", flush=True)
-    (OUT / "report.json").write_text(json.dumps(dict(criteria=CRITERIA, rows=rows), indent=2, default=float))
+    (OUT / "report.json").write_text(json.dumps(dict(criteria=CRITERIA, rows=rows), indent=2, default=float), encoding="utf-8")
 
 qual = [r for r in rows if r["near_threshold"]]
 ok = len(qual) >= 3 and all(r["facilitation"] for r in qual)
@@ -98,7 +98,7 @@ report = dict(benchmark="a2_robustness", criteria=CRITERIA, rows=rows, n_qualify
               checks={"RA2_facilitation_at_every_near_threshold_gain": ok}, wall_s=round(time.time() - t0))
 from flycns.bench import provenance  # noqa: E402
 report["provenance"] = provenance()
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"\n{len(qual)} of {len(GAINS)} gains near threshold; facilitation at "
       f"{sum(r['facilitation'] for r in qual)} of them")
 print(f"CHECK (criterion registered before the run)\n  {'PASS' if ok else 'FAIL'}  RA2_facilitation_at_every_near_threshold_gain")

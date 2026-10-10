@@ -157,4 +157,4 @@ print(f"\nbest: SEZ gain {best.local}  score {int(best.score)}/8   "
 print(grid[["sensory", "relay", "local", "score"] + [c for c in grid.columns if c.startswith("chk_")]].head(8).to_string(index=False))
 (OUT / "best.json").write_text(json.dumps(dict(region_gains=dict(SEZ=float(best.local), other=1.0), score=int(best.score),
                                                checks={c[4:]: bool(best[c]) for c in grid.columns if c.startswith("chk_")}),
-                                          indent=2))
+                                          indent=2), encoding="utf-8")

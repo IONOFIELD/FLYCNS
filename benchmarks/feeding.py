@@ -239,14 +239,14 @@ print(f"F5 rewired null -> MN9 {nullv:.2f}")
 report["pass"] = all(v for v in report["checks"].values() if v is not None)
 mech = Path("results/feeding/mechanism.json")
 if mech.exists():
-    report["mechanism"] = json.loads(mech.read_text())["conclusion"]
+    report["mechanism"] = json.loads(mech.read_text(encoding="utf-8"))["conclusion"]
     print("\nmechanism:", report["mechanism"])
 report["provenance"] = provenance()
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 prov = ["# Provenance: feeding (port of Shiu et al. 2024 tests to MaleCNS)", "",
         f"sugar types used: {sugar}", f"bitter types used: {bitter or 'none resolved'}",
         f"second-order present: {so_have}", f"motor present: {mn_have}", "", "## Checks"]
 prov += [f"- {k}: {'SKIP' if v is None else ('PASS' if v else 'FAIL')}" for k, v in report["checks"].items()]
-(OUT / "provenance.md").write_text("\n".join(prov))
+(OUT / "provenance.md").write_text("\n".join(prov), encoding="utf-8")
 print("\nCHECKS"); [print(f"  {'SKIP' if v is None else ('PASS' if v else 'FAIL')}  {k}") for k, v in report["checks"].items()]
 print(f"\nBENCHMARK {'PASS' if report['pass'] else 'FAIL'}  -> {OUT}/report.json")

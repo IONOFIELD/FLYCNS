@@ -181,7 +181,7 @@ if A2_ONLY:
         loom_alone_hit=lo["gf_hit"], loom_plus_jo_hit=a2["gf_hit"], difference=d, difference_ci95=[dlo, dhi],
         loom_alone_depol_mV=lo["gf_depol_mV"], loom_plus_jo_depol_mV=a2["gf_depol_mV"], mode="A2 only")
     report["provenance"] = provenance()
-    (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+    (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
     print(f"A2 only at gain {SUB_LOOM_GAIN}: {lo['gf_hit']:.3f} -> {a2['gf_hit']:.3f}, difference {d:+.3f} "
           f"(95% CI {dlo:+.3f} to {dhi:+.3f})")
     sys.exit(0)
@@ -219,11 +219,11 @@ print(f"A2 (reported, {n1} trials/arm): loom alone {lo['gf_hit']:.2f} -> with JO
       f"difference {d:+.2f} (95% CI {dlo:+.2f} to {dhi:+.2f}) -> {direction}")
 report["pass"] = all(v for v in report["checks"].values() if v is not None)
 report["provenance"] = provenance()
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 prov = ["# Provenance: auditory (JON -> GF)", "", f"JO types: {jo_types} at {JO_HZ} Hz",
         f"A2 reported (not scored): JO drive {report['arms']['A2_prediction']['direction']} of near-threshold loom response",
         "Electrical JON->GF calibrated to a 3 mV compound GF potential at 150 Hz (Pezier & Blagburn 2013)",
         "", "## Checks"] + [f"- {k}: {'REPORTED' if v is None else ('PASS' if v else 'FAIL')}" for k, v in report["checks"].items()]
-(OUT / "provenance.md").write_text("\n".join(prov))
+(OUT / "provenance.md").write_text("\n".join(prov), encoding="utf-8")
 print("\nCHECKS"); [print(f"  {'REPORTED' if v is None else ('PASS' if v else 'FAIL')}  {k}") for k, v in report["checks"].items()]
 print(f"\nBENCHMARK {'PASS' if report['pass'] else 'FAIL'}  -> {OUT}/report.json")

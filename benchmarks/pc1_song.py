@@ -96,11 +96,11 @@ try:
 except Exception:
     commit, dirty = "", True
 if crit_f.exists():
-    if json.loads(crit_f.read_text()).get("criteria") != CRITERIA:
+    if json.loads(crit_f.read_text(encoding="utf-8")).get("criteria") != CRITERIA:
         raise SystemExit("criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test.")
 else:
     crit_f.write_text(json.dumps(dict(criteria=CRITERIA, registered_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
-                                      git_commit=commit, script_uncommitted=dirty), indent=2))
+                                      git_commit=commit, script_uncommitted=dirty), indent=2), encoding="utf-8")
 print(f"criteria registered at commit {commit or '?'}{' (SCRIPT UNCOMMITTED: commit before running)' if dirty else ''}")
 
 # ---- static: signed input-normalised path products, the analysis the paper found insufficient
@@ -158,7 +158,7 @@ report = dict(benchmark="pc1_song", criteria=CRITERIA, pc1_types_present=pc1_pre
                       "P3_14a_exceeds_15_16_on_pulse": bool(d14["pMP2"] > d1516["pMP2"]),
                       "P4_null_silent": bool(null["pMP2"] < 0.1)})
 report["provenance"] = provenance()
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECKS (criteria registered before the run)")
 for k, v in report["checks"].items():
     print(f"  {'PASS' if v else 'FAIL'}  {k}")

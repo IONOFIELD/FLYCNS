@@ -11,7 +11,7 @@ suffix (SIP108m, PVLP204m, SIP109m, ...), and SIP108m alone drives DNp13 selecti
 (benchmarks/dnp13_control.py). Whether those types are male-specific decides whether the sine
 pathway is a sexually dimorphic circuit. The local data had no field to answer that.
 
-Run:  python scripts/fetch_dimorphism.py          (needs NEUPRINT_TOKEN)   Safe to rerun.
+Run:  python scripts/fetch_dimorphism.py          (needs the neuPrint token saved by setup.cmd)   Safe to rerun.
 """
 import os
 import re
@@ -19,9 +19,13 @@ import re
 import pandas as pd
 from neuprint import Client, fetch_custom
 
-token = os.environ.get("NEUPRINT_TOKEN")
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from flycns.windows import neuprint_token  # noqa: E402
+token = neuprint_token()
 if not token:
-    raise SystemExit('Set NEUPRINT_TOKEN first: export NEUPRINT_TOKEN=$(cat ~/.neuprint_token)')
+    raise SystemExit("No neuPrint token: run setup.cmd once; it asks for the token and saves it")
 c = Client("neuprint.janelia.org", dataset="male-cns:v1.0", token=token)
 
 keys = set()

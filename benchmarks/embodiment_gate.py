@@ -162,7 +162,7 @@ report["verdict"] = dict(
                "Without a cited rate the loop is a guess and should not be built. Fenton/Dickinson "
                "haltere campaniform work and Dickerson et al. on wing campaniform fields are the "
                "places to look. If not buildable: record which question failed and stop."))
-(OUT / "gate.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "gate.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\n" + "=" * 72)
 for k, v in report["verdict"].items():
     if isinstance(v, bool):

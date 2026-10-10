@@ -124,4 +124,4 @@ print(grid[["sensory", "relay", "local", "score"] + [c for c in grid.columns if 
 (OUT / "best.json").write_text(json.dumps(dict(class_gains=dict(sensory=float(best.sensory), relay=float(best.relay),
                                                                  local=float(best.local)), score=int(best.score),
                                                checks={c[4:]: bool(best[c]) for c in grid.columns if c.startswith("chk_")}),
-                                          indent=2))
+                                          indent=2), encoding="utf-8")

@@ -70,11 +70,11 @@ try:
 except Exception:
     commit, dirty = "", True
 if crit_f.exists():
-    if json.loads(crit_f.read_text()).get("criteria") != CRITERIA:
+    if json.loads(crit_f.read_text(encoding="utf-8")).get("criteria") != CRITERIA:
         raise SystemExit("criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test.")
 else:
     crit_f.write_text(json.dumps(dict(criteria=CRITERIA, registered_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
-                                      git_commit=commit, script_uncommitted=dirty), indent=2))
+                                      git_commit=commit, script_uncommitted=dirty), indent=2), encoding="utf-8")
 print(f"criteria registered at commit {commit or '?'}{' (SCRIPT UNCOMMITTED: commit before running)' if dirty else ''}")
 
 neurons, edges = load_graph(DATA)
@@ -177,7 +177,7 @@ print("\nR3  fresh cell-identity and phase draws")
 r3 = []
 for k in range(1, len(target) + 1):
     r = at_k(k, FRESH_SEED_BASE); line(f"  k={k:>2}", r); r3.append(r)
-    (OUT / "report.json").write_text(json.dumps(report | dict(R3_partial=r3), indent=2, default=float))
+    (OUT / "report.json").write_text(json.dumps(report | dict(R3_partial=r3), indent=2, default=float), encoding="utf-8")
 in_band = [r for r in r3 if BAND[0] <= r["dvmn_mean"] <= BAND[1]]
 kstar_fresh = in_band[0]["k"] if in_band else None
 r3_k7 = next(r for r in r3 if r["k"] == K_TEST)
@@ -190,7 +190,7 @@ print(f"  fresh k* = {kstar_fresh} (original {K_STAR_ORIG}); monotone within 0.5
       f"{report['arms']['R3']['monotone_within_0p5']} (reported, not scored)")
 
 report["provenance"] = provenance()
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"\nCHECKS (criteria registered before the run) | {round(time.time() - t0)}s")
 for kk, v in report["checks"].items():
     print(f"  {'PASS' if v else 'FAIL'}  {kk}")

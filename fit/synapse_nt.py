@@ -79,6 +79,6 @@ out = {"n_neurons_with_tbars": int(len(agg)),
                 "use nt_agree to target sign perturbations at genuinely uncertain neurons "
                 "instead of a random fraction")}
 Path("results").mkdir(exist_ok=True)
-Path("results/nt_confidence.json").write_text(json.dumps(out, indent=2))
+Path("results/nt_confidence.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
 print(json.dumps(out, indent=2))
 print("\nwrote data/edges_nt.parquet (edges + nt_conf + nt_agree)")

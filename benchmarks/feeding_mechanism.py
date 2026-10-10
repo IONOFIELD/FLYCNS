@@ -89,5 +89,5 @@ report = dict(
                 "activity, i.e. the state-dependent modulation this model omits (cf. Shiu et al. 2024, which "
                 "reported the same limitation for inhibitory neurons at 0 Hz baseline)."),
     sign_map=SIGN_MAP)
-(OUT / "mechanism.json").write_text(json.dumps(report, indent=2))
+(OUT / "mechanism.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
 print(json.dumps(report, indent=2))

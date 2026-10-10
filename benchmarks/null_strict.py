@@ -40,7 +40,7 @@ OUT = Path("results/null_strict")
 OUT.mkdir(parents=True, exist_ok=True)
 ESCAPE_TRIALS = 40
 pc1_crit = Path("results/pc1_song/criteria.json")
-PC1_TRIALS = int(json.loads(pc1_crit.read_text())["criteria"]["n_trials"]) if pc1_crit.exists() else 10
+PC1_TRIALS = int(json.loads(pc1_crit.read_text(encoding="utf-8"))["criteria"]["n_trials"]) if pc1_crit.exists() else 10
 
 CRITERIA = dict(
     null_mode="superclass (flycns/graph.py rewire_null): targets permuted only within the post cell's superclass",
@@ -53,13 +53,14 @@ require_clean(Path(__file__).stem)
 require_data(DATA, Path(__file__).stem, ["neurons.parquet", "edges.parquet"])
 crit_f = OUT / "criteria.json"
 if crit_f.exists():
-    if json.loads(crit_f.read_text()).get("criteria") != CRITERIA:
+    if json.loads(crit_f.read_text(encoding="utf-8")).get("criteria") != CRITERIA:
         raise SystemExit("criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test.")
 else:
     st = provenance()
     crit_f.write_text(json.dumps(dict(criteria=CRITERIA, registered_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
-                                      git_commit=st["git_commit"], script_uncommitted=st["git_dirty"]), indent=2))
-print(f"criteria registered: {json.loads(crit_f.read_text())['git_commit'] or '?'}")
+                                      git_commit=st["git_commit"], script_uncommitted=st["git_dirty"]), indent=2), encoding="utf-8")
+registered_commit = json.loads(crit_f.read_text(encoding="utf-8"))["git_commit"]
+print(f"criteria registered: {registered_commit or '?'}")
 
 env = dict(os.environ, FLYCNS_NULL="superclass", FLYCNS_RUN_TAG="null_strict")
 snap = Path(tempfile.mkdtemp(prefix="flycns_null_strict_"))
@@ -71,12 +72,12 @@ try:
     t0 = time.time()
     for argv in (["benchmarks/gf_escape.py", str(ESCAPE_TRIALS), DATA], ["benchmarks/pc1_song.py", str(PC1_TRIALS), DATA]):
         print(f"running {' '.join(argv)} with FLYCNS_NULL=superclass ...", flush=True)
-        r = subprocess.run([sys.executable, "-u", *argv], env=env, capture_output=True, text=True)
-        (OUT / f"{Path(argv[0]).stem}.log").write_text(r.stdout + r.stderr)
+        r = subprocess.run([sys.executable, "-u", *argv], env=env, capture_output=True, text=True, encoding="utf-8", errors="replace")
+        (OUT / f"{Path(argv[0]).stem}.log").write_text(r.stdout + r.stderr, encoding="utf-8")
         if r.returncode != 0:
             raise SystemExit(f"{argv[0]} failed (exit {r.returncode}); see {OUT}/{Path(argv[0]).stem}.log")
-    esc = json.loads(Path("results/gf_escape/report.json").read_text())
-    pc1 = json.loads(Path("results/pc1_song/report.json").read_text())
+    esc = json.loads(Path("results/gf_escape/report.json").read_text(encoding="utf-8"))
+    pc1 = json.loads(Path("results/pc1_song/report.json").read_text(encoding="utf-8"))
 finally:
     for d in canon:
         if (snap / d.name).exists():
@@ -95,7 +96,7 @@ report = dict(benchmark="null_strict", criteria=CRITERIA, checks=checks,
                           real_gf_hit=real_e["gf_hit"], real_pop_rate_hz=real_e["pop_rate_hz"]),
               pc1=dict(null=null_p, real=real_p, n_trials=PC1_TRIALS),
               wall_s=round(time.time() - t0, 1), provenance=provenance())
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"\nescape: null GF hit {null_e['gf_hit']:.2f} (real {real_e['gf_hit']:.2f}); "
       f"null CNS {null_e['pop_rate_hz']:.4f} Hz vs real {real_e['pop_rate_hz']:.4f} Hz")
 print(f"pc1:    null pMP2 {null_p['pMP2']:.2f} (real {real_p['pMP2']:.2f}); "
