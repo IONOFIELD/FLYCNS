@@ -62,6 +62,7 @@ MENU = """
                 46  regression test: unit checks + whole toy suite in an isolated copy (~10 min)
                 49  integrity: code committed? settings overridden? data match data/MANIFEST.json?
                 50  stricter null: escape and pC1 controls on a superclass-preserving shuffle (registered)
+                51  canonical rerun: update, pin data, core suite, stricter null, commit and push (~1.5 h)
                 28  cord parameter sensitivity (do brain values distort the nerve cord?)
                 36  flight sensitivity: does DLM's silence depend on the relay layer's parameters?
   FITS           8  GF adaptation sweep       9  SEZ regional gain sweep      10  afferent screen
@@ -172,6 +173,7 @@ while True:
     elif c == "46": run("tests/regression.py")
     elif c == "49": run("-m", "flycns.integrity", "status", "data")
     elif c == "50": run("benchmarks/null_strict.py")
+    elif c == "51": run("bash", "scripts/canonical_rerun.sh")
     elif c == "36": run("benchmarks/sensitivity_flight.py", ask("wingbeat cycles per arm", "400"))
     elif c == "37": run("benchmarks/flight_snpp16.py", ask("wingbeat cycles per arm", "400"))
     elif c == "38": run("benchmarks/flight_snpp16_graded.py", ask("wingbeat cycles per arm", "400"))
