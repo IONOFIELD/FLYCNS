@@ -107,6 +107,23 @@ def t_min_weight_and_provenance(tmp):
     return ok, f"{len(e5)} edges at 5, {len(e20)} at 20; report stamped with data digests" if ok else str(rec)
 
 
+def t_targeted_flip_needs_its_table(tmp):
+    """A perturbation whose input is missing must stop, never run unperturbed under its label."""
+    from flycns import graph, integrity
+    d = tmp / "tf"; d.mkdir()
+    n, e = _tables()
+    n.to_parquet(d / "neurons.parquet", index=False); e.to_parquet(d / "edges.parquet", index=False)
+    os.environ["FLYCNS_SIGNFLIP_TARGETED"] = "1"
+    integrity._ANNOUNCED = True
+    try:
+        graph.load_graph(str(d))
+        return False, "ran without edges_nt.parquet"
+    except SystemExit as ex:
+        return "edges_nt.parquet" in str(ex), "refused: no transmitter table"
+    finally:
+        del os.environ["FLYCNS_SIGNFLIP_TARGETED"]
+
+
 def t_settings_banner():
     code = "from flycns.integrity import announce_overrides as a; a(); a()"
     r = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace",
@@ -297,6 +314,7 @@ def run_all():
                          ("global null unchanged", t_null_global_unchanged),
                          ("superclass null keeps class structure", t_null_superclass),
                          ("min_weight override + provenance", lambda: t_min_weight_and_provenance(tmp)),
+                         ("targeted flip refuses without its table", lambda: t_targeted_flip_needs_its_table(tmp)),
                          ("settings banner", t_settings_banner),
                          ("registered tests refuse dirty code", lambda: t_clean_tree_guard(tmp)),
                          ("every scored check has a role", t_every_check_has_a_role),

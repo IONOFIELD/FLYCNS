@@ -9,6 +9,7 @@ results\\SUITE.md) are snapshotted first and restored at the end, even after an 
 perturbed run can never be left standing as the headline result.
 
     .venv\\Scripts\\python.exe scripts\\overnight.py         (menu option 7)
+    .venv\\Scripts\\python.exe scripts\\overnight.py seed1   (only the named runs; used by the cloud rerun)
 """
 import os
 import shutil
@@ -62,11 +63,16 @@ def git(*args):
 
 
 def main():
+    only = sys.argv[1:]
+    unknown = sorted(set(only) - {r[0] for r in RUNS})
+    if unknown:
+        sys.exit(f"unknown run(s) {unknown}; choose from {[r[0] for r in RUNS]}")
     for args in (["fit/audit_stimuli.py", "data"], ["-m", "flycns.integrity", "verify", "data"]):
         if subprocess.run([PY, *args]).returncode != 0:
             sys.exit("pre-flight check failed (see above); battery not started")
+    incomplete = []
     with preserved(*(RES / b for b in BENCHES), RES / "SUITE.md"):   # canonical results come back exactly
-        for tag, seed, flip, wscale, extra in RUNS:
+        for tag, seed, flip, wscale, extra in (r for r in RUNS if not only or r[0] in only):
             env = {k: v for k, v in os.environ.items() if not k.startswith("FLYCNS_")}
             env.update(FLYCNS_SEED=str(seed), FLYCNS_SIGNFLIP=str(flip), FLYCNS_WSCALE=str(wscale),
                        FLYCNS_RUN_TAG=tag, **extra)
@@ -91,6 +97,8 @@ def main():
                 shutil.copy2(RES / "SUITE.md", out / "SUITE.md")
             line = checks_line(out / "SUITE.md") if (out / "SUITE.md").exists() else "no summary"
             print(f"  {line}" + (f"  (incomplete: {', '.join(failed)})" if failed else ""))
+            if failed:
+                incomplete.append(tag)
             git("add", "-A", "--", "results/overnight")
             if git("commit", "-qm", f"overnight: {tag} {line}" + (" INCOMPLETE" if failed else ""),
                    "--", "results/overnight").returncode == 0:
@@ -101,6 +109,8 @@ def main():
     for d in sorted((RES / "overnight").iterdir()):
         if (d / "SUITE.md").exists():
             print(f"{d.name:<20} {checks_line(d / 'SUITE.md')}")
+    if incomplete:
+        sys.exit(f"incomplete runs: {', '.join(incomplete)} (see their logs in results\\overnight)")
 
 
 if __name__ == "__main__":
