@@ -44,7 +44,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: install (${{ matrix.deps }}; the lock from ready-made wheels only, as setup does)
-        run: pip install ${{ matrix.deps == 'requirements.lock' && '--only-binary=:all:' || '' }} -r ${{ matrix.deps }}
+        run: pip install ${{ matrix.deps == 'requirements.lock' && '--only-binary=:all: --no-binary=asciitree' || '' }} -r ${{ matrix.deps }}
       - name: regression test on the synthetic toy graph
         run: python tests/regression.py
         env:

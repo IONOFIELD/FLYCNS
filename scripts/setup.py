@@ -29,6 +29,10 @@ os.environ["PYTHONUTF8"] = "1"
 ARGS = set(sys.argv[1:])
 QUIET = "--refresh" in ARGS or not sys.stdin.isatty()     # never prompt in CI or unattended runs
 VENV_PY = ROOT / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+# The lock installs from ready-made Windows builds only, except these pure-Python packages that are
+# published only as source (they build without a compiler). CI installs with the same flags.
+SOURCE_OK = "asciitree"
+WHEELS_ONLY = ["--only-binary=:all:", f"--no-binary={SOURCE_OK}"]
 
 
 def _windows_helpers():
@@ -106,7 +110,7 @@ def step_environment():
     if v >= (3, 12):
         # ready-made Windows builds only: a missing one fails here, in seconds, with a clear way out,
         # instead of a long compile that needs the C++ Build Tools
-        if vpy("-m", "pip", "install", "-q", "--only-binary=:all:", "-r", "requirements.lock") != 0:
+        if vpy("-m", "pip", "install", "-q", *WHEELS_ONLY, "-r", "requirements.lock") != 0:
             sys.exit(f"  A pinned package has no ready-made Windows build for Python {here}.\n"
                      "  Install Python 3.12 (winget install -e --id Python.Python.3.12), then run setup.cmd again.")
         say("  reference environment: every package pinned (requirements.lock)")
