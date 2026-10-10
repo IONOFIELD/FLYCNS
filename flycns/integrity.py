@@ -28,19 +28,21 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CODE_PATHSPECS = ["*.py", "*.sh", "requirements*.txt", "requirements*.lock", "fly", "Dockerfile"]
+CODE_PATHSPECS = ["*.py", "*.cmd", "requirements*.txt", "requirements*.lock"]
 NOT_CODE_PREFIXES = ("results/", "data/", "testdata/")
 FINGERPRINT_ALGO = "rowhash-v1"   # sha256 over sorted per-row hashes; see table_fingerprint()
 MANIFEST = "MANIFEST.json"
 CACHE = ".fingerprints.json"      # per data dir, gitignored; keyed by size and mtime
 
 # Settings that only route output or count trials; announced but not treated as model overrides.
-PLUMBING = {"FLYCNS_RUN_TAG", "FLYCNS_AUDITORY_OUT", "FLYCNS_A2_TRIALS", "FLYCNS_ALLOW_DIRTY"}
+PLUMBING = {"FLYCNS_RUN_TAG", "FLYCNS_AUDITORY_OUT", "FLYCNS_A2_TRIALS", "FLYCNS_ALLOW_DIRTY",
+            "FLYCNS_CODEGEN"}   # engine choice: same equations, recorded in every report as `engine`
 
 
 def _git(*args):
     try:
-        r = subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True, timeout=10)
+        r = subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True, encoding="utf-8",
+                           errors="replace", timeout=10)
         return r.returncode, r.stdout
     except Exception:
         return 1, ""
@@ -160,13 +162,13 @@ def fingerprints(data_dir="data", names=None):
     paths = [p for p in paths if p.exists()]
     cf = d / CACHE
     try:
-        cache = json.loads(cf.read_text()) if cf.exists() else {}
+        cache = json.loads(cf.read_text(encoding="utf-8")) if cf.exists() else {}
     except Exception:
         cache = {}
     out = {p.name: _cached_fingerprint(p, cache) for p in paths}
     live = {k for k in cache if any(k.startswith(p.name + ":") for p in paths)}
     try:
-        cf.write_text(json.dumps({k: cache[k] for k in live}))
+        cf.write_text(json.dumps({k: cache[k] for k in live}), encoding="utf-8")
     except OSError:
         pass
     return out
@@ -181,7 +183,7 @@ def write_manifest(data_dir="data"):
                dataset="male-cns:v1.0 (neuprint.janelia.org)",
                written_at=datetime.datetime.now().isoformat(timespec="seconds"),
                files={k: v for k, v in sorted(fps.items())})
-    (Path(data_dir) / MANIFEST).write_text(json.dumps(man, indent=2) + "\n")
+    (Path(data_dir) / MANIFEST).write_text(json.dumps(man, indent=2) + "\n", encoding="utf-8")
     return man
 
 
@@ -192,7 +194,7 @@ def verify_data(data_dir="data", names=None):
     mf = d / MANIFEST
     if not mf.exists():
         return dict(status="no-manifest", problems=[], data_dir=str(d))
-    man = json.loads(mf.read_text())
+    man = json.loads(mf.read_text(encoding="utf-8"))
     want = man.get("files", {})
     check = [n for n in (names or want) if n in want]
     have = fingerprints(data_dir, check)
@@ -246,6 +248,9 @@ def provenance_record():
     try:
         import brian2, numpy, pandas
         rec["versions"] = dict(brian2=brian2.__version__, numpy=numpy.__version__, pandas=pandas.__version__)
+        from .windows import _DONE
+        rec["engine"] = _DONE.get("codegen", "not used")
+        rec["platform"] = sys.platform
     except Exception:
         pass
     if LOADED:

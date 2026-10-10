@@ -19,6 +19,7 @@ import pandas as pd
 from brian2 import (NeuronGroup, PoissonGroup, Synapses, SpikeMonitor, StateMonitor, Network,
                     ms, mV, Hz, second, defaultclock, prefs, seed as b2seed)
 
+from .windows import codegen_target
 from .graph import (electrical_pairs, drop_mixed_chemical, pre_class, region_of,
                     INTRINSIC_OVERRIDES, SEZ_GAIN_FITTED, PEPTIDE_MODULATION)
 
@@ -69,8 +70,11 @@ class LIFParams:
 
 class CNSModel:
     def __init__(self, neurons, edges, stim_types, params=LIFParams(),
-                 electrical=True, codegen="cython", monitor_types=()):
-        prefs.codegen.target = codegen
+                 electrical=True, codegen=None, monitor_types=()):
+        # engine: compiled when a C++ compiler works, else pure Python; same equations either way
+        # (flycns/windows.py; tests/unit.py checks the two give identical spikes)
+        self.codegen = codegen or codegen_target()
+        prefs.codegen.target = self.codegen
         defaultclock.dt = params.dt_ms * ms
         b2seed(params.seed)
         self.p = params

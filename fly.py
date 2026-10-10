@@ -1,19 +1,23 @@
-#!/usr/bin/env python
 """
 flycns launcher: one menu for setup, benchmarks, fits, exploration and visualization.
 
-    python fly.py
+    .\fly.cmd          (runs this file in the project's environment)
 """
-import json, os, subprocess, sys
+import json, os, shutil, subprocess, sys, zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 os.chdir(ROOT)
+sys.path.insert(0, str(ROOT))
+from flycns.windows import console, load_token_into_env, open_path, open_text, TOKEN_FILE  # noqa: E402
+
+console()
+load_token_into_env()        # so the fetch scripts see the token saved by setup.cmd
 STATE = ROOT / ".flycns_state.json"
-state = json.loads(STATE.read_text()) if STATE.exists() else {"cell": "DNp01"}
+state = json.loads(STATE.read_text(encoding="utf-8")) if STATE.exists() else {"cell": "DNp01"}
 
 def save():
-    STATE.write_text(json.dumps(state))
+    STATE.write_text(json.dumps(state), encoding="utf-8")
 
 def run(*cmd, env=None):
     e = dict(os.environ); e.update(env or {})
@@ -26,10 +30,10 @@ def status():
     have = lambda p: "yes" if Path(p).exists() else "no "
     t = os.environ.get("NEUPRINT_TOKEN", "")
     tok = "set" if (len(t) > 40 and "<" not in t and "token" not in t.lower()) else \
-          "NOT SET or placeholder. Save it once:  echo PASTE > ~/.neuprint_token ; then  export NEUPRINT_TOKEN=$(cat ~/.neuprint_token)"
+          f"NOT SET. Run setup.cmd, which asks for it once and saves it to {TOKEN_FILE}"
     suite = ""
     if Path("results/SUITE.md").exists():
-        for line in Path("results/SUITE.md").read_text().splitlines():
+        for line in Path("results/SUITE.md").read_text(encoding="utf-8").splitlines():
             if "checks pass" in line:
                 suite = line.strip("* "); break
     print(f"""
@@ -105,7 +109,7 @@ while True:
     elif c == "2": run("scripts/fetch_annotations.py")
     elif c == "45": run("scripts/fetch_dimorphism.py")
     elif c == "3": status()
-    elif c == "4": run("bash", "scripts/run_all.sh", ask("trials", "40"))
+    elif c == "4": run("scripts/run_all.py", ask("trials", "40"))
     elif c == "5":
         b = ask("benchmark (gf_escape / auditory / feeding)", "gf_escape")
         run(f"benchmarks/{b}.py", ask("trials", "40"))
@@ -114,8 +118,8 @@ while True:
     elif c == "6":
         run("benchmarks/summarize.py")
     elif c == "7":
-        print("  runs ~2.5 h; use:  caffeinate -i scripts/overnight.sh 2>&1 | tee overnight.log")
-        if ask("start now? (y/n)", "n").lower() == "y": run("bash", "scripts/overnight.sh")
+        print("  twelve suites, several hours; keeps Windows awake, commits and pushes each one as it finishes")
+        if ask("start now? (y/n)", "n").lower() == "y": run("scripts/overnight.py")
     elif c == "8": run("benchmarks/fit_gf_adapt.py", ask("trials", "20"))
     elif c == "9": run("benchmarks/fit_regional.py", ask("trials", "6"))
     elif c == "10":
@@ -138,30 +142,40 @@ while True:
     elif c == "15":
         state["cell"] = ask("cell type or bodyId (e.g. DNp01, TTMn, MN9, LC4, 10001)", state["cell"]); save()
     elif c == "16":
-        run("viz/cascade_3d.py"); run("open", "results/gf_escape/cascade_3d.html")
+        run("viz/cascade_3d.py")
+        if Path("results/gf_escape/cascade_3d.html").exists(): open_path(ROOT / "results/gf_escape/cascade_3d.html")
     elif c == "20": run("scripts/export_brainsets.py", ask("trials per session", "40"))
     elif c == "21":
-        Path("data/turner2022").mkdir(parents=True, exist_ok=True)
-        print("""
-  Dryad blocks scripted downloads (403). Use the browser:
-    1. open  https://doi.org/10.5061/dryad.h44j0zpp8
-    2. click README.rtf, template_brain.zip (0.7 GB), datafiles.zip (22 GB); keep the tab open
-    3. then run:
-       mv ~/Downloads/README.rtf ~/Downloads/template_brain.zip ~/Downloads/datafiles.zip data/turner2022/
-       cd data/turner2022 && unzip -q template_brain.zip && unzip -q datafiles.zip
-  Only those three files are needed (skip behavior_tracking, anatomical_brains, transforms, mean_brain).""")
-        run("open", "https://doi.org/10.5061/dryad.h44j0zpp8")
+        dest = ROOT / "data" / "turner2022"; dest.mkdir(parents=True, exist_ok=True)
+        need = ["README.rtf", "template_brain.zip", "datafiles.zip"]
+        dl = Path.home() / "Downloads"
+        if not all((dest / n).exists() or (dl / n).exists() for n in need):
+            print("""
+  Dryad blocks scripted downloads, so this one is by hand, once:
+    1. the page opening now: click README.rtf, template_brain.zip (0.7 GB) and datafiles.zip (22 GB)
+       (skip behavior_tracking, anatomical_brains, transforms and mean_brain)
+    2. when all three are in your Downloads folder, choose 21 again: they are moved and unpacked for you""")
+            open_path("https://doi.org/10.5061/dryad.h44j0zpp8")
+        else:
+            for n in need:
+                if (dl / n).exists() and not (dest / n).exists():
+                    shutil.move(str(dl / n), str(dest / n)); print(f"  moved {n}")
+            for z in ("template_brain.zip", "datafiles.zip"):
+                print(f"  unpacking {z} ..."); zipfile.ZipFile(dest / z).extractall(dest)
+            print(f"  ready in {dest}. Next: option 22 extracts the loom tuning.")
     elif c == "22":
-        run("bash", "-c", "pip show visanalysis >/dev/null 2>&1 || pip install -q git+https://github.com/ClandininLab/visanalysis")
+        if subprocess.run([sys.executable, "-m", "pip", "show", "visanalysis"], capture_output=True).returncode != 0:
+            run("-m", "pip", "install", "-q", "git+https://github.com/ClandininLab/visanalysis")
         run("fit/extract_turner_loom.py", "data/turner2022")
         if Path("results/turner2022/loom_tuning.json").exists() and ask("activate measured tuning for benchmarks? (y/n)", "y") == "y":
-            import shutil; shutil.copy("results/turner2022/loom_tuning.json", "data/loom_tuning_measured.json"); print("  activated")
+            shutil.copy("results/turner2022/loom_tuning.json", "data/loom_tuning_measured.json"); print("  activated")
     elif c == "23": run("scripts/fetch_bulk.py", ask("target: synapse-nt / annotations / connectome / all", "synapse-nt"))
     elif c == "24": run("fit/synapse_nt.py")
     elif c == "25":
         run("fit/roi_membership.py")
         if ask("also build neuropil meshes for the 3D view? (large download) (y/n)", "n") == "y":
-            run("bash", "-c", "pip install -q cloud-volume trimesh scikit-image && python fit/roi_membership.py --meshes")
+            run("-m", "pip", "install", "-q", "cloud-volume", "trimesh", "scikit-image")
+            run("fit/roi_membership.py", "--meshes")
     elif c == "26": run("benchmarks/fit_baseline.py", ask("trials", "6"))
     elif c == "27": run("benchmarks/feeding_mechanism.py")
     elif c == "28": run("benchmarks/sensitivity_cord.py", ask("trials", "20"))
@@ -173,7 +187,7 @@ while True:
     elif c == "46": run("tests/regression.py")
     elif c == "49": run("-m", "flycns.integrity", "status", "data")
     elif c == "50": run("benchmarks/null_strict.py")
-    elif c == "51": run("bash", "scripts/canonical_rerun.sh")
+    elif c == "51": run("scripts/canonical_rerun.py")
     elif c == "36": run("benchmarks/sensitivity_flight.py", ask("wingbeat cycles per arm", "400"))
     elif c == "37": run("benchmarks/flight_snpp16.py", ask("wingbeat cycles per arm", "400"))
     elif c == "38": run("benchmarks/flight_snpp16_graded.py", ask("wingbeat cycles per arm", "400"))
@@ -187,10 +201,10 @@ while True:
     elif c == "44": run("benchmarks/dnp13_control.py", ask("trials", "10"))
     elif c == "34": run("benchmarks/flight_loop.py", ask("wingbeat cycles per arm", "400"))
     elif c == "31": run("fit/check_modulators.py")
-    elif c == "17": run("less", "RESULTS.md")
-    elif c == "18": run("less", "REFERENCES.md")
+    elif c == "17": open_text(ROOT / "RESULTS.md")
+    elif c == "18": open_text(ROOT / "REFERENCES.md")
     elif c == "19":
-        for p in Path("results").glob("*/provenance.md"): print(f"\n--- {p}\n" + p.read_text())
+        for p in Path("results").glob("*/provenance.md"): print(f"\n--- {p}\n" + p.read_text(encoding="utf-8"))
     else:
         print("  unknown option")
     input("\n  enter to return to menu...")

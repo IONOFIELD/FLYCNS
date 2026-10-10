@@ -1,0 +1,16 @@
+# Line endings. Windows tools get CRLF where they need it; everything else is stored and checked out
+# consistently so the clean-tree guard (flycns/integrity.py) never sees a line-ending-only change.
+* text=auto
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.csv text eol=lf
+*.txt text eol=lf
+*.lock text eol=lf
+*.yml text eol=lf
+*.cff text eol=lf
+*.parquet binary
+*.h5 binary
+*.feather binary

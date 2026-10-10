@@ -167,6 +167,6 @@ summary = dict(relay_superclasses_varied=RELAY_SUPERCLASSES, n_exc_relays=len(ex
                both_in_band_unflooded=[dict(param=r.param, value=r.value, dng02=bool(r.with_dng02))
                                        for r in both.itertuples()],
                verdict=verdict, provenance=provenance())
-(OUT / "summary.json").write_text(json.dumps(summary, indent=2, default=float))
+(OUT / "summary.json").write_text(json.dumps(summary, indent=2, default=float), encoding="utf-8")
 print("\nVERDICT:", verdict)
 print(f"wrote {OUT / 'grid.csv'} and summary.json")

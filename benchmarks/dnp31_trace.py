@@ -123,5 +123,5 @@ print(f"\nunder measured loom drive (6 trials): {TARGET} {report['under_measured
       f"wing motor pool {report['under_measured_loom']['wing_motor_spikes']} spikes")
 
 report["provenance"] = provenance()
-(OUT / "trace.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "trace.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"\nwrote {OUT / 'trace.json'}")

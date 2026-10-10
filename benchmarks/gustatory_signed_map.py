@@ -95,11 +95,11 @@ try:
 except Exception:
     commit, dirty = "", True
 if crit_f.exists():
-    if json.loads(crit_f.read_text()).get("criteria") != CRITERIA:
+    if json.loads(crit_f.read_text(encoding="utf-8")).get("criteria") != CRITERIA:
         raise SystemExit("criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test.")
 else:
     crit_f.write_text(json.dumps(dict(criteria=CRITERIA, registered_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
-                                      git_commit=commit, script_uncommitted=dirty), indent=2))
+                                      git_commit=commit, script_uncommitted=dirty), indent=2), encoding="utf-8")
 print(f"criteria registered at commit {commit or '?'}{' (SCRIPT UNCOMMITTED: commit before running)' if dirty else ''}")
 
 # ---- matrices
@@ -177,7 +177,7 @@ report = dict(benchmark="gustatory_signed_map", criteria=CRITERIA, n_grn_types=l
                   lb3d_effect_on_proboscis=dict(declared=cum(groups_signed["LB3d"], PROBOSCIS),
                                                 as_glutamatergic=cum(groups_cf["LB3d"], PROBOSCIS))))
 report["provenance"] = provenance()
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 
 pd.set_option("display.width", 160)
 print("\nlabellar groups, cumulative SIGNED influence (hops 1-5):")

@@ -357,7 +357,7 @@ for a in report["arms"].values():
     a.pop("_spikes", None)
 report["pass"] = all(report["checks"].values())
 report["provenance"] = provenance()
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECKS")
 for k, v in report["checks"].items():
     print(f"  {'PASS' if v else 'FAIL'}  {k}")

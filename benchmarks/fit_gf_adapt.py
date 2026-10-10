@@ -67,4 +67,4 @@ df = pd.DataFrame(rows); ok = df[df.ok]
 best = int(ok.b_mV.min()) if len(ok) else None
 print(f"\nsmallest increment satisfying C1-C4: {best} mV" if best is not None else "\nno candidate satisfies all constraints")
 (OUT / "best.json").write_text(json.dumps(dict(b_adapt_mV=best, rule="smallest b with C1-C4",
-                                               constraints="von Reyn 2014: 1-2 spikes/loom, probabilistic; Tanouye & Wyman 1980 relay"), indent=2))
+                                               constraints="von Reyn 2014: 1-2 spikes/loom, probabilistic; Tanouye & Wyman 1980 relay"), indent=2), encoding="utf-8")

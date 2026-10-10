@@ -59,21 +59,21 @@ try:
 except Exception:
     commit, dirty = "", True
 if crit_f.exists():
-    if json.loads(crit_f.read_text()).get("criteria") != CRITERIA:
+    if json.loads(crit_f.read_text(encoding="utf-8")).get("criteria") != CRITERIA:
         raise SystemExit("criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test.")
 else:
     crit_f.write_text(json.dumps(dict(criteria=CRITERIA, registered_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
-                                      git_commit=commit, script_uncommitted=dirty), indent=2))
+                                      git_commit=commit, script_uncommitted=dirty), indent=2), encoding="utf-8")
 print(f"criteria registered at commit {commit or '?'}{' (SCRIPTS UNCOMMITTED: commit before running)' if dirty else ''}")
 
 t0 = time.time()
 env = dict(os.environ, FLYCNS_A2_TRIALS=str(A2_TRIALS))
 proc = subprocess.run([sys.executable, "-u", "benchmarks/auditory.py", "40", DATA], env=env,
-                      capture_output=True, text=True)
-(OUT / "auditory_run.log").write_text(proc.stdout + proc.stderr)
+                      capture_output=True, text=True, encoding="utf-8", errors="replace")
+(OUT / "auditory_run.log").write_text(proc.stdout + proc.stderr, encoding="utf-8")
 if proc.returncode != 0:
     raise SystemExit(f"auditory.py failed (exit {proc.returncode}); see {OUT / 'auditory_run.log'}")
-rep = json.loads(Path("results/auditory/report.json").read_text())
+rep = json.loads(Path("results/auditory/report.json").read_text(encoding="utf-8"))
 a2 = rep["arms"]["A2_prediction"]
 n = int(a2["n_trials_per_arm"])
 k1 = int(round(a2["loom_alone_hit"] * n)); k2 = int(round(a2["loom_plus_jo_hit"] * n))
@@ -99,7 +99,7 @@ report = dict(benchmark="a2_registered", criteria=CRITERIA, working_point_loom_g
               checks={"A2R_facilitation": outcome == "above"}, wall_s=round(time.time() - t0))
 from flycns.bench import provenance  # noqa: E402
 report["provenance"] = provenance()
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"working point: loom gain {a2.get('loom_gain')}, {n} trials per arm")
 print(f"loom alone      {k1}/{n} = {p1:.3f}  (95% CI {l1:.3f} to {u1:.3f})")
 print(f"loom + sound    {k2}/{n} = {p2:.3f}  (95% CI {l2:.3f} to {u2:.3f})")

@@ -4,13 +4,15 @@ on:
     branches: [main]
   pull_request:
   schedule:
-    - cron: "17 9 * * 1"   # weekly: catches breakage from the outside world (runners, indexes) early
+    - cron: "17 9 * * 1"   # weekly: catches breakage from the outside world (runners, package indexes) early
   workflow_dispatch:
 
+# flycns runs on Windows only, so every job runs on Windows. No job sets PYTHONUTF8: the code must
+# be correct under Windows' default text encoding, as when someone runs a script directly.
 jobs:
   lint:
     # Real errors only: syntax errors, undefined names, duplicate definitions. Style is not enforced.
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -20,20 +22,21 @@ jobs:
       - run: ruff check --select E9,F63,F7,F82,F811 --output-format github .
 
   toy-suite:
-    name: toy suite (${{ matrix.os }}, Python ${{ matrix.python }}, ${{ matrix.deps }})
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 60
+    name: toy suite (Python ${{ matrix.python }}, ${{ matrix.deps }}, ${{ matrix.engine }} engine)
+    runs-on: windows-latest
+    timeout-minutes: 150
     strategy:
       fail-fast: false
       matrix:
         include:
-          # reference environment: requirements.lock, on both supported platforms
-          - { os: ubuntu-latest, python: "3.12", deps: requirements.lock }
-          - { os: macos-latest,  python: "3.12", deps: requirements.lock }
+          # reference environment: requirements.lock, compiled engine (the runner has the MSVC compiler)
+          - { python: "3.12", deps: requirements.lock, engine: compiled }
           # the lock must also hold on the next Python
-          - { os: ubuntu-latest, python: "3.13", deps: requirements.lock }
-          # oldest supported Python, newest compatible packages (the setup.sh fallback path)
-          - { os: ubuntu-latest, python: "3.10", deps: requirements.txt }
+          - { python: "3.13", deps: requirements.lock, engine: compiled }
+          # oldest supported Python, newest compatible packages (the setup fallback path)
+          - { python: "3.10", deps: requirements.txt, engine: compiled }
+          # a machine without the Microsoft C++ Build Tools: the pure-Python engine, end to end
+          - { python: "3.12", deps: requirements.lock, engine: pure-Python }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -43,12 +46,29 @@ jobs:
         run: pip install -r ${{ matrix.deps }}
       - name: regression test on the synthetic toy graph
         run: python tests/regression.py
+        env:
+          FLYCNS_CODEGEN: ${{ matrix.engine == 'pure-Python' && 'numpy' || '' }}
 
-  container:
-    # the frozen reference image: if this passes, `docker build` from this commit reproduces the environment
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
+  user-path:
+    # exactly what a person does after cloning: setup.cmd --check, then the menu through fly.cmd
+    name: setup.cmd and fly.cmd, as a user runs them
+    runs-on: windows-latest
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v4
-      - run: docker build -t flycns .
-      - run: docker run --rm flycns python tests/regression.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: .\setup.cmd --check
+        shell: cmd
+        run: setup.cmd --check
+      - name: .\fly.cmd (status, integrity status, quit)
+        shell: pwsh
+        run: |
+          $out = "3`n`n49`n`nq`n" | .\fly.cmd 2>&1 | Out-String
+          Write-Output $out
+          if ($LASTEXITCODE -ne 0) { throw "fly.cmd exited $LASTEXITCODE" }
+          foreach ($want in @("neuprint token", "code     commit", "settings ")) {
+            if (-not $out.Contains($want)) { throw "fly.cmd output is missing '$want'" }
+          }
+          if ($out.Contains("Traceback")) { throw "fly.cmd raised an exception" }

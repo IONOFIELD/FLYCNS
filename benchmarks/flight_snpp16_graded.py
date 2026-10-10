@@ -83,12 +83,12 @@ except Exception:
 registered = dict(criteria=CRITERIA, registered_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
                   git_commit=commit, script_uncommitted=dirty)
 if crit_f.exists():
-    prior = json.loads(crit_f.read_text())
+    prior = json.loads(crit_f.read_text(encoding="utf-8"))
     if prior.get("criteria") != CRITERIA:
         raise SystemExit("criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test. "
                          "Delete it deliberately only if the design has genuinely changed.")
 else:
-    crit_f.write_text(json.dumps(registered, indent=2))
+    crit_f.write_text(json.dumps(registered, indent=2), encoding="utf-8")
 print(f"criteria registered at commit {commit or '?'}{' (SCRIPT UNCOMMITTED: commit before running)' if dirty else ''}")
 
 neurons, edges = load_graph(DATA)
@@ -166,7 +166,7 @@ for k in range(1, len(target) + 1):
     print(f"k={k:>2} | DVMn {r['dvmn_mean']:6.2f} Hz (draws {'/'.join(f'{x:.1f}' for x in r['dvmn_per_draw'])}; "
           f"{r['dvmn_in_band']}/{N_DRAWS} in band) | steer {r['steer_mean']:5.2f} | b1 {r['b1_mean']:5.2f} | "
           f"DLMn {r['dlmn_mean']:4.2f} | CNS {r['cns_mean']:.3f} | {round(time.time() - t0)}s")
-    (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+    (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 
 sw = report["sweep"]
 means = [r["dvmn_mean"] for r in sw]
@@ -203,7 +203,7 @@ if partner:
               f"(ratio {rep['summation_ratio']:.2f})" if rep["summation_ratio"] else "")
 report["reported"] = rep
 report["provenance"] = provenance()
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECKS (criteria registered before the run)")
 for kk, v in report["checks"].items():
     print(f"  {'PASS' if v else 'FAIL'}  {kk}")

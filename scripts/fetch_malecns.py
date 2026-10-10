@@ -5,7 +5,7 @@ Run once:  python scripts/fetch_malecns.py
 Outputs:   data/neurons.parquet   one row per neuron
            data/edges.parquet     one row per (pre, post) pair, weight >= MIN_WEIGHT
 
-Requires:  export NEUPRINT_TOKEN="..."   (from neuprint.janelia.org account page)
+Requires:  a neuPrint token (setup.cmd asks for it once and saves it)
 """
 
 import os
@@ -22,9 +22,12 @@ BATCH = 2000            # source neurons per edge query; lower if queries time o
 OUT = Path("data")
 OUT.mkdir(exist_ok=True)
 
-token = os.environ.get("NEUPRINT_TOKEN")
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from flycns.windows import neuprint_token  # noqa: E402
+token = neuprint_token()
 if not token:
-    raise SystemExit("Set NEUPRINT_TOKEN first: export NEUPRINT_TOKEN=\"...\"")
+    raise SystemExit("No neuPrint token: run setup.cmd once; it asks for the token and saves it")
 
 client = Client("neuprint.janelia.org", dataset=DATASET, token=token)
 print("connected to", DATASET)

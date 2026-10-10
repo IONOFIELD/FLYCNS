@@ -109,5 +109,5 @@ report["comparison"] = dict(
           "biphasic calcium response, blocked by AstA-R1 knockdown in Mi1; this is a spike-count "
           "analogue in a model with no graded compartment, reported and never scored"))
 report["provenance"] = provenance()
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\ncomparison:", json.dumps(report["comparison"], indent=1, default=float))

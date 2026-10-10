@@ -89,11 +89,11 @@ try:
 except Exception:
     commit, dirty = "", True
 if crit_f.exists():
-    if json.loads(crit_f.read_text()).get("criteria") != CRITERIA:
+    if json.loads(crit_f.read_text(encoding="utf-8")).get("criteria") != CRITERIA:
         raise SystemExit("criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test.")
 else:
     crit_f.write_text(json.dumps(dict(criteria=CRITERIA, registered_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
-                                      git_commit=commit, script_uncommitted=dirty), indent=2))
+                                      git_commit=commit, script_uncommitted=dirty), indent=2), encoding="utf-8")
 print(f"criteria registered at commit {commit or '?'}{' (SCRIPT UNCOMMITTED: commit before running)' if dirty else ''}")
 
 neurons, edges = load_graph(DATA)
@@ -166,7 +166,7 @@ report = dict(benchmark="feeding_by_modality", criteria=CRITERIA, resolved=resol
                       "F4_bitter_below_sugar_at_100hz": bool(dynamic["bitter"]["100Hz"]["mn9_spikes_per_cell"]
                                                              < dynamic["sugar"]["100Hz"]["mn9_spikes_per_cell"])})
 report["provenance"] = provenance()
-(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
+(OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"\nF1 VERDICT: {report['F1_verdict']}")
 print("CHECKS (criteria registered before the run)")
 for k, v in report["checks"].items():
