@@ -11,7 +11,8 @@ code, data and settings that produced it.
 ## Quick start
 
 Needs macOS or Linux, Python 3.12 (3.10 or newer works, unpinned), and a C compiler
-(macOS: `xcode-select --install`).
+(macOS: `xcode-select --install`). These are **Terminal** commands. Windows PowerShell and cmd cannot
+run them. On Windows, use WSL (Ubuntu) or the Docker route below.
 
     git clone https://github.com/IONOFIELD/FLYCNS.git flycns && cd flycns
     ./setup.sh --check                          # installs, runs the regression test: no account, ~10 min
@@ -21,6 +22,12 @@ Needs macOS or Linux, Python 3.12 (3.10 or newer works, unpinned), and a C compi
 
 `--check` alone is enough to confirm everything installs and runs. Rerunning `./setup.sh` is safe;
 it skips the download if the connectome is already there.
+
+After an update, **one command** brings everything up to date on the computer that holds the
+connectome. It updates the code, pins the data, reruns the core suite and the stricter null, then
+commits and pushes. It is safe to run again after an interruption, and it is also menu option **51**.
+
+    git stash; git pull; scripts/canonical_rerun.sh       # about 1 to 1.5 h; keeps a Mac awake
 
 With Docker instead, using the frozen reference environment:
 
@@ -106,7 +113,7 @@ The house rules are in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 |---|---|---|
 | Setup | 1 to 3, 45 | download the connectome, sensory and sex-related annotations; show status |
 | Benchmarks | 4 to 7 | run the core suite or one circuit; summary; overnight robustness battery |
-| Checks | 28, 35, 36, 46, 49, 50 | stimulus audit; parameter sensitivity; regression test; integrity status; stricter null |
+| Checks | 28, 35, 36, 46, 49 to 51 | stimulus audit; parameter sensitivity; regression test; integrity status; stricter null; one-command canonical rerun |
 | Fits | 8 to 10, 26 | the fits and sweeps behind each declared value |
 | Recorded data | 21, 22 | fetch the Turner et al. 2022 imaging data; extract measured loom tuning |
 | Connectome detail | 23 to 25 | per-synapse transmitter confidence; neuropil membership |
