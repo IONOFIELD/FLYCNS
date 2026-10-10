@@ -2,60 +2,72 @@
 
 [![regression](https://github.com/IONOFIELD/FLYCNS/actions/workflows/regression.yml/badge.svg)](https://github.com/IONOFIELD/FLYCNS/actions/workflows/regression.yml)
 
-A spiking simulation of the complete male fruit fly nervous system, built from its wiring diagram,
-tested against published physiology, and built so that every result can be traced to the exact
-code, data and settings that produced it.
-
----
-
-## Quick start (Windows)
-
-Open **PowerShell** and paste each block in turn.
-
-**First time only:** install git and Python. Skip any you already have.
-
-    winget install -e --id Git.Git
-    winget install -e --id Python.Python.3.12
-
-Close PowerShell and open it again so it finds them. Then:
-
-    git clone https://github.com/IONOFIELD/FLYCNS.git flycns
-    cd flycns
-    .\setup.cmd --check      # installs everything and runs the self-test on a toy graph: no account needed
-    .\setup.cmd              # asks for your neuPrint token once, then downloads the connectome (~5 min)
-    .\fly.cmd                # the menu: option 4 runs the core suite (~40 min)
-
-- **The neuPrint token** is free: log in at [neuprint.janelia.org](https://neuprint.janelia.org) with Google, then open Account. `setup.cmd` asks for it once and saves it to `%USERPROFILE%\.neuprint_token`.
-- **Speed:** setup offers to install the free **Microsoft C++ Build Tools**, a one-time download. With them, the simulation is compiled. Without them, everything still works, about 4 times slower, and the results are identical (CI checks the two engines spike for spike).
-- **Rerunning `setup.cmd`** is safe. It skips anything already done.
-
-**After an update**, one menu option brings everything up to date on your machine. Run `.\fly.cmd` and choose **51**. It:
-- updates the code;
-- pins the data fingerprint;
-- reruns the core suite and the stricter null;
-- commits and pushes the results.
-
-It keeps Windows awake while it runs, and it is safe to run again after an interruption.
-
----
+A simulation of the male fruit fly's entire nervous system, built from its complete wiring diagram
+and checked against recordings from real flies.
 
 ## What it is
 
-Every neuron in the male fly's brain and nerve cord is simulated as a simple spiking unit, wired
-exactly as the MaleCNS v1.0 connectome (Janelia FlyEM, 2026) says. Stimulate a sense organ and
-watch which neurons fire and in what order. The downloaded connectome has 176,422 neurons and 6.1
-million signed connections.
+- Every neuron in the fly's brain and nerve cord, about 176,000 of them, wired exactly as the Janelia MaleCNS connectome (2026) maps them and simulated as spiking neurons.
+- You stimulate a sense, such as sight, sound, taste or the wing's motion sensors, and watch which neurons fire and in what order, all the way to the muscles.
+- Each circuit is scored against published measurements. The pass/fail criteria are written down before the test runs.
 
-What makes it more than a simulation is that it is **scored**:
+## What it achieves
+
+- **Escape reflex.** A looming shadow fires the giant escape neuron, which drives the jump muscle one spike for one spike, 0.9 ms later, as in the fly. This circuit was used to set the model's few tuned values, so it shows the model is set up correctly. It is not a prediction.
+- **Sound and sight combined.** Without being tuned for it, the model predicts that a sound makes the escape neuron far more likely to fire for a faint visual threat: 4% becomes 45%. That matches a 2012 recording, and the test was registered in advance.
+- **Courtship song.** The model reproduces which male-only neurons drive pulse song but not sine song, as experiments showed. It also predicts a new pathway for sine song that a lab could test.
+- **Taste.** It shows which taste neurons push feeding up and which push it down, once each connection's sign (excite or inhibit) is counted.
+- **Traceable.** Every result records the exact code, data and settings that produced it. Failures and corrections stay on the record.
+
+## What it is not
+
+- **Not a whole fly.** There is no body and no behavior, except a stand-in for flight.
+- **Not complete.** Neuromodulators (chemicals such as dopamine that change how circuits behave), background activity and non-spiking neurons are missing. Circuits that depend on them fail, and those failures are reported.
+- **Not tuned to look good.** The few values that were tuned are listed, and the checks they affect are not counted as tests.
+
+## Install (Windows)
+
+1. Open **PowerShell**: press the Windows key, type `PowerShell`, press Enter.
+2. Install git and Python. You only need to do this once, and you can skip either one if you already have it. Paste:
+
+       winget install -e --id Git.Git
+       winget install -e --id Python.Python.3.12
+
+3. Close PowerShell and open it again.
+4. Download flycns and set it up. Paste:
+
+       git clone https://github.com/IONOFIELD/FLYCNS.git flycns
+       cd flycns
+       .\setup.cmd
+
+   Setup asks for your **neuPrint token**, a free key for downloading the fly's wiring:
+   1. Sign in at [neuprint.janelia.org](https://neuprint.janelia.org) with Google.
+   2. Click **Account** and copy the token.
+   3. Paste it when setup asks.
+
+   Setup then downloads the data, which takes about 5 minutes.
+5. Run it:
+
+       .\fly.cmd
+
+   A menu opens. Type `4` and press Enter to run the main tests (about 40 minutes).
+
+**Next time:** open PowerShell, then type `cd flycns` and `.\fly.cmd`.
+
+- **Check the install without an account:** use `.\setup.cmd --check` in place of `.\setup.cmd`. It runs a self-test on a small practice network.
+- **Faster runs:** setup offers to install the free Microsoft C++ Build Tools. Without them everything still works, about 4 times slower, with identical results.
+- **Updating:** in the `flycns` folder, run `git pull`, then `.\setup.cmd`.
+
+---
+
+## More detail
+
+### How results are scored
+
 - Each circuit is tested against numbers from published recordings, with pass/fail criteria, null models (the same neurons with shuffled wiring) and ablations.
 - Many tests are **pre-registered**: their criteria are committed to git before they run, so a result cannot be tuned after the fact.
 - Every check is labelled with **what it is evidence of**. A check that a parameter was tuned to pass is marked *calibrated* and is not counted as a test of the model ([`docs/CALIBRATION.md`](docs/CALIBRATION.md)).
-
-### What it is not
-
-- **Not a model of how a fly behaves.** There is no body, except a minimal stand-in for flight.
-- **Not fitted to neural recordings.** The single-neuron parameters come from published values, and the visual stimulus is measured from real imaging. A few values were chosen to make specific checks pass. They are listed, with their rules, in `docs/CALIBRATION.md`, and those checks are not counted as tests.
-- **Not a complete account of the fly.** Neuromodulators, graded (non-spiking) neurons and spontaneous background activity are absent, and several circuits fail for exactly that reason.
+- **For the maintainer:** after an update, menu option **51** does four things. It updates the code, pins the data fingerprint, reruns the core suite and the stricter null, then commits and pushes the results. It keeps Windows awake while it runs, and it is safe to run again after an interruption.
 
 ### What it can be used for
 
