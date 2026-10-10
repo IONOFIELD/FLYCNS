@@ -10,7 +10,7 @@ Published physiology to compare against:
   GF spikes per loom: 1 to 2      GF latency: ~20 to 60 ms after loom onset
   TTMn follows GF within ~1 ms (electrical synapse, undercounted here)
 
-Run:  python gf_benchmark.py
+Run:  python scripts/legacy/gf_fit.py   (sweeps loom burst rate on real wiring)
 """
 
 import numpy as np
@@ -39,6 +39,40 @@ edges = pd.read_parquet("data/edges.parquet")
 edges = edges[edges["sign"].notna() & (edges["sign"] != 0)].reset_index(drop=True)
 meta = neurons.set_index("bodyId")
 
+# ------------------------------------------------ literature overrides
+# Electrical synapses are invisible to the connectome. Each entry sets an
+# ABSOLUTE effective synapse count for a (pre type, post type) pair, pairing
+# each pre neuron with the post neuron it already contacts most, or with an
+# unused post neuron if it has no contact. Every entry must carry a citation.
+OVERRIDES = [
+    # pre,     post,   eff. synapses, source
+    ("DNp01", "TTMn", 130, "GF-TTMn shakB gap junction; Allen, Godenschwege, Tanouye & Phelan 2006"),
+    ("DNp01", "PSI",  130, "GF-PSI shakB gap junction; Allen et al. 2006; Phelan et al. 2008"),
+]
+
+def apply_overrides(df):
+    df = df.copy()
+    for pre_t, post_t, eff, src in OVERRIDES:
+        pres = list(meta.index[meta["type"] == pre_t])
+        posts = list(meta.index[meta["type"] == post_t])
+        used = set()
+        for p in pres:
+            hit = df[(df.pre == p) & (df.post.isin(posts))]
+            if len(hit):
+                q = hit.sort_values("weight", ascending=False).iloc[0].post
+                df = df[~((df.pre == p) & (df.post.isin(posts)))]
+            else:
+                free = [x for x in posts if x not in used] or posts
+                q = free[0]
+            used.add(q)
+            df = pd.concat([df, pd.DataFrame([dict(pre=p, post=q, weight=eff,
+                                                   nt="acetylcholine", sign=1.0)])],
+                           ignore_index=True)
+            print(f"override {pre_t} {p} -> {post_t} {q}: {eff} eff. synapses  [{src}]")
+    return df
+
+edges = apply_overrides(edges)
+
 
 def rewire(df, seed):
     """Degree-preserving null: shuffle which postsynaptic neuron each edge lands on.
@@ -51,7 +85,7 @@ def rewire(df, seed):
     return out
 
 
-def run(edge_df, label):
+def run(edge_df, label, burst_hz):
     stim_ids = sorted(set(neurons.loc[neurons["type"].isin(STIM_TYPES), "bodyId"]))
     stim_index = pd.Series(np.arange(len(stim_ids)), index=stim_ids)
     all_ids = pd.unique(pd.concat([edge_df["pre"], edge_df["post"]]))
@@ -87,7 +121,7 @@ def run(edge_df, label):
     for k in range(N_TRIALS):
         net.run(GAP_MS * ms)
         onsets.append(float(net.t / ms))
-        P.rates = BURST_HZ * Hz
+        P.rates = burst_hz * Hz
         net.run(BURST_MS * ms)
         P.rates = 0 * Hz
     net.run(GAP_MS * ms)
@@ -103,15 +137,20 @@ def run(edge_df, label):
         gf = np.isin(i[win], ro["DNp01"])
         tt = np.isin(i[win], ro["TTMn"])
         lat = (t[win][gf].min() - on) if gf.any() else np.nan
-        rows.append(dict(trial=k, gf=gf.sum(), lat=lat, ttmn=tt.sum()))
-        print(f"{k:>5} {gf.sum():>10} {lat:>14.1f} {tt.sum():>12}")
+        tlat = (t[win][tt].min() - t[win][gf].min()) if (gf.any() and tt.any()) else np.nan
+        rows.append(dict(trial=k, gf=gf.sum(), lat=lat, ttmn=tt.sum(), tlat=tlat))
+        print(f"{k:>5} {gf.sum():>10} {lat:>14.1f} {tt.sum():>12}   TTMn-GF {tlat:5.1f} ms")
     df = pd.DataFrame(rows)
     print(f"mean GF spikes/loom {df.gf.mean():.1f}, mean latency {df.lat.mean():.1f} ms, "
           f"mean TTMn {df.ttmn.mean():.1f}")
     return df
 
 
-real = run(edges, "REAL WIRING")
-null = run(rewire(edges, SEED), "REWIRED NULL")
-real.to_csv("data/gf_real.csv", index=False)
-null.to_csv("data/gf_null.csv", index=False)
+summary = []
+for hz in [5, 10]:
+    df = run(edges, f"REAL WIRING, burst {hz} Hz", hz)
+    summary.append(dict(burst_hz=hz, gf=df.gf.mean(), lat=df.lat.mean(),
+                        ttmn=df.ttmn.mean(), ttmn_lag=df.tlat.mean(), hit=(df.gf > 0).mean()))
+print("\n=== SUMMARY (target: GF 1-2 spikes, hit rate ~1.0, TTMn ~1) ===")
+print(pd.DataFrame(summary).to_string(index=False))
+pd.DataFrame(summary).to_csv("data/gf_fit.csv", index=False)

@@ -25,6 +25,11 @@ SIGN_MAP = {"acetylcholine": 1, "gaba": -1, "glutamate": -1, "histamine": -1,
 # subthreshold compound potential, and removes the 679 EM chemical synapses on the contact so it
 # is not counted twice. That is a modelling simplification, not a claim that the synapse is
 # purely electrical.
+# DIRECTION: every entry is one-way, pre -> post (model.py adds coupling current and a spikelet
+# to the post cell only). For GF -> TTMn and GF -> PSI this matches the biology: the giant
+# synapses are heterotypic shakB junctions that rectify, passing current mainly from GF to its
+# targets (Phelan et al. 2008). For JON -> GF it is a simplification; any retrograde coupling
+# from GF back onto the afferents is not represented.
 ELECTRICAL_SYNAPSES = [
     ("DNp01", "TTMn", True, 9.0, "shakB gap junction, 1:1 relay; Tanouye & Wyman 1980; Allen et al. 2006"),
     ("DNp01", "PSI",  True, 9.0, "shakB gap junction, 1:1 relay; Allen et al. 2006; Phelan et al. 2008"),
@@ -186,8 +191,16 @@ INTRINSIC_OVERRIDES = [
 ]
 
 
-def load_graph(data_dir="data", min_weight=5):
+_LAST = {}   # the most recently loaded neuron table, for nulls that need cell annotations
+MIN_WEIGHT_DEFAULT = 5   # synapses per connection; FLYCNS_MIN_WEIGHT overrides (robustness battery)
+
+
+def load_graph(data_dir="data", min_weight=None):
     import os
+    from .integrity import announce_overrides, LOADED
+    announce_overrides()
+    if min_weight is None:
+        min_weight = int(os.environ.get("FLYCNS_MIN_WEIGHT", MIN_WEIGHT_DEFAULT))
     neurons = pd.read_parquet(f"{data_dir}/neurons.parquet")
     edges = pd.read_parquet(f"{data_dir}/edges.parquet")
     edges = edges[edges["weight"] >= min_weight].copy()
@@ -219,7 +232,12 @@ def load_graph(data_dir="data", min_weight=5):
         edges.loc[m, "sign"] *= -1
         print(f"[graph] SIGN-FLIP PERTURBATION: {m.sum():,} edges ({flip:.0%}) sign-inverted")
     print(f"[graph] {len(neurons):,} neurons, {len(edges):,} signed edges "
-          f"(dropped {n_unknown:,} unknown-NT pairs and modulatory amines)")
+          f"(dropped {n_unknown:,} unknown-NT pairs and modulatory amines)"
+          + (f", min_weight {min_weight}" if min_weight != MIN_WEIGHT_DEFAULT else ""))
+    LOADED.clear()
+    LOADED.update(data_dir=str(data_dir), min_weight=int(min_weight), n_neurons=int(len(neurons)),
+                  n_signed_edges=int(len(edges)), n_signed_synapses=int(edges["weight"].sum()))
+    _LAST["neurons"] = neurons
     return neurons, edges
 
 
@@ -263,54 +281,7 @@ def afferents_by_subclass(neurons, subclasses, type_prefix=None):
 
 
 def gustatory_afferents(neurons):
-    """Types whose subclass is anatomically gustatory (requires fetch_annotations.py)."""
-    if "subclass" not in neurons:
-        return []
-    m = neurons[neurons["subclass"].isin(GUSTATORY_SUBCLASSES)]
-    return sorted(m["type"].dropna().unique())
-
-
-def pre_class(superclass):
-    """Three presynaptic classes for class-wise synaptic gain (regional fitting)."""
-    sc = "" if superclass is None or superclass != superclass else str(superclass)
-    if "sensory" in sc:
-        return "sensory"
-    if "descending" in sc or "ascending" in sc:
-        return "relay"
-    return "local"
-
-
-def type_region(t):
-    """Fallback region tag from the type-name prefix (used only without roi_membership.parquet)."""
-    t = "" if t is None or t != t else str(t)
-    return "SEZ" if t.startswith(SEZ_TYPE_PREFIXES) else "other"
-
-
-def region_of(neurons, data_dir="data"):
-    """Per-bodyId region ('SEZ'/'other'), anatomical where available, else prefix rule."""
-    bodies = sez_bodies(neurons, data_dir)
-    idx = neurons.set_index("bodyId")
-    if bodies:
-        r = pd.Series("other", index=idx.index)
-        r.loc[list(bodies & set(idx.index))] = "SEZ"
-        return r, f"anatomical (roiInfo, {len(bodies):,} SEZ-intrinsic neurons)"
-    return idx["type"].map(type_region), "type-name prefix fallback"
-
-
-def afferents_by_subclass(neurons, subclasses, type_prefix=None):
-    """Sensory types selected by MaleCNS `subclass` (modality), optionally within a type prefix.
-    MaleCNS annotates JO neurons as auditory / wind_gravity / grooming, which does NOT follow
-    the JO-A/JO-B type split, so modality must come from the annotation."""
-    if "subclass" not in neurons:
-        return []
-    m = neurons[neurons["subclass"].isin(subclasses)]
-    if type_prefix:
-        m = m[m["type"].fillna("").str.startswith(type_prefix)]
-    return sorted(m["type"].dropna().unique())
-
-
-def gustatory_afferents(neurons):
-    """Types whose subclass is anatomically gustatory (requires fetch_annotations.py)."""
+    """Types whose subclass is anatomically gustatory (requires scripts/fetch_annotations.py)."""
     if "subclass" not in neurons:
         return []
     m = neurons[neurons["subclass"].isin(GUSTATORY_SUBCLASSES)]
@@ -394,10 +365,47 @@ def drop_mixed_chemical(edges, neurons):
     return edges[keep].reset_index(drop=True)
 
 
-def rewire_null(edges, seed=0):
+NULL_MODES = ("global", "superclass", "superclass_side")
+
+
+def rewire_null(edges, seed=0, mode=None, neurons=None):
     """Degree-preserving null: permute postsynaptic targets, keep out-degree,
-    synapse counts and NT sign of every presynaptic neuron."""
+    synapse counts and NT sign of every presynaptic neuron.
+
+    mode (default FLYCNS_NULL, else "global"):
+      global           permute targets across the whole CNS. Weak: it also destroys which
+                       neuropil and which cell class each neuron talks to, so almost any
+                       circuit goes silent on it.
+      superclass       permute targets only among cells of the same superclass (sensory,
+                       descending, motor, central ...). Every neuron keeps how many synapses
+                       it sends to each class of cell; only the identity of the target within
+                       the class is shuffled. A circuit that survives this null depends on the
+                       specific wiring, not on class-level statistics.
+      superclass_side  as superclass, and the target also keeps its body side.
+    Each target keeps its in-degree in every mode. Self-loops created by the shuffle are
+    dropped, as before."""
+    import os
+    mode = mode or os.environ.get("FLYCNS_NULL", "global")
+    if mode not in NULL_MODES:
+        raise ValueError(f"unknown null mode {mode!r}; choose from {NULL_MODES}")
     rng = np.random.default_rng(seed)
     out = edges.copy()
-    out["post"] = rng.permutation(out["post"].values)
-    return out[out["pre"] != out["post"]].reset_index(drop=True)
+    if mode == "global":
+        out["post"] = rng.permutation(out["post"].values)
+    else:
+        nrn = neurons if neurons is not None else _LAST.get("neurons")
+        if nrn is None:
+            raise ValueError(f"null mode {mode!r} needs the neuron table; call load_graph first or pass neurons=")
+        meta = nrn.set_index("bodyId")
+        group = meta["superclass"].fillna("?").astype(str)
+        if mode == "superclass_side":
+            group = group + "|" + infer_side(meta).fillna("?").astype(str)
+        g = out["post"].map(group).fillna("?").to_numpy()
+        post = out["post"].to_numpy().copy()
+        for label in pd.unique(g):
+            idx = np.flatnonzero(g == label)
+            post[idx] = post[idx][rng.permutation(len(idx))]
+        out["post"] = post
+    out = out[out["pre"] != out["post"]].reset_index(drop=True)
+    out.attrs["null_mode"] = mode
+    return out

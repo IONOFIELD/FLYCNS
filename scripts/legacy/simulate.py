@@ -4,7 +4,7 @@ Phase 2: leaky integrate-and-fire on the full MaleCNS graph (Brian2).
 Parameters follow Shiu et al. Nature 2024 (FlyWire LIF model).
 Stimulated neurons are replaced by Poisson spike sources at STIM_HZ.
 
-Run:  python simulate.py
+Run:  python scripts/legacy/simulate.py
 Edit STIM_TYPES and READOUT_TYPES to change the experiment.
 """
 

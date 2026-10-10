@@ -11,7 +11,7 @@ suffix (SIP108m, PVLP204m, SIP109m, ...), and SIP108m alone drives DNp13 selecti
 (benchmarks/dnp13_control.py). Whether those types are male-specific decides whether the sine
 pathway is a sexually dimorphic circuit. The local data had no field to answer that.
 
-Run:  python fetch_dimorphism.py          (needs NEUPRINT_TOKEN)   Safe to rerun.
+Run:  python scripts/fetch_dimorphism.py          (needs NEUPRINT_TOKEN)   Safe to rerun.
 """
 import os
 import re

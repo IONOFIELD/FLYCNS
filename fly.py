@@ -18,7 +18,7 @@ def save():
 def run(*cmd, env=None):
     e = dict(os.environ); e.update(env or {})
     try:
-        subprocess.run([sys.executable, *cmd] if cmd[0].endswith(".py") else list(cmd), env=e)
+        subprocess.run([sys.executable, *cmd] if (cmd[0].endswith(".py") or cmd[0] == "-m") else list(cmd), env=e)
     except KeyboardInterrupt:
         print("\n(interrupted)")
 
@@ -56,10 +56,12 @@ MENU = """
                  2  fetch sensory annotations (subclass, entry nerve)
                 45  fetch sex-related annotations (dimorphism, fruitless, doublesex)
                  3  status
-  BENCHMARKS     4  run full suite (3 circuits, ~40 min)      5  run one benchmark
+  BENCHMARKS     4  run core suite (3 circuits, ~40 min)      5  run one benchmark
                  6  show suite summary                        7  robustness battery (overnight)
   CHECKS        35  audit every stimulus set against the dataset (seconds; run before long jobs)
-                46  regression test: whole toy suite in an isolated copy (a few minutes)
+                46  regression test: unit checks + whole toy suite in an isolated copy (~10 min)
+                49  integrity: code committed? settings overridden? data match data/MANIFEST.json?
+                50  stricter null: escape and pC1 controls on a superclass-preserving shuffle (registered)
                 28  cord parameter sensitivity (do brain values distort the nerve cord?)
                 36  flight sensitivity: does DLM's silence depend on the relay layer's parameters?
   FITS           8  GF adaptation sweep       9  SEZ regional gain sweep      10  afferent screen
@@ -98,11 +100,11 @@ while True:
     c = ask("select").lower()
     if c in ("q", "quit", ""):
         break
-    elif c == "1": run("fetch_malecns.py")
-    elif c == "2": run("fetch_annotations.py")
-    elif c == "45": run("fetch_dimorphism.py")
+    elif c == "1": run("scripts/fetch_malecns.py")
+    elif c == "2": run("scripts/fetch_annotations.py")
+    elif c == "45": run("scripts/fetch_dimorphism.py")
     elif c == "3": status()
-    elif c == "4": run("bash", "run_all.sh", ask("trials", "40"))
+    elif c == "4": run("bash", "scripts/run_all.sh", ask("trials", "40"))
     elif c == "5":
         b = ask("benchmark (gf_escape / auditory / feeding)", "gf_escape")
         run(f"benchmarks/{b}.py", ask("trials", "40"))
@@ -111,8 +113,8 @@ while True:
     elif c == "6":
         run("benchmarks/summarize.py")
     elif c == "7":
-        print("  runs ~2.5 h; use:  caffeinate -i ./overnight.sh 2>&1 | tee overnight.log")
-        if ask("start now? (y/n)", "n").lower() == "y": run("bash", "overnight.sh")
+        print("  runs ~2.5 h; use:  caffeinate -i scripts/overnight.sh 2>&1 | tee overnight.log")
+        if ask("start now? (y/n)", "n").lower() == "y": run("bash", "scripts/overnight.sh")
     elif c == "8": run("benchmarks/fit_gf_adapt.py", ask("trials", "20"))
     elif c == "9": run("benchmarks/fit_regional.py", ask("trials", "6"))
     elif c == "10":
@@ -136,7 +138,7 @@ while True:
         state["cell"] = ask("cell type or bodyId (e.g. DNp01, TTMn, MN9, LC4, 10001)", state["cell"]); save()
     elif c == "16":
         run("viz/cascade_3d.py"); run("open", "results/gf_escape/cascade_3d.html")
-    elif c == "20": run("export_brainsets.py", ask("trials per session", "40"))
+    elif c == "20": run("scripts/export_brainsets.py", ask("trials per session", "40"))
     elif c == "21":
         Path("data/turner2022").mkdir(parents=True, exist_ok=True)
         print("""
@@ -153,7 +155,7 @@ while True:
         run("fit/extract_turner_loom.py", "data/turner2022")
         if Path("results/turner2022/loom_tuning.json").exists() and ask("activate measured tuning for benchmarks? (y/n)", "y") == "y":
             import shutil; shutil.copy("results/turner2022/loom_tuning.json", "data/loom_tuning_measured.json"); print("  activated")
-    elif c == "23": run("fetch_bulk.py", ask("target: synapse-nt / annotations / connectome / all", "synapse-nt"))
+    elif c == "23": run("scripts/fetch_bulk.py", ask("target: synapse-nt / annotations / connectome / all", "synapse-nt"))
     elif c == "24": run("fit/synapse_nt.py")
     elif c == "25":
         run("fit/roi_membership.py")
@@ -168,6 +170,8 @@ while True:
     elif c == "33": run("benchmarks/embodiment_gate.py")
     elif c == "35": run("fit/audit_stimuli.py")
     elif c == "46": run("tests/regression.py")
+    elif c == "49": run("-m", "flycns.integrity", "status", "data")
+    elif c == "50": run("benchmarks/null_strict.py")
     elif c == "36": run("benchmarks/sensitivity_flight.py", ask("wingbeat cycles per arm", "400"))
     elif c == "37": run("benchmarks/flight_snpp16.py", ask("wingbeat cycles per arm", "400"))
     elif c == "38": run("benchmarks/flight_snpp16_graded.py", ask("wingbeat cycles per arm", "400"))

@@ -57,6 +57,11 @@ CRITERIA = dict(
     R3=f"fresh draws (seed base {FRESH_SEED_BASE}): k* within 1 of {K_STAR_ORIG}, and k={K_TEST} in band in >=4/{N_DRAWS}",
     band=BAND, n_draws=N_DRAWS, n_cycles=N_CYCLES)
 
+# Registered test: refuse uncommitted code and data that differ from data/MANIFEST.json, so the
+# registered result can be traced to an exact commit and an exact dataset (flycns/integrity.py).
+from flycns.integrity import require_clean, require_data  # noqa: E402
+require_clean(Path(__file__).stem)
+require_data(DATA, Path(__file__).stem, ["neurons.parquet", "edges.parquet"])
 crit_f = OUT / "criteria.json"
 try:
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, timeout=5).stdout.strip()

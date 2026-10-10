@@ -83,6 +83,11 @@ CRITERIA = dict(
     P3="pMP2 under pC1_14a > pMP2 under pC1_15_16",
     P4="pC1_14a on rewired null: pMP2 < 0.1",
     limit="suppression phenotypes untestable: no background activity")
+# Registered test: refuse uncommitted code and data that differ from data/MANIFEST.json, so the
+# registered result can be traced to an exact commit and an exact dataset (flycns/integrity.py).
+from flycns.integrity import require_clean, require_data  # noqa: E402
+require_clean(Path(__file__).stem)
+require_data(DATA, Path(__file__).stem, ["neurons.parquet", "edges.parquet"])
 crit_f = OUT / "criteria.json"
 try:
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, timeout=5).stdout.strip()

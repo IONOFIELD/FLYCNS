@@ -1,8 +1,10 @@
-# MaleCNS v1.0 LIF benchmark suite  [signflip_targeted]
+# MaleCNS v1.0 LIF benchmark suite
 
-env: FLYCNS_SEED=0 FLYCNS_SIGNFLIP=0 FLYCNS_WSCALE=0.3
+**36/48 checks pass, but NOT all under the declared parameter set:** see the flags column.
 
-**16/16 checks pass under ONE parameter set** (same LIFParams for every circuit).
+**By role:** independent 14/25 | control 9/9 | robustness 3/4 | calibrated 7/7 | construction 3/3
+
+Only *independent* checks test the model; *calibrated* and *construction* checks were made to pass by a declared parameter (docs/CALIBRATION.md). *control* checks show the machinery is not trivial.
 
 ## Parameters
 ```
@@ -39,41 +41,84 @@ env: FLYCNS_SEED=0 FLYCNS_SIGNFLIP=0 FLYCNS_WSCALE=0.3
 effective chemical kick per synapse: 0.0825 mV (Shiu 2024 unitary 0.275 mV x MaleCNS rescale 0.3)
 
 ## Checks
-| benchmark | check | result |
-|---|---|---|
-| auditory | A1_jo_alone_mostly_subthreshold | PASS |
-| auditory | A2_jo_effect_on_near_threshold_loom_REPORTED | SKIP |
-| auditory | A3_declared_pairs_carry_jo_drive | PASS |
-| auditory | A4_null_silent | PASS |
-| auditory | A5_cns_quiet | PASS |
-| feeding | F2b_extra_SEZ_quiet | PASS |
-| feeding | F2c_motor_rate_physiological | PASS |
-| feeding | F2_dose_response_REPORTED | SKIP |
-| feeding | F1_laterality_matches_wiring | SKIP |
-| feeding | F1_shiu_contralateral_bias | SKIP |
-| feeding | F3_bitter_suppresses | SKIP |
-| feeding | F4_second_order_sufficient | PASS |
-| feeding | F5_null_silent | PASS |
-| gf_escape | gf_spikes_per_response_1_to_2 | PASS |
-| gf_escape | gf_response_prob_0.5_to_1 | PASS |
-| gf_escape | gf_latency_10_60ms | PASS |
-| gf_escape | ttmn_one_to_one | PASS |
-| gf_escape | ttmn_lag_0.5_1.5ms | PASS |
-| gf_escape | cns_quiet | PASS |
-| gf_escape | electrical_necessary | PASS |
-| gf_escape | null_silent | PASS |
+| benchmark | check | result | role | flags |
+|---|---|---|---|---|
+| a2_registered | A2R_facilitation | PASS | independent | UNSTAMPED |
+| a2_robustness | RA2_facilitation_at_every_near_threshold_gain | PASS | robustness | UNSTAMPED |
+| auditory | A1_jo_alone_mostly_subthreshold | PASS | calibrated | UNSTAMPED |
+| auditory | A2_jo_effect_on_near_threshold_loom_REPORTED | SKIP | reported | UNSTAMPED |
+| auditory | A3_declared_pairs_carry_jo_drive | PASS | control | UNSTAMPED |
+| auditory | A4_null_silent | PASS | control | UNSTAMPED |
+| auditory | A5_cns_quiet | PASS | calibrated | UNSTAMPED |
+| dnp13_control | D1_dnp13_reachable | PASS | control | UNSTAMPED |
+| dnp13_control | D2_pc1_1b_sine_choice | FAIL | independent | UNSTAMPED |
+| feeding | F2b_extra_SEZ_quiet | PASS | calibrated | PERTURBED, UNSTAMPED |
+| feeding | F2c_motor_rate_physiological | PASS | construction | PERTURBED, UNSTAMPED |
+| feeding | F2_dose_response_REPORTED | SKIP | reported | PERTURBED, UNSTAMPED |
+| feeding | F1_laterality_matches_wiring | SKIP | reported | PERTURBED, UNSTAMPED |
+| feeding | F1_shiu_contralateral_bias | SKIP | reported | PERTURBED, UNSTAMPED |
+| feeding | F3_bitter_suppresses | SKIP | reported | PERTURBED, UNSTAMPED |
+| feeding | F4_second_order_sufficient | PASS | independent | PERTURBED, UNSTAMPED |
+| feeding | F5_null_silent | PASS | control | PERTURBED, UNSTAMPED |
+| feeding_by_modality | F2_sugar_ratio_exceeds_bitter | PASS | independent | UNSTAMPED |
+| feeding_by_modality | F3_sugar_drives_mn9_at_100hz | FAIL | independent | UNSTAMPED |
+| feeding_by_modality | F4_bitter_below_sugar_at_100hz | FAIL | independent | UNSTAMPED |
+| flight_loop | L1a_DVMn_2_to_12_hz | PASS | calibrated | UNSTAMPED |
+| flight_loop | L1b_DLMn_cf_2_to_12_hz | FAIL | independent | UNSTAMPED |
+| flight_loop | L2_b1_0.5_to_1.2_spikes_per_wingbeat | PASS | independent | UNSTAMPED |
+| flight_loop | L3_leg_mn_not_entrained | PASS | independent | UNSTAMPED |
+| flight_loop | L4_steering_specific_vs_null | PASS | control | UNSTAMPED |
+| flight_loop | L5_DLMn_cf_2_to_12_hz_with_DNg02 | FAIL | independent | UNSTAMPED |
+| flight_loop | L6_DVMn_still_in_band_with_DNg02 | FAIL | independent | UNSTAMPED |
+| flight_snpp16 | N1_snpp16_sufficient_dvmn_in_band | FAIL | independent | UNSTAMPED |
+| flight_snpp16 | N2_snpp16_necessary_dvmn_below_2hz | FAIL | independent | UNSTAMPED |
+| flight_snpp16_graded | G1_graded | FAIL | independent | UNSTAMPED |
+| flight_snpp16_graded | G2_in_band_window | PASS | independent | UNSTAMPED |
+| flight_snpp16_graded | G3_selective_at_k_star | PASS | independent | UNSTAMPED |
+| flight_snpp16_graded | G4_wiring_specific_at_k_star | PASS | control | UNSTAMPED |
+| flight_snpp16_graded | G5_reliable_at_k_star | PASS | independent | UNSTAMPED |
+| flight_snpp16_robustness | R1_survives_transmitter_uncertainty | PASS | robustness | UNSTAMPED |
+| flight_snpp16_robustness | R2_selectivity_holds_across_cord_params | FAIL | robustness | UNSTAMPED |
+| flight_snpp16_robustness | R3_replicates_with_fresh_draws | PASS | robustness | UNSTAMPED |
+| gf_escape | gf_spikes_per_response_1_to_2 | PASS | calibrated | PERTURBED, UNSTAMPED |
+| gf_escape | gf_response_prob_0.5_to_1 | PASS | calibrated | PERTURBED, UNSTAMPED |
+| gf_escape | gf_latency_10_60ms | PASS | independent | PERTURBED, UNSTAMPED |
+| gf_escape | ttmn_one_to_one | PASS | construction | PERTURBED, UNSTAMPED |
+| gf_escape | ttmn_lag_0.5_1.5ms | PASS | construction | PERTURBED, UNSTAMPED |
+| gf_escape | cns_quiet | PASS | calibrated | PERTURBED, UNSTAMPED |
+| gf_escape | electrical_necessary | PASS | control | PERTURBED, UNSTAMPED |
+| gf_escape | null_silent | PASS | control | PERTURBED, UNSTAMPED |
+| gustatory_signed_map | S1_valence_signed_on_proboscis | PASS | independent | UNSTAMPED |
+| gustatory_signed_map | S2_per_type_sign_agreement | FAIL | independent | UNSTAMPED |
+| gustatory_signed_map | S3_LB2_dominates_pharyngeal_pumping | FAIL | independent | UNSTAMPED |
+| pc1_song | P1_pc1_14a_pulse_over_sine | PASS | independent | UNSTAMPED |
+| pc1_song | P2_pc1_13_14_pulse_over_sine | PASS | independent | UNSTAMPED |
+| pc1_song | P3_14a_exceeds_15_16_on_pulse | PASS | independent | UNSTAMPED |
+| pc1_song | P4_null_silent | PASS | control | UNSTAMPED |
+| sugar_laterality | L1_sugar_contralateral_bias | PASS | independent | UNSTAMPED |
+
+Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = over an hour older than the newest report; UNSTAMPED = written before integrity stamping, rerun to stamp.
 
 Declared deviations from the raw connectome: see each results/*/provenance.md and flycns/graph.py.
 
-**WARNING: reports more than an hour older than the newest are included: auditory, gf_escape, peptide_asta. Rerun the suite (`./run_all.sh`) before quoting this table.**
-
 ## Report provenance
-| benchmark | written | commit | env |
-|---|---|---|---|
-| auditory | 2026-09-11T12:51:07 | 8b95326 | {'FLYCNS_SEED': '0', 'FLYCNS_SIGNFLIP_TARGETED': '1', 'FLYCNS_RUN_TAG': 'signflip_targeted', 'FLYCNS_SIGNFLIP': '0', 'FLYCNS_WSCALE': '0.3'} |
-| feeding | 2026-09-11T14:16:21 | f5ab72b | {'FLYCNS_SEED': '0', 'FLYCNS_SIGNFLIP_TARGETED': '1', 'FLYCNS_RUN_TAG': 'signflip_targeted', 'FLYCNS_SIGNFLIP': '0', 'FLYCNS_WSCALE': '0.3'} |
-| gf_escape | 2026-09-11T12:21:29 | 8b95326 | {'FLYCNS_SEED': '0', 'FLYCNS_SIGNFLIP_TARGETED': '1', 'FLYCNS_RUN_TAG': 'signflip_targeted', 'FLYCNS_SIGNFLIP': '0', 'FLYCNS_WSCALE': '0.3'} |
-| peptide_asta | 2026-09-09T15:43:57 | 00a6afb | - |
+| benchmark | written | commit | data (neurons / edges) | env overrides |
+|---|---|---|---|---|
+| a2_registered | unstamped |  | - | - |
+| a2_robustness | unstamped |  | - | - |
+| auditory | 2026-09-27T18:42:11 | 4b3d746 | - | - |
+| dnp13_control | 2026-09-26T22:15:58 | c67b98e | - | - |
+| feeding | 2026-09-11T14:16:21 | f5ab72b | - | {'FLYCNS_SEED': '0', 'FLYCNS_SIGNFLIP_TARGETED': '1', 'FLYCNS_SIGNFLIP': '0', 'FLYCNS_WSCALE': '0.3'} |
+| feeding_by_modality | 2026-09-26T18:54:44 | 4cfae84 | - | - |
+| flight_loop | 2026-09-24T21:19:46 | ce8b9d2 | - | - |
+| flight_snpp16 | 2026-09-25T13:57:00 | b1e9e41 | - | - |
+| flight_snpp16_graded | 2026-09-25T15:05:22 | 64d665b | - | - |
+| flight_snpp16_robustness | 2026-09-26T12:17:55 | 77e0cc5 | - | - |
+| gf_escape | 2026-09-11T12:21:29 | 8b95326 | - | {'FLYCNS_SEED': '0', 'FLYCNS_SIGNFLIP_TARGETED': '1', 'FLYCNS_SIGNFLIP': '0', 'FLYCNS_WSCALE': '0.3'} |
+| gustatory_signed_map | 2026-09-26T19:06:17 | 2239201 | - | - |
+| pc1_song | 2026-09-26T19:47:23 | 981a20f | - | - |
+| peptide_asta | 2026-09-09T15:43:57 | 00a6afb | - | - |
+| sugar_laterality | 2026-09-26T19:20:29 | 27d36e2 | - | - |
 
-## Citation check: 27/28 tags resolve in REFERENCES.md
-Unresolved: Burrows 1998
+## Citation check: 43/50 tags resolve in REFERENCES.md
+Unresolved: Burrows 1998, CORRECTION 2026, Korff & Dickinson 2022, Newcombe 1998, Pezier & Blagburn 2013, Pezier et al. 2014, Pezier et al. 2016

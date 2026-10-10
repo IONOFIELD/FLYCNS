@@ -26,7 +26,7 @@ from flycns.graph import SIGN_MAP
 
 TB = Path("data/bulk/tbar-neurotransmitters.feather")
 if not TB.exists():
-    raise SystemExit("missing data/bulk/tbar-neurotransmitters.feather; run: python fetch_bulk.py synapse-nt")
+    raise SystemExit("missing data/bulk/tbar-neurotransmitters.feather; run: python scripts/fetch_bulk.py synapse-nt")
 neurons = pd.read_parquet("data/neurons.parquet")
 edges = pd.read_parquet("data/edges.parquet")
 meta = neurons.set_index("bodyId")

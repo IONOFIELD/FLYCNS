@@ -78,6 +78,11 @@ CRITERIA = dict(
     D2="pC1_1b drives DNp13 >= 0.5 AND DNp13 > pMP2",
     interpretation=dict(both="pulse/sine choice real both ways", D1_only="pC1_14a selectivity genuine; pC1_1b link not reproduced",
                         D1_fail="reword pc1_song P1/P2: pulse driven, sine unreachable"))
+# Registered test: refuse uncommitted code and data that differ from data/MANIFEST.json, so the
+# registered result can be traced to an exact commit and an exact dataset (flycns/integrity.py).
+from flycns.integrity import require_clean, require_data  # noqa: E402
+require_clean(Path(__file__).stem)
+require_data(DATA, Path(__file__).stem, ["neurons.parquet", "edges.parquet"])
 crit_f = OUT / "criteria.json"
 try:
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, timeout=5).stdout.strip()

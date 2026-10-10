@@ -45,6 +45,12 @@ CRITERIA = dict(
     trials_per_arm=A2_TRIALS,
     outcomes=dict(above="PASS facilitation", below="FAIL suppression (contradicts Tootoonian 2012)",
                   spans="FAIL unresolved at this trial count"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+# Registered test: refuse uncommitted code and data that differ from data/MANIFEST.json, so the
+# registered result can be traced to an exact commit and an exact dataset (flycns/integrity.py).
+from flycns.integrity import require_clean, require_data  # noqa: E402
+require_clean(Path(__file__).stem)
+require_data(DATA, Path(__file__).stem, ["neurons.parquet", "edges.parquet"])
 crit_f = OUT / "criteria.json"
 try:
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, timeout=5).stdout.strip()
@@ -91,6 +97,8 @@ report = dict(benchmark="a2_registered", criteria=CRITERIA, working_point_loom_g
               difference=d, difference_ci95=[lo, hi], outcome=CRITERIA["outcomes"][outcome],
               auditory_report_ci=a2.get("difference_ci95"),
               checks={"A2R_facilitation": outcome == "above"}, wall_s=round(time.time() - t0))
+from flycns.bench import provenance  # noqa: E402
+report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
 print(f"working point: loom gain {a2.get('loom_gain')}, {n} trials per arm")
 print(f"loom alone      {k1}/{n} = {p1:.3f}  (95% CI {l1:.3f} to {u1:.3f})")

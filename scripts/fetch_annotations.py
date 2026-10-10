@@ -3,7 +3,7 @@ Add sensory annotations to data/neurons.parquet without refetching edges:
 subclass (e.g. 'pharyngeal sensillum', 'labellar bristle', 'taste peg') and
 entryNerve (e.g. 'MxLbN', 'aPhN', 'AN'). Safe to rerun.
 
-Run:  python fetch_annotations.py
+Run:  python scripts/fetch_annotations.py
 """
 import os
 import pandas as pd

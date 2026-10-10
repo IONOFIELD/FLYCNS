@@ -6,7 +6,7 @@ Fetch bulk MaleCNS files from Google Storage (no token needed; CC-BY).
   roi-brain    brain neuropil compartment volume (256 nm) -> neuropil membership + meshes
   roi-vnc      VNC neuropil compartment volume (256 nm)
 
-Run:  python fetch_bulk.py synapse-nt          (or roi-brain, roi-vnc, all)
+Run:  python scripts/fetch_bulk.py synapse-nt          (or roi-brain, roi-vnc, all)
 Files land in data/bulk/. Resumable.
 """
 import subprocess, sys

@@ -12,10 +12,38 @@ The complete male Drosophila central nervous system connectome (Janelia FlyEM Ma
 166,700 neurons, brain and ventral nerve cord) was simulated as a signed leaky integrate-and-fire
 network using the model and parameters of Shiu et al. 2024, with the loom stimulus measured from
 public calcium imaging and split by the fly's behavioural state. Two circuits reproduce published
-physiology under a single declared parameter set with no fitted gains: the giant fiber escape
-pathway and auditory input to the giant fiber. Three further circuits do not, and the reason is
+physiology under a single declared parameter set: the giant fiber escape pathway and auditory
+input to the giant fiber. (Correction, 10 October 2026: "with no fitted gains" was wrong. One global
+weight scale, the loom rate scale and the giant fiber's adaptation were chosen partly on the escape
+readouts, so escape is the calibration circuit and its spike-count and response-probability checks
+are not tests; see the note below and docs/CALIBRATION.md.) Three further circuits do not, and the reason is
 the same in each case and is measured rather than assumed. A nine-suite robustness battery shows
 no scored result depends on a transmitter call the connectome's own classifier is uncertain about.
+
+---
+
+## 10 October 2026: calibration ledger and run integrity
+
+**Escape reclassified as the calibration circuit.** An outside review traced three chosen values to
+the escape readouts:
+- the global weight scale, chosen by a sweep that looked at giant fiber firing;
+- the loom rate scale, anchored so the giant fiber fires 1 to 2 spikes;
+- the giant fiber's adaptation, fitted to the same targets.
+
+The escape spike-count and response-probability checks are therefore **calibrated**. TTMn one-to-one and lag hold **by construction**. The independent part of escape is its latency, plus two controls. Every check now carries a role (`flycns/calibration.py`), and `results/SUITE.md` counts independent checks separately. The held-out results are the circuits nothing was fitted to: A2 facilitation, pC1 song, the signed taste map, sugar laterality, feeding by modality, flight (except L1a) and SNpp16.
+
+**Committed escape and feeding reports were left in a perturbed state.** The robustness battery wrote into the canonical result folders and did not restore them. The committed `results/gf_escape/report.json` and `results/feeding/report.json` therefore came from the targeted sign-inversion run (seed 0, 11 September), not a canonical run. The battery also copied every benchmark's report into one folder under one name, so each tag kept only the last report. Both are fixed: the battery snapshots and restores the canonical folders, and it keeps one report per benchmark. The escape numbers quoted in this note were recorded from runs before the battery. The committed perturbed report shows 0.65 response probability and 1.19 spikes per response, against 0.68 and 1.06 here. Rerun the core suite (`scripts/run_all.sh`) to replace both reports with canonical ones that carry the new integrity stamp, and to confirm the quoted numbers.
+
+**Run integrity.** Reports now record:
+- whether the code matched the stamped commit;
+- a content fingerprint of the input tables;
+- every settings override.
+
+Registered tests refuse uncommitted code and data that differ from `data/MANIFEST.json`. See README, "Integrity".
+
+**New robustness axes, not yet run on the full connectome:**
+- the connection-size threshold (3 and 10 synapses, against the default 5);
+- a stricter null that shuffles wiring only within cell class (`benchmarks/null_strict.py`, registered; it also runs in the battery).
 
 ---
 
@@ -506,7 +534,7 @@ SIP108m drives the sine neuron and not the pulse neuron. The pulse/sine split is
 wiring and survives simulation in both directions.
 
 **A new prediction: activating the pIP5 (pIP-e) neurons should promote sine song.** The rule found
-SIP108m from the wiring; MaleCNS's own sex annotations (`fetch_dimorphism.py`, properties
+SIP108m from the wiring; MaleCNS's own sex annotations (`scripts/fetch_dimorphism.py`, properties
 `dimorphism`, `fruDsx`, `synonyms`) then identify it and every other strong excitatory input to DNp13:
 
 | type | cells | dimorphism | fru/dsx | literature names |
@@ -578,7 +606,7 @@ the stimulus and is declared as such.
 ## 5. Robustness
 
 **Nine-suite battery**, each a full three-circuit suite at 40 trials under measured stationary
-input (`overnight.sh`, `results/overnight/`):
+input (`scripts/overnight.sh`, `results/overnight/`):
 
 | run | result | failing check |
 |---|---|---|
@@ -613,8 +641,8 @@ benchmark.
 
 ---
 
-**Stimulus-set integrity** (`fit/audit_stimuli.py`, run automatically by `run_all.sh` and
-`overnight.sh`). Stimulus neurons are selected by exact type name, and MaleCNS splits many
+**Stimulus-set integrity** (`fit/audit_stimuli.py`, run automatically by `scripts/run_all.sh` and
+`scripts/overnight.sh`). Stimulus neurons are selected by exact type name, and MaleCNS splits many
 populations into subtypes, so a correct-looking name can match nothing. That happened once: the
 first DNg02 run selected "DNg02", which matches none of the 29 DNg02_a to _g cells, and those arms
 ran without their input. The model now raises when a stimulus set matches no neurons and warns
@@ -697,7 +725,8 @@ Pang & Clandinin 2022. Peptidergic modulation: Krieger 2023. Transmitter predict
 al. 2024.
 
 What is added here: a test harness with numeric pass/fail criteria, null models and ablation arms;
-one parameter set across independent circuits with no fitted gains; a spiking sensory-to-motor
+one parameter set across circuits, with every chosen value and the checks it touches listed in
+docs/CALIBRATION.md; a spiking sensory-to-motor
 cascade across the neck connective on MaleCNS; measured stimulus tuning extracted from public
 imaging and split by behavioural state; a perturbation targeted at the connectome's own
 uncertainty; and mechanistic accounts of four circuits this model class cannot reproduce. Full
