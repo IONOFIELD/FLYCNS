@@ -119,6 +119,15 @@ def main():
         print(f"  {'PASS' if ok else 'FAIL'}  {label:<44} {note}")
     failed = [l for l, ok, _ in results if not ok]
     print(f"\n{len(results) - len(failed)}/{len(results)} passed" + (f"; FAILED: {failed}" if failed else ""))
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        # GitHub annotations: the key results show on the pull request page (GitHub caps notices per step)
+        from flycns.windows import codegen_target
+        eng = next((n for l, _, n in results if "engines" in l), "")
+        print(f"::notice title=engine::{codegen_target()} engine on {sys.platform}, Python {sys.version.split()[0]}. {eng}")
+        print(f"::notice title=regression::{len(results) - len(failed)}/{len(results)} passed")
+        for l, ok, n in results:
+            if not ok:
+                print(f"::error title={l}::{n}")
     sys.exit(1 if failed else 0)
 
 
