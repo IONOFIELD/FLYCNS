@@ -1,0 +1,124 @@
+# Model specification
+
+This file states the model in plain mathematics, independent of any simulator. Software rots, so
+someone with only this file, the connectome and a different simulator should be able to rebuild
+the model and get the same results. The reference implementation is `flycns/graph.py` (network)
+and `flycns/model.py` (dynamics), run in Brian2. Where the two disagree, the code is what produced
+the results, and the disagreement is a bug in this file.
+
+Every value below is the default in
+`LIFParams` or `flycns/graph.py`. Overrides of any of them through `FLYCNS_*` environment
+variables are stamped into each report.
+
+## 1. Network
+
+**Source.** Janelia FlyEM MaleCNS v1.0 (neuprint dataset `male-cns:v1.0`). Two tables:
+- **neurons:** `bodyId`, `type`, `superclass`, `somaSide`, and annotations.
+- **edges:** `pre`, `post`, `weight` = synapse count, `nt` = the predicted transmitter of the presynaptic neuron.
+
+Their content is pinned by `data/MANIFEST.json`.
+
+**Connections kept.** Only connections of at least 5 synapses (`MIN_WEIGHT_DEFAULT`).
+
+**Sign.** Each connection takes the sign of its presynaptic transmitter:
+
+| transmitter | sign |
+|---|---|
+| acetylcholine | +1 |
+| GABA, glutamate, histamine | −1 |
+| dopamine, octopamine, serotonin | 0 (modulatory; connection removed) |
+| unknown | connection removed |
+
+**Neurons simulated.** Every neuron that appears in a kept connection. Neurons with no kept connection are absent.
+
+**Electrical synapses.** EM cannot see gap junctions, so they are added from the literature. Each is a one-way pair (pre → post) with a citation (`ELECTRICAL_SYNAPSES`):
+- **GF (DNp01) → TTMn and GF → PSI:** spikelet 9 mV, ipsilateral, coupling g = 0.2.
+- **JO-B1_a and JO-B1_c → GF:** spikelet calibrated so the population at 150 Hz gives a 3 mV compound potential, with coupling 0.2 / n (n = afferents converging on one GF).
+
+The 679 EM "chemical" synapses on the JO→GF contact are removed so the contact is not counted twice.
+
+## 2. Neuron
+
+Each neuron is a leaky integrate-and-fire unit with three state variables: membrane potential v, synaptic drive g, and adaptation a.
+
+```
+tau_m · dv/dt = V_rest − v + g + I_gap − a          (v is held at V_reset while refractory)
+tau_s · dg/dt = −g
+tau_a · da/dt = −a
+
+spike when v > V_thresh:   v ← V_reset ;  a ← a + b_adapt ;  refractory for t_ref
+```
+
+| parameter | value | source |
+|---|---|---|
+| V_rest | −52 mV | Shiu et al. 2024 |
+| V_thresh | −45 mV | Shiu et al. 2024 |
+| V_reset | −52 mV | Shiu et al. 2024 |
+| tau_m | 20 ms | Shiu et al. 2024 |
+| tau_s | 5 ms | Shiu et al. 2024 |
+| t_ref | 2.2 ms | Shiu et al. 2024 |
+| tau_a | 100 ms | declared |
+| b_adapt | 0, except GF (DNp01) 30 mV and central-brain motor neurons (superclass cb_motor) 10 mV | docs/CALIBRATION.md |
+
+## 3. Chemical synapse
+
+When presynaptic neuron i spikes, after a delay d_chem = 1.8 ms (Shiu et al. 2024):
+
+```
+g_post ← g_post + s_ij · n_ij · w_syn · w_scale
+```
+
+- s_ij is the sign.
+- n_ij is the synapse count.
+- w_syn = 0.275 mV (Shiu et al. 2024).
+- w_scale = 0.3 (docs/CALIBRATION.md).
+
+The effective kick is 0.0825 mV per synapse. Class and region gains exist in the code but are all 1.0 in the declared set.
+
+## 4. Electrical synapse
+
+For each declared pair (pre → post):
+
+```
+I_gap(post) = Σ_pre  g_gap · (v_pre − v_post)          (continuous; enters the post membrane equation)
+on a pre spike, after d_gap = 0.8 ms:  v_post ← v_post + A_spikelet
+```
+
+- The spikelet stands in for the action potential, which a LIF unit does not have.
+- Coupling acts on the post cell only. The giant-fiber synapses rectify in vivo (Phelan et al. 2008).
+- A stimulated source has no membrane, so it contributes only the spikelet.
+
+## 5. Stimulus
+
+- A stimulated cell type is **replaced** by independent Poisson spike sources, one per neuron of that type. A replaced neuron receives no input.
+- Each source drives the targets of the neuron it replaces through the same synapse rules.
+- Rates and protocols are defined per benchmark, in each script header.
+- **Loom.** Amplitude per type comes from Turner et al. 2022 (stationary trials). Each trial has a shared lognormal gain (sigma from the same data), scaled by PEAK_HZ = 5 Hz.
+
+## 6. Numerics
+
+- **Integration:** forward Euler, time step 0.1 ms.
+- **Initial state:** all neurons start at V_rest with g = a = 0.
+- **Background:** none. There is no tonic background activity and no noise in the declared set.
+- **Randomness:** only in Poisson stimulus spikes and nulls, from a fixed seed (`FLYCNS_SEED`, default 0).
+
+## 7. Null models (`rewire_null`)
+
+| mode | how targets are shuffled | what is kept |
+|---|---|---|
+| global (default; used by every registered test) | permuted across the whole network | each sender's out-degree, synapse counts and sign; each target's in-degree |
+| superclass | permuted only among targets of the same superclass | additionally, how many synapses each sender sends to each class of cell |
+| superclass_side | as superclass, within the same body side | additionally, body side |
+
+Self-loops created by the shuffle are dropped in every mode.
+
+## 8. Not in the model
+
+- Neuromodulation: amines are excluded and peptides are off.
+- Graded (non-spiking) signalling.
+- Spontaneous background activity.
+- Dendritic compartments.
+- Short-term plasticity.
+- A body, except a surrogate drive in the flight benchmarks.
+
+README "Limitations" lists which results fail because of each absence.

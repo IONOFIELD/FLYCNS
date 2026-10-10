@@ -4,7 +4,7 @@ Giant fiber escape benchmark on MaleCNS v1.0, physiologically grounded version.
 MODEL
   Leaky integrate-and-fire, current-based exponential synapses, parameters
   from Shiu et al. 2024 (Nature) with a global weight scale fitted on MaleCNS
-  (see sweep.py; 0.275 mV/synapse is ~3x too strong when the VNC is included).
+  (see scripts/legacy/sweep.py; 0.275 mV/synapse is ~3x too strong when the VNC is included).
   Chemical synapse sign from MaleCNS consensus neurotransmitter prediction:
   ACh +, GABA -, Glu -, His - (fly), amines 0 (modulatory, not modelled).
 
@@ -33,7 +33,7 @@ PASS CRITERIA (published physiology)
   GF: 1 to 2 spikes per loom, hit rate near 1.   TTMn: 1 spike per GF spike,
   lag < 1.5 ms.   Whole-CNS rate stays < 0.1 Hz/neuron.   Rewired null: ~0.
 
-Run:  python gf_physio.py
+Run:  python scripts/legacy/gf_physio.py
 """
 
 import numpy as np

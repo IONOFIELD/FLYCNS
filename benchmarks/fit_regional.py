@@ -6,7 +6,7 @@ even at 3x sensory gain, while the local gain feeding needs (~3x) breaks the
 escape circuit. Here only synapses from SEZ intrinsic types (GNG, SAD, PRW,
 FLA, CAN prefixes) are scaled; everything else stays at unity.
 Gustatory afferents are selected by MaleCNS `subclass` (labellar bristle,
-taste peg, pharyngeal sensillum) after fetch_annotations.py.
+taste peg, pharyngeal sensillum) after scripts/fetch_annotations.py.
 The SEZ population is defined anatomically (>50% of synapses in SEZ compartments,
 excluding sensory/motor/efferent) when data/roi_membership.parquet exists; the model
 prints which definition it used.

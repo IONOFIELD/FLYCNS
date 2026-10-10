@@ -1,8 +1,4 @@
 """Shared helpers for benchmark scripts: type discovery, pulse protocol, readout scoring."""
-import datetime
-import os
-import re
-import subprocess
 import numpy as np
 import pandas as pd
 
@@ -60,12 +56,8 @@ def readout_rates(model, onsets, types, window_ms, meta):
 
 
 def provenance():
-    """Stamp every report so a stale one can never be mistaken for a current one."""
-    try:
-        commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True,
-                                text=True, timeout=5).stdout.strip()
-    except Exception:
-        commit = ""
-    env = {k: v for k, v in os.environ.items() if k.startswith("FLYCNS_")}
-    return dict(written_at=datetime.datetime.now().isoformat(timespec="seconds"),
-                git_commit=commit, env=env)
+    """Stamp every report so a stale one can never be mistaken for a current one: commit and
+    whether the code matched it, FLYCNS_* overrides, library versions, graph settings and the
+    content fingerprint of the input data (flycns/integrity.py)."""
+    from .integrity import provenance_record
+    return provenance_record()

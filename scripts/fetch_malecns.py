@@ -1,7 +1,7 @@
 """
 Phase 0: pull the MaleCNS v1.0 graph from neuprint and cache it locally.
 
-Run once:  python fetch_malecns.py
+Run once:  python scripts/fetch_malecns.py
 Outputs:   data/neurons.parquet   one row per neuron
            data/edges.parquet     one row per (pre, post) pair, weight >= MIN_WEIGHT
 

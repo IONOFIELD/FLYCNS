@@ -88,6 +88,11 @@ in a manuscript. This project builds on the work below; it does not contradict i
 - **Azabou et al. 2023** — Azabou M, Arora V, Ganesh V, et al. A unified, scalable framework for neural population decoding (POYO). *NeurIPS* (2023). arXiv:2310.16046.
 - **Azabou et al. 2025** — Azabou M, et al. Multi-session, multi-task neural decoding from distinct cell types and brain regions (POYO+). *ICLR* (2025).
 
+## Related work (positioning in README; not built on)
+- **Lappalainen et al. 2024** — Lappalainen JK, Tschopp FD, Prakhya S, et al., Turaga SC. Connectome-constrained networks predict neural activity across the fly visual system. *Nature* (2024).
+- **Wang-Chen et al. 2024** — Wang-Chen S, Stimpfling VA, Lam TKC, et al., Ramdya P. NeuroMechFly v2: simulating embodied sensorimotor control in adult *Drosophila*. *Nature Methods* (2024).
+- **Jin et al. 2026** — Jin Z, Zhu Y, Zhang C, Sui Y. Whole-brain connectomic graph model enables whole-body locomotion control in fruit fly. arXiv:2602.17997 (2026).
+
 ## Prior MaleCNS dynamics demonstrations (acknowledged, not built on)
 - Georgia Tech / E. Smith MaleCNS-in-Minecraft demonstration (Sept 2026, social media; code not public at time of writing).
 - Eon Systems embodied FlyWire model (company writeup, March 2026).

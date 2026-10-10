@@ -2,7 +2,7 @@
 Phase 1: sanity checks on the cached MaleCNS graph, plus locating
 the neurons for the first cascade test (photoreceptors -> DNg13).
 
-Run:  python inspect_graph.py
+Run:  python scripts/legacy/inspect_graph.py
 """
 
 import pandas as pd

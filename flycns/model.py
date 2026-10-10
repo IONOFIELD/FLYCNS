@@ -32,7 +32,7 @@ class LIFParams:
     tau_syn_ms: float = 5.0
     refractory_ms: float = 2.2
     w_syn_mV: float = 0.275          # Shiu et al. 2024 per-synapse kick
-    w_scale: float = float(os.environ.get("FLYCNS_WSCALE", "0.3"))   # fitted on MaleCNS (sweep.py)
+    w_scale: float = float(os.environ.get("FLYCNS_WSCALE", "0.3"))   # chosen on MaleCNS; see docs/CALIBRATION.md
     tau_adapt_ms: float = 100.0
     gap_delay_ms: float = 0.8        # Tanouye & Wyman 1980
     chem_delay_ms: float = 1.8       # Shiu et al. 2024

@@ -8,7 +8,7 @@ For each (weight scale, stim Hz) we drive two stimulus sets and report:
 Specificity = GF rate under looming drive / GF rate under auditory drive.
 Want: pop < ~1 Hz, frac < ~0.1, DNg13 visual >> DNg13 auditory.
 
-Run:  python sweep.py
+Run:  python scripts/legacy/sweep.py
 """
 
 import numpy as np

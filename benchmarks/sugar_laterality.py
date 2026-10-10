@@ -74,6 +74,11 @@ CRITERIA = dict(
     L1="sugar, both sides: contra > 0, ipsi > 0, contra >= 1.10 x ipsi (cumulative signed, hops 1-5)",
     margin=1.10,
     sides="explicit only (somaSide, else _L/_R instance suffix)", groups=GROUPS)
+# Registered test: refuse uncommitted code and data that differ from data/MANIFEST.json, so the
+# registered result can be traced to an exact commit and an exact dataset (flycns/integrity.py).
+from flycns.integrity import require_clean, require_data  # noqa: E402
+require_clean(Path(__file__).stem)
+require_data(DATA, Path(__file__).stem, ["neurons.parquet", "edges.parquet"])
 crit_f = OUT / "criteria.json"
 try:
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, timeout=5).stdout.strip()

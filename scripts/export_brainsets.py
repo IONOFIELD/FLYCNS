@@ -14,7 +14,7 @@ Layout (per file, groups/datasets):
 This follows the structure brainsets uses (temporaldata Data: spikes, units, trials,
 domain); verify field names against the installed brainsets version before training.
 
-Run:  python export_brainsets.py [n_trials] [out_dir]
+Run:  python scripts/export_brainsets.py [n_trials] [out_dir]
 """
 import sys, json
 from pathlib import Path
@@ -22,7 +22,7 @@ import numpy as np
 import pandas as pd
 import h5py
 import temporaldata as td
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, CNSModel, LIFParams
 from flycns.protocols import LOOM_TUNING
 from flycns.bench import find_types, pulse_protocol

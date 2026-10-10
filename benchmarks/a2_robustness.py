@@ -39,6 +39,12 @@ CRITERIA = dict(
     gains=GAINS, trials_per_arm=TRIALS, near_threshold="loom-alone GF probability <= 0.3",
     RA2="at every qualifying gain the 95% CI on the difference lies above zero, and >= 3 gains qualify",
     ci_method="Newcombe 1998 method 10, recomputed from counts")
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+# Registered test: refuse uncommitted code and data that differ from data/MANIFEST.json, so the
+# registered result can be traced to an exact commit and an exact dataset (flycns/integrity.py).
+from flycns.integrity import require_clean, require_data  # noqa: E402
+require_clean(Path(__file__).stem)
+require_data(DATA, Path(__file__).stem, ["neurons.parquet", "edges.parquet"])
 crit_f = OUT / "criteria.json"
 try:
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, timeout=5).stdout.strip()
@@ -90,6 +96,8 @@ qual = [r for r in rows if r["near_threshold"]]
 ok = len(qual) >= 3 and all(r["facilitation"] for r in qual)
 report = dict(benchmark="a2_robustness", criteria=CRITERIA, rows=rows, n_qualifying=len(qual),
               checks={"RA2_facilitation_at_every_near_threshold_gain": ok}, wall_s=round(time.time() - t0))
+from flycns.bench import provenance  # noqa: E402
+report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float))
 print(f"\n{len(qual)} of {len(GAINS)} gains near threshold; facilitation at "
       f"{sum(r['facilitation'] for r in qual)} of them")

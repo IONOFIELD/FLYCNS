@@ -1,0 +1,106 @@
+"""
+What each scored check is evidence of.
+
+A check that a parameter was tuned to pass is not evidence that the model is right; it only shows
+the tuning worked. This table records, for every scored check, which of five roles it plays.
+benchmarks/summarize.py prints the role beside every result and counts only INDEPENDENT checks as
+tests of the model. The parameters behind the CALIBRATED and CONSTRUCTION entries, and the rule
+each was set by, are listed in docs/CALIBRATION.md.
+
+  calibrated    a free parameter was chosen, at least partly, to make this check pass
+  construction  guaranteed by a parameter entered from the same measurement the check cites
+  independent   not a target of any fit; a genuine test (pre-registered where marked)
+  control       a null model, ablation or positive control: shows the machinery is not trivial
+  robustness    re-tests an independent result under perturbation
+
+A check missing from this table is reported as UNCLASSIFIED and counted as not independent.
+"""
+
+CAL, CON, IND, CTL, ROB = "calibrated", "construction", "independent", "control", "robustness"
+
+CHECK_ROLES = {
+    "gf_escape": {
+        "gf_spikes_per_response_1_to_2": (CAL, "GF adaptation b_adapt (fit_gf_adapt.py) and the loom rate scale PEAK_HZ were both set to give 1-2 spikes"),
+        "gf_response_prob_0.5_to_1": (CAL, "PEAK_HZ anchored to P(response) >= 0.5; b_adapt fit rule includes P 0.5-1"),
+        "gf_latency_10_60ms": (IND, "not a fit target"),
+        "ttmn_one_to_one": (CON, "9 mV GF->TTMn spikelet chosen so one GF spike is suprathreshold (1:1 relay, Tanouye & Wyman 1980)"),
+        "ttmn_lag_0.5_1.5ms": (CON, "gap-junction delay 0.8 ms entered from Tanouye & Wyman 1980"),
+        "cns_quiet": (CAL, "global weight scale w_scale was chosen partly on population rate (scripts/legacy/sweep.py)"),
+        "electrical_necessary": (CTL, "ablation of the declared electrical synapses"),
+        "null_silent": (CTL, "degree-preserving rewired null"),
+    },
+    "auditory": {
+        "A1_jo_alone_mostly_subthreshold": (CAL, "JON->GF coupling calibrated to a 3 mV subthreshold compound potential (value untraced)"),
+        "A3_declared_pairs_carry_jo_drive": (CTL, "ablation of the declared mixed synapse"),
+        "A4_null_silent": (CTL, "degree-preserving rewired null"),
+        "A5_cns_quiet": (CAL, "w_scale was chosen partly on population rate under auditory drive"),
+    },
+    "a2_registered": {
+        "A2R_facilitation": (IND, "pre-registered; facilitation was never a fit target (the working point only sets loom-alone near threshold)"),
+    },
+    "a2_robustness": {
+        "RA2_facilitation_at_every_near_threshold_gain": (ROB, "pre-registered sweep of A2R"),
+    },
+    "feeding": {
+        "F2b_extra_SEZ_quiet": (CAL, "w_scale was chosen partly on population rate"),
+        "F2c_motor_rate_physiological": (CON, "cb_motor adaptation (10 mV) entered to keep sustained motor rates under 100 Hz"),
+        "F4_second_order_sufficient": (IND, "not a fit target"),
+        "F5_null_silent": (CTL, "degree-preserving rewired null"),
+    },
+    "feeding_by_modality": {
+        "F2_sugar_ratio_exceeds_bitter": (IND, "pre-registered"),
+        "F3_sugar_drives_mn9_at_100hz": (IND, "pre-registered"),
+        "F4_bitter_below_sugar_at_100hz": (IND, "pre-registered"),
+    },
+    "gustatory_signed_map": {
+        "S1_valence_signed_on_proboscis": (IND, "pre-registered"),
+        "S2_per_type_sign_agreement": (IND, "pre-registered"),
+        "S3_LB2_dominates_pharyngeal_pumping": (IND, "pre-registered"),
+    },
+    "sugar_laterality": {
+        "L1_sugar_contralateral_bias": (IND, "pre-registered; prediction from Shiu et al. 2024"),
+    },
+    "pc1_song": {
+        "P1_pc1_14a_pulse_over_sine": (IND, "pre-registered"),
+        "P2_pc1_13_14_pulse_over_sine": (IND, "pre-registered"),
+        "P3_14a_exceeds_15_16_on_pulse": (IND, "pre-registered"),
+        "P4_null_silent": (CTL, "pre-registered rewired null"),
+    },
+    "dnp13_control": {
+        "D1_dnp13_reachable": (CTL, "pre-registered positive control"),
+        "D2_pc1_1b_sine_choice": (IND, "pre-registered"),
+    },
+    "flight_loop": {
+        "L1a_DVMn_2_to_12_hz": (CAL, "afferent load anchored by rule to put DVMn 1a-c in 2-12 Hz"),
+        "L1b_DLMn_cf_2_to_12_hz": (IND, "not a fit target"),
+        "L2_b1_0.5_to_1.2_spikes_per_wingbeat": (IND, "not a fit target"),
+        "L3_leg_mn_not_entrained": (IND, "not a fit target"),
+        "L4_steering_specific_vs_null": (CTL, "rewired null"),
+        "L5_DLMn_cf_2_to_12_hz_with_DNg02": (IND, "not a fit target"),
+        "L6_DVMn_still_in_band_with_DNg02": (IND, "not a fit target"),
+    },
+    "flight_snpp16": {
+        "N1_snpp16_sufficient_dvmn_in_band": (IND, "stated before the run"),
+        "N2_snpp16_necessary_dvmn_below_2hz": (IND, "stated before the run"),
+    },
+    "flight_snpp16_graded": {
+        "G1_graded": (IND, "pre-registered"),
+        "G2_in_band_window": (IND, "pre-registered"),
+        "G3_selective_at_k_star": (IND, "pre-registered"),
+        "G4_wiring_specific_at_k_star": (CTL, "pre-registered rewired null"),
+        "G5_reliable_at_k_star": (IND, "pre-registered"),
+    },
+    "flight_snpp16_robustness": {
+        "R1_survives_transmitter_uncertainty": (ROB, "pre-registered"),
+        "R2_selectivity_holds_across_cord_params": (ROB, "pre-registered"),
+        "R3_replicates_with_fresh_draws": (ROB, "pre-registered"),
+    },
+    "null_strict": {
+        "S1_escape_null_silent_superclass": (CTL, "pre-registered stricter null"),
+        "S2_pc1_null_silent_superclass": (CTL, "pre-registered stricter null"),
+    },
+}
+
+
+def role(benchmark, check):
+    return CHECK_ROLES.get(benchmark, {}).get(check, ("unclassified", "add it to flycns/calibration.py"))
