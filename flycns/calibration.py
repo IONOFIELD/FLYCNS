@@ -30,6 +30,7 @@ CHECK_ROLES = {
         "null_silent": (CTL, "degree-preserving rewired null"),
     },
     "auditory": {
+        "A2_jo_effect_on_near_threshold_loom_REPORTED": (IND, "reported here; scored in a2_registered"),
         "A1_jo_alone_mostly_subthreshold": (CAL, "JON->GF coupling calibrated to a 3 mV subthreshold compound potential (value untraced)"),
         "A3_declared_pairs_carry_jo_drive": (CTL, "ablation of the declared mixed synapse"),
         "A4_null_silent": (CTL, "degree-preserving rewired null"),
@@ -42,6 +43,10 @@ CHECK_ROLES = {
         "RA2_facilitation_at_every_near_threshold_gain": (ROB, "pre-registered sweep of A2R"),
     },
     "feeding": {
+        "F1_laterality_matches_wiring": (IND, "not a fit target; scored only when MN9 responds to one-sided drive"),
+        "F1_shiu_contralateral_bias": (IND, "not applicable to this drive; tested in sugar_laterality"),
+        "F2_dose_response_REPORTED": (IND, "reported, not scored"),
+        "F3_bitter_suppresses": (IND, "not a fit target; scored only when a bitter GRN type resolves"),
         "F2b_extra_SEZ_quiet": (CAL, "w_scale was chosen partly on population rate"),
         "F2c_motor_rate_physiological": (CON, "cb_motor adaptation (10 mV) entered to keep sustained motor rates under 100 Hz"),
         "F4_second_order_sufficient": (IND, "not a fit target"),

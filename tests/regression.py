@@ -52,6 +52,10 @@ RUNS = [  # (label, argv relative to the copy, extra env, sentinel substring or 
     ("data manifest write + verify", ["-m", "flycns.integrity", "write", "testdata"], {}, "wrote testdata/MANIFEST.json"),
     ("integrity status", ["-m", "flycns.integrity", "verify", "testdata"], {}, "testdata: match"),
     ("suite summary with roles", ["benchmarks/summarize.py"], {}, "By role:"),
+    # the toy graph scores checks the real data leaves unscored; every one of them needs a role too
+    ("every toy-scored check has a role", ["-c", "import sys,pathlib; t=pathlib.Path('results/SUITE.md').read_text(); "
+     "bad=[l for l in t.splitlines() if '| unclassified |' in l]; print('\\n'.join(bad) or 'all classified'); "
+     "sys.exit(1 if bad else 0)"], {}, "all classified"),
 ]
 # The isolated copy is not a git checkout, so the registered tests' clean-tree guard would refuse to
 # run; the override is the documented escape hatch and is stamped into every toy report.

@@ -20,7 +20,14 @@ fi
 stop () { echo; echo "STOPPED: $*"; echo "Nothing was pushed. Send Claude the lines above."; exit 1; }
 
 echo "[1/5] update code, environment and annotations"
-git pull --ff-only || stop "git pull could not fast-forward (local changes or a diverged branch)."
+# result files left by an earlier, interrupted run would block the pull; they are regenerated below,
+# so set them aside (recoverable) rather than discard them. Code changes are never touched.
+if [ -n "$(git status --porcelain --untracked-files=no -- results)" ]; then
+  git stash push -q -m "canonical_rerun $(date +%F_%H%M): local result files set aside" -- results
+  echo "  set aside uncommitted result files from an earlier run (recover: git stash list, git stash pop)"
+fi
+# --rebase: a data-pin commit from an earlier interrupted run is replayed on top of the latest code
+git pull --rebase || stop "git pull failed (uncommitted code changes, or a conflict)."
 ./setup.sh || stop "setup did not finish (see its message above)."
 source .venv/bin/activate
 

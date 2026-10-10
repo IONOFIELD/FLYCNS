@@ -140,15 +140,18 @@ def t_clean_tree_guard(tmp):
 
 
 def t_every_check_has_a_role():
+    """Every check in the committed reports has a role, including checks those reports left unscored
+    (some are scored only under some conditions). tests/regression.py adds the complement: every
+    check the toy suite scores, which exercises branches the real data skips, must have a role too."""
     from flycns.calibration import role
-    missing = []
+    missing = set()
     for rep in sorted((ROOT / "results").glob("*/report.json")):
         r = json.loads(rep.read_text())
-        for k, v in (r.get("checks") or {}).items():
-            if v is not None and role(r.get("benchmark", rep.parent.name), k)[0] == "unclassified":
-                missing.append(f"{rep.parent.name}:{k}")
-    return not missing, "every scored check is classified" if not missing else \
-        f"classify in flycns/calibration.py: {missing}"
+        for k in (r.get("checks") or {}):
+            if role(r.get("benchmark", rep.parent.name), k)[0] == "unclassified":
+                missing.add(f"{rep.parent.name}:{k}")
+    return not missing, "every check in the committed reports is classified" if not missing else \
+        f"classify in flycns/calibration.py: {sorted(missing)}"
 
 
 def run_all():
