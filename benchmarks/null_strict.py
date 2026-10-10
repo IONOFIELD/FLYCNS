@@ -59,7 +59,8 @@ else:
     st = provenance()
     crit_f.write_text(json.dumps(dict(criteria=CRITERIA, registered_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
                                       git_commit=st["git_commit"], script_uncommitted=st["git_dirty"]), indent=2), encoding="utf-8")
-print(f"criteria registered: {json.loads(crit_f.read_text(encoding="utf-8"))['git_commit'] or '?'}")
+registered_commit = json.loads(crit_f.read_text(encoding="utf-8"))["git_commit"]
+print(f"criteria registered: {registered_commit or '?'}")
 
 env = dict(os.environ, FLYCNS_NULL="superclass", FLYCNS_RUN_TAG="null_strict")
 snap = Path(tempfile.mkdtemp(prefix="flycns_null_strict_"))

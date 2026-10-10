@@ -182,6 +182,21 @@ def t_engines_identical():
         f"engines differ: {len(a)} vs {len(b)} spikes"
 
 
+def t_all_sources_parse():
+    """Every Python file parses on THIS interpreter. CI runs the oldest supported Python (3.10), so
+    syntax that only newer versions accept (e.g. reusing the quote inside an f-string, 3.12+) fails here."""
+    import ast as _ast
+    bad = []
+    for f in sorted(ROOT.rglob("*.py")):
+        if any(p in f.parts for p in (".venv", ".git", "__pycache__")):
+            continue
+        try:
+            _ast.parse(f.read_text(encoding="utf-8"), filename=str(f))
+        except SyntaxError as e:
+            bad.append(f"{f.relative_to(ROOT)}:{e.lineno}")
+    return not bad, (f"every file parses on Python {sys.version.split()[0]}" if not bad else f"syntax errors: {bad}")
+
+
 def t_text_io_is_utf8():
     """Every text read or write names its encoding. On Windows the default is cp1252, which breaks
     on characters this repository uses (é, —, ×, braille in the terminal views)."""
@@ -225,6 +240,7 @@ def run_all():
                          ("settings banner", t_settings_banner),
                          ("registered tests refuse dirty code", lambda: t_clean_tree_guard(tmp)),
                          ("every scored check has a role", t_every_check_has_a_role),
+                         ("every file parses on this Python", t_all_sources_parse),
                          ("text I/O is explicitly UTF-8", t_text_io_is_utf8),
                          ("token read in every Windows format", lambda: t_token_file_formats(tmp)),
                          ("both engines give identical spikes", t_engines_identical)]:
