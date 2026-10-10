@@ -229,8 +229,8 @@ def load_graph(data_dir="data", min_weight=None):
             print(f"[graph] TARGETED SIGN FLIP: {int(m.sum()):,} edges "
                   f"({edges.loc[m, 'weight'].sum() / edges['weight'].sum():.1%} of weight) "
                   f"from neurons whose T-bars disagree with their consensus label")
-        else:
-            print("[graph] FLYCNS_SIGNFLIP_TARGETED set but data/edges_nt.parquet missing; run fit/synapse_nt.py")
+        else:   # never run unperturbed under a perturbation's label
+            raise SystemExit(f"[graph] FLYCNS_SIGNFLIP_TARGETED=1 needs {f}; run fit/synapse_nt.py (menu 24)")
     # robustness: flip a random fraction of neurotransmitter signs (FLYCNS_SIGNFLIP, e.g. 0.05)
     flip = float(os.environ.get("FLYCNS_SIGNFLIP", "0"))
     if flip > 0:

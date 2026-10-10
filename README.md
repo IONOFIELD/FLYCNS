@@ -77,6 +77,7 @@ and checked against recordings from real flies.
 - Many tests are **pre-registered**: their criteria are committed to git before they run, so a result cannot be tuned after the fact.
 - Every check is labelled with **what it is evidence of**. A check that a parameter was tuned to pass is marked *calibrated* and is not counted as a test of the model ([`docs/CALIBRATION.md`](docs/CALIBRATION.md)).
 - **For the maintainer:** after an update, menu option **51** does four things. It updates the code, pins the data fingerprint, reruns the core suite and the stricter null, then commits and pushes the results. It keeps Windows awake while it runs, and it is safe to run again after an interruption.
+- **Without your own computer:** push any commit to a branch named `rerun/<anything>` and GitHub's Windows machines run every real-data rerun at once: menu 51, the battery, the A2 and flight tests ([`.github/workflows/rerun.yml`](.github/workflows/rerun.yml)). It needs your neuPrint token saved once as the repository secret `NEUPRINT_TOKEN`. Each run's results come back on its own `rerun-out/...` branch for review; nothing reaches main unreviewed.
 
 ### Where this sits (2026)
 
