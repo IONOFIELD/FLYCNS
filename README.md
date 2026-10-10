@@ -7,9 +7,18 @@ and checked against recordings from real flies.
 
 ## What it is
 
-- Every neuron in the fly's brain and nerve cord, about 176,000 of them, wired exactly as the Janelia MaleCNS connectome (2026) maps them and simulated as spiking neurons.
-- You stimulate a sense, such as sight, sound, taste or the wing's motion sensors, and watch which neurons fire and in what order, all the way to the muscles.
-- Each circuit is scored against published measurements. The pass/fail criteria are written down before the test runs.
+- A computer model of every neuron in the male fruit fly's brain and nerve cord, about 176,000 of them, wired exactly as the Janelia MaleCNS connectome (2026) maps them.
+- Each neuron is a simple spiking unit. The connections come straight from the wiring diagram, including whether each one excites or inhibits.
+- A test suite that scores each circuit against published measurements from real flies. The pass/fail criteria are written down before the test runs.
+
+## What it can do
+
+- **Stimulate a sense and watch the response.** Choose sight, sound, taste or the wing's motion sensors, and see which neurons fire and in what order, all the way to the muscles. You can watch it in the terminal or in 3D.
+- **Test what the wiring alone can explain**, and show exactly where that explanation stops.
+- **Make predictions a lab can test.** Each one names cell types and pathways and gives a specific expected result.
+- **Check the connectome itself.** It has already flagged a likely mislabelled transmitter.
+- **Score other fly models.** The same tests, run on another model, give a comparable score.
+- **Export simulated recordings** in the format that brain-decoding machine-learning tools read.
 
 ## What it achieves
 
@@ -68,13 +77,6 @@ and checked against recordings from real flies.
 - Many tests are **pre-registered**: their criteria are committed to git before they run, so a result cannot be tuned after the fact.
 - Every check is labelled with **what it is evidence of**. A check that a parameter was tuned to pass is marked *calibrated* and is not counted as a test of the model ([`docs/CALIBRATION.md`](docs/CALIBRATION.md)).
 - **For the maintainer:** after an update, menu option **51** does four things. It updates the code, pins the data fingerprint, reruns the core suite and the stricter null, then commits and pushes the results. It keeps Windows awake while it runs, and it is safe to run again after an interruption.
-
-### What it can be used for
-
-- **Asking what the wiring alone can explain**, and seeing exactly where it stops.
-- **Generating predictions an experimenter can test**: named cell types and pathways with a specific expected result.
-- **Checking the connectome itself.** The simulation has exposed annotation issues, including a likely transmitter misclassification.
-- **Benchmarking other fly models.** The same tests, run on another model, give a comparable score.
 
 ### Where this sits (2026)
 
