@@ -20,6 +20,7 @@ from brian2 import (NeuronGroup, PoissonGroup, Synapses, SpikeMonitor, StateMoni
                     ms, mV, Hz, second, defaultclock, prefs, seed as b2seed)
 
 from .windows import codegen_target
+from .integrity import LOADED
 from .graph import (electrical_pairs, drop_mixed_chemical, pre_class, region_of,
                     INTRINSIC_OVERRIDES, SEZ_GAIN_FITTED, PEPTIDE_MODULATION)
 
@@ -107,19 +108,26 @@ class CNSModel:
 
         p = params
         noise = "+ sigma * sqrt(2 / tau_m) * xi" if p.baseline_noise_mV > 0 else ""
+        use_pep = bool(p.peptide_gain_scale)
+        # g_shunt: gap-junction load from electrically coupled partners that are stimulus sources.
+        # A simulated partner loads its post cell through I_gap = g(v_pre - v_post); a source has no
+        # membrane, so without this term replacing a cell by a source would silently remove that load
+        # and change the post cell's excitability (it confounded the A2 arms before 2026-10-10).
+        # pep: peptide level, copied each step from a shared per-peptide pool when modulation is on, else 0.
         eqs = f"""
-        dv/dt = (v_rest + I_base - v + g + I_gap - a) / tau_m {noise} : volt (unless refractory)
+        dv/dt = (v_rest + I_base - v + g + I_gap + g_shunt * (v_rest - v) - a) / tau_m {noise} : volt (unless refractory)
         dg/dt = -g / tau_syn : volt
         da/dt = -a / tau_adapt : volt
-        dpep/dt = -pep / tau_pep : 1
+        pep : 1
         pep_gain : 1
+        g_shunt : 1
         I_gap : volt
         b_adapt : volt
         """
         ns = dict(v_rest=p.v_rest_mV * mV, tau_m=p.tau_m_ms * ms, tau_syn=p.tau_syn_ms * ms,
                   tau_adapt=p.tau_adapt_ms * ms, v_thresh=p.v_thresh_mV * mV,
                   v_reset=p.v_reset_mV * mV, I_base=p.baseline_depol_mV * mV,
-                  sigma=p.baseline_noise_mV * mV, tau_pep=2.0 * second)
+                  sigma=p.baseline_noise_mV * mV)
         # per-neuron tau_m, threshold and refractory, so superclasses can differ
         eqs = eqs.replace("/ tau_m ", "/ tau_m_i ").replace("/ tau_m)", "/ tau_m_i)")
         eqs += "        tau_m_i : second\n        v_thresh_i : volt\n        ref_i : second\n"
@@ -133,6 +141,7 @@ class CNSModel:
         G.ref_i = p.refractory_ms * ms
         G.pep = 0
         G.pep_gain = 0
+        G.g_shunt = 0
         self.superclass_params_applied = []
         if p.superclass_params:
             sc_of = self.meta.loc[self.lif_ids, "superclass"].fillna("").values
@@ -159,19 +168,20 @@ class CNSModel:
                 self.overrides_applied.append(dict(type=typ, parameter=par, value=val, source=src))
 
         w_unit = p.w_syn_mV * p.w_scale * mV
-        region, region_src = region_of(neurons)
+        region, region_src = region_of(neurons, LOADED.get("data_dir", "data"))
         self.region_source = region_src
         gain_of = (self.meta["superclass"].map(pre_class).map(p.class_gains).fillna(1.0)
                    * region.reindex(self.meta.index).fillna("other").map(p.region_gains).fillna(1.0))
         rec = edges[edges["pre"].isin(self.lif_index.index) & edges["post"].isin(self.lif_index.index)]
         S_rec = Synapses(G, G, "w : volt", on_pre="g_post += w * (1 + pep_gain_post * pep_post)")
-        S_rec.connect(i=self.lif_index[rec["pre"]].values, j=self.lif_index[rec["post"]].values)
-        S_rec.w = (rec["weight"] * rec["sign"] * gain_of.loc[rec["pre"]].values).values * w_unit
-        S_rec.delay = p.chem_delay_ms * ms
+        if len(rec):     # Brian2 cannot connect an empty edge list; an empty layer is simply left out
+            S_rec.connect(i=self.lif_index[rec["pre"]].values, j=self.lif_index[rec["post"]].values)
+            S_rec.w = (rec["weight"] * rec["sign"] * gain_of.loc[rec["pre"]].values).values * w_unit
+            S_rec.delay = p.chem_delay_ms * ms
 
         P = PoissonGroup(len(stim), rates=0 * Hz)
         se = edges[edges["pre"].isin(self.stim_index.index) & edges["post"].isin(self.lif_index.index)]
-        objs = [G, P, S_rec]
+        objs = [G, P] + ([S_rec] if len(rec) else [])
         if len(se):
             S_stim = Synapses(P, G, "w : volt", on_pre="g_post += w * (1 + pep_gain_post * pep_post)")
             S_stim.connect(i=self.stim_index[se["pre"]].values, j=self.lif_index[se["post"]].values)
@@ -195,9 +205,11 @@ class CNSModel:
                 S_gap.gg = ep.g_gap.values
                 S_gap.delay = p.gap_delay_ms * ms
                 objs.append(S_gap)
-            # stimulus source -> LIF: spikelet only (sources have no membrane voltage)
+            # stimulus source -> LIF: spikelet, plus the coupling load of a partner at rest (g_shunt)
             eps = ep_all[ep_all.pre.isin(self.stim_index.index)]
             if len(eps):
+                load = eps.groupby("post")["g_gap"].sum()
+                G.g_shunt[self.lif_index[load.index].values] = load.values
                 S_gap_s = Synapses(P, G, "spk : volt", on_pre="v_post += spk")
                 S_gap_s.connect(i=self.stim_index[eps.pre].values, j=self.lif_index[eps.post].values)
                 S_gap_s.spk = eps.spikelet_mV.values * mV
@@ -205,29 +217,50 @@ class CNSModel:
                 objs.append(S_gap_s)
             self.electrical_table = ep_all
 
+        # Peptidergic volume transmission: one shared level per peptide (a pool cell), raised by every
+        # source spike whether the source is simulated or a stimulus, and copied to every receptor-
+        # expressing target (one link per target). (Before 2026-10-10 sources were looked up among
+        # simulated cells only, so a stimulated source was silently skipped, and every source was wired
+        # to every target, n_source x n_target synapses.)
         self.peptides_applied = []
-        if p.peptide_gain_scale:
-            for entry in PEPTIDE_MODULATION:
-                src = [self.lif_index[b] for b in self.meta.index[self.meta["type"] == entry["source"]]
-                       if b in self.lif_index.index]
+        if use_pep:
+            link = np.zeros(len(self.lif_ids), dtype=int)       # pool cell per target; 0 = none
+            pool = NeuronGroup(1 + len(PEPTIDE_MODULATION), "dc/dt = -c / tau_p : 1\ntau_p : second",
+                               method="exact", name="peptide_pool*")
+            pool.tau_p = 1 * second
+            for k, entry in enumerate(PEPTIDE_MODULATION, start=1):
+                ids = self.meta.index[self.meta["type"] == entry["source"]]
+                src_lif = [self.lif_index[b] for b in ids if b in self.lif_index.index]
+                src_stim = [self.stim_index[b] for b in ids if b in self.stim_index.index]
                 tgt_types = [t for t in entry["targets"] if t not in p.peptide_exclude]
-                tgt = [self.lif_index[b] for b in self.meta.index[self.meta["type"].isin(tgt_types)]
-                       if b in self.lif_index.index]
-                if not src or not tgt:
+                tgt = np.array([self.lif_index[b] for b in self.meta.index[self.meta["type"].isin(tgt_types)]
+                                if b in self.lif_index.index], dtype=int)
+                n_src = len(src_lif) + len(src_stim)
+                if not n_src or not len(tgt):
                     continue
+                if (link[tgt] != 0).any():
+                    raise ValueError(f"[model] peptide {entry['peptide']}: targets already modulated by another peptide")
+                link[tgt] = k
+                pool.tau_p[k] = entry["tau_s"] * second
                 G.pep_gain[tgt] = entry["gain"] * p.peptide_gain_scale
-                S_pep = Synapses(G, G, on_pre="pep_post = clip(pep_post + dpep_per_spike, 0, 1)",
-                                 namespace=dict(dpep_per_spike=1.0 / max(len(src), 1)))
-                # volume transmission: every source cell onto every receptor-expressing cell
-                ii = np.repeat(np.asarray(src), len(tgt))
-                jj = np.tile(np.asarray(tgt), len(src))
-                S_pep.connect(i=ii, j=jj)
-                objs.append(S_pep)
+                for grp, idx in ((G, src_lif), (P, src_stim)):
+                    if idx:
+                        S_pep = Synapses(grp, pool, on_pre="c_post = clip(c_post + dc, 0, 1)",
+                                         namespace=dict(dc=1.0 / n_src))
+                        S_pep.connect(i=np.asarray(idx), j=np.full(len(idx), k))
+                        objs.append(S_pep)
                 self.peptides_applied.append(dict(peptide=entry["peptide"], source=entry["source"],
-                                                  n_source=len(src), n_target=len(tgt),
-                                                  target_types=tgt_types, gain=entry["gain"],
-                                                  excluded=list(p.peptide_exclude),
-                                                  citation=entry["citation"]))
+                                                  n_source=n_src, source_is_stimulus=bool(src_stim),
+                                                  n_target=int(len(tgt)), target_types=tgt_types,
+                                                  gain=entry["gain"], tau_s=entry["tau_s"],
+                                                  excluded=list(p.peptide_exclude), citation=entry["citation"]))
+            if not self.peptides_applied:
+                raise ValueError("[model] peptide modulation is on (peptide_gain_scale > 0) but no peptide's "
+                                 "source and targets are both in this network; nothing would be modulated")
+            tgt_all = np.flatnonzero(link)
+            S_link = Synapses(pool, G, "pep_post = c_pre : 1 (summed)")
+            S_link.connect(i=link[tgt_all], j=tgt_all)
+            objs += [pool, S_link]
         self.spikes = SpikeMonitor(G)
         objs.append(self.spikes)
         self.vmon = None

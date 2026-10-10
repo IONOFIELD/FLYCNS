@@ -169,17 +169,77 @@ def t_engines_identical():
         spikes = {}
         for eng in engines:
             m = CNSModel(neurons, edges, list(LOOM_TUNING), LIFParams(), electrical=True, codegen=eng)
-            loom_protocol(m, n_trials=4)
+            loom_protocol(m, n_trials=4, peak_hz=15.0)   # strong drive: enough spikes to compare
             spikes[eng] = m.spike_frame().sort_values(["t_ms", "bodyId"]).reset_index(drop=True)
     finally:
         shutil.rmtree(d, ignore_errors=True)
+    expect = os.environ.get("FLYCNS_EXPECT_ENGINE", "")
+    if expect and expect != codegen_target():      # CI: a "compiled" job must really have compiled
+        return False, f"expected the {expect} engine, but {codegen_target()} is in use"
     if len(engines) == 1:
-        return True, f"only the pure-Python engine is available here ({len(spikes['numpy'])} spikes); compared in CI"
+        return True, f"pure-Python engine only here ({len(spikes['numpy'])} spikes); the compiled comparison runs in CI"
     a, b = spikes["cython"], spikes["numpy"]
     ok = len(a) > 0 and len(a) == len(b) and (a.bodyId.values == b.bodyId.values).all() \
         and np.allclose(a.t_ms.values, b.t_ms.values)
     return ok, f"compiled and pure-Python engines: {len(a)} identical spikes" if ok else \
         f"engines differ: {len(a)} vs {len(b)} spikes"
+
+
+def _toy_graph():
+    """The toy graph, built once per process in a temporary folder."""
+    if "toy" not in _CACHE:
+        import tempfile as _tf
+        d = Path(_tf.mkdtemp(prefix="flycns_toy_"))
+        subprocess.run([sys.executable, str(ROOT / "scripts/make_testdata.py")], cwd=d, capture_output=True, check=True)
+        from flycns import load_graph
+        _CACHE["toy"] = load_graph(str(d / "testdata"))
+        shutil.rmtree(d, ignore_errors=True)
+    return _CACHE["toy"]
+
+
+_CACHE = {}
+
+
+def t_stimulus_choice_keeps_excitability():
+    """Turning an electrically coupled cell into a stimulus source must not change how excitable its
+    partner is. Four cells: an ear afferent (JO-B1_a) coupled by a declared gap junction to the giant
+    fiber (DNp01), a driver and a dummy. The giant fiber starts 5 mV above rest and relaxes; with the
+    afferent simulated (at rest) or a silent source, the relaxation must be identical. Before
+    2026-10-10 the source version lost the gap-junction load and relaxed more slowly, which made the
+    giant fiber more excitable and confounded the A2 arms."""
+    from brian2 import mV
+    from flycns import CNSModel, LIFParams
+    neurons = pd.DataFrame(dict(bodyId=[1, 2, 3, 4], type=["JO-B1_a", "DNp01", "LC4", "dummy"],
+                                superclass=["cb_sensory", "descending_neuron", "visual_projection", "cb_intrinsic"],
+                                somaSide=["L"] * 4))
+    edges = pd.DataFrame(dict(pre=[3, 1], post=[2, 4], weight=[10, 5], nt=["acetylcholine"] * 2, sign=[1.0, 1.0]))
+    final = {}
+    for label, stim in (("afferent simulated", ["LC4"]), ("afferent a silent source", ["LC4", "JO-B1_a"])):
+        m = CNSModel(neurons, edges, stim, LIFParams(), electrical=True, monitor_types=("DNp01",))
+        gf = m.readout_index("DNp01")
+        m.G.v[gf] = -47 * mV
+        m.run(10)
+        final[label] = float(np.asarray(m.vmon.v / mV)[0, -1])
+    a, b = final.values()
+    ok = abs(a - b) < 1e-6
+    return ok, f"giant fiber after 10 ms: {a:.4f} vs {b:.4f} mV" + ("" if ok else ": the stimulus choice changed it")
+
+
+def t_peptide_reaches_targets():
+    """Peptide modulation must act whether its source cell type is simulated or a stimulus (before
+    2026-10-10 a stimulated source was silently skipped, so the AstA experiment never modulated)."""
+    from flycns import CNSModel, LIFParams
+    neurons, edges = _toy_graph()
+    out = {}
+    for label, stim in (("source simulated", ["L3", "L5"]), ("source stimulated", ["L3", "L5", "Pm3"])):
+        m = CNSModel(neurons, edges, stim, LIFParams(peptide_gain_scale=1.0), electrical=False)
+        rates = np.where(m.stim["type"].isin(["Pm3", "L3", "L5"]), 100.0, 0.0)
+        m.set_stim_rates(rates)
+        m.run(300)
+        tgt = np.flatnonzero(np.asarray(m.G.pep_gain) > 0)
+        out[label] = (len(m.peptides_applied), float(np.asarray(m.G.pep)[tgt].max()) if len(tgt) else 0.0)
+    ok = out["source stimulated"][0] == 1 and out["source stimulated"][1] > 0
+    return ok, "; ".join(f"{k}: {n} peptide wired, peak level {v:.2f}" for k, (n, v) in out.items())
 
 
 def t_all_sources_parse():
@@ -243,7 +303,9 @@ def run_all():
                          ("every file parses on this Python", t_all_sources_parse),
                          ("text I/O is explicitly UTF-8", t_text_io_is_utf8),
                          ("token read in every Windows format", lambda: t_token_file_formats(tmp)),
-                         ("both engines give identical spikes", t_engines_identical)]:
+                         ("both engines give identical spikes", t_engines_identical),
+                         ("stimulus choice keeps excitability", t_stimulus_choice_keeps_excitability),
+                         ("peptide acts from a stimulated source", t_peptide_reaches_targets)]:
             try:
                 ok, msg = fn()
             except Exception as ex:  # a crashing check is a failing check

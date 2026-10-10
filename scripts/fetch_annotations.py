@@ -5,7 +5,6 @@ entryNerve (e.g. 'MxLbN', 'aPhN', 'AN'). Safe to rerun.
 
 Run:  python scripts/fetch_annotations.py
 """
-import os
 import pandas as pd
 from neuprint import Client, fetch_custom
 

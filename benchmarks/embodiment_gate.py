@@ -37,12 +37,10 @@ import json
 import sys
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph
-from flycns.bench import provenance
 from flycns.graph import SIGN_MAP
 
 DATA = sys.argv[1] if len(sys.argv) > 1 else "data"

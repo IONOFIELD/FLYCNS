@@ -11,6 +11,7 @@ connectome, all). Files land in data\\bulk\\. Resumable: an interrupted download
 """
 import sys
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -27,7 +28,14 @@ def download(url, dest):
     part = dest.with_suffix(dest.suffix + ".part")
     have = part.stat().st_size if part.exists() else 0
     req = urllib.request.Request(url, headers={"Range": f"bytes={have}-"} if have else {})
-    with urllib.request.urlopen(req, timeout=60) as r:
+    try:
+        r = urllib.request.urlopen(req, timeout=60)
+    except urllib.error.HTTPError as e:
+        if e.code == 416 and have:        # nothing left to fetch: the partial file is complete
+            part.replace(dest)
+            return
+        raise
+    with r:
         if have and r.status != 206:          # server ignored the range: start again
             have = 0
         total = have + int(r.headers.get("Content-Length") or 0)

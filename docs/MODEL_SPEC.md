@@ -42,7 +42,7 @@ The 679 EM "chemical" synapses on the JO→GF contact are removed so the contact
 Each neuron is a leaky integrate-and-fire unit with three state variables: membrane potential v, synaptic drive g, and adaptation a.
 
 ```
-tau_m · dv/dt = V_rest − v + g + I_gap − a          (v is held at V_reset while refractory)
+tau_m · dv/dt = V_rest − v + g + I_gap + g_shunt · (V_rest − v) − a      (v is held at V_reset while refractory)
 tau_s · dg/dt = −g
 tau_a · da/dt = −a
 
@@ -86,7 +86,8 @@ on a pre spike, after d_gap = 0.8 ms:  v_post ← v_post + A_spikelet
 
 - The spikelet stands in for the action potential, which a LIF unit does not have.
 - Coupling acts on the post cell only. The giant-fiber synapses rectify in vivo (Phelan et al. 2008).
-- A stimulated source has no membrane, so it contributes only the spikelet.
+- A stimulated source has no membrane. It contributes the spikelet, plus the load of a partner at rest, `g_shunt · (V_rest − v_post)`, where `g_shunt` is the summed `g_gap` of the post cell's stimulated partners. Without that term, replacing a cell by a source would remove its load and change its partner's excitability; this confounded the A2 arms before 10 October 2026.
+- **Calibration under load.** A population's spikelet is set to `compound_mV · (1 + G) / (n · rate · tau_m)`, with `G = 0.2` the population's total coupling onto the post cell. The load shortens the post cell's effective time constant to `tau_m / (1 + G)`, so this keeps the calibrated potential exact.
 
 ## 5. Stimulus
 
@@ -107,13 +108,22 @@ on a pre spike, after d_gap = 0.8 ms:  v_post ← v_post + A_spikelet
 
 | mode | how targets are shuffled | what is kept |
 |---|---|---|
-| global (default; used by every registered test) | permuted across the whole network | each sender's out-degree, synapse counts and sign; each target's in-degree |
+| global (default; used by every registered test) | permuted across the whole network | each sender's connection count, synapse counts and sign; each target's in-degree |
 | superclass | permuted only among targets of the same superclass | additionally, how many synapses each sender sends to each class of cell |
 | superclass_side | as superclass, within the same body side | additionally, body side |
 
-Self-loops created by the shuffle are dropped in every mode.
+Self-loops created by the shuffle are dropped in every mode. A shuffle can give a sender the same target twice; such repeats are kept and summed, so the number of distinct partners is not always preserved. Unless a seed is given, the null uses `FLYCNS_SEED`, so the battery's seed replicates draw different nulls.
 
-## 8. Not in the model
+## 8. Peptide modulation (off in the declared parameter set)
+
+When `peptide_gain_scale > 0`, each declared peptide has one shared level `c`:
+- every spike of a source cell, simulated or stimulated, raises it by `1 / n_source`, clipped to [0, 1];
+- it decays with that peptide's declared time constant;
+- it is copied each step to every receptor-expressing target, where it scales synaptic input as `g += w · (1 + gain · c)`.
+
+A peptide whose source and targets are not both in the network is an error, never silently skipped.
+
+## 9. Not in the model
 
 - Neuromodulation: amines are excluded and peptides are off.
 - Graded (non-spiking) signalling.

@@ -30,7 +30,7 @@ deviation from 1 (prefer the least modified model).
 Run:  python benchmarks/fit_regional.py [n_trials] [data_dir]
 Writes results/fit_regional/grid.csv and best.json
 """
-import json, sys, time, itertools
+import json, sys, time
 from pathlib import Path
 import numpy as np
 import pandas as pd

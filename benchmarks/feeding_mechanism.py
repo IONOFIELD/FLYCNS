@@ -32,7 +32,7 @@ DATA = sys.argv[1] if len(sys.argv) > 1 else "data"
 OUT = Path("results/feeding"); OUT.mkdir(parents=True, exist_ok=True)
 n = pd.read_parquet(f"{DATA}/neurons.parquet").set_index("bodyId")
 e = pd.read_parquet(f"{DATA}/edges.parquet")
-e["sgn"] = e["nt"].str.lower().map(SIGN_MAP).fillna(0)
+e["sgn"] = e["sign"]   # the signs the dynamic model uses, including any FLYCNS_SIGNFLIP perturbation
 mn9 = n.index[n.type == "MN9"]
 
 # M1 input balance at MN9

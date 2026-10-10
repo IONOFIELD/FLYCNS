@@ -52,7 +52,7 @@ from scipy.sparse import csr_matrix
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, CNSModel, LIFParams
 from flycns.bench import pulse_protocol, readout_rates, provenance
-from flycns.graph import SIGN_MAP, GUSTATORY_MN9_DRIVING
+from flycns.graph import GUSTATORY_MN9_DRIVING
 
 N_TRIALS = int(sys.argv[1]) if len(sys.argv) > 1 else 6
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
@@ -111,7 +111,7 @@ for g, lst in GROUPS.items():
 
 mn9 = meta.index[meta["type"] == "MN9"]
 e = edges.copy()
-e["sgn"] = e["nt"].str.lower().map(SIGN_MAP).fillna(0)
+e["sgn"] = e["sign"]   # the signs the dynamic model uses, including any FLYCNS_SIGNFLIP perturbation
 inp = e[e.post.isin(mn9)]
 exc_relays = set(inp.loc[inp.sgn > 0, "pre"])
 inh_relays = set(inp.loc[inp.sgn < 0, "pre"])

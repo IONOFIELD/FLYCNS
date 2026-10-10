@@ -48,6 +48,12 @@
   "gain_n_trials": 1510,
   "n_series": 23,
   "n_flies": 21,
+  "behaviour_rule": {
+    "walking_gt": 0.5,
+    "stationary_lt": 0.1,
+    "min_trials": 5,
+    "source": "per-series binary_behavior at 50 Hz (authors' classification)"
+  },
   "series": [
     {
       "file": "2021-08-04.hdf5",
@@ -340,5 +346,83 @@
   ],
   "method": "photodiode epoch onsets; dF/F vs 1 s pre; peak in 3 s stim window",
   "source": "Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8",
-  "extracted_on": "2026-09-09"
+  "extracted_on": "2026-09-09",
+  "by_protocol": {
+    "PanGlomSuite": {
+      "n_series": 10,
+      "amplitude": {
+        "LC4": 0.518,
+        "LC6": 0.3773,
+        "LC9": 0.3062,
+        "LC11": 0.2698,
+        "LC12": 0.7074,
+        "LC15": 0.6078,
+        "LC16": 0.4795,
+        "LC17": 1.0,
+        "LC18": 0.3574,
+        "LC21": 0.3386,
+        "LC26": 0.7274,
+        "LPLC1": 0.5054,
+        "LPLC2": 0.7276
+      }
+    },
+    "LoomingSpot": {
+      "n_series": 13,
+      "amplitude": {
+        "LC4": 0.5588,
+        "LC6": 0.4342,
+        "LC9": 0.3333,
+        "LC11": 0.286,
+        "LC12": 1.0,
+        "LC15": 0.6103,
+        "LC16": 0.4924,
+        "LC17": 0.8074,
+        "LC18": 0.3914,
+        "LC21": 0.4257,
+        "LC26": 0.7296,
+        "LPLC1": 0.5151,
+        "LPLC2": 0.8474
+      }
+    }
+  },
+  "amplitude_by_state": {
+    "walking": {
+      "LC4": 0.7273,
+      "LC6": 0.6435,
+      "LC9": 0.449,
+      "LC11": 0.3881,
+      "LC12": 1.0,
+      "LC15": 0.7791,
+      "LC16": 0.5295,
+      "LC17": 0.941,
+      "LC18": 0.4637,
+      "LC21": 0.5914,
+      "LC26": 0.9334,
+      "LPLC1": 0.6668,
+      "LPLC2": 0.9993
+    },
+    "stationary": {
+      "LC4": 0.52,
+      "LC6": 0.4008,
+      "LC9": 0.316,
+      "LC11": 0.2725,
+      "LC12": 1.0,
+      "LC15": 0.59,
+      "LC16": 0.4908,
+      "LC17": 0.7778,
+      "LC18": 0.3764,
+      "LC21": 0.3853,
+      "LC26": 0.6906,
+      "LPLC1": 0.4905,
+      "LPLC2": 0.8282
+    }
+  },
+  "gain_sigma_by_state": {
+    "walking": 0.4419,
+    "stationary": 0.357
+  },
+  "n_series_by_state": {
+    "walking": 8,
+    "stationary": 13
+  }
 }

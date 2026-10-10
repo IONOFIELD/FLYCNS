@@ -70,24 +70,24 @@ GUSTATORY_SUBCLASSES = ["labellar bristle", "taste peg", "pharyngeal sensillum"]
 # imply (hypothesis to test in vivo), needed for taste -> MN9 propagation.
 SEZ_TYPE_PREFIXES = ("GNG", "SAD", "PRW", "FLA", "CAN")     # fallback only
 SEZ_ROI_PREFIXES = ("GNG", "PRW", "SAD", "FLA", "CAN", "AMMC", "PENP")
-_SEZ_BODIES = None
+_SEZ_BODIES = {}
 
 
 def sez_bodies(neurons=None, data_dir="data"):
-    """Body IDs of SEZ-intrinsic neurons by anatomy; empty if the membership file is absent."""
-    global _SEZ_BODIES
-    if _SEZ_BODIES is None:
+    """Body IDs of SEZ-intrinsic neurons by anatomy; empty if the membership file is absent.
+    Cached per data folder and neuron table (an earlier single global cache ignored both)."""
+    key = (str(Path(data_dir).resolve()), id(neurons))
+    if key not in _SEZ_BODIES:
         f = Path(data_dir) / "roi_membership.parquet"
-        if not f.exists():
-            _SEZ_BODIES = frozenset()
-        else:
+        keep = set()
+        if f.exists():
             m = pd.read_parquet(f).set_index("bodyId")
             keep = set(m.index[m.sez_frac > 0.5])
             if neurons is not None:
                 sc = neurons.set_index("bodyId")["superclass"].fillna("")
                 keep &= set(sc.index[~sc.str.contains("sensory|motor|efferent")])
-            _SEZ_BODIES = frozenset(keep)
-    return _SEZ_BODIES
+        _SEZ_BODIES[key] = frozenset(keep)
+    return _SEZ_BODIES[key]
 # Regional gain is DISABLED (1.0) since 2026-09-08. It was fitted to 2.0 under a
 # type-name prefix definition of the SEZ, where it appeared to open the taste -> MN9
 # pathway. With the SEZ defined anatomically from the connectome's own compartment
@@ -135,9 +135,9 @@ TASTE_SENSORY_FALLBACK = ["BM_Taste"]   # MaleCNS labellar taste population, mod
 #     Sasaki and Burrows 1998). A single-compartment cell with a somatic threshold cannot
 #     represent that; it is a limitation of the model class, not a parameter to tune.
 #
-# benchmarks/sensitivity_cord.py measured the escape benchmark to be invariant to cord tau_m
-# (5-40 ms), threshold gap (4-10 mV) and refractory period (1-5 ms) across all 14,153 cord
-# neurons, so this gap does not affect present results. Fill this in only alongside a
+# benchmarks/sensitivity_cord.py swept cord tau_m (5-40 ms), threshold gap (4-10 mV) and refractory
+# period (1-5 ms) across 19,912 cord neurons: escape holds everywhere except a 10 mV gap, where the
+# 9 mV GF->TTMn spikelet becomes subthreshold and the relay fails (results/sensitivity_cord). Fill this in only alongside a
 # fast/slow assignment for MaleCNS MNs, with a figure reference per field.
 #   CORD_PARAMS = {"vnc_motor": {"tau_m_ms": ..., "v_thresh_mV": ..., "refractory_ms": ...}}
 CORD_PARAMS: dict = {}
@@ -178,7 +178,8 @@ INTRINSIC_OVERRIDES = [
     ("DNp01", "b_adapt_mV", 30.0, "all-or-none GF response; von Reyn 2014; Ache 2019. Fitted by pre-stated rule "
                                   "(smallest value giving 1-2 spikes/response, <=2 on the strongest gain quartile, "
                                   "P(response) 0.5-1, TTMn relay intact; benchmarks/fit_gf_adapt.py at >=40 trials). "
-                                  "30 mV under the ordinal loom tuning, 30 mV under measured stationary tuning at 40 "
+                                  "30 mV under the ordinal loom tuning, 30 mV under the measured tuning at 40 (all trials, not "
+                                  "stationary as earlier stated: re-check under stationary input, docs/CALIBRATION.md) "
                                   "trials; an intermediate 15 mV came from a 20-trial fit whose strong-gain quartile "
                                   "held ~5 trials and was undersampled. 0 mV gives up to 8 spikes per loom."),
     # superclass-level: sustained fly motor neuron firing stays well under 100 Hz
@@ -203,9 +204,15 @@ def load_graph(data_dir="data", min_weight=None):
         min_weight = int(os.environ.get("FLYCNS_MIN_WEIGHT", MIN_WEIGHT_DEFAULT))
     neurons = pd.read_parquet(f"{data_dir}/neurons.parquet")
     edges = pd.read_parquet(f"{data_dir}/edges.parquet")
+    floor = int(edges["weight"].min()) if len(edges) else 0
+    if min_weight < floor:
+        # the fetch keeps only connections of at least `floor` synapses, so a lower threshold cannot add
+        # anything and would be stamped into the report as a setting that never took effect
+        raise SystemExit(f"[graph] min_weight {min_weight} is below this dataset's floor of {floor} synapses "
+                         f"(scripts/fetch_malecns.py keeps only connections >= {floor}); use {floor} or more")
     edges = edges[edges["weight"] >= min_weight].copy()
     edges["sign"] = edges["nt"].str.lower().map(SIGN_MAP)
-    n_unknown = edges["sign"].isna().sum()
+    n_unknown = int((edges["sign"].isna() | (edges["sign"] == 0)).sum())
     edges = edges[edges["sign"].notna() & (edges["sign"] != 0)].reset_index(drop=True)
     edges["sign"] = edges["sign"].astype(float)
     # robustness, targeted: flip the sign of neurons whose per-T-bar predictions mostly
@@ -336,7 +343,11 @@ def electrical_pairs(neurons):
             else:
                 n_conv = len(pres)
             n_conv = max(float(n_conv), 1.0)
-            spk = spk["compound_mV"] / (n_conv * spk["at_hz"] * TAU_M_S)
+            # Summed spikelets n * rate * A, decaying with the post cell's effective time constant. The
+            # population's coupling loads the post cell by n_conv * g_gap = G_GAP_RELAY (model.py: as I_gap
+            # from simulated partners, as g_shunt from stimulus sources), shortening that constant to
+            # tau / (1 + G_GAP_RELAY); the factor keeps the target potential exact under that load.
+            spk = spk["compound_mV"] * (1 + G_GAP_RELAY) / (n_conv * spk["at_hz"] * TAU_M_S)
             g_gap = G_GAP_RELAY / n_conv
         assert np.isfinite(spk) and np.isfinite(g_gap), f"bad electrical calibration for {post_t}"
         for b, row in pres.iterrows():
@@ -346,7 +357,7 @@ def electrical_pairs(neurons):
             for q in cand.index:
                 pairs.append(dict(pre=b, post=q, pre_type=row["type"], post_type=post_t,
                                   spikelet_mV=float(spk), g_gap=float(g_gap), source=src))
-    return pd.DataFrame(pairs)
+    return pd.DataFrame(pairs, columns=["pre", "post", "pre_type", "post_type", "spikelet_mV", "g_gap", "source"])
 
 
 def drop_mixed_chemical(edges, neurons):
@@ -368,7 +379,7 @@ def drop_mixed_chemical(edges, neurons):
 NULL_MODES = ("global", "superclass", "superclass_side")
 
 
-def rewire_null(edges, seed=0, mode=None, neurons=None):
+def rewire_null(edges, seed=None, mode=None, neurons=None):
     """Degree-preserving null: permute postsynaptic targets, keep out-degree,
     synapse counts and NT sign of every presynaptic neuron.
 
@@ -382,13 +393,16 @@ def rewire_null(edges, seed=0, mode=None, neurons=None):
                        the class is shuffled. A circuit that survives this null depends on the
                        specific wiring, not on class-level statistics.
       superclass_side  as superclass, and the target also keeps its body side.
-    Each target keeps its in-degree in every mode. Self-loops created by the shuffle are
+    Each target keeps its in-degree in every mode. A shuffle can give a sender the same target twice;
+    such repeats are kept and summed by the simulator, so each sender keeps its synapse count and
+    connection count but not always its number of distinct partners. Self-loops created by the shuffle are
     dropped, as before."""
     import os
     mode = mode or os.environ.get("FLYCNS_NULL", "global")
     if mode not in NULL_MODES:
         raise ValueError(f"unknown null mode {mode!r}; choose from {NULL_MODES}")
-    rng = np.random.default_rng(seed)
+    # seed: FLYCNS_SEED unless given, so the seed replicates of the battery draw different nulls
+    rng = np.random.default_rng(int(os.environ.get("FLYCNS_SEED", "0")) if seed is None else seed)
     out = edges.copy()
     if mode == "global":
         out["post"] = rng.permutation(out["post"].values)

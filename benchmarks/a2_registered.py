@@ -67,7 +67,10 @@ else:
 print(f"criteria registered at commit {commit or '?'}{' (SCRIPTS UNCOMMITTED: commit before running)' if dirty else ''}")
 
 t0 = time.time()
-env = dict(os.environ, FLYCNS_A2_TRIALS=str(A2_TRIALS))
+started = time.strftime("%Y-%m-%dT%H:%M:%S")
+# the child must run the registered protocol: no inherited output folder, fixed gain or A2-only mode
+env = {k: v for k, v in os.environ.items() if k not in ("FLYCNS_AUDITORY_OUT", "FLYCNS_A2_GAIN", "FLYCNS_A2_ONLY")}
+env["FLYCNS_A2_TRIALS"] = str(A2_TRIALS)
 proc = subprocess.run([sys.executable, "-u", "benchmarks/auditory.py", "40", DATA], env=env,
                       capture_output=True, text=True, encoding="utf-8", errors="replace")
 (OUT / "auditory_run.log").write_text(proc.stdout + proc.stderr, encoding="utf-8")
@@ -76,6 +79,12 @@ if proc.returncode != 0:
 rep = json.loads(Path("results/auditory/report.json").read_text(encoding="utf-8"))
 a2 = rep["arms"]["A2_prediction"]
 n = int(a2["n_trials_per_arm"])
+# score only the report this run just wrote, at the registered trial count and calibration rule
+fresh = rep.get("provenance", {}).get("written_at", "") >= started
+rule_ok = rep["arms"].get("A2_calibration", {}).get("rule", "").startswith("largest gain")
+if not (fresh and n == A2_TRIALS and rule_ok):
+    raise SystemExit(f"refusing to score results/auditory/report.json: fresh={fresh}, trials {n} (registered "
+                     f"{A2_TRIALS}), calibration rule {'ok' if rule_ok else 'not the registered one'}")
 k1 = int(round(a2["loom_alone_hit"] * n)); k2 = int(round(a2["loom_plus_jo_hit"] * n))
 
 

@@ -17,8 +17,10 @@ call :try_exe "%ProgramFiles%\Python312\python.exe"
 if not defined PY goto install_python
 
 :run
-%PY% scripts\setup.py %*
-exit /b %ERRORLEVEL%
+(
+  %PY% scripts\setup.py %*
+  exit /b
+)
 
 :install_python
 echo Python was not found on this computer.

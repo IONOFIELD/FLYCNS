@@ -44,11 +44,15 @@ RUNS = [  # (label, argv relative to the copy, extra env, sentinel substring or 
     ("feeding_by_modality", ["benchmarks/feeding_by_modality.py", "2", "testdata"], {}, None),
     ("pc1_song", ["benchmarks/pc1_song.py", "2", "testdata"], {}, None),
     ("dnp13_control", ["benchmarks/dnp13_control.py", "2", "testdata"], {}, None),
-    ("flight_snpp16", ["benchmarks/flight_snpp16.py", "20", "testdata"], {"FLYCNS_TARGET_TYPE": "SApp10"}, None),
+    ("flight_snpp16", ["benchmarks/flight_snpp16.py", "20", "testdata"], {}, None),
+    ("flight_snpp16_graded (registers on toy data)", ["benchmarks/flight_snpp16_graded.py", "20", "testdata"], {}, None),
+    ("flight_loop", ["benchmarks/flight_loop.py", "20", "testdata"], {}, None),
+    ("peptide_asta", ["benchmarks/peptide_asta.py", "2", "testdata"], {}, None),
     ("a2_registered", ["benchmarks/a2_registered.py", "4", "testdata"], {}, None),
     ("a2_robustness", ["benchmarks/a2_robustness.py", "2", "testdata"], {}, None),
     ("null_strict", ["benchmarks/null_strict.py", "testdata"], {}, None),
     ("battery variant: min_weight 10", ["benchmarks/gf_escape.py", "2", "testdata"], {"FLYCNS_MIN_WEIGHT": "10"}, "min_weight 10"),
+    ("a threshold below the data's floor is refused", ["benchmarks/gf_escape.py", "2", "testdata"], {"FLYCNS_MIN_WEIGHT": "3"}, "!fail:below this dataset's floor"),
     ("battery variant: superclass null", ["benchmarks/gf_escape.py", "2", "testdata"], {"FLYCNS_NULL": "superclass"}, None),
     ("data manifest write + verify", ["-m", "flycns.integrity", "write", "testdata"], {}, "wrote testdata/MANIFEST.json"),
     ("integrity status", ["-m", "flycns.integrity", "verify", "testdata"], {}, "testdata: match"),
@@ -99,9 +103,12 @@ def main():
                 r = subprocess.run([sys.executable, *argv], cwd=work, **TEXT,
                                    timeout=STEP_TIMEOUT_S, env={**os.environ, **BASE_ENV, **env})
                 out = r.stdout + r.stderr
-                ok = r.returncode == 0 and "Traceback" not in out
-                if sentinel:
-                    ok = ok and sentinel in out
+                # a sentinel "!fail:<text>" marks a run that must be REFUSED, with that text in its message
+                expect_fail = bool(sentinel) and sentinel.startswith("!fail:")
+                want = sentinel[6:] if expect_fail else sentinel
+                ok = (r.returncode != 0) if expect_fail else (r.returncode == 0 and "Traceback" not in out)
+                if want:
+                    ok = ok and want in out
                 note = f"exit {r.returncode}, {round(time.time() - t0)}s"
                 if not ok:
                     note += " | " + (out.strip().splitlines() or [""])[-1][:160]

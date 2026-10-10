@@ -38,7 +38,7 @@ from scipy.sparse import csr_matrix
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph
 from flycns.bench import provenance
-from flycns.graph import SIGN_MAP, GUSTATORY_MN9_DRIVING
+from flycns.graph import GUSTATORY_MN9_DRIVING
 
 DATA = sys.argv[1] if len(sys.argv) > 1 else "data"
 OUT = Path("results/sugar_laterality")
@@ -95,7 +95,7 @@ else:
 print(f"criteria registered at commit {commit or '?'}{' (SCRIPT UNCOMMITTED: commit before running)' if dirty else ''}")
 
 e = edges.copy()
-e["sgn"] = e["nt"].str.lower().map(SIGN_MAP).fillna(0.0)
+e["sgn"] = e["sign"]   # the signs the dynamic model uses, including any FLYCNS_SIGNFLIP perturbation
 ids_all = pd.Index(sorted(set(e.pre) | set(e.post)))
 pos = pd.Series(np.arange(len(ids_all)), index=ids_all)
 

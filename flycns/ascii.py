@@ -1,6 +1,5 @@
 """Terminal readouts: circuit sketch, spike raster, regional activity bar."""
 import numpy as np
-import pandas as pd
 
 CIRCUITS = {
     "gf_escape": """

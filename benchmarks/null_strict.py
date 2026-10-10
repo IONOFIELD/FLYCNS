@@ -24,16 +24,14 @@ Run:  python benchmarks/null_strict.py [data_dir]          (about the time of on
 """
 import json
 import os
-import shutil
 import subprocess
 import sys
-import tempfile
 import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns.bench import provenance  # noqa: E402
-from flycns.integrity import require_clean, require_data  # noqa: E402
+from flycns.integrity import preserved, require_clean, require_data  # noqa: E402
 
 DATA = sys.argv[1] if len(sys.argv) > 1 else "data"
 OUT = Path("results/null_strict")
@@ -63,13 +61,8 @@ registered_commit = json.loads(crit_f.read_text(encoding="utf-8"))["git_commit"]
 print(f"criteria registered: {registered_commit or '?'}")
 
 env = dict(os.environ, FLYCNS_NULL="superclass", FLYCNS_RUN_TAG="null_strict")
-snap = Path(tempfile.mkdtemp(prefix="flycns_null_strict_"))
-canon = [Path("results/gf_escape"), Path("results/pc1_song")]
-for d in canon:
-    if d.exists():
-        shutil.copytree(d, snap / d.name)
-try:
-    t0 = time.time()
+t0 = time.time()
+with preserved("results/gf_escape", "results/pc1_song"):     # never leaves null-mode results behind
     for argv in (["benchmarks/gf_escape.py", str(ESCAPE_TRIALS), DATA], ["benchmarks/pc1_song.py", str(PC1_TRIALS), DATA]):
         print(f"running {' '.join(argv)} with FLYCNS_NULL=superclass ...", flush=True)
         r = subprocess.run([sys.executable, "-u", *argv], env=env, capture_output=True, text=True, encoding="utf-8", errors="replace")
@@ -78,13 +71,6 @@ try:
             raise SystemExit(f"{argv[0]} failed (exit {r.returncode}); see {OUT}/{Path(argv[0]).stem}.log")
     esc = json.loads(Path("results/gf_escape/report.json").read_text(encoding="utf-8"))
     pc1 = json.loads(Path("results/pc1_song/report.json").read_text(encoding="utf-8"))
-finally:
-    for d in canon:
-        if (snap / d.name).exists():
-            shutil.rmtree(d, ignore_errors=True)
-            shutil.copytree(snap / d.name, d)
-    shutil.rmtree(snap, ignore_errors=True)
-    print("canonical gf_escape and pc1_song results restored")
 
 null_e, real_e = esc["arms"]["rewired_null"], esc["arms"]["real_electrical"]
 null_p = pc1["null_pc1_14a_100Hz"]

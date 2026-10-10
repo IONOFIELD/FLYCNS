@@ -50,8 +50,71 @@ Registered tests refuse uncommitted code and data that differ from `data/MANIFES
 No model equation, parameter or criterion changed.
 
 **New robustness axes, not yet run on the full connectome:**
-- the connection-size threshold (3 and 10 synapses, against the default 5);
+- the connection-size threshold (10 and 20 synapses, against the default 5; the fetch keeps nothing below 5, so a looser threshold is impossible and is refused);
 - a stricter null that shuffles wiring only within cell class (`benchmarks/null_strict.py`, registered; it also runs in the battery).
+
+---
+
+## 10 October 2026, later: full audit (four independent code reviews plus a run of every script)
+
+Each finding below was confirmed against the code, the committed reports, or a test, and then fixed.
+The fixes change no registered criterion. Several change what a rerun will measure, so the
+affected committed results are marked **rerun pending** and must not be quoted until they are rerun.
+
+**Affecting committed results**
+- **Loom input was all-trials, not stationary.** The committed data file had no per-state split, so every loom-driven result used all-trials amplitudes. The documentation said stationary. Missing states are now an error, and the file now has the split. **Rerun pending:**
+  - escape;
+  - auditory, A2R and RA2;
+  - DNp31 and the auditory-wing trace;
+  - the battery.
+
+  The calibrated values must be re-checked first: PEAK_HZ, GF adaptation and the A2 working point.
+- **The A2 arms differed in more than sound.** With the ear afferents simulated (loom alone), their gap junctions loaded the giant fiber. As stimulus sources (loom plus sound), the load vanished, making the giant fiber more excitable. Part of the reported facilitation (4% to 45%) may therefore be this artefact. Reviewers estimated about 0.1 to 0.15 of the difference, an estimate not yet measured. The model now keeps a source's load (`g_shunt`), and a unit test fails if the stimulus choice changes a partner's excitability. **A2R and RA2: rerun pending.** The registered result stands as recorded, with this caveat.
+- **The AstA experiment never modulated.** A stimulated peptide source was skipped, and the report shows `peptide_applied: []`. The conclusion "Mi1 stays silent under AstA" is therefore withdrawn. Peptides now act from stimulated sources, a skipped peptide is an error, and the all-to-all wiring is replaced by one shared level. **peptide_asta: rerun pending.**
+- **Flight robustness R2 varied the stimulus, not only the relays.** The "relay" superclasses included the driven wing afferents (vnc_sensory). At a 10 mV threshold gap the afferents themselves barely fired, so R2's failure there is uninformative. Sensory superclasses are now excluded, in sensitivity_flight as well. **R2 and sensitivity_flight: rerun pending.**
+- **Flight robustness R1 was vacuous.** No flipped edge reached the active circuit: its draws are bit-identical to graded k=7. Separately, the targeted inversion flagged cells by transmitter identity rather than sign, so a glutamate cell whose T-bars say GABA was flipped to excitatory. Agreement is now by sign (`fit/synapse_nt.py`). **R1 and the targeted battery suite: rerun pending, after rerunning menu 24.**
+- **Flight robustness R3 reused the original phase draws.** The registered text promises fresh draws; they are now drawn. **R3: rerun pending.**
+- **sensitivity_flight ran at the outdated anchor 0.35.** It now uses 0.25. The committed flight_loop report also predates the multi-draw rule. **flight_loop and sensitivity_flight: rerun pending.**
+- **Feeding scoring.**
+  - F2b and F2c rates are now taken during the drive only. Before, F2b was diluted about 2.5x and F2c divided by 250 ms instead of 200.
+  - F2b now uses the anatomical SEZ.
+  - F5 (a null that cannot fail when the real network is also silent) and F4 (in fallback mode, MN9's own strongest inputs) are now reported, not scored.
+  - A tie in F1 no longer counts as a match.
+
+  **feeding: rerun pending.**
+- **The SEZ membership double-counted nested ROIs** (a cell entirely in AMMC scored 0.67). It now uses primary ROIs only. **roi_membership, check_modulators and fit_regional: rerun pending (menu 25).** The SEZ gain is 1.0, so no scored result depended on this.
+- **The cord-invariance claim was wrong.** See "Cord parameters" below, now corrected.
+
+**Robustness of the tool**
+- **Data and engine.**
+  - Data fingerprints now agree across pandas 2 and 3 (checked).
+  - Optional derived tables no longer block other copies.
+  - The loom input file is guarded like code.
+  - A failed `git status` no longer counts as clean.
+- **Scripts and batteries.**
+  - Every loom report now records which loom input it used.
+  - Settings equal to their defaults are no longer flagged as perturbed.
+  - Staleness is judged from each report's write stamp, not file times.
+  - A2 scores only the report its own run wrote.
+  - The battery files only successful reports and runs feeding at the canonical trial count.
+  - Every restore of canonical results is exact.
+  - Jittered spike trains can no longer crash a run.
+  - Thresholds below the data's floor are refused.
+  - The stimulus audit now covers every benchmark.
+- **Maintainer flow.** Menu 51 now:
+  - checks git's identity before the long run;
+  - verifies every commit and push;
+  - never leaves a half-finished rebase.
+- **Setup.**
+  - It rebuilds an environment made with another Python.
+  - It installs the lock from ready-made Windows wheels only. pykdtree 1.4.3 replaces a Mac-only pin.
+  - It never refetches over pinned data.
+- **Smaller fixes.** The launchers no longer load the simulator, so Windows does not lock its files during updates. Downloads resume past a completed file.
+- **CI.**
+  - It runs a script directly under Windows' default encoding.
+  - It checks that compiled jobs really compiled.
+  - It runs menu 51 end to end against a stand-in for GitHub.
+  - The toy graph now exercises the gap junction, AstA and bitter paths it was missing.
 
 ---
 
@@ -641,11 +704,13 @@ throughout.
 per-synapse confidence is 0.91; 1.2% of neurons fall below 0.6; neurons whose T-bars disagree with
 their aggregate label carry 3.5% of total synaptic weight.
 
-**Cord parameters** (`benchmarks/sensitivity_cord.py`). Sweeping cord-only membrane time constant
-(5 to 40 ms), threshold gap (4 to 10 mV) and refractory period (1 to 5 ms) across all 14,153
-nerve-cord neurons leaves every escape check passing and every metric unchanged. The inherited
-central-brain parameters are a limitation for circuits requiring cord computation, not for this
-benchmark.
+**Cord parameters** (`benchmarks/sensitivity_cord.py`). The sweep covered cord-only membrane time constant
+(5 to 40 ms), threshold gap (4 to 10 mV) and refractory period (1 to 5 ms) across 19,912 nerve-cord
+neurons. Every escape check passes at every setting except one. At a 10 mV threshold gap, the 9 mV
+GF-to-TTMn spikelet is subthreshold, so the one-to-one relay and its lag fail: the TTMn/GF ratio is
+0.31 and the lag 24.6 ms. (Correction, 10 October 2026: this paragraph previously said "every metric
+unchanged" and "14,153 neurons", contradicting the committed grid.) The escape result therefore
+depends on the cord threshold staying within about 9 mV of rest.
 
 ---
 

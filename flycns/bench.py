@@ -43,15 +43,15 @@ def readout_rates(model, onsets, types, window_ms, meta):
         ids = model.lif_ids[model.readout_index(typ)]
         if len(ids) == 0:
             continue
-        side = side_all.loc[ids]
+        side = side_all.loc[ids].where(lambda x: x.isin(["L", "R"]), "unsided")
         for k, on in enumerate(onsets):
             w = sp[(sp.t_ms >= on) & (sp.t_ms < on + window_ms) & sp.bodyId.isin(ids)]
-            for s in ["L", "R"]:
-                n_s = (side == s).sum()
-                if n_s:
-                    out.append(dict(trial=k, type=typ, side=s,
-                                    spikes_per_cell=w.bodyId.isin(side.index[side == s]).sum() / n_s,
-                                    latency_ms=(w.t_ms.min() - on) if len(w) else np.nan))
+            for s in ["L", "R", "unsided"]:
+                cells = side.index[side == s]
+                if len(cells):
+                    ws = w[w.bodyId.isin(cells)]          # this side only: count and latency
+                    out.append(dict(trial=k, type=typ, side=s, spikes_per_cell=len(ws) / len(cells),
+                                    latency_ms=(ws.t_ms.min() - on) if len(ws) else np.nan))
     return pd.DataFrame(out)
 
 
@@ -61,3 +61,15 @@ def provenance():
     content fingerprint of the input data (flycns/integrity.py)."""
     from .integrity import provenance_record
     return provenance_record()
+
+
+def spike_source(n, ids, times_ms, dt_ms=0.1):
+    """SpikeGeneratorGroup for jittered spike trains. Brian2 refuses a source that spikes twice in one
+    time step, which jitter makes possible (about 9% of runs at 400 sources); the later duplicate in a
+    bin is dropped, so committed runs (which had none) are unchanged."""
+    from brian2 import SpikeGeneratorGroup, ms
+    ids = np.asarray(ids, dtype=int)
+    t = np.asarray(times_ms, dtype=float)
+    bins = ((t + 1e-3 * dt_ms) / dt_ms).astype(np.int64)        # Brian2's own binning
+    keep = ~pd.DataFrame(dict(i=ids, b=bins)).duplicated().to_numpy()
+    return SpikeGeneratorGroup(n, ids[keep], t[keep] * ms)

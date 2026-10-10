@@ -35,10 +35,16 @@ neurons, edges = load_graph(DATA)
 meta = neurons.set_index("bodyId")
 infl = pd.read_csv(OUT / "afferent_influence.csv", index_col=0) if (OUT / "afferent_influence.csv").exists() else None
 if infl is None:
-    raise SystemExit("run benchmarks/diagnose_feeding.py first")
+    raise SystemExit("run benchmarks/diagnose_feeding.py first (it writes results/feeding/afferent_influence.csv)")
 cands = [t for t in infl.index if infl.loc[t, "n_type"] >= MIN_N]
 if ONLY:
     cands = [t for t in ONLY if t in infl.index]
+# the candidate list comes from a saved file; keep only types that exist in this dataset
+have = set(neurons["type"].dropna())
+gone = [t for t in cands if t not in have]
+cands = [t for t in cands if t in have]
+if gone:
+    print(f"skipping {len(gone)} candidate types absent from this dataset: {gone[:8]}")
 print(f"screening {len(cands)} afferent types at {HZ} Hz, w_scale {W_SCALE}, {N_TRIALS} trials each")
 tag = f"_{int(HZ)}Hz_w{W_SCALE}"
 

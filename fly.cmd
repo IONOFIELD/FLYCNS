@@ -7,5 +7,8 @@ if not exist ".venv\Scripts\python.exe" (
   echo No environment here yet. Run setup.cmd first.
   exit /b 1
 )
-".venv\Scripts\python.exe" fly.py %*
-exit /b %ERRORLEVEL%
+rem one block: cmd.exe reads it whole, so an update to this file during menu 51 cannot derail it
+(
+  ".venv\Scripts\python.exe" fly.py %*
+  exit /b
+)

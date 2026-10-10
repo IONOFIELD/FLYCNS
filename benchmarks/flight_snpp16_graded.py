@@ -41,9 +41,9 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from brian2 import SpikeGeneratorGroup, Synapses, ms, mV
+from brian2 import Synapses, mV
 from flycns import load_graph, CNSModel, LIFParams
-from flycns.bench import provenance
+from flycns.bench import provenance, spike_source
 from flycns.graph import rewire_null
 
 N_CYCLES = int(sys.argv[1]) if len(sys.argv) > 1 else 400
@@ -128,7 +128,7 @@ def drive(src, edge_df, seed):
     times = (cyc[None, :] + phase[:, None] + rng.normal(0, JITTER_MS, (len(idx), N_CYCLES))).ravel() + pre_ms
     ids = np.repeat(np.arange(len(idx)), N_CYCLES)
     keep = times >= 0
-    gen = SpikeGeneratorGroup(len(idx), ids[keep], times[keep] * ms)
+    gen = spike_source(len(idx), ids[keep], times[keep])
     S = Synapses(gen, m.G, on_pre="v_post += kick", namespace=dict(kick=8.0 * mV))
     S.connect(i=np.arange(len(idx)), j=np.array(idx))
     m.net.add(gen, S)
