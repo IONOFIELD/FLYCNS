@@ -31,7 +31,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns.bench import provenance  # noqa: E402
-from flycns.integrity import preserved, require_clean, require_data  # noqa: E402
+from flycns.integrity import preserved, require_clean, require_data, criteria_differ  # noqa: E402
 
 DATA = sys.argv[1] if len(sys.argv) > 1 else "data"
 OUT = Path("results/null_strict")
@@ -51,7 +51,7 @@ require_clean(Path(__file__).stem)
 require_data(DATA, Path(__file__).stem, ["neurons.parquet", "edges.parquet"])
 crit_f = OUT / "criteria.json"
 if crit_f.exists():
-    if json.loads(crit_f.read_text(encoding="utf-8")).get("criteria") != CRITERIA:
+    if criteria_differ(crit_f, CRITERIA):
         raise SystemExit("criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test.")
 else:
     st = provenance()
