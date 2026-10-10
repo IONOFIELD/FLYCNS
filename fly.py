@@ -43,11 +43,12 @@ def status():
   selected cell for neuron view: {state['cell']}""")
 
 def _cols():
-    try:
-        import pyarrow.parquet as pq
-        return pq.read_schema("data/neurons.parquet").names
-    except Exception:
-        return []
+    # in a child process: the menu itself never loads compiled libraries, which on Windows would lock
+    # their files while menu 51 or setup updates the environment
+    r = subprocess.run([sys.executable, "-c", "import pyarrow.parquet as pq; "
+                        "print(','.join(pq.read_schema('data/neurons.parquet').names))"],
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    return r.stdout.strip().split(",") if r.returncode == 0 else []
 
 def ask(prompt, default=""):
     v = input(f"{prompt}{' [' + default + ']' if default else ''}> ").strip()
@@ -120,7 +121,7 @@ while True:
     elif c == "7":
         print("  twelve suites, several hours; keeps Windows awake, commits and pushes each one as it finishes")
         if ask("start now? (y/n)", "n").lower() == "y": run("scripts/overnight.py")
-    elif c == "8": run("benchmarks/fit_gf_adapt.py", ask("trials", "20"))
+    elif c == "8": run("benchmarks/fit_gf_adapt.py", ask("trials (40 or more)", "40"))
     elif c == "9": run("benchmarks/fit_regional.py", ask("trials", "6"))
     elif c == "10":
         run("benchmarks/screen_afferents.py", ask("trials", "3"), "data", ask("rate Hz", "50"), ask("w_scale", "0.3"))

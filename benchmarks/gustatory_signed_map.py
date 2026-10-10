@@ -42,7 +42,7 @@ from scipy.sparse import csr_matrix
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph
 from flycns.bench import provenance
-from flycns.graph import SIGN_MAP, GUSTATORY_SUBCLASSES
+from flycns.graph import GUSTATORY_SUBCLASSES
 
 DATA = sys.argv[1] if len(sys.argv) > 1 else "data"
 OUT = Path("results/gustatory_signed_map")
@@ -104,7 +104,7 @@ print(f"criteria registered at commit {commit or '?'}{' (SCRIPT UNCOMMITTED: com
 
 # ---- matrices
 e = edges.copy()
-e["sgn"] = e["nt"].str.lower().map(SIGN_MAP).fillna(0.0)
+e["sgn"] = e["sign"]   # the signs the dynamic model uses, including any FLYCNS_SIGNFLIP perturbation
 ids = pd.Index(sorted(set(e.pre) | set(e.post)))
 pos = pd.Series(np.arange(len(ids)), index=ids)
 

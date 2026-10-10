@@ -13,7 +13,6 @@ pathway is a sexually dimorphic circuit. The local data had no field to answer t
 
 Run:  python scripts/fetch_dimorphism.py          (needs the neuPrint token saved by setup.cmd)   Safe to rerun.
 """
-import os
 import re
 
 import pandas as pd

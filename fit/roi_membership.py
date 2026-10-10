@@ -14,14 +14,14 @@ Run:  python fit/roi_membership.py            (uses neuprint roiInfo; needs the 
 Writes data/roi_membership.parquet (bodyId, dominant ROI, fraction of synapses in it)
 and, with --meshes, data/meshes/<roi>.npz for the 3D viewer.
 """
-import os, sys, json
+import sys, json
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np
 import pandas as pd
 
 OUT = Path("data"); OUT.mkdir(exist_ok=True)
-SEZ_ROIS = ["GNG", "PRW", "SAD", "FLA", "CAN", "AMMC"]   # subesophageal zone compartments
+from flycns.graph import SEZ_ROI_PREFIXES as SEZ_ROIS   # one definition of the SEZ compartments
 
 if "--meshes" not in sys.argv:
     from neuprint import Client, fetch_custom
@@ -30,6 +30,10 @@ if "--meshes" not in sys.argv:
     if not tok:
         raise SystemExit("No neuPrint token: run setup.cmd once; it asks for the token and saves it")
     c = Client("neuprint.janelia.org", dataset="male-cns:v1.0", token=tok)
+    # roiInfo lists nested ROIs (PENP contains SAD and AMMC, MB contains its lobes ...). Fractions are
+    # taken over the primary, non-overlapping ROIs only; summing parents and children counted the same
+    # synapses twice (a cell entirely in AMMC scored 0.67 instead of 1.0 before 2026-10-10).
+    PRIMARY = set(c.primary_rois)
     print("fetching per-neuron ROI synapse distributions...")
     q = "MATCH (n:Neuron) RETURN n.bodyId AS bodyId, n.roiInfo AS roi"
     df = fetch_custom(q, client=c)
@@ -44,7 +48,7 @@ if "--meshes" not in sys.argv:
         if not isinstance(ri, dict):
             skipped += 1; continue
         tot = {k: (v.get("pre", 0) + v.get("post", 0)) for k, v in ri.items() if isinstance(v, dict)}
-        tot = {k: v for k, v in tot.items() if v > 0 and k not in ("CentralBrain", "VNC", "OpticLobe")}
+        tot = {k: v for k, v in tot.items() if v > 0 and k in PRIMARY}
         if not tot:
             continue
         s = sum(tot.values()); dom = max(tot, key=tot.get)
@@ -65,7 +69,7 @@ if "--meshes" not in sys.argv:
 else:
     try:
         from cloudvolume import CloudVolume
-        import trimesh
+        import trimesh  # noqa: F401  (availability check)
     except ImportError:
         raise SystemExit("pip install cloud-volume trimesh")
     from skimage import measure

@@ -28,15 +28,22 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CODE_PATHSPECS = ["*.py", "*.cmd", "requirements*.txt", "requirements*.lock"]
+# Committed files that shape every result: model inputs inside data/ count as code for the guard
+MODEL_INPUTS = ("data/loom_tuning_measured.json",)
+CODE_PATHSPECS = ["*.py", "*.cmd", "requirements*.txt", "requirements*.lock", *MODEL_INPUTS]
 NOT_CODE_PREFIXES = ("results/", "data/", "testdata/")
-FINGERPRINT_ALGO = "rowhash-v1"   # sha256 over sorted per-row hashes; see table_fingerprint()
+CORE_TABLES = ("neurons.parquet", "edges.parquet")   # must be present; derived tables are optional
+FINGERPRINT_ALGO = "rowhash-v2"   # v2: dtype-family labels and None for missing text, so pandas 2 and 3 agree
 MANIFEST = "MANIFEST.json"
 CACHE = ".fingerprints.json"      # per data dir, gitignored; keyed by size and mtime
 
 # Settings that only route output or count trials; announced but not treated as model overrides.
 PLUMBING = {"FLYCNS_RUN_TAG", "FLYCNS_AUDITORY_OUT", "FLYCNS_A2_TRIALS", "FLYCNS_ALLOW_DIRTY",
-            "FLYCNS_CODEGEN"}   # engine choice: same equations, recorded in every report as `engine`
+            "FLYCNS_CODEGEN", "FLYCNS_EXPECT_ENGINE"}   # engine: same equations, recorded as `engine`
+# A setting equal to its declared default changes nothing and is not an override.
+DEFAULTS = {"FLYCNS_SEED": "0", "FLYCNS_SIGNFLIP": "0", "FLYCNS_SIGNFLIP_TARGETED": "0", "FLYCNS_WSCALE": "0.3",
+            "FLYCNS_PEPTIDE": "0", "FLYCNS_NULL": "global", "FLYCNS_MIN_WEIGHT": "5", "FLYCNS_PEAK_HZ": "5.0",
+            "FLYCNS_LOOM_STATE": "stationary", "FLYCNS_BASELINE_DEPOL": "0", "FLYCNS_BASELINE_NOISE": "0"}
 
 
 def _git(*args):
@@ -55,13 +62,15 @@ def git_state():
     if rc != 0 or out.strip() != "true":
         return dict(is_repo=False, commit="", dirty_files=[], clean=False)
     _, commit = _git("rev-parse", "--short", "HEAD")
-    _, status = _git("status", "--porcelain", "--untracked-files=all", "--", *CODE_PATHSPECS)
+    rc, status = _git("status", "--porcelain", "--untracked-files=all", "--", *CODE_PATHSPECS)
+    if rc != 0:     # an unreadable state is never "clean"
+        return dict(is_repo=True, commit=commit.strip(), dirty_files=["? git status failed"], clean=False)
     dirty = []
     for line in status.splitlines():
         path = line[3:].strip().strip('"')
         if " -> " in path:
             path = path.split(" -> ", 1)[1]
-        if not path.startswith(NOT_CODE_PREFIXES):
+        if path in MODEL_INPUTS or not path.startswith(NOT_CODE_PREFIXES):
             dirty.append(f"{line[:2].strip() or '?'} {path}")
     return dict(is_repo=True, commit=commit.strip(), dirty_files=dirty, clean=not dirty)
 
@@ -85,12 +94,24 @@ def require_clean(label):
         return st
     raise SystemExit(f"[integrity] {label} is a registered test and refuses to run: {why}.\n"
                      f"  Commit (or stash) the changes first, so the result can be traced to code.\n"
-                     f"  For a throwaway run: FLYCNS_ALLOW_DIRTY=1 (stamped into the report).")
+                     f"  For a throwaway run, in PowerShell: $env:FLYCNS_ALLOW_DIRTY=1 (stamped into the report).")
 
 
 # -------------------------------------------------------------------------------------- settings
+def _is_default(key, value):
+    d = DEFAULTS.get(key)
+    if d is None:
+        return False
+    try:
+        return float(value) == float(d)
+    except ValueError:
+        return value.strip().lower() == d
+
+
 def overrides():
-    return {k: v for k, v in sorted(os.environ.items()) if k.startswith("FLYCNS_")}
+    """FLYCNS_* settings that differ from the declared defaults (empty values are unset)."""
+    return {k: v for k, v in sorted(os.environ.items())
+            if k.startswith("FLYCNS_") and v.strip() != "" and not _is_default(k, v)}
 
 
 _ANNOUNCED = False
@@ -130,10 +151,19 @@ def table_fingerprint(path):
     cols = sorted(map(str, df.columns))
     df.columns = list(map(str, df.columns))
     df = df[cols]
+    # Version-independent: text columns are labelled "text" and missing text is None, because pandas 2
+    # reads them as object (missing None) and pandas 3 as str (missing NaN), which would hash apart.
+    kinds = []
+    for c in cols:
+        if pd.api.types.is_string_dtype(df[c]) or df[c].dtype == object:
+            df[c] = df[c].astype(object).where(df[c].notna(), None)
+            kinds.append([c, "text"])
+        else:
+            kinds.append([c, str(df[c].dtype)])
     rows = np.array(pd.util.hash_pandas_object(df, index=False).to_numpy(dtype="uint64"), copy=True)
     rows.sort()
     h = hashlib.sha256()
-    h.update(json.dumps([[c, str(df[c].dtype)] for c in cols]).encode())
+    h.update(json.dumps(kinds).encode())
     h.update(rows.tobytes())
     sums = {}
     for c in cols:
@@ -149,7 +179,8 @@ def table_fingerprint(path):
 
 def _cached_fingerprint(path, cache):
     st = path.stat()
-    key = f"{path.name}:{st.st_size}:{st.st_mtime_ns}:{FINGERPRINT_ALGO}"
+    import pandas as pd
+    key = f"{path.name}:{st.st_size}:{st.st_mtime_ns}:{FINGERPRINT_ALGO}:pandas{pd.__version__.split('.')[0]}"
     if key not in cache:
         cache[key] = table_fingerprint(path)
     return cache[key]
@@ -166,7 +197,7 @@ def fingerprints(data_dir="data", names=None):
     except Exception:
         cache = {}
     out = {p.name: _cached_fingerprint(p, cache) for p in paths}
-    live = {k for k in cache if any(k.startswith(p.name + ":") for p in paths)}
+    live = {k for k in cache if (d / k.split(":", 1)[0]).exists()}   # keep entries for every table on disk
     try:
         cf.write_text(json.dumps({k: cache[k] for k in live}), encoding="utf-8")
     except OSError:
@@ -201,7 +232,8 @@ def verify_data(data_dir="data", names=None):
     problems = []
     for n in check:
         if n not in have:
-            problems.append(f"{n}: listed in manifest but missing")
+            if n in CORE_TABLES:      # derived tables (synapse transmitters, ROI membership) are optional
+                problems.append(f"{n}: listed in manifest but missing")
             continue
         a, b = have[n], want[n]
         if a["digest"] != b["digest"]:
@@ -226,12 +258,59 @@ def require_data(data_dir, label, names=None):
             return v
         raise SystemExit(f"[integrity] {label} refuses to run: {data_dir} differs from its manifest:\n  "
                          + "\n  ".join(v["problems"])
-                         + "\n  If the data were deliberately refetched, review and run: "
-                           f"python -m flycns.integrity write {data_dir}")
+                         + "\n  If the data were deliberately refetched, review, then rewrite the fingerprint: "
+                           f".venv\\Scripts\\python.exe -m flycns.integrity write {data_dir}")
     if v["status"] == "no-manifest" and Path(data_dir).resolve() == (ROOT / "data").resolve():
         _box([f"{label}: no {data_dir}/{MANIFEST}; the input data are not pinned.",
-              f"Record them once with: python -m flycns.integrity write {data_dir}  (then commit it)"])
+              "Run setup.cmd once: it records the fingerprint (menu 51 then commits it)."])
     return v
+
+
+# ----------------------------------------------------------------------------- canonical results
+class preserved:
+    """Context manager: snapshot result folders and files, and put them back exactly on exit, even
+    after an error or Ctrl+C. Paths that did not exist before are removed. Used wherever a perturbed
+    run writes into a canonical result folder (the robustness battery, the stricter null). If a
+    restore fails (a file held open by another program on Windows), the snapshot is kept and its
+    location printed, so nothing is lost."""
+
+    def __init__(self, *paths):
+        self.paths = [Path(p) for p in paths]
+
+    def __enter__(self):
+        import shutil
+        import tempfile
+        self.snap = Path(tempfile.mkdtemp(prefix="flycns_canonical_"))
+        self.had = {}
+        for i, p in enumerate(self.paths):
+            self.had[p] = p.exists()
+            if p.is_dir():
+                shutil.copytree(p, self.snap / str(i))
+            elif p.exists():
+                shutil.copy2(p, self.snap / str(i))
+        return self
+
+    def __exit__(self, *exc):
+        import shutil
+        failed = []
+        for i, p in enumerate(self.paths):
+            try:
+                if p.is_dir():
+                    shutil.rmtree(p)
+                elif p.exists():
+                    p.unlink()
+                if self.had[p]:
+                    src = self.snap / str(i)
+                    (shutil.copytree(src, p) if src.is_dir() else shutil.copy2(src, p))
+            except OSError as e:
+                failed.append(f"{p}: {e}")
+        if failed:
+            _box(["could not fully restore the canonical results:"] + failed
+                 + [f"the untouched copies are kept in {self.snap}"])
+        else:
+            shutil.rmtree(self.snap, ignore_errors=True)
+            print("canonical results restored", flush=True)
+        return False
 
 
 # ------------------------------------------------------------------------------------ provenance
@@ -253,6 +332,11 @@ def provenance_record():
         rec["platform"] = sys.platform
     except Exception:
         pass
+    proto = sys.modules.get("flycns.protocols")
+    if proto is not None:    # the measured loom input, whenever this run could have used it
+        lf = Path(proto.LOOM_FILE)
+        rec["loom_input"] = dict(source=proto.TUNING_SOURCE, state=proto.LOOM_STATE,
+                                 sha256=hashlib.sha256(lf.read_bytes()).hexdigest()[:16] if lf.exists() else None)
     if LOADED:
         rec["graph"] = {k: v for k, v in LOADED.items()}
         dd = LOADED.get("data_dir")
@@ -275,7 +359,7 @@ def _cli():
         print(f"wrote {data_dir}/{MANIFEST}:")
         for n, f in man["files"].items():
             print(f"  {n:<28} {f['rows']:>12,} rows  {f['digest'][:16]}")
-        print(f"commit it:  git add {data_dir}/{MANIFEST} && git commit -m 'pin input data'")
+        print(f"commit it:  git add {data_dir}/{MANIFEST}   then   git commit -m \"pin input data\"")
     elif cmd == "verify":
         v = verify_data(data_dir)
         print(f"{data_dir}: {v['status']}")

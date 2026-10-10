@@ -79,9 +79,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from brian2 import SpikeGeneratorGroup, Synapses, ms, mV, Hz, second
+from brian2 import SpikeGeneratorGroup, Synapses, ms, mV
 from flycns import load_graph, CNSModel, LIFParams
-from flycns.bench import provenance
+from flycns.bench import provenance, spike_source
 from flycns.graph import rewire_null, SIGN_MAP
 
 N_CYCLES = int(sys.argv[1]) if len(sys.argv) > 1 else 400
@@ -150,7 +150,7 @@ def run_arm(label, edge_df, load, closed=False, dn_hz=0.0, seed=0, quiet=False):
     pre_ms, dur_ms = 200.0, N_CYCLES * period
     if not closed:
         ids, times = phase_locked_spikes(n_aff, N_CYCLES, load, rng, t0_ms=pre_ms)
-        gen = SpikeGeneratorGroup(n_aff, ids, times * ms)
+        gen = spike_source(n_aff, ids, times)
         S = Synapses(gen, G, on_pre="v_post += kick", namespace=dict(kick=8.0 * mV))
         S.connect(i=np.arange(n_aff), j=np.array(lif_idx))
         m.net.add(gen, S)

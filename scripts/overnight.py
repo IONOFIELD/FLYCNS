@@ -10,24 +10,23 @@ perturbed run can never be left standing as the headline result.
 
     .venv\\Scripts\\python.exe scripts\\overnight.py         (menu option 7)
 """
-import json
 import os
 import shutil
 import subprocess
 import sys
-import tempfile
 import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+from flycns.integrity import preserved  # noqa: E402
 from flycns.windows import console, keep_awake  # noqa: E402
 
 console()
 keep_awake()
 os.chdir(ROOT)
 PY = sys.executable
-BENCHES = ["gf_escape", "auditory", "feeding"]
+BENCHES = {"gf_escape": "40", "auditory": "40", "feeding": "6"}   # trials, as in the canonical suite (run_all.py)
 RES = Path("results")
 
 # tag, seed, random sign-flip fraction, weight scale, extra settings
@@ -42,9 +41,10 @@ RUNS = [
     ("wscale040", 0, 0, 0.40, {}),
     # targeted perturbation: only the neurons the transmitter classifier is unsure about
     ("signflip_targeted", 0, 0, 0.3, {"FLYCNS_SIGNFLIP_TARGETED": "1"}),
-    # connection-size threshold (default 5 synapses): looser and stricter inclusion of connections
-    ("minweight3", 0, 0, 0.3, {"FLYCNS_MIN_WEIGHT": "3"}),
+    # connection-size threshold: stricter than the default 5 synapses (the fetch keeps nothing below 5,
+    # so a looser threshold is impossible and graph.py refuses one)
     ("minweight10", 0, 0, 0.3, {"FLYCNS_MIN_WEIGHT": "10"}),
+    ("minweight20", 0, 0, 0.3, {"FLYCNS_MIN_WEIGHT": "20"}),
     # stricter null: shuffle targets only within the same superclass (flycns/graph.py rewire_null)
     ("null_superclass", 0, 0, 0.3, {"FLYCNS_NULL": "superclass"}),
 ]
@@ -65,13 +65,7 @@ def main():
     for args in (["fit/audit_stimuli.py", "data"], ["-m", "flycns.integrity", "verify", "data"]):
         if subprocess.run([PY, *args]).returncode != 0:
             sys.exit("pre-flight check failed (see above); battery not started")
-    snap = Path(tempfile.mkdtemp(prefix="flycns_canonical_"))
-    for b in BENCHES:
-        if (RES / b).exists():
-            shutil.copytree(RES / b, snap / b)
-    if (RES / "SUITE.md").exists():
-        shutil.copy2(RES / "SUITE.md", snap / "SUITE.md")
-    try:
+    with preserved(*(RES / b for b in BENCHES), RES / "SUITE.md"):   # canonical results come back exactly
         for tag, seed, flip, wscale, extra in RUNS:
             env = {k: v for k, v in os.environ.items() if not k.startswith("FLYCNS_")}
             env.update(FLYCNS_SEED=str(seed), FLYCNS_SIGNFLIP=str(flip), FLYCNS_WSCALE=str(wscale),
@@ -80,31 +74,29 @@ def main():
                   + "".join(f", {k[7:].lower()} {v}" for k, v in extra.items()) + ")", flush=True)
             out = RES / "overnight" / tag
             out.mkdir(parents=True, exist_ok=True)
-            for b in BENCHES:
+            failed = []
+            for b, trials in BENCHES.items():
+                (RES / b / "report.json").unlink(missing_ok=True)   # never file an earlier run's report here
                 with open(RES / "overnight" / f"{tag}_{b}.log", "w", encoding="utf-8") as log:
-                    code = subprocess.run([PY, f"benchmarks/{b}.py", "40", "data"], env=env,
+                    code = subprocess.run([PY, f"benchmarks/{b}.py", trials, "data"], env=env,
                                           stdout=log, stderr=subprocess.STDOUT).returncode
-                if code != 0:
-                    print(f"  {b} errored (see results\\overnight\\{tag}_{b}.log)")
-                if (RES / b / "report.json").exists():
+                if code == 0 and (RES / b / "report.json").exists():
                     shutil.copy2(RES / b / "report.json", out / f"{b}_report.json")
-            subprocess.run([PY, "benchmarks/summarize.py"], env=env, capture_output=True)
-            shutil.copy2(RES / "SUITE.md", out / "SUITE.md")
-            line = checks_line(out / "SUITE.md")
-            print(f"  {line}")
-            git("add", "-A", "results/overnight")
-            if git("commit", "-qm", f"overnight: {tag} {line}").returncode == 0:
-                git("push", "-q")
+                else:
+                    failed.append(b)
+                    print(f"  {b} errored (see results\\overnight\\{tag}_{b}.log)")
+            if subprocess.run([PY, "benchmarks/summarize.py"], env=env, capture_output=True).returncode != 0:
+                failed.append("summary")
+            else:
+                shutil.copy2(RES / "SUITE.md", out / "SUITE.md")
+            line = checks_line(out / "SUITE.md") if (out / "SUITE.md").exists() else "no summary"
+            print(f"  {line}" + (f"  (incomplete: {', '.join(failed)})" if failed else ""))
+            git("add", "-A", "--", "results/overnight")
+            if git("commit", "-qm", f"overnight: {tag} {line}" + (" INCOMPLETE" if failed else ""),
+                   "--", "results/overnight").returncode == 0:
+                if git("push", "-q").returncode != 0:
+                    print("  (push failed; the commit is kept locally, run git push later)")
             print(f"=== {time.strftime('%H:%M')} done  {tag}", flush=True)
-    finally:
-        for b in BENCHES:
-            if (snap / b).exists():
-                shutil.rmtree(RES / b, ignore_errors=True)
-                shutil.copytree(snap / b, RES / b)
-        if (snap / "SUITE.md").exists():
-            shutil.copy2(snap / "SUITE.md", RES / "SUITE.md")
-        shutil.rmtree(snap, ignore_errors=True)
-        print("canonical results restored")
     print("\nSUMMARY")
     for d in sorted((RES / "overnight").iterdir()):
         if (d / "SUITE.md").exists():

@@ -8,7 +8,6 @@ Outputs:   data/neurons.parquet   one row per neuron
 Requires:  a neuPrint token (setup.cmd asks for it once and saves it)
 """
 
-import os
 import time
 from pathlib import Path
 

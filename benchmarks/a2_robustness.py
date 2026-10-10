@@ -90,7 +90,7 @@ for g in GAINS:
     print(f"gain {g:<4} | alone {k1:>3}/{n} = {p1:.3f} | with sound {k2:>3}/{n} = {p2:.3f} | difference {d:+.3f} "
           f"(95% CI {lo:+.3f} to {hi:+.3f}) | {'near-threshold' if row['near_threshold'] else 'above threshold'}"
           f"{'  FACILITATION' if row['facilitation'] else ''} | {round(time.time() - t0)}s", flush=True)
-    (OUT / "report.json").write_text(json.dumps(dict(criteria=CRITERIA, rows=rows), indent=2, default=float), encoding="utf-8")
+    (OUT / "progress.json").write_text(json.dumps(dict(criteria=CRITERIA, rows=rows), indent=2, default=float), encoding="utf-8")
 
 qual = [r for r in rows if r["near_threshold"]]
 ok = len(qual) >= 3 and all(r["facilitation"] for r in qual)

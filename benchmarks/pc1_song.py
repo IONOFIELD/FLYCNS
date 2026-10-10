@@ -47,7 +47,7 @@ from scipy.sparse import csr_matrix
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, CNSModel, LIFParams
 from flycns.bench import pulse_protocol, readout_rates, provenance
-from flycns.graph import SIGN_MAP, rewire_null
+from flycns.graph import rewire_null
 
 N_TRIALS = int(sys.argv[1]) if len(sys.argv) > 1 else 10
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
@@ -105,7 +105,7 @@ print(f"criteria registered at commit {commit or '?'}{' (SCRIPT UNCOMMITTED: com
 
 # ---- static: signed input-normalised path products, the analysis the paper found insufficient
 e = edges.copy()
-e["sgn"] = e["nt"].str.lower().map(SIGN_MAP).fillna(0.0)
+e["sgn"] = e["sign"]   # the signs the dynamic model uses, including any FLYCNS_SIGNFLIP perturbation
 ids = pd.Index(sorted(set(e.pre) | set(e.post)))
 pos = pd.Series(np.arange(len(ids)), index=ids)
 W = csr_matrix((e.weight.values * e.sgn.values, (pos[e.pre].values, pos[e.post].values)), shape=(len(ids), len(ids)))
@@ -148,7 +148,7 @@ for g in GROUPS:
         print(f"  {g:<10} {hz:>5.0f} Hz | " + "  ".join(f"{r} {d[r]:5.2f}" for r in READOUTS)
               + f" | CNS {d['cns_hz']:.4f} Hz | {round(time.time() - t0)}s")
 null = drive("pC1_14a", rewire_null(edges, seed=0), 100.0)
-print(f"  null pC1_14a 100 Hz | " + "  ".join(f"{r} {null[r]:5.2f}" for r in READOUTS))
+print("  null pC1_14a 100 Hz | " + "  ".join(f"{r} {null[r]:5.2f}" for r in READOUTS))
 
 d14 = dynamic["pC1_14a"]["100Hz"]; d1314 = dynamic["pC1_13_14"]["100Hz"]; d1516 = dynamic["pC1_15_16"]["100Hz"]
 report = dict(benchmark="pc1_song", criteria=CRITERIA, pc1_types_present=pc1_present, static=static,

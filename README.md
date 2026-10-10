@@ -23,7 +23,7 @@ and checked against recordings from real flies.
 ## What it achieves
 
 - **Escape reflex.** A looming shadow fires the giant escape neuron, which drives the jump muscle one spike for one spike, 0.9 ms later, as in the fly. This circuit was used to set the model's few tuned values, so it shows the model is set up correctly. It is not a prediction.
-- **Sound and sight combined.** Without being tuned for it, the model predicts that a sound makes the escape neuron far more likely to fire for a faint visual threat: 4% becomes 45%. That matches a 2012 recording, and the test was registered in advance.
+- **Sound and sight combined.** Without being tuned for it, the model predicts that a sound makes the escape neuron far more likely to fire for a faint visual threat: 4% becomes 45%. That matches a 2012 recording, and the test was registered in advance. *It is being re-measured: an October 2026 audit found and fixed a model difference between the two test arms that may account for part of the effect.*
 - **Courtship song.** The model reproduces which male-only neurons drive pulse song but not sine song, as experiments showed. It also predicts a new pathway for sine song that a lab could test.
 - **Taste.** It shows which taste neurons push feeding up and which push it down, once each connection's sign (excite or inhibit) is counted.
 - **Traceable.** Every result records the exact code, data and settings that produced it. Failures and corrections stay on the record.
@@ -147,7 +147,7 @@ The house rules are in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 | circuit | outcome |
 |---|---|
 | **Visual escape** (loom to giant fiber to jump muscle) | The **calibration circuit**. The loom's rate scale and the giant fiber's adaptation were set to give 1 to 2 spikes per response, and the relay is 1:1 by construction. On that calibration, the giant fiber fires with probability 0.68, and each spike drives the jump motor neuron one-to-one 0.9 ms later. The independent part is the latency (37 ms, inside 10 to 60 ms). The controls are no response without the electrical synapse and none on shuffled wiring. Holds when uncertain transmitter calls are inverted and across nerve-cord parameters. |
-| **Hearing to the giant fiber** | Sound alone stays subthreshold through the documented electrical synapse, which is calibrated. **Independent and pre-registered:** sound plus a near-threshold loom raises the giant fiber's response probability from 4% to 45%. This is the facilitation Tootoonian et al. 2012 recorded (120 trials per arm), and it holds at every near-threshold working point tested (pre-registered sweep). |
+| **Hearing to the giant fiber** | *Re-measurement pending after the October 2026 audit (RESULTS.md).* Sound alone stays subthreshold through the documented electrical synapse, which is calibrated. **Independent and pre-registered:** sound plus a near-threshold loom raises the giant fiber's response probability from 4% to 45%. This is the facilitation Tootoonian et al. 2012 recorded (120 trials per arm), and it holds at every near-threshold working point tested (pre-registered sweep). |
 | **Feeding** (taste to proboscis) | Does not reproduce feeding. The reason is measured, and the result holds when taste neurons are split by modality. |
 | **Courtship song** (male-specific pC1 neurons to song command neurons) | Pre-registered, 3 of 3 independent checks pass, and the null control passes. Activating pC1_14a drives the pulse-song neuron and not the sine-song neuron, as optogenetics showed; shuffled wiring drives nothing. A separate pathway of male-specific pIP5 neurons drives the sine neuron and not the pulse neuron, which is a new prediction. Signed paths also predict the song suppression the model cannot simulate. |
 | **Taste to feeding motor neurons** (signed map) | Appetitive taste neurons push proboscis extension up and bitter pushes it down (pre-registered pass). Of the 15 strongest unsigned influences on the proboscis motor neuron, 8 reverse to inhibitory once synaptic sign is included. Sugar neurons favour the opposite side's proboscis motor neuron, as Shiu et al. 2024 predicted, and this is visible only with sign. |
@@ -168,7 +168,7 @@ and every retraction are in [`RESULTS.md`](RESULTS.md).
   - random seeds;
   - random and targeted transmitter-sign inversion. The targeted inversion flips every neuron whose own synapses disagree with its transmitter label, and no scored result depends on those calls;
   - the connection-strength scale;
-  - the connection-size threshold (3, 5 and 10 synapses);
+  - the connection-size threshold (5, 10 and 20 synapses; the data contain nothing below 5);
   - a stricter null that shuffles wiring only within cell class.
 - **Measured input.** The visual stimulus uses amplitudes extracted from 1,510 recorded trials across 21 flies (Turner et al. 2022). Only the trials in which the fly was not walking are used, to match a simulation with no locomotion.
 

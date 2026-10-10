@@ -23,9 +23,11 @@ from flycns.protocols import LOOM_TUNING
 from flycns import graph as G
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 40
-if N < 40:
-    print(f"WARNING: {N} trials leaves ~{N//4} trials in the strongest-gain quartile, which is the "
-          f"binding constraint (C2). Use >= 40.")
+if N < 40 and "testdata" not in " ".join(sys.argv):
+    # the stated rule needs >= 40 (a 20-trial fit once gave a wrong 15 mV, see graph.py); a fit below
+    # that cannot be told apart from a valid one in best.json, so it is refused rather than warned about
+    raise SystemExit(f"{N} trials leaves ~{N//4} trials in the strongest-gain quartile, the binding "
+                     f"constraint (C2). The fit rule requires at least 40.")
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
 OUT = Path("results/fit_gf_adapt"); OUT.mkdir(parents=True, exist_ok=True)
 GRID = [0, 5, 10, 15, 20, 30, 45, 60]
@@ -66,5 +68,5 @@ for b in GRID:
 df = pd.DataFrame(rows); ok = df[df.ok]
 best = int(ok.b_mV.min()) if len(ok) else None
 print(f"\nsmallest increment satisfying C1-C4: {best} mV" if best is not None else "\nno candidate satisfies all constraints")
-(OUT / "best.json").write_text(json.dumps(dict(b_adapt_mV=best, rule="smallest b with C1-C4",
+(OUT / "best.json").write_text(json.dumps(dict(b_adapt_mV=best, n_trials=N, rule="smallest b with C1-C4",
                                                constraints="von Reyn 2014: 1-2 spikes/loom, probabilistic; Tanouye & Wyman 1980 relay"), indent=2), encoding="utf-8")

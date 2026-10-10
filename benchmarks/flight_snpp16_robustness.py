@@ -32,9 +32,9 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from brian2 import SpikeGeneratorGroup, Synapses, ms, mV
+from brian2 import Synapses, mV
 from flycns import load_graph, CNSModel, LIFParams
-from flycns.bench import provenance
+from flycns.bench import provenance, spike_source
 from flycns.graph import SIGN_MAP
 
 N_CYCLES = int(sys.argv[1]) if len(sys.argv) > 1 else 400
@@ -100,7 +100,8 @@ first = edges[edges.pre.isin(aff)].groupby("post").weight.sum()
 relays = first[first >= 20].index
 onto = edges[edges.pre.isin(relays) & edges.post.isin(dlm)]
 exc_relays = set(onto[onto["nt"].str.lower().map(SIGN_MAP).fillna(0) > 0].pre)
-RELAY_SC = sorted({sc.get(b, "") for b in exc_relays} - {""})
+# the driven afferents are excluded: varying their own threshold would change the stimulus, not the relays
+RELAY_SC = sorted({sc.get(b, "") for b in exc_relays} - {""} - {s for s in set(sc) if "sensory" in s})
 print(f"{TARGET} {len(target)} cells | relay superclasses for R2: {RELAY_SC}")
 
 
@@ -115,7 +116,7 @@ def drive(src, edge_df, seed, params=None):
     times = (cyc[None, :] + phase[:, None] + rng.normal(0, JITTER_MS, (len(idx), N_CYCLES))).ravel() + pre_ms
     ids = np.repeat(np.arange(len(idx)), N_CYCLES)
     keep = times >= 0
-    gen = SpikeGeneratorGroup(len(idx), ids[keep], times[keep] * ms)
+    gen = spike_source(len(idx), ids[keep], times[keep])
     S = Synapses(gen, m.G, on_pre="v_post += kick", namespace=dict(kick=8.0 * mV))
     S.connect(i=np.arange(len(idx)), j=np.array(idx))
     m.net.add(gen, S)
@@ -129,12 +130,12 @@ def drive(src, edge_df, seed, params=None):
     return dict(dvmn=rate(dvm), dlmn=rate(dlm), steer=rate(steer), b1=rate(b1))
 
 
-def at_k(k, seed_base, edge_df=None, params=None):
+def at_k(k, seed_base, edge_df=None, params=None, phase_base=0):
     edge_df = edges if edge_df is None else edge_df
     out = []
     for d in range(N_DRAWS):
         rng = np.random.default_rng(seed_base + 17 * k + d)
-        out.append(drive(list(rng.choice(target, size=k, replace=False)), edge_df, seed=d, params=params))
+        out.append(drive(list(rng.choice(target, size=k, replace=False)), edge_df, seed=phase_base + d, params=params))
     agg = {f: [r[f] for r in out] for f in out[0]}
     return dict(k=k, **{f"{f}_mean": float(np.mean(v)) for f, v in agg.items()},
                 **{f"{f}_max": float(np.max(v)) for f, v in agg.items() if f != "dvmn"},
@@ -176,7 +177,8 @@ report["checks"]["R2_selectivity_holds_across_cord_params"] = bool(all(selective
 print("\nR3  fresh cell-identity and phase draws")
 r3 = []
 for k in range(1, len(target) + 1):
-    r = at_k(k, FRESH_SEED_BASE); line(f"  k={k:>2}", r); r3.append(r)
+    # fresh cells AND fresh phase/jitter draws, as registered (before 2026-10-10 the phases reused seeds 0-4)
+    r = at_k(k, FRESH_SEED_BASE, phase_base=FRESH_SEED_BASE); line(f"  k={k:>2}", r); r3.append(r)
     (OUT / "report.json").write_text(json.dumps(report | dict(R3_partial=r3), indent=2, default=float), encoding="utf-8")
 in_band = [r for r in r3 if BAND[0] <= r["dvmn_mean"] <= BAND[1]]
 kstar_fresh = in_band[0]["k"] if in_band else None

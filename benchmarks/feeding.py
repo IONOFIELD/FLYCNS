@@ -45,7 +45,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, rewire_null, CNSModel, LIFParams
 from flycns.graph import (FEEDING_SECOND_ORDER, FEEDING_MOTOR, SUGAR_GRN_PATTERNS,
-                          BITTER_GRN_PATTERNS, TASTE_SENSORY_FALLBACK)
+                          BITTER_GRN_PATTERNS)
 from flycns.bench import find_types, present_types, pulse_protocol, readout_rates
 from flycns.bench import provenance
 from flycns.graph import infer_side, gustatory_afferents, GUSTATORY_MN9_DRIVING
@@ -69,7 +69,8 @@ so_have, so_miss = present_types(neurons, FEEDING_SECOND_ORDER)
 _mn9 = meta.index[meta["type"] == "MN9"]
 _exc = edges[edges.post.isin(_mn9) & (edges.sign > 0)].assign(t=lambda d: d.pre.map(meta["type"]))
 mn9_inputs = _exc.groupby("t").weight.sum().sort_values(ascending=False)
-if not so_have:
+F4_FALLBACK = not so_have
+if F4_FALLBACK:
     so_have = list(mn9_inputs.head(4).index)
     print("second-order (Shiu names) absent; using MN9's top EXCITATORY input types:", so_have)
 # sensory afferents feeding those excitatory inputs (superclass contains 'sensory')
@@ -130,14 +131,21 @@ for hz in [10, 25, 50, 100, 200]:
         A.raster(m, on, ["MN9"], window_ms=250, bin_ms=8, max_trials=2); A.region_bar(m, on)
     print(f"F2 sugar {hz:>3} Hz -> MN9 {v:.2f} spikes/cell, CNS {m.population_rate_hz():.4f} Hz")
     if hz == 50:
-        from flycns.graph import type_region
-        spf = m.spike_frame(); scc = spf["superclass"].fillna("")
-        in_sez = (spf["type"].map(type_region) == "SEZ") | scc.isin(["cb_motor", "cb_sensory", "cb_sensory_tbc"])
-        dur = m.t_ms / 1000.0
-        report["arms"]["F2b_nonSEZ_rate_hz"] = float((~in_sez).sum() / len(m.lif_ids) / dur)
+        from flycns.graph import region_of
+        spf = m.spike_frame()
+        # "during taste drive": spikes inside the 200 ms pulses only, divided by the time the drive was on
+        # (before 2026-10-10 the whole run including gaps was used, diluting F2b about 2.5x, and F2c
+        # divided by 250 ms per pulse); SEZ membership is the anatomical definition the model uses
+        in_win = np.zeros(len(spf), dtype=bool)
+        for t_on in on:
+            in_win |= ((spf.t_ms >= t_on) & (spf.t_ms < t_on + 200)).to_numpy()
+        spf = spf[in_win]; scc = spf["superclass"].fillna("")
+        drive_s = len(on) * 0.2
+        sez_of, _ = region_of(neurons, DATA)
+        in_sez = (spf["bodyId"].map(sez_of) == "SEZ") | scc.isin(["cb_motor", "cb_sensory", "cb_sensory_tbc"])
+        report["arms"]["F2b_nonSEZ_rate_hz"] = float((~in_sez).sum() / len(m.lif_ids) / drive_s)
         mot = spf[scc == "cb_motor"]
-        stim_s = N_TRIALS * 0.25
-        per_cell = mot.groupby("bodyId").size() / stim_s
+        per_cell = mot.groupby("bodyId").size() / drive_s
         report["arms"]["F2c_motor_mean_hz"] = float(per_cell.mean()) if len(per_cell) else 0.0
         n_types = m.meta.loc[m.lif_ids][m.meta.loc[m.lif_ids, "superclass"] == "cb_motor"].type.nunique()
         report["arms"]["motor_types_active"] = {t: int(v) for t, v in mot.groupby("type").size().sort_values(ascending=False).head(12).items()}
@@ -192,7 +200,9 @@ struct_L, struct_R = float(_struct.get("L", 0)), float(_struct.get("R", 0))
 report["arms"]["F1_left_sugar"]["structural_2hop_L"] = struct_L
 report["arms"]["F1_left_sugar"]["structural_2hop_R"] = struct_R
 func_sign = np.sign(contra - ipsi); struct_sign = np.sign(struct_R - struct_L)
-report["checks"]["F1_laterality_matches_wiring"] = (bool(func_sign == struct_sign) if (ipsi + contra) > 0 else None)
+# a tie on either side carries no direction, so it is not scored as a match
+report["checks"]["F1_laterality_matches_wiring"] = (bool(func_sign == struct_sign)
+                                                    if (ipsi + contra) > 0 and func_sign != 0 and struct_sign != 0 else None)
 # Shiu 2024 predicted contralateral > ipsilateral MN9 for LABELLAR SUGAR GRNs. This benchmark's
 # drive is pharyngeal/taste-peg/LB3 dominated, so the comparison is not applicable HERE; it is
 # tested with the identified sugar types in benchmarks/sugar_laterality.py (registered; passes).
@@ -226,14 +236,20 @@ for typ in [t for t in (["Fdg", "Bract", "Roundup", "Zorro"] if "Fdg" in so_have
     suff[typ] = float(mn9(m, on).spikes_per_cell.mean())
     print(f"F4 {typ} 50 Hz -> MN9 {suff[typ]:.2f}")
 report["arms"]["F4_sufficiency"] = suff
-report["checks"]["F4_second_order_sufficient"] = (bool(suff) and all(v > 0 for v in suff.values())) if suff else None
+# Without Shiu's cell names the types tried are MN9's strongest direct excitatory inputs, which drive it
+# almost by construction: the question cannot be asked, so it is reported, not scored.
+report["arms"]["F4_mode"] = "fallback: MN9's top direct excitatory inputs (not scored)" if F4_FALLBACK else "Shiu names"
+report["checks"]["F4_second_order_sufficient"] = (None if F4_FALLBACK or not suff
+                                                  else bool(all(v > 0 for v in suff.values())))
 
 # ---------------------------------------------------------------- F5 null
 m = build(sugar, rewire_null(edges))
 on = pulse_protocol(m, {t: 50 for t in sugar}, n_trials=N_TRIALS)
 nullv = float(mn9(m, on).spikes_per_cell.mean())
-report["arms"]["F5_null"] = dict(MN9=nullv)
-report["checks"]["F5_null_silent"] = bool(nullv < 0.1)
+real50 = float(curve.loc[curve.sugar_hz == 50, "MN9_spikes_per_cell"].iloc[0])
+report["arms"]["F5_null"] = dict(MN9=nullv, MN9_real_50Hz=real50)
+# a null is only informative if the real network responds; silent vs silent is not scored
+report["checks"]["F5_null_silent"] = bool(nullv < 0.1) if real50 >= 0.5 else None
 print(f"F5 rewired null -> MN9 {nullv:.2f}")
 
 report["pass"] = all(v for v in report["checks"].values() if v is not None)

@@ -33,7 +33,7 @@ CHECK_ROLES = {
         "A2_jo_effect_on_near_threshold_loom_REPORTED": (IND, "reported here; scored in a2_registered"),
         "A1_jo_alone_mostly_subthreshold": (CAL, "JON->GF coupling calibrated to a 3 mV subthreshold compound potential (value untraced)"),
         "A3_declared_pairs_carry_jo_drive": (CTL, "ablation of the declared mixed synapse"),
-        "A4_null_silent": (CTL, "degree-preserving rewired null"),
+        "A4_null_silent": (CTL, "rewired null; note it removes the declared pathway as A3 does, so it cannot fail where A3 passes"),
         "A5_cns_quiet": (CAL, "w_scale was chosen partly on population rate under auditory drive"),
     },
     "a2_registered": {
@@ -49,8 +49,8 @@ CHECK_ROLES = {
         "F3_bitter_suppresses": (IND, "not a fit target; scored only when a bitter GRN type resolves"),
         "F2b_extra_SEZ_quiet": (CAL, "w_scale was chosen partly on population rate"),
         "F2c_motor_rate_physiological": (CON, "cb_motor adaptation (10 mV) entered to keep sustained motor rates under 100 Hz"),
-        "F4_second_order_sufficient": (IND, "not a fit target"),
-        "F5_null_silent": (CTL, "degree-preserving rewired null"),
+        "F4_second_order_sufficient": (IND, "scored only with Shiu's cell names; with the fallback (MN9's own strongest inputs) it is reported, not scored"),
+        "F5_null_silent": (CTL, "rewired null; scored only when the real network responds (MN9 >= 0.5 at 50 Hz)"),
     },
     "feeding_by_modality": {
         "F2_sugar_ratio_exceeds_bitter": (IND, "pre-registered"),

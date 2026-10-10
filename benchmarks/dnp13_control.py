@@ -39,7 +39,6 @@ from scipy.sparse import csr_matrix
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, CNSModel, LIFParams
 from flycns.bench import pulse_protocol, readout_rates, provenance
-from flycns.graph import SIGN_MAP
 
 N_TRIALS = int(sys.argv[1]) if len(sys.argv) > 1 else 10
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
@@ -57,7 +56,7 @@ if missing:
     raise SystemExit(f"ABORT before registration: missing {missing}. Near names: {near}")
 
 e = edges.copy()
-e["sgn"] = e["nt"].str.lower().map(SIGN_MAP).fillna(0.0)
+e["sgn"] = e["sign"]   # the signs the dynamic model uses, including any FLYCNS_SIGNFLIP perturbation
 dnp13 = meta.index[meta["type"] == "DNp13"]
 inp = e[e.post.isin(dnp13)].assign(ty=lambda d: d.pre.map(meta["type"]))
 exc_by_type = inp[inp.sgn > 0].groupby("ty").weight.sum().drop(labels=["DNp13"], errors="ignore").sort_values(ascending=False)

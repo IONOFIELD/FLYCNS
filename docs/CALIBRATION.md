@@ -35,6 +35,21 @@ of the model. CI fails if a scored check has no role.
 | SEZ regional gain | `flycns/graph.py` | Fitted to 2.0 under an earlier region definition, then **disabled (1.0)** on 2026-09-08 | none |
 | peptide modulation, tonic baseline | `flycns/model.py` | **Off** in the declared parameter set | none |
 
+**Loom input, corrected 10 October 2026.** The documentation said the loom stimulus used the
+stationary-trial amplitudes. In fact the committed data file had no per-state split, so the code
+silently used all trials (LC4 0.595 instead of 0.52, sigma 0.369 instead of 0.357). The file now
+carries the split and a missing state is an error. Every value chosen on loom-driven readouts must
+therefore be re-checked under the stationary input now in use, before any loom result is quoted
+again:
+- PEAK_HZ;
+- GF adaptation (`benchmarks/fit_gf_adapt.py`, menu 8, at least 40 trials);
+- the A2 working point.
+
+**JON→GF calibration under load.** The spikelet now includes the factor `(1 + 0.2)` for the
+gap-junction load the afferents put on the giant fiber (docs/MODEL_SPEC.md §4). The 3 mV target is
+unchanged and is now met in every configuration. Before, it was met only when the afferents were
+stimulus sources.
+
 Values that are **measured, not chosen**:
 - **Single-neuron parameters:** Shiu et al. 2024.
 - **Loom tuning amplitudes and trial-gain sigma:** extracted from Turner et al. 2022 imaging, stationary trials.

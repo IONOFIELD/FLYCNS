@@ -42,11 +42,28 @@ def py(*args):
     return subprocess.run([PY, *args]).returncode
 
 
+def commit(message, *paths):
+    """Commit the given paths; True if a commit was made. Nothing staged is not an error; a refused
+    commit is (git needs user.name and user.email, which a fresh Git for Windows does not have)."""
+    git("add", "-A", "--", *paths, quiet=True)
+    if git("diff", "--cached", "--quiet", "--", *paths, quiet=True).returncode == 0:
+        return False
+    r = git("commit", "-qm", message, "--", *paths)
+    if r.returncode != 0:
+        stop("git refused the commit (see its message above).")
+    return True
+
+
 def main():
     if not os.environ.get(UPDATED):
         print("[1/5] update code")
         if git("rev-parse", "--is-inside-work-tree", quiet=True).returncode != 0:
             stop("this folder is not a git checkout; clone it with git (see README) so results can be traced.")
+        # checked before 1.5 hours of simulation, not after: git cannot commit without an identity
+        if not (git("config", "user.name", quiet=True).stdout.strip() and git("config", "user.email", quiet=True).stdout.strip()):
+            stop('git does not know who you are yet. Run these two lines once, then choose 51 again:\n'
+                 '  git config --global user.name "Your Name"\n'
+                 '  git config --global user.email "you@example.com"')
         # result files left by an interrupted run would block the pull; they are regenerated below, so
         # set them aside (recoverable) rather than discard them. Code changes are never touched.
         if git("status", "--porcelain", "--untracked-files=no", "--", "results", quiet=True).stdout.strip():
@@ -54,7 +71,11 @@ def main():
             print("  set aside uncommitted result files from an earlier run (recover: git stash list, git stash pop)")
         # --rebase: a data-pin commit from an earlier interrupted run is replayed on top of the latest code
         if git("pull", "--rebase", "-q").returncode != 0:
-            stop("git pull failed (uncommitted code changes, or a conflict).")
+            gitdir = Path(git("rev-parse", "--git-dir", quiet=True).stdout.strip())
+            if (gitdir / "rebase-merge").exists() or (gitdir / "rebase-apply").exists():
+                git("rebase", "--abort", quiet=True)      # never leave the folder half-rebased
+                stop("the update conflicts with a local commit; the folder is back as it was. Send Claude this message.")
+            stop("git pull failed (uncommitted code changes, or no connection).")
         # restart from the updated copy of this script, so the newest steps run
         sys.exit(subprocess.run([PY, __file__, *sys.argv[1:]], env={**os.environ, UPDATED: "1"}).returncode)
 
@@ -65,8 +86,7 @@ def main():
 
     print("[2/5] pin the input data")
     if git("ls-files", "--error-unmatch", "data/MANIFEST.json", quiet=True).returncode != 0:
-        git("add", "data/MANIFEST.json")
-        git("commit", "-qm", "pin input data: data/MANIFEST.json (male-cns:v1.0)")
+        commit("pin input data: data/MANIFEST.json (male-cns:v1.0)", "data/MANIFEST.json")
         print("  committed data/MANIFEST.json")
     else:
         print("  already pinned; setup verified the data against it")
@@ -85,17 +105,20 @@ def main():
         stop("the stricter null did not finish.")
 
     print("[5/5] commit and push")
-    subprocess.run([PY, "benchmarks/summarize.py"], capture_output=True)
-    git("add", "-A", "results", quiet=True)
-    if git("commit", "-qm", "canonical rerun of the core suite and the registered stricter null, "
-                            "under integrity stamping", quiet=True).returncode != 0:
+    if py("benchmarks/summarize.py") != 0:
+        stop("the suite summary failed.")
+    if not commit("canonical rerun of the core suite and the registered stricter null, under integrity stamping",
+                  "results"):
         print("  (no result changes to commit)")
-    if git("push", "-q").returncode != 0:
+    ahead = git("rev-list", "--count", "@{u}..HEAD", quiet=True).stdout.strip()
+    if ahead not in ("", "0") and git("push", "-q").returncode != 0:
         stop("push failed; everything is committed locally, so just run: git push")
+    if git("rev-list", "--count", "@{u}..HEAD", quiet=True).stdout.strip() not in ("", "0"):
+        stop("the results are committed but not on GitHub yet; run: git push")
     print()
     for line in (ROOT / "results/SUITE.md").read_text(encoding="utf-8").splitlines()[2:5]:
         print(line)
-    print("\ndone: results pushed to GitHub.")
+    print("\ndone: " + (f"{ahead} commit(s) pushed to GitHub." if ahead not in ("", "0") else "nothing new to push."))
 
 
 if __name__ == "__main__":

@@ -19,28 +19,31 @@ TUNING_SOURCE = "ordinal placeholder from Turner et al. 2022 Fig 3A groups"
 # Measured values, if fit/extract_turner_loom.py has been run on the Dryad data.
 import json
 from pathlib import Path
-_meas = Path("data/loom_tuning_measured.json")
-if _meas.exists():
-    _m = json.loads(_meas.read_text(encoding="utf-8"))
-    # Behavioural state: loom responses are larger when the fly walks (Turner, Krieger, Pang &
-    # Clandinin 2022, reproduced by fit/extract_turner_loom.py: every glomerulus except LC12 is
-    # relatively larger in walking trials, e.g. LC6 0.64 vs 0.40, and the trial-gain sigma is
-    # 0.44 vs 0.36). The benchmarks simulate a fly that is not walking, so the STATIONARY set is
-    # the default; FLYCNS_LOOM_STATE=walking or =all selects the others.
-    _state = os.environ.get("FLYCNS_LOOM_STATE", "stationary")
+# Behavioural state: loom responses are larger when the fly walks (Turner, Krieger, Pang & Clandinin
+# 2022, reproduced by fit/extract_turner_loom.py: every glomerulus except LC12 is relatively larger in
+# walking trials, e.g. LC6 0.64 vs 0.40, and the trial-gain sigma is 0.44 vs 0.36). The benchmarks
+# simulate a fly that is not walking, so the STATIONARY set is the default; FLYCNS_LOOM_STATE=walking
+# or =all selects the others. A requested state that is not in the file is an error, never a silent
+# fallback: before 2026-10-10 the committed file had no per-state split, so every loom result
+# silently used all trials while the documentation said stationary.
+LOOM_STATE = os.environ.get("FLYCNS_LOOM_STATE", "stationary")
+LOOM_FILE = Path(__file__).resolve().parents[1] / "data" / "loom_tuning_measured.json"
+if LOOM_FILE.exists():
+    _m = json.loads(LOOM_FILE.read_text(encoding="utf-8"))
     _byst = _m.get("amplitude_by_state", {})
-    if _state in _byst:
-        LOOM_TUNING = {k: v for k, v in _byst[_state].items() if v > 0.05}
-        GAIN_SIGMA_DEFAULT = float((_m.get("gain_sigma_by_state") or {}).get(_state)
-                                   or _m.get("gain_sigma", GAIN_SIGMA_DEFAULT))
-        _n = (_m.get("n_series_by_state") or {}).get(_state, "?")
-        TUNING_SOURCE = (f"MEASURED ({_state} trials, {_n} series): {_m['source']} "
-                         f"({_m['n_flies']} flies, extracted {_m['extracted_on']})")
+    if LOOM_STATE == "all":
+        _amp, _sig, _n = _m["amplitude"], _m.get("gain_sigma"), _m.get("n_series", "?")
+    elif LOOM_STATE in _byst:
+        _amp = _byst[LOOM_STATE]
+        _sig = (_m.get("gain_sigma_by_state") or {}).get(LOOM_STATE)
+        _n = (_m.get("n_series_by_state") or {}).get(LOOM_STATE, "?")
     else:
-        LOOM_TUNING = {k: v for k, v in _m["amplitude"].items() if v > 0.05}
-        GAIN_SIGMA_DEFAULT = float(_m.get("gain_sigma", GAIN_SIGMA_DEFAULT))
-        TUNING_SOURCE = (f"MEASURED (all trials): {_m['source']} "
-                         f"({_m['n_flies']} flies, extracted {_m['extracted_on']})")
+        raise SystemExit(f"[protocols] loom state {LOOM_STATE!r} is not in {LOOM_FILE.name} "
+                         f"(it has: {sorted(_byst) + ['all']}). Re-extract it with menu option 22.")
+    LOOM_TUNING = {k: v for k, v in _amp.items() if v > 0.05}
+    GAIN_SIGMA_DEFAULT = float(_sig or GAIN_SIGMA_DEFAULT)
+    TUNING_SOURCE = (f"MEASURED ({LOOM_STATE} trials, {_n} series): {_m['source']} "
+                     f"({_m['n_flies']} flies, extracted {_m['extracted_on']})")
 else:
     LOOM_TUNING = dict(LOOM_TUNING_ORDINAL)
 

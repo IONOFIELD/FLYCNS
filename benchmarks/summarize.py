@@ -15,8 +15,11 @@ from flycns.integrity import PLUMBING
 rows, stamps, flags = [], {}, {}
 counts, passed_by_role = Counter(), Counter()
 reports = sorted(Path("results").glob("*/report.json"))
-mtimes = {rep: rep.stat().st_mtime for rep in reports}
-newest = max(mtimes.values()) if mtimes else 0
+# staleness from the time each report was WRITTEN (its provenance stamp), not the file's modification
+# time, which a fresh checkout resets for every file
+import datetime as _dt
+stamps_written = [json.loads(r.read_text(encoding="utf-8")).get("provenance", {}).get("written_at", "") for r in reports]
+newest_written = max((w for w in stamps_written if w), default="")
 for rep in reports:
     r = json.loads(rep.read_text(encoding="utf-8"))
     name = r.get("benchmark", rep.parent.name)
@@ -29,7 +32,9 @@ for rep in reports:
         f.append("DIRTY")
     if (prov.get("data") or {}).get("manifest") == "mismatch":
         f.append("DATA-MISMATCH")
-    if newest - mtimes[rep] > 3600:
+    written = prov.get("written_at", "")
+    if written and newest_written and newest_written > written and (
+            _dt.datetime.fromisoformat(newest_written) - _dt.datetime.fromisoformat(written)).total_seconds() > 3600:
         f.append("STALE")
     if not prov or "git_dirty" not in prov:
         f.append("UNSTAMPED")   # written before integrity stamping (2026-10-10); rerun to stamp

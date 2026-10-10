@@ -22,7 +22,6 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from flycns.graph import SIGN_MAP
 
 TB = Path("data/bulk/tbar-neurotransmitters.feather")
 if not TB.exists():
@@ -49,13 +48,17 @@ tb_small = pd.DataFrame({"body": tb[body_col].values, "pred": [nt_names[i] for i
 
 # The `body` column covers every EM segment (~1.8M), most of them unproofread fragments
 # with no consensus label; restrict to the annotated neurons that carry the graph.
-n_all = len(tb_small := tb_small if "tb_small" in dir() else None) if False else None
 cons = meta["consensusNt"].str.lower()
 n_before = tb_small["body"].nunique()
 tb_small = tb_small[tb_small["body"].isin(cons.dropna().index)]
 print(f"restricting to annotated neurons: {tb_small['body'].nunique():,} of {n_before:,} bodies")
 tb_small["consensus"] = tb_small["body"].map(cons)
-tb_small["agree"] = tb_small["pred"].values == tb_small["consensus"].fillna("").values
+# agreement on SIGN, which is what the model uses: a glutamate cell whose T-bars say GABA is still
+# inhibitory (before 2026-10-10 any identity mismatch counted, so the targeted inversion flipped such
+# cells to excitatory)
+from flycns.graph import SIGN_MAP  # noqa: E402
+tb_small["agree"] = (tb_small["pred"].str.lower().map(SIGN_MAP).to_numpy()
+                     == tb_small["consensus"].map(SIGN_MAP).to_numpy())
 agg = tb_small.groupby("body").agg(mean_conf=("conf", "mean"), n_tbars=("conf", "size"),
                                    agree=("agree", "mean"))
 edges2 = edges.copy()

@@ -7,8 +7,9 @@ on:
     - cron: "17 9 * * 1"   # weekly: catches breakage from the outside world (runners, package indexes) early
   workflow_dispatch:
 
-# flycns runs on Windows only, so every job runs on Windows. No job sets PYTHONUTF8: the code must
-# be correct under Windows' default text encoding, as when someone runs a script directly.
+# flycns runs on Windows only, so every job runs on Windows. No job sets PYTHONUTF8 for the test
+# runner itself; flycns sets it for the processes it starts, and one step below runs a script
+# directly, as a user might, to prove the code is correct under Windows' default text encoding.
 jobs:
   lint:
     # Real errors only: syntax errors, undefined names, duplicate definitions. Style is not enforced.
@@ -29,29 +30,34 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # reference environment: requirements.lock, compiled engine (the runner has the MSVC compiler)
-          - { python: "3.12", deps: requirements.lock, engine: compiled }
-          # the lock must also hold on the next Python
-          - { python: "3.13", deps: requirements.lock, engine: compiled }
+          # reference environment, compiled engine (the runner has the Microsoft C++ compiler)
+          - { python: "3.12", deps: requirements.lock, engine: compiled, codegen: "", expect: cython }
+          # the lock must also install from ready-made wheels on the next Python
+          - { python: "3.13", deps: requirements.lock, engine: compiled, codegen: "", expect: cython }
           # oldest supported Python, newest compatible packages (the setup fallback path)
-          - { python: "3.10", deps: requirements.txt, engine: compiled }
+          - { python: "3.10", deps: requirements.txt, engine: compiled, codegen: "", expect: cython }
           # a machine without the Microsoft C++ Build Tools: the pure-Python engine, end to end
-          - { python: "3.12", deps: requirements.lock, engine: pure-Python }
+          - { python: "3.12", deps: requirements.lock, engine: pure-Python, codegen: numpy, expect: numpy }
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
-      - name: install (${{ matrix.deps }})
-        run: pip install -r ${{ matrix.deps }}
+      - name: install (${{ matrix.deps }}; the lock from ready-made wheels only, as setup does)
+        run: pip install ${{ matrix.deps == 'requirements.lock' && '--only-binary=:all:' || '' }} -r ${{ matrix.deps }}
       - name: regression test on the synthetic toy graph
         run: python tests/regression.py
         env:
-          FLYCNS_CODEGEN: ${{ matrix.engine == 'pure-Python' && 'numpy' || '' }}
+          FLYCNS_CODEGEN: ${{ matrix.codegen }}
+          FLYCNS_EXPECT_ENGINE: ${{ matrix.expect }}
+      - name: a script run directly, under Windows' default encoding (reads é and em dashes)
+        run: python benchmarks/summarize.py > $null
 
   user-path:
-    # exactly what a person does after cloning: setup.cmd --check, then the menu through fly.cmd
-    name: setup.cmd and fly.cmd, as a user runs them
+    # exactly what people do: setup.cmd --check and the menu through fly.cmd; then the maintainer's
+    # menu 51 (update, pin data, core suite, stricter null, commit, push) against a local stand-in for
+    # GitHub, on toy data, with every integrity guard active
+    name: setup.cmd, fly.cmd and menu 51, as a user runs them
     runs-on: windows-latest
     timeout-minutes: 150
     steps:
@@ -72,3 +78,30 @@ jobs:
             if (-not $out.Contains($want)) { throw "fly.cmd output is missing '$want'" }
           }
           if ($out.Contains("Traceback")) { throw "fly.cmd raised an exception" }
+      - name: menu 51 end to end against a local remote (toy data)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          git config --global user.name "ci"; git config --global user.email "ci@example.com"
+          $w = Join-Path $env:RUNNER_TEMP "maintainer"
+          git clone -q --bare . "$w\remote.git"
+          git clone -q "$w\remote.git" "$w\clone"
+          cmd /c mklink /J "$w\clone\.venv" "$PWD\.venv" | Out-Null
+          Set-Location "$w\clone"
+          .\.venv\Scripts\python.exe scripts\make_testdata.py | Out-Null
+          Copy-Item testdata\*.parquet data\
+          .\.venv\Scripts\python.exe -m flycns.integrity write data | Out-Null
+          # registrations made on the real connectome do not fit the toy graph; the toy registers its own
+          git rm -q results/*/criteria.json
+          git add data/MANIFEST.json
+          git commit -qm "CI: toy data pinned in place of the connectome"
+          git push -q
+          $before = git -C "$w\remote.git" rev-list --count HEAD
+          $out = "51`n`nq`n" | .\fly.cmd 2>&1 | Out-String
+          Write-Output $out
+          if ($out.Contains("STOPPED") -or $out.Contains("Traceback")) { throw "menu 51 did not finish" }
+          $after = git -C "$w\remote.git" rev-list --count HEAD
+          $last = git -C "$w\remote.git" log -1 --format=%s
+          Write-Output "remote commits: $before -> $after; last: $last"
+          if ([int]$after -le [int]$before -or -not $last.StartsWith("canonical rerun")) { throw "menu 51 did not push its results" }
+          if ((git status --porcelain --untracked-files=no) -ne $null) { throw "menu 51 left uncommitted changes" }

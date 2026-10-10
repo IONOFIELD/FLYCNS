@@ -5,16 +5,17 @@ The flight benchmark's headline is that DLMn c-f, which receives about twice DVM
 drive per cell, stays silent because that drive is disynaptic and its relay layer is
 subthreshold. Those relays are nerve-cord interneurons running on Shiu et al.'s central-brain
 membrane values (tau_m 20 ms, threshold 7 mV above rest, refractory 2.2 ms). The escape
-benchmark was invariant to cord parameters because its cascade is monosynaptic through a
-declared electrical relay (benchmarks/sensitivity_cord.py); flight is the first result that
-asks the cord to compute, so it may not be.
+benchmark held across most cord settings because its cascade is monosynaptic through a
+declared electrical relay, but not all: at a 10 mV threshold gap the 9 mV relay spikelet is
+subthreshold and the TTMn relay fails (benchmarks/sensitivity_cord.py). Flight is the first result
+that asks the cord to compute.
 
 This is a SENSITIVITY test, not a fit: nothing is chosen, and no value found here enters the
 declared parameter set. The relay superclasses are read from the data (the superclasses of the
 excitatory interneurons onto DLMn c-f), and only those are varied, one parameter at a time,
 over the same ranges as the escape sweep. Every other neuron keeps the declared values.
 
-Conditions at each setting, both at the flight anchor (proprioceptive load 0.35, where DVMn
+Conditions at each setting, both at the flight anchor (proprioceptive load 0.25, where DVMn
 sits at ~9 Hz without any command):
   A  proprioceptive drive only
   B  proprioceptive drive + DNg02 at 10 Hz (the rate at which DVMn is in band)
@@ -39,9 +40,9 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from brian2 import SpikeGeneratorGroup, Synapses, ms, mV
+from brian2 import Synapses, mV
 from flycns import load_graph, CNSModel, LIFParams
-from flycns.bench import provenance
+from flycns.bench import provenance, spike_source
 from flycns.graph import SIGN_MAP
 
 N_CYCLES = int(sys.argv[1]) if len(sys.argv) > 1 else 400
@@ -49,7 +50,7 @@ DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
 OUT = Path("results/sensitivity_flight")
 OUT.mkdir(parents=True, exist_ok=True)
 
-WINGBEAT_HZ, JITTER_MS, LOAD, DNG02_HZ = 202.0, 0.8, 0.35, 10.0
+WINGBEAT_HZ, JITTER_MS, LOAD, DNG02_HZ = 202.0, 0.8, 0.25, 10.0   # load: the flight anchor (RESULTS.md, 23 Sept)
 STEER = r"^(b[123] MN|hg[1-4] MN|i[12] MN|iii[13] MN|tp[12] MN|ps1 MN)"
 BASE = LIFParams()
 
@@ -72,7 +73,8 @@ onto = edges[edges.pre.isin(relays) & edges.post.isin(dlm)]
 sgn = onto["nt"].str.lower().map(SIGN_MAP).fillna(0)
 exc_relays = set(onto[sgn > 0].pre)
 relay_sc = pd.Series([sc.get(b, "") for b in exc_relays]).value_counts()
-RELAY_SUPERCLASSES = [s for s in relay_sc.index if s]
+# the driven afferents are excluded: varying their own threshold would change the stimulus, not the relays
+RELAY_SUPERCLASSES = [s for s in relay_sc.index if s and "sensory" not in s]
 print(f"campaniform afferents {len(aff)}; DLMn c-f {len(dlm)}; DVMn 1a-c {len(dvm)}; DNg02 subtypes {len(dng02_types)}")
 print(f"excitatory relays onto DLMn c-f: {len(exc_relays)}, by superclass: {relay_sc.to_dict()}")
 print(f"varying ONLY: {RELAY_SUPERCLASSES}")
@@ -104,7 +106,7 @@ def run(param, value, with_command):
     pre_ms, period = 200.0, 1000.0 / WINGBEAT_HZ
     dur_ms = N_CYCLES * period
     ids, times = phase_locked(len(lif_idx), N_CYCLES, LOAD, rng, pre_ms)
-    gen = SpikeGeneratorGroup(len(lif_idx), ids, times * ms)
+    gen = spike_source(len(lif_idx), ids, times)
     S = Synapses(gen, m.G, on_pre="v_post += kick", namespace=dict(kick=8.0 * mV))
     S.connect(i=np.arange(len(lif_idx)), j=np.array(lif_idx))
     m.net.add(gen, S)

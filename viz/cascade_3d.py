@@ -14,7 +14,7 @@ Run:  python viz/cascade_3d.py [trial] [data_dir] [--no-skeletons]
 Needs the neuPrint token (saved by setup.cmd) for the first run (skeletons, meshes); cached afterwards.
 Writes results/gf_escape/cascade_3d.html
 """
-import os, sys
+import sys
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go

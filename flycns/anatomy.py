@@ -1,7 +1,6 @@
 """Braille dorsal-view projection of the CNS and frame rendering, shared by viz tools."""
 import os, sys, time
 import numpy as np
-import pandas as pd
 
 PAL = {"ol_intrinsic": 36, "ol_sensory": 36, "visual_projection": 96, "visual_centrifugal": 96,
        "cb_intrinsic": 33, "cb_sensory": 93, "cb_motor": 91, "descending_neuron": 35,

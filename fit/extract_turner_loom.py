@@ -171,7 +171,7 @@ out = dict(amplitude={k: round(float(v), 4) for k, v in normed.sort_values(ascen
            n_series=int(amp.shape[1]), n_flies=len({(s['file'], s['fly']) for s in sources}),
            behaviour_rule=dict(walking_gt=WALK_HI, stationary_lt=WALK_LO, min_trials=MIN_STATE_TRIALS,
                                source="per-series binary_behavior at 50 Hz (authors' classification)"),
-           series=sources, method="photodiode epoch onsets; dF/F vs 1 s pre; peak in 3 s stim window",
+           series=sources, method="epoch onsets from epoch_time stamps; dF/F vs 1 s pre; peak in 3 s stim window",
            source="Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8",
            extracted_on=datetime.date.today().isoformat())
 # per-protocol amplitudes, reported because they differ
@@ -191,7 +191,6 @@ for st, cols in by_state.items():
     g = np.concatenate(gain_state[st]) if gain_state[st] else np.array([])
     g = g[np.isfinite(g) & (g > 0)]
     out["gain_sigma_by_state"][st] = round(float(np.std(np.log(g))), 4) if len(g) > 20 else None
-(OUT / "loom_tuning.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
 if out["amplitude_by_state"]:
     st = pd.DataFrame(out["amplitude_by_state"]).dropna()
     print("\nnormalised amplitude by behavioural state:"); print(st.round(3).to_string())
@@ -206,6 +205,8 @@ if by_rv:
     piv = rvdf.pivot_table(index="glom", columns="rv", values="peak", aggfunc="mean")
     out["by_rv_ratio"] = {str(c): {k: round(float(v), 4) for k, v in piv[c].dropna().items()} for c in piv.columns}
     print("\npeak dF/F by loom r/v ratio (s):"); print(piv.round(3).to_string())
+# written after every field is filled in (by_rv_ratio was computed after the write before 2026-10-10)
+(OUT / "loom_tuning.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
 print("\nnormalised loom amplitude by glomerulus (fly-averaged):")
 for k, v in out["amplitude"].items():
     print(f"  {k:<6} {v:.3f}")

@@ -39,7 +39,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from flycns import load_graph, rewire_null, CNSModel, LIFParams, loom_protocol
+from flycns import load_graph, rewire_null, CNSModel, LIFParams
 from flycns.graph import drop_mixed_chemical
 from flycns.protocols import LOOM_TUNING
 from flycns.bench import find_types, pulse_protocol

@@ -8,7 +8,7 @@ the braille cascade, print which types and regions fired. Each run ~10 s.
 Run:  python viz/explore.py [data_dir] [--sez GAIN] [--landscape|--portrait] [--stretch]
       landscape (brain left, VNC right) is the default on wide terminals
 """
-import sys, time
+import sys
 import numpy as np
 import pandas as pd
 from pathlib import Path

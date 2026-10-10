@@ -41,8 +41,6 @@ Run:  python benchmarks/peptide_asta.py [n_trials] [data_dir]
 """
 import json, sys, time
 from pathlib import Path
-import numpy as np
-import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, CNSModel, LIFParams
 from flycns.bench import pulse_protocol, provenance

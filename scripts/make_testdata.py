@@ -2,27 +2,31 @@
 import numpy as np, pandas as pd
 rng = np.random.default_rng(0)
 rows, bid = [], 1000
-def add(t, n, sc, side_alt=True):
+def add(t, n, sc, side_alt=True, gen=None):
     global bid
+    g = gen or rng
     for k in range(n):
         rows.append(dict(bodyId=bid, type=t, superclass=sc, somaSide=("L","R")[k%2] if side_alt else "L",
-                         consensusNt="acetylcholine", x=rng.normal(), y=rng.normal(), z=rng.normal()))
+                         consensusNt="acetylcholine", x=g.normal(), y=g.normal(), z=g.normal()))
         bid += 1
 for t in ["LC4","LPLC2","LC6","LC16","LC26","LPLC1","LC9","LC17","LC12"]: add(t, 20, "visual_projection")
 add("DNp01", 2, "descending_neuron"); add("TTMn", 2, "vnc_motor"); add("PSI", 2, "vnc_intrinsic")
-add("JO-A1", 20, "cb_sensory"); add("JO-B1", 20, "cb_sensory")
+add("JO-A1", 20, "cb_sensory"); add("JO-B1_a", 20, "cb_sensory")   # JO-B1_a: a declared electrical partner of GF
 add("Gr64f_sugar_GRN", 20, "cb_sensory"); add("Gr66a_bitter_GRN", 10, "cb_sensory")
 add("GNG001", 4, "cb_intrinsic"); add("Bract", 4, "descending_neuron"); add("MN9", 2, "cb_motor")
 add("JO-FV", 10, "cb_sensory"); add("aPhM2a", 5, "cb_sensory"); add("BM_Taste", 10, "cb_sensory")
-add("pC1_1b", 2, "cb_intrinsic"); add("LC10a", 6, "visual_projection"); add("pC1_14a", 2, "cb_intrinsic"); add("pC1_13a", 2, "cb_intrinsic"); add("pC1_14b", 2, "cb_intrinsic"); add("pC1_15a", 2, "cb_intrinsic"); add("pC1_15b", 2, "cb_intrinsic"); add("pC1_15c", 2, "cb_intrinsic"); add("pC1_16a", 2, "cb_intrinsic"); add("pMP2", 2, "descending_neuron"); add("DNp13", 2, "descending_neuron"); add("pIP10", 2, "descending_neuron"); add("LB3a", 4, "cb_sensory"); add("LB1b", 3, "cb_sensory"); add("LB1c", 3, "cb_sensory"); add("LB1d", 3, "cb_sensory"); add("LB2a", 2, "cb_sensory"); add("LB2b", 2, "cb_sensory"); add("LB2c", 2, "cb_sensory"); add("MN6", 2, "cb_motor"); add("MN11D", 2, "cb_motor"); add("MN11V", 2, "cb_motor"); add("LB3b", 6, "cb_sensory"); add("LB3c", 6, "cb_sensory"); add("LB1a", 6, "cb_sensory"); add("LC11", 10, "visual_projection"); add("LC15", 10, "visual_projection"); add("LC18", 10, "visual_projection"); add("LC21", 10, "visual_projection"); add("L3", 20, "ol_intrinsic"); add("L5", 20, "ol_intrinsic"); add("DNg02_a", 3, "descending_neuron"); add("DNg02_b", 3, "descending_neuron"); add("SApp10", 30, "vnc_sensory"); add("SApp02", 20, "vnc_sensory"); add("DLMn c-f", 8, "vnc_motor"); add("b1 MN", 2, "vnc_motor"); add("IN19B043", 20, "vnc_intrinsic"); add("Pm3", 6, "ol_intrinsic"); add("Mi1", 20, "ol_intrinsic"); add("Tm2", 10, "ol_intrinsic")
+add("pC1_1b", 2, "cb_intrinsic"); add("LC10a", 6, "visual_projection"); add("pC1_14a", 2, "cb_intrinsic"); add("pC1_13a", 2, "cb_intrinsic"); add("pC1_14b", 2, "cb_intrinsic"); add("pC1_15a", 2, "cb_intrinsic"); add("pC1_15b", 2, "cb_intrinsic"); add("pC1_15c", 2, "cb_intrinsic"); add("pC1_16a", 2, "cb_intrinsic"); add("pMP2", 2, "descending_neuron"); add("DNp13", 2, "descending_neuron"); add("pIP10", 2, "descending_neuron"); add("LB3a", 4, "cb_sensory"); add("LB1b", 3, "cb_sensory"); add("LB1c", 3, "cb_sensory"); add("LB1d", 3, "cb_sensory"); add("LB2a", 2, "cb_sensory"); add("LB2b", 2, "cb_sensory"); add("LB2c", 2, "cb_sensory"); add("MN6", 2, "cb_motor"); add("MN11D", 2, "cb_motor"); add("MN11V", 2, "cb_motor"); add("LB3b", 6, "cb_sensory"); add("LB3c", 6, "cb_sensory"); add("LB1a", 6, "cb_sensory"); add("LC11", 10, "visual_projection"); add("LC15", 10, "visual_projection"); add("LC18", 10, "visual_projection"); add("LC21", 10, "visual_projection"); add("L3", 20, "ol_intrinsic"); add("L5", 20, "ol_intrinsic"); add("DNg02_a", 3, "descending_neuron"); add("DNg02_b", 3, "descending_neuron"); add("SNpp16", 30, "vnc_sensory"); add("SNpp07", 20, "vnc_sensory"); add("DLMn c-f", 8, "vnc_motor"); add("b1 MN", 2, "vnc_motor"); add("IN19B043", 20, "vnc_intrinsic"); add("Pm3", 6, "ol_intrinsic"); add("Mi1", 20, "ol_intrinsic"); add("Tm2", 10, "ol_intrinsic")
 add("filler", 300, "cb_intrinsic")
+# types the chains below use; their own generator keeps every other random draw unchanged
+_g2 = np.random.default_rng(1)
+add("L1", 20, "ol_intrinsic", gen=_g2); add("L2", 20, "ol_intrinsic", gen=_g2); add("Fdg", 2, "cb_intrinsic", gen=_g2)
 n = pd.DataFrame(rows)
 n["subclass"] = None
 n.loc[n.type.str.startswith("JO-A")|n.type.str.startswith("JO-B"), "subclass"] = "auditory"
 n.loc[n.type=="JO-FV", "subclass"] = "wind_gravity"
-n.loc[n.type.isin(["SApp10","SApp02"]), "subclass"] = "campaniform sensilla"
+n.loc[n.type.isin(["SNpp16","SNpp07"]), "subclass"] = "campaniform sensilla"
 n["entryNerve"] = None
-n.loc[n.type=="SApp10", "entryNerve"] = "ADMN"; n.loc[n.type=="SApp02", "entryNerve"] = "DMetaN"
+n.loc[n.type=="SNpp16", "entryNerve"] = "ADMN"; n.loc[n.type=="SNpp07", "entryNerve"] = "DMetaN"
 n.loc[n.type.str.match(r"^LB[1-4]"), "subclass"] = "labellar bristle"; n.loc[n.type=="aPhM2a", "subclass"] = "pharyngeal sensillum"; n.loc[n.type=="Gr64f_sugar_GRN", "subclass"] = "taste peg"
 n.loc[n.type.str.startswith("JO-") | n.type.str.contains("GRN"), "somaSide"] = None
 n["instance"] = n.type + "_" + n.somaSide.fillna(pd.Series(["L","R"]*(len(n)//2+1))[:len(n)].set_axis(n.index))
@@ -36,10 +40,10 @@ def chain(pre_t, post_t, w, contra=False):
         for b in n[n.type==post_t].itertuples():
             if contra and a.somaSide == b.somaSide: continue
             e.append(dict(pre=a.bodyId, post=b.bodyId, weight=w, nt="acetylcholine"))
-chain("pC1_1b","DNp13",40); chain("LC10a","pC1_1b",30); chain("pC1_14a","pMP2",60); chain("pC1_13a","pMP2",30); chain("pC1_15a","DNp13",30); chain("LB2a","MN11D",20); chain("LB3a","GNG001",20); chain("GNG001","MN6",40); chain("LB3b","GNG001",40); chain("LB3c","GNG001",40); chain("L3","Mi1",30); chain("L5","Mi1",30); chain("LC11","DNp01",5); chain("DNg02_a","DLMn c-f",30); chain("DNg02_b","DLMn c-f",30); chain("SApp10","IN19B043",40); chain("SApp02","IN19B043",30); chain("IN19B043","DLMn c-f",25); chain("SApp10","b1 MN",60); chain("L1","Mi1",30); chain("Pm3","Mi1",20); chain("L2","Pm3",30); chain("Gr64f_sugar_GRN", "GNG001", 120); chain("aPhM2a", "GNG001", 150); chain("BM_Taste", "GNG001", 60); chain("GNG001", "MN9", 400, contra=True); chain("Bract", "MN9", 400)
+chain("pC1_1b","DNp13",40); chain("LC10a","pC1_1b",30); chain("pC1_14a","pMP2",60); chain("pC1_13a","pMP2",30); chain("pC1_15a","DNp13",30); chain("LB2a","MN11D",20); chain("LB3a","GNG001",20); chain("GNG001","MN6",40); chain("LB3b","GNG001",40); chain("LB3c","GNG001",40); chain("L3","Mi1",30); chain("L5","Mi1",30); chain("LC11","DNp01",5); chain("DNg02_a","DLMn c-f",30); chain("DNg02_b","DLMn c-f",30); chain("SNpp16","IN19B043",40); chain("SNpp07","IN19B043",30); chain("IN19B043","DLMn c-f",25); chain("SNpp16","b1 MN",60); chain("L1","Mi1",30); chain("Pm3","Mi1",20); chain("L2","Pm3",30); chain("Gr64f_sugar_GRN", "GNG001", 120); chain("aPhM2a", "GNG001", 150); chain("BM_Taste", "GNG001", 60); chain("GNG001", "MN9", 400, contra=True); chain("Bract", "MN9", 400)
 for a in n[n.type=="Gr66a_bitter_GRN"].bodyId:
     for b in n[n.type=="Fdg"].bodyId: e.append(dict(pre=a, post=b, weight=40, nt="gaba"))
-for a in n[n.type=="JO-B1"].bodyId[:5]:
+for a in n[n.type=="JO-B1_a"].bodyId[:5]:
     for g in gf: e.append(dict(pre=a, post=g, weight=100, nt="acetylcholine"))
 for i in range(3000):
     a, b = rng.choice(n.bodyId.values, 2, replace=False)

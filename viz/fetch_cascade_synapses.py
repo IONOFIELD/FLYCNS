@@ -9,7 +9,6 @@ Writes results/gf_escape/cascade_sites.parquet     every pre/post site of active
 Run:  python viz/fetch_cascade_synapses.py [trial]      (needs NEUPRINT_TOKEN)
 """
 import os, sys
-import numpy as np
 import pandas as pd
 from pathlib import Path
 from neuprint import Client, fetch_synapses, fetch_synapse_connections, NeuronCriteria as NC
