@@ -360,8 +360,8 @@
     "L1_sugar_contralateral_bias": true
   },
   "provenance": {
-    "written_at": "2026-10-11T13:11:08",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T21:03:10",
+    "git_commit": "b7eba83",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -376,6 +376,7 @@
     "engine": "not used",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "graph": {
       "data_dir": "data",
       "min_weight": 5,
@@ -385,7 +386,11 @@
       "n_dropped_unsigned_edges": 160051,
       "n_dropped_unsigned_synapses": 1980492,
       "n_silent_presynaptic": 8020,
-      "edges_nt_used": false
+      "edges_nt_used": false,
+      "glu_vnc": "inhibitory",
+      "n_glu_vnc_flipped": 0,
+      "jon_mode": "electrical",
+      "jon_compound_mv": 3.0
     },
     "data": {
       "dir": "data",
@@ -396,5 +401,24 @@
       },
       "manifest": "match"
     }
+  },
+  "uncertainty": {
+    "L1_sugar_contralateral_bias": {
+      "estimate": 1.7349626892139418,
+      "ci95": null,
+      "band": null,
+      "method": "point",
+      "verdict": "PASS",
+      "note": "graph arithmetic over the fixed connectome (signed path products from explicitly sided afferents), no simulation and no random draws; estimate is the smaller contra/ipsi ratio of the two sides (needs >= 1.10 with both positive): L afferents 3.3477062301493032, R afferents 1.7349626892139418"
+    }
+  },
+  "registration": {
+    "file": "results/sugar_laterality/registration.json",
+    "version": 2,
+    "git_commit": "4c39a8f",
+    "model_hash": "23af5a3da52e9d1d37c4262cdb8a3e0fffbdbe07f6a565901b184ab1c124687e",
+    "registered_at": "2026-10-11T12:41:06",
+    "matches": true,
+    "problems": []
   }
 }
