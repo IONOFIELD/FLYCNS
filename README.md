@@ -5,6 +5,35 @@
 A simulation of the male fruit fly's entire nervous system, built from its complete wiring diagram
 and checked against recordings from real flies.
 
+## In one minute
+
+Scientists have mapped every neuron and every connection in the male fruit fly's brain and nerve
+cord. That map is a wiring diagram, and on its own it does nothing. flycns turns it on: signals run
+through the wiring, and the result is checked against what real flies do.
+
+**What it is for.** Experiments in software first. Stimulate a sense, silence a cell type or cut a
+pathway, and see what changes. Each run takes minutes and costs nothing, so a lab can test in real
+flies only the predictions worth testing.
+
+**Why do it.** A basic question in neuroscience is how much of what a nervous system does follows
+from its wiring alone. No human brain can be mapped this way; it is far too large. The fly's is the
+largest complete map there is, so it is where that question can be tested. This model answers it
+circuit by circuit, including where the wiring alone is not enough.
+
+**What is different.**
+- **The whole nervous system, not only the brain.** Brain and nerve cord, so a signal travels from
+  a sense all the way to the muscles.
+- **The male fly.** Circuits that differ between the sexes, such as courtship song, can be simulated.
+- **Scored, not showcased.** Pass/fail criteria are written before each test runs, and failures stay
+  on the record next to the successes.
+- **Built to be used and to last.** Every result is traceable to its code, data and settings, and
+  automated checks run on every change.
+
+**Headline result.** Without being tuned for it, the model predicted that a sound makes the fly's
+escape neuron far more likely to fire for a faint visual threat: from 18% to 53% of trials. That
+matches what was recorded in real flies (Tootoonian et al. 2012), and the test's criteria were
+committed before it ran.
+
 ## What it is
 
 - A computer model of every neuron in the male fruit fly's brain and nerve cord, about 176,000 of them, wired exactly as the Janelia MaleCNS connectome (2026) maps them.
