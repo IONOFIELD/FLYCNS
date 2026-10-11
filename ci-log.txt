@@ -1,0 +1,11 @@
+criteria registered at commit d313cfa
+gain 0.4  | alone   0/100 = 0.000 | with sound  20/100 = 0.200 | difference +0.200 (95% CI +0.124 to +0.289) | near-threshold  FACILITATION | 1380s
+gain 0.5  | alone   0/100 = 0.000 | with sound  32/100 = 0.320 | difference +0.320 (95% CI +0.229 to +0.417) | near-threshold  FACILITATION | 2578s
+gain 0.6  | alone   0/100 = 0.000 | with sound  37/100 = 0.370 | difference +0.370 (95% CI +0.274 to +0.468) | near-threshold  FACILITATION | 3786s
+gain 0.7  | alone  10/100 = 0.100 | with sound  48/100 = 0.480 | difference +0.380 (95% CI +0.259 to +0.487) | near-threshold  FACILITATION | 4990s
+gain 0.8  | alone  18/100 = 0.180 | with sound  52/100 = 0.520 | difference +0.340 (95% CI +0.210 to +0.454) | near-threshold  FACILITATION | 6183s
+
+5 of 5 gains near threshold; facilitation at 5 of them
+CHECK (criterion registered before the run)
+  PASS  RA2_facilitation_at_every_near_threshold_gain
+wrote results\a2_robustness\report.json
