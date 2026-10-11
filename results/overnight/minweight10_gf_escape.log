@@ -33,7 +33,7 @@ loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pa
   vnc_motor              #                                        0.080
   ascending_neuron                                                0.003
   visual_projection                                               0.000
-[real_electrical] GF 0.68/cell hit 0.55 (95% CI 0.40-0.69) lat 38.9 ms | TTMn 0.68/cell lag 0.90 ms | pop 0.0038 Hz | 311.8s
+[real_electrical] GF 0.68/cell hit 0.55 (95% CI 0.40-0.69) lat 38.9 ms | TTMn 0.68/cell lag 0.90 ms | pop 0.0038 Hz | 315.1s
   per trial GF/TTMn spikes: 1/0 0/0 4/0 1/0 0/0 2/0 7/0 2/0 0/0 0/0 1/0 1/0 0/0 1/0 0/0 0/0 1/0 1/0 1/0 3/0 1/0 7/0 1/0 2/0 3/0 0/0 0/0 0/0 1/0 2/0 1/0 1/0 1/0 2/0 3/0 2/0 0/0 1/0 2/0 9/0
   raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
   t0  DNp01  .......|......................
@@ -55,7 +55,7 @@ loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pa
   descending_neuron      ##                                       0.118
   ascending_neuron                                                0.003
   visual_projection                                               0.000
-[real_chemical_only] GF 0.81/cell hit 0.72 (95% CI 0.57-0.84) lat 36.3 ms | TTMn 0.00/cell lag nan ms | pop 0.0038 Hz | 303.8s
+[real_chemical_only] GF 0.81/cell hit 0.72 (95% CI 0.57-0.84) lat 36.3 ms | TTMn 0.00/cell lag nan ms | pop 0.0038 Hz | 318.2s
   per trial GF/TTMn spikes: 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0
   raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
   t0  DNp01  ..............................
@@ -72,7 +72,7 @@ loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pa
 
   region activity (spikes per neuron over 40 stimulus windows):
   vnc_intrinsic          ######################################## 0.000
-[rewired_null] GF 0.00/cell hit 0.00 (95% CI -0.00-0.09) lat nan ms | TTMn 0.00/cell lag nan ms | pop 0.0000 Hz | 339.4s
+[rewired_null] GF 0.00/cell hit 0.00 (95% CI -0.00-0.09) lat nan ms | TTMn 0.00/cell lag nan ms | pop 0.0000 Hz | 336.2s
 
 CHECKS
   PASS  gf_spikes_per_response_1_to_2
@@ -83,5 +83,15 @@ CHECKS
   PASS  cns_quiet
   PASS  electrical_necessary
   PASS  null_silent
+
+UNCERTAINTY (95% interval; PASS only if the whole interval lies in the band)
+  PASS        gf_spikes_per_response_1_to_2: 1.477 [1.136, 1.887] band [1, 2] (bootstrap)
+  UNRESOLVED  gf_response_prob_0.5_to_1: 0.55 [0.3983, 0.6929] band [0.5, 1] (wilson)
+  PASS        gf_latency_10_60ms: 38.93 [34.48, 43.28] band [10, 60] (bootstrap)
+  PASS        ttmn_one_to_one: 1 [1, 1] band [0.8, 1.2] (bootstrap (ratio of sums))
+  PASS        ttmn_lag_0.5_1.5ms: 0.9 [0.9, 0.9] band [0.5, 1.5] (bootstrap)
+  PASS        cns_quiet: 0.003791 (point)
+  PASS        electrical_necessary: -0.0675 [-0.1013, -0.03875] band [-, 0] (bootstrap (two independent arms))
+  PASS        null_silent: 0 [0, 0.08762] band [-, 0.1] (wilson)
 
 BENCHMARK PASS  -> results\gf_escape/report.json
