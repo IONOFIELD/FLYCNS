@@ -49,7 +49,7 @@ _changed = {}
 # the trial counts the committed results are run at (fly.py defaults, scripts/run_all.py, rerun.yml)
 CANONICAL_TRIALS = {"gf_escape": 40, "auditory": 40, "feeding": 6, "peptide_asta": 10, "pc1_song": 10,
                     "dnp13_control": 10, "feeding_by_modality": 6, "a2_registered": 120, "a2_robustness": 100,
-                    "flight_loop": 400, "flight_snpp16_graded": 400, "flight_snpp16_robustness": 400,
+                    "flight_loop": 400, "flight_snpp16": 400, "flight_snpp16_graded": 400, "flight_snpp16_robustness": 400,
                     "null_dc_escape": 40, "null_dc_song": 30, "null_dc_auditory": 40}
 
 
@@ -78,10 +78,12 @@ for rep in reports:
     r = json.loads(rep.read_text(encoding="utf-8"))
     name = r.get("benchmark", rep.parent.name)
     prov = r.get("provenance", {})
-    model_env = {k: v for k, v in (prov.get("env") or {}).items() if k not in PLUMBING}
+    model_env = {k: v for k, v in (prov.get("env") or {}).items() if k not in PLUMBING and k != "FLYCNS_ALLOW_DIRTY"}
     f = []
     if model_env:
         f.append("PERTURBED")
+    if prov.get("allow_dirty") or (prov.get("env") or {}).get("FLYCNS_ALLOW_DIRTY") == "1":
+        f.append("ALLOW-DIRTY")   # the guards were waived for this run
     if prov.get("git_dirty"):
         f.append("DIRTY")
     if (prov.get("data") or {}).get("manifest") == "mismatch":
@@ -116,7 +118,7 @@ for rep in reports:
 
 total, passed = sum(counts.values()), sum(passed_by_role.values())
 unresolved = sum(unresolved_by_role.values())
-canonical = not any(("PERTURBED" in f or "DIRTY" in f or "DATA-MISMATCH" in f or "UNPINNED" in f
+canonical = not any(("PERTURBED" in f or "DIRTY" in f or "ALLOW-DIRTY" in f or "DATA-MISMATCH" in f or "UNPINNED" in f
                      or any(x.startswith("TRIALS") for x in f)) for f in flags.values())
 p = LIFParams().__dict__
 tag = os.environ.get("FLYCNS_RUN_TAG", "")
@@ -142,6 +144,7 @@ md = ["# MaleCNS v1.0 LIF benchmark suite" + (f"  [{tag}]" if tag else ""), "",
       "", "Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; "
           "DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); "
           "UNSTAMPED = written before integrity stamping, rerun to stamp; UNPINNED = no record of the input tables; "
+          "ALLOW-DIRTY = run with FLYCNS_ALLOW_DIRTY=1, which waives the integrity guards; "
           "TRIALS a<b = run at fewer trials than the canonical b.",
       "", "Declared deviations from the raw connectome: see each results/*/provenance.md and flycns/graph.py."]
 # citation integrity: every author-year tag in code must resolve in REFERENCES.md

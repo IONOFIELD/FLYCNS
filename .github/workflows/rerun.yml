@@ -195,6 +195,8 @@ jobs:
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0   # full history: registered tests check that their registration was never changed
       - uses: actions/setup-python@v6
         with: { python-version: "3.12", cache: pip, cache-dependency-path: requirements.lock }
       - uses: actions/cache/restore@v5

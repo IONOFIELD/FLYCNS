@@ -76,6 +76,11 @@ class CNSModel:
         # (flycns/windows.py; tests/unit.py checks the two give identical spikes)
         self.codegen = codegen or codegen_target()
         prefs.codegen.target = self.codegen
+        # brian2 also reads a brian_preferences file in the working folder or ~/.brian; one that switched
+        # to single precision would change every number with nothing in the code to show it
+        if np.dtype(prefs.core.default_float_dtype) != np.float64:
+            raise SystemExit(f"[model] brian2 is set to {np.dtype(prefs.core.default_float_dtype)} by a "
+                             "brian_preferences file; the model is defined in float64. Remove that setting.")
         defaultclock.dt = params.dt_ms * ms
         b2seed(params.seed)
         self.p = params

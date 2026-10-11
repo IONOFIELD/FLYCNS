@@ -38,13 +38,15 @@ NOT_CODE_PREFIXES = ("results/", "data/", "testdata/")
 CORE_TABLES = ("neurons.parquet", "edges.parquet")   # must be present; derived tables are optional
 FINGERPRINT_ALGO = "rowhash-v2"   # v2: dtype-family labels and None for missing text, so pandas 2 and 3 agree
 MANIFEST = "MANIFEST.json"
-CACHE = ".fingerprints.json"      # per data dir, gitignored; keyed by the sha256 of the file's bytes
+CACHE = ".fingerprints.json"      # no longer read or written (2026-10-11); kept so old copies are recognised
 
 # Settings that only route output or count trials; announced but not treated as model overrides.
-PLUMBING = {"FLYCNS_RUN_TAG", "FLYCNS_AUDITORY_OUT", "FLYCNS_A2_TRIALS", "FLYCNS_ALLOW_DIRTY",
+# FLYCNS_ALLOW_DIRTY is NOT plumbing: it waives the guards, so menu 51 refuses it and summarize flags
+# every report made under it (ALLOW-DIRTY).
+PLUMBING = {"FLYCNS_RUN_TAG", "FLYCNS_AUDITORY_OUT", "FLYCNS_A2_TRIALS",
             "FLYCNS_CODEGEN", "FLYCNS_EXPECT_ENGINE"}   # engine: same equations, recorded as `engine`
 # A setting equal to its declared default changes nothing and is not an override.
-DEFAULTS = {"FLYCNS_SEED": "0", "FLYCNS_SIGNFLIP": "0", "FLYCNS_SIGNFLIP_TARGETED": "0", "FLYCNS_WSCALE": "0.3",
+DEFAULTS = {"FLYCNS_ALLOW_DIRTY": "0", "FLYCNS_SEED": "0", "FLYCNS_SIGNFLIP": "0", "FLYCNS_SIGNFLIP_TARGETED": "0", "FLYCNS_WSCALE": "0.3",
             "FLYCNS_PEPTIDE": "0", "FLYCNS_NULL": "global", "FLYCNS_MIN_WEIGHT": "5", "FLYCNS_PEAK_HZ": "5.0",
             "FLYCNS_LOOM_STATE": "stationary", "FLYCNS_BASELINE_DEPOL": "0", "FLYCNS_BASELINE_NOISE": "0"}
 
@@ -89,14 +91,19 @@ def registration_history(label):
     once and never edited or deleted (a deleted-and-rewritten file would silently re-register).
     Returns a list of problems; empty when fine or when there is no history to check (shallow clone)."""
     path = f"results/{label}/criteria.json"
-    if not (ROOT / path).exists():
-        return []
     _, shallow = _git("rev-parse", "--is-shallow-repository")
     if shallow.strip() == "true":
+        print(f"[integrity] {label}: shallow clone, so the registration history cannot be checked", flush=True)
         return []
     _, log = _git("log", "--format=%h", "--", path)
     _, deleted = _git("log", "--format=%h", "--diff-filter=D", "--", path)
     problems = []
+    if not (ROOT / path).exists():
+        # a registration that was committed and then deleted must not quietly register again
+        if deleted.split():
+            problems.append(f"{path} was registered and then deleted (in {deleted.split()[0]}); a new design "
+                            f"needs a new registration under a new name")
+        return problems
     if len(log.split()) > 1:
         problems.append(f"{path} was changed after it was committed ({len(log.split())} commits)")
     if deleted.split():
@@ -227,34 +234,36 @@ def _file_sha256(path):
     return h.hexdigest()
 
 
-def _cached_fingerprint(path, cache, fresh=False):
-    """The content fingerprint, cached under the sha256 of the file's bytes (a few seconds) so the
-    row hash (about a minute for the edge table) is not recomputed for an unchanged file. fresh=True
-    ignores the cache: registered tests never trust a cache file anyone can write."""
+_MEMO = {}   # this process only: (path, bytes sha256, algorithm) -> fingerprint; never read from disk
+
+
+def _fingerprint(path):
+    """The content fingerprint of one table, computed from the file itself. Memoised in this process
+    only, keyed by the sha256 of the file's bytes. (Until 2026-10-11 a cache file in the data folder
+    could vouch for data; anyone could write it, so nothing trusts it now.)"""
     import pandas as pd
-    key = f"{path.name}:{_file_sha256(path)}:{FINGERPRINT_ALGO}:pandas{pd.__version__.split('.')[0]}"
-    if fresh or key not in cache:
-        cache[key] = table_fingerprint(path)
-    return cache[key]
+    key = (str(Path(path).resolve()), _file_sha256(path), FINGERPRINT_ALGO, pd.__version__.split(".")[0])
+    if key not in _MEMO:
+        _MEMO[key] = table_fingerprint(path)
+    return _MEMO[key]
 
 
-def fingerprints(data_dir="data", names=None, fresh=False):
-    """Fingerprints for the named parquet files (default: every top-level *.parquet)."""
+def fingerprints(data_dir="data", names=None, fresh=True):
+    """Fingerprints for the named parquet files (default: every top-level *.parquet), always computed
+    from the files. `fresh` is accepted for older callers and has no effect."""
     d = Path(data_dir)
     paths = [d / n for n in names] if names else sorted(d.glob("*.parquet"))
-    paths = [p for p in paths if p.exists()]
-    cf = d / CACHE
-    try:
-        cache = json.loads(cf.read_text(encoding="utf-8")) if cf.exists() else {}
-    except Exception:
-        cache = {}
-    out = {p.name: _cached_fingerprint(p, cache, fresh) for p in paths}
-    live = {k for k in cache if (d / k.split(":", 1)[0]).exists()}   # keep entries for every table on disk
-    try:
-        cf.write_text(json.dumps({k: cache[k] for k in live}), encoding="utf-8")
-    except OSError:
-        pass
-    return out
+    return {p.name: _fingerprint(p) for p in paths if p.exists()}
+
+
+def _check_table(path, pinned):
+    """(fingerprint, byte_identical) for one table against its manifest entry. A file whose bytes
+    hash to the pinned sha256 is the pinned file, and its pinned fingerprint is used without
+    rehashing its rows; any other file is fingerprinted from its content."""
+    sha = pinned.get("sha256")
+    if sha and _file_sha256(path) == sha:
+        return {k: pinned[k] for k in ("digest", "rows", "columns", "sums") if k in pinned}, True
+    return _fingerprint(path), False
 
 
 def write_manifest(data_dir="data"):
@@ -262,17 +271,21 @@ def write_manifest(data_dir="data"):
     if not fps:
         raise SystemExit(f"[integrity] no *.parquet in {data_dir}; nothing to record")
     import pandas as pd
+    # the sha256 of each file's bytes lets a later check confirm the pinned file in seconds; the
+    # content fingerprint still decides when the bytes differ (a rewrite of the same rows)
+    files = {k: {**v, "sha256": _file_sha256(Path(data_dir) / k)} for k, v in sorted(fps.items())}
     man = dict(algorithm=FINGERPRINT_ALGO, pandas=pd.__version__,
                dataset="male-cns:v1.0 (neuprint.janelia.org)",
                written_at=datetime.datetime.now().isoformat(timespec="seconds"),
-               files={k: v for k, v in sorted(fps.items())})
+               files=files)
     (Path(data_dir) / MANIFEST).write_text(json.dumps(man, indent=2) + "\n", encoding="utf-8")
     return man
 
 
-def verify_data(data_dir="data", names=None, fresh=False):
-    """Compare data_dir against its manifest. Returns dict(status, problems, ...).
-    status: 'match' | 'mismatch' | 'no-manifest' | 'no-data'."""
+def verify_data(data_dir="data", names=None, fresh=True):
+    """Compare data_dir against its manifest, from the files themselves (never a cache). Returns
+    dict(status, problems, digests, ...); status: 'match' | 'mismatch' | 'no-manifest'.
+    `fresh` is accepted for older callers and has no effect."""
     d = Path(data_dir)
     mf = d / MANIFEST
     if not mf.exists():
@@ -280,14 +293,14 @@ def verify_data(data_dir="data", names=None, fresh=False):
     man = json.loads(mf.read_text(encoding="utf-8"))
     want = man.get("files", {})
     check = [n for n in (names or want) if n in want]
-    have = fingerprints(data_dir, check, fresh)
-    problems = []
+    problems, digests = [], {}
     for n in check:
-        if n not in have:
+        if not (d / n).exists():
             if n in CORE_TABLES:      # derived tables (synapse transmitters, ROI membership) are optional
                 problems.append(f"{n}: listed in manifest but missing")
             continue
-        a, b = have[n], want[n]
+        (a, _), b = _check_table(d / n, want[n]), want[n]
+        digests[n] = a["digest"]
         if a["digest"] != b["digest"]:
             same_inv = (a["rows"], a["columns"], a["sums"]) == (b["rows"], b["columns"], b["sums"])
             problems.append(f"{n}: content differs from manifest"
@@ -298,13 +311,13 @@ def verify_data(data_dir="data", names=None, fresh=False):
     if names:
         problems += [f"{n}: not listed in manifest" for n in names if n not in want and (d / n).exists()]
     return dict(status="match" if not problems else "mismatch", problems=problems, data_dir=str(d),
-                manifest_written_at=man.get("written_at"))
+                digests=digests, manifest_written_at=man.get("written_at"))
 
 
 def require_data(data_dir, label, names=None):
     """Registered runs: refuse on a manifest mismatch; warn loudly when there is no manifest. Every
-    table is rehashed from its content, never taken from the fingerprint cache."""
-    v = verify_data(data_dir, names, fresh=True)
+    table is checked from the file itself (its bytes against the pinned sha256, else its content)."""
+    v = verify_data(data_dir, names)
     if v["status"] == "mismatch":
         if allow_dirty():
             _box([f"{label}: DATA DIFFER FROM {data_dir}/{MANIFEST} (FLYCNS_ALLOW_DIRTY=1)"] + v["problems"])
@@ -396,6 +409,8 @@ def provenance_record(data_dir=None):
         # the architecture: identical spikes across engines are established on x86-64; ARM64 may fuse
         # multiply-adds and differ in the last bit
         rec["machine"] = _pf.machine()
+        from brian2 import prefs as _prefs
+        rec["float_dtype"] = str(numpy.dtype(_prefs.core.default_float_dtype))
     except Exception:
         pass
     proto = sys.modules.get("flycns.protocols")
@@ -412,9 +427,11 @@ def provenance_record(data_dir=None):
             (["roi_membership.parquet"] if (Path(dd) / "roi_membership.parquet").exists() else []) + \
             (["edges_nt.parquet"] if LOADED.get("edges_nt_used") else [])
         try:
-            fps = fingerprints(dd, names)
-            rec["data"] = dict(dir=str(dd), digests={k: v["digest"][:16] for k, v in fps.items()},
-                               manifest=verify_data(dd, names)["status"])
+            v = verify_data(dd, names)
+            if v["status"] == "no-manifest":
+                v["digests"] = {k: f["digest"] for k, f in fingerprints(dd, names).items()}
+            rec["data"] = dict(dir=str(dd), digests={k: d[:16] for k, d in v["digests"].items()},
+                               manifest=v["status"])
         except Exception as e:   # provenance must never crash a finished run
             rec["data"] = dict(dir=str(dd), error=str(e)[:200])
     return rec

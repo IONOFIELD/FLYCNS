@@ -344,7 +344,7 @@
       ]
     }
   ],
-  "method": "photodiode epoch onsets; dF/F vs 1 s pre; peak in 3 s stim window",
+  "method": "epoch onsets from the per-epoch epoch_time clock stamps (not the photodiode; corrected 2026-10-11); dF/F vs 1 s pre; peak in 3 s stim window",
   "source": "Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8",
   "extracted_on": "2026-09-09",
   "by_protocol": {

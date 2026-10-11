@@ -113,7 +113,7 @@ def arm(label, src, edge_df=edges):
     return rec
 
 
-report = dict(benchmark="flight_snpp16", target_type=TARGET, n_target=len(target), n_others=len(others),
+report = dict(benchmark="flight_snpp16", n_cycles=N_CYCLES, target_type=TARGET, n_target=len(target), n_others=len(others),
               target_share_of_dvmn_synapses=syn_to_dvm / max(syn_all, 1), seeds=SEEDS, arms={})
 report["arms"]["S1_snpp16_alone"] = arm(f"S1 {TARGET} alone", target)
 report["arms"]["S2_all_but_snpp16"] = arm(f"S2 all but {TARGET}", others)
