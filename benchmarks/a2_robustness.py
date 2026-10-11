@@ -97,10 +97,38 @@ qual = [r for r in rows if r["near_threshold"]]
 ok = len(qual) >= 3 and all(r["facilitation"] for r in qual)
 report = dict(benchmark="a2_robustness", criteria=CRITERIA, rows=rows, n_qualifying=len(qual),
               checks={"RA2_facilitation_at_every_near_threshold_gain": ok}, wall_s=round(time.time() - t0))
+# Uncertainty record (flycns/stats.py): RA2 as registered is a conjunction, so it is a combine of one part
+# for the qualifying count and one part per qualifying gain, each scored on that gain's registered
+# Newcombe interval (difference > 0, lower edge exclusive).
+from flycns import stats  # noqa: E402
+
+
+def _gain_part(r):
+    rec = stats.scored(r["difference"], r["ci"][0], r["ci"][1], low=0, strict=True, method="newcombe (as registered)",
+                       n=r["n"], note=f"gain {r['gain']}: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 "
+                                      f"recomputed from counts (n per arm)")
+    rec["gain"] = r["gain"]
+    return rec
+
+
+unc = stats.combine(
+    [stats.point(len(qual), len(qual) >= 3,
+                 note="number of grid gains that qualify as near-threshold (loom-alone GF probability <= 0.3 on the "
+                      "point estimate, the registered definition); at least 3 must qualify. A count under a "
+                      "registered definition, scored on its value, not resampled")]
+    + [_gain_part(r) for r in qual],
+    note="RA2 as registered: >= 3 near-threshold gains, and at every one the 95% CI on the difference lies above zero")
+report["uncertainty"] = {"RA2_facilitation_at_every_near_threshold_gain": unc}
 from flycns.bench import provenance  # noqa: E402
 report["provenance"] = provenance(DATA)
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"\n{len(qual)} of {len(GAINS)} gains near threshold; facilitation at "
       f"{sum(r['facilitation'] for r in qual)} of them")
 print(f"CHECK (criterion registered before the run)\n  {'PASS' if ok else 'FAIL'}  RA2_facilitation_at_every_near_threshold_gain")
+print(f"UNCERTAINTY (95% interval; PASS only if every part passes)\n  {unc['verdict']:<10}  "
+      f"RA2_facilitation_at_every_near_threshold_gain ({unc['method']})")
+for p in unc["parts"]:
+    what = (f"gain {p['gain']}: difference {p['estimate']:+.4g} [{p['ci95'][0]:+.4g}, {p['ci95'][1]:+.4g}] band (0, -)"
+            if "gain" in p else f"near-threshold gains: {p['estimate']:g} (need >= 3)")
+    print(f"      {p['verdict']:<10}  {what} ({p['method']})")
 print(f"wrote {OUT / 'report.json'}")

@@ -19,6 +19,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns.bench import provenance, stamp
 from flycns import load_graph, rewire_null, CNSModel, LIFParams, loom_protocol
+from flycns import stats
 from flycns.protocols import LOOM_TUNING, TUNING_SOURCE, GAIN_SIGMA_DEFAULT, PEAK_HZ_DEFAULT
 from flycns.graph import ELECTRICAL_SYNAPSES, INTRINSIC_OVERRIDES, SIGN_MAP
 from flycns import ascii as A
@@ -33,6 +34,14 @@ def _wilson(k, n, z=1.96):
         return (0.0, 0.0)
     p = k / n; d = 1 + z * z / n; c = p + z * z / (2 * n); h = z * np.sqrt(p * (1 - p) / n + z * z / (4 * n * n))
     return ((c - h) / d, (c + h) / d)
+
+
+def _unc_text(u):
+    """One console line for an uncertainty record: estimate [95% interval] band (method)."""
+    f = lambda x: "-" if x is None else (f"{x:.4g}" if isinstance(x, float) else str(x))  # noqa: E731
+    ci = f" [{f(u['ci95'][0])}, {f(u['ci95'][1])}]" if u.get("ci95") else ""
+    band = f" band [{f(u['band'][0])}, {f(u['band'][1])}]" if u.get("band") else ""
+    return f"{f(u.get('estimate'))}{ci}{band} ({u['method']})"
 
 
 def score(model, trials, burst_ms=60, window_ms=100):
@@ -69,6 +78,10 @@ def run_arm(name, neurons, edges, electrical):
                 ttmn_lag_ms=float(df.ttmn_lag.mean()), psi_per_cell=float(df.psi.mean()),
                 ttmn_to_gf_ratio=float(df.ttmn.sum() / df.gf.sum()) if df.gf.sum() else float("nan"),
                 wall_s=round(time.time() - t0, 1))
+    # per-trial readouts (None where a trial has no value, e.g. no GF spike), kept so that every check
+    # can be scored with a 95% interval over trials (flycns/stats.py)
+    summ["per_trial"] = {c: [None if pd.isna(x) else float(x) for x in df[c]]
+                         for c in ["gf", "gf_lat", "gf_per_firing_cell", "ttmn", "ttmn_lag", "psi"]}
     print(f"[{name}] GF {summ['gf_per_cell']:.2f}/cell hit {summ['gf_hit']:.2f} "
           f"(95% CI {summ['gf_hit_ci95'][0]:.2f}-{summ['gf_hit_ci95'][1]:.2f}) lat {summ['gf_lat_ms']:.1f} ms | "
           f"TTMn {summ['ttmn_per_cell']:.2f}/cell lag {summ['ttmn_lag_ms']:.2f} ms | "
@@ -106,6 +119,52 @@ checks = {
 }
 report["checks"] = checks
 report["pass"] = all(checks.values())
+
+
+# ---- uncertainty (flycns/stats.py): one record per scored check, three-way verdict on the 95% interval
+def _pt(arm, col):
+    return np.array([np.nan if x is None else x for x in arm["per_trial"][col]], dtype=float)
+
+
+r_gf, r_tt, c_tt, null_gf = _pt(r, "gf"), _pt(r, "ttmn"), _pt(c, "ttmn"), _pt(n, "gf")
+r_gfh, r_lat, r_lag = _pt(r, "gf_per_firing_cell"), _pt(r, "gf_lat"), _pt(r, "ttmn_lag")
+n_resp, n_lag = int((~np.isnan(r_gfh)).sum()), int((~np.isnan(r_lag)).sum())
+none_note = lambda k, what: f"; no {what} in the real arm, so nothing to score" if k == 0 else ""  # noqa: E731
+pairing = ("the arms are separate simulations, resampled independently (each arm draws the same per-trial loom "
+           "gains from the same seed; ignoring that pairing widens the interval when both arms rise with gain)")
+unc = {
+    "gf_spikes_per_response_1_to_2": stats.scored(
+        *stats.bootstrap(r_gfh), low=1.0, high=2.0, n=n_resp,
+        note="GF spikes per firing GF cell, bootstrap over responding trials" + none_note(n_resp, "responding trials")),
+    "gf_response_prob_0.5_to_1": stats.proportion(int((r_gf > 0).sum()), len(r_gf), 0.5, 1.0,
+                                                  note="trials with any GF spike, real+electrical arm"),
+    "gf_latency_10_60ms": stats.scored(
+        *stats.bootstrap(r_lat), low=10, high=60, n=n_resp,
+        note="first GF spike after burst onset, bootstrap over responding trials. The stimulus is a 60 ms flat-rate "
+             "burst (flycns.protocols.loom_protocol), not an expanding loom, so this is latency to burst onset, "
+             "not to a loom" + none_note(n_resp, "responding trials")),
+    "ttmn_one_to_one": stats.scored(
+        *stats.bootstrap(np.column_stack([r_tt, r_gf]), stat=stats.ratio_of_sums), low=0.8, high=1.2, n=len(r_gf),
+        method="bootstrap (ratio of sums)", note="sum of TTMn spikes per cell / sum of GF spikes per cell, "
+                                                 "trials resampled as (TTMn, GF) pairs"),
+    "ttmn_lag_0.5_1.5ms": stats.scored(
+        *stats.bootstrap(r_lag), low=0.5, high=1.5, n=n_lag,
+        note="first TTMn spike minus first GF spike, bootstrap over trials where both fired"
+             + none_note(n_lag, "trials with both GF and TTMn spikes")),
+    "cns_quiet": stats.point(
+        r["pop_rate_hz"], r["pop_rate_hz"] < 0.05,
+        note="one whole-run population rate (spikes per neuron per second over the whole real+electrical run): "
+             "a readout with no trial structure, scored on its point value; band < 0.05 Hz"),
+    "electrical_necessary": (stats.scored(
+        *stats.bootstrap_diff(c_tt, 0.1 * r_tt), high=0, method="bootstrap (two independent arms)", n=len(c_tt),
+        note="chemical-only TTMn per cell minus 0.1 x real TTMn per cell, per trial (n per arm); " + pairing)
+        if np.nansum(r_tt) > 0 else stats.unresolved(
+            "the real+electrical arm fired no TTMn spikes, so there is nothing for removing the electrical "
+            "synapses to abolish", estimate=c["ttmn_per_cell"])),
+    "null_silent": stats.proportion(int((null_gf > 0).sum()), len(null_gf), high=0.1,
+                                    note="trials with any GF spike in the rewired null arm; band < 0.1"),
+}
+report["uncertainty"] = unc
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 
@@ -120,4 +179,7 @@ prov += ["", f"## Loom tuning: {TUNING_SOURCE}; trial gain sigma {GAIN_SIGMA_DEF
 (OUT / "provenance.md").write_text("\n".join(prov), encoding="utf-8")
 
 print("\nCHECKS"); [print(f"  {'PASS' if v else 'FAIL'}  {k}") for k, v in checks.items()]
+print("\nUNCERTAINTY (95% interval; PASS only if the whole interval lies in the band)")
+for k, u in unc.items():
+    print(f"  {u['verdict']:<10}  {k}: {_unc_text(u)}")
 print(f"\nBENCHMARK {'PASS' if report['pass'] else 'FAIL'}  -> {OUT}/report.json")
