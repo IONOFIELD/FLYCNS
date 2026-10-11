@@ -30,10 +30,12 @@ trio were rerun on GitHub's Windows machines (`.github/workflows/rerun.yml`), on
 So were the seven benchmarks never rerun under integrity stamping: pc1 song, DNp13 control, feeding
 by modality, gustatory map, sugar laterality, SNpp16 and SNpp16 graded.
 - **Data.** The connectome was fetched from neuPrint and pinned in `data/MANIFEST.json`: 176,422
-  neurons and 6,287,789 edges. A second, independent fetch matched the pin.
+  neurons and 6,287,789 edges. Each later rerun fetched it again; setup refuses data that differ
+  from the pin, and both later fetches matched.
 - **Code.** Every report was produced on committed code, at `45126da` or `b33610d`. The two
   commits differ only in the summary script, the workflow and the references.
-- **Engine.** The compiled engine was used throughout, on Windows.
+- **Engine.** Every simulation used the compiled engine, on Windows. Wrapper and static-analysis
+  scripts record "not used".
 
 **Result: every report in `results/SUITE.md` now carries a clean stamp. None is stale, unstamped,
 dirty or perturbed.** 36 of 48 scored checks pass under one parameter set; the independent checks
@@ -68,20 +70,24 @@ of 2, and 5 mV fails it at 2.3.
 | Escape (calibrated) | P 0.68, 1.06 spikes per response, 37 ms | P 0.575 (0.42 to 0.71), 1.46 spikes, 39.7 ms; all 8 checks pass |
 | A2R, sound facilitates a near-threshold loom (registered) | 0.042 to 0.450, +0.41 | **0.175 to 0.533, +0.358 (95% CI +0.240 to +0.463): PASS** |
 | RA2, facilitation across working points (registered) | PASS | **PASS at all five gains**, +0.20 to +0.40 |
-| Stricter null, superclass-preserving (registered; first run) | not run | **PASS**: escape and pC1 song both silent on it |
-| Flight robustness R1, targeted transmitter inversion | PASS (vacuous) | **PASS**, now with 1.6% of signed weight flipped |
+| Stricter null, superclass-preserving (registered; first committed run) | not run | **PASS**: escape and pC1 song both silent on it |
+| Flight robustness R1, targeted transmitter inversion | PASS, untouched | **PASS, still untouched**: 1.6% of signed weight flipped, yet the k = 7 draws are identical to the unperturbed ones. No uncertain neuron lies on this circuit, so R1 cannot fail here. |
 | Flight robustness R2, cord parameters | FAIL (uninformative) | **FAIL, now informative** (below) |
 | Flight robustness R3, fresh draws | PASS (reused draws) | **PASS**: k* = 5 again, k = 7 in band in 4 of 5 |
 | Flight loop | 4 of 7 | 4 of 7, the same checks |
-| Flight sensitivity | DLMn silent at every setting | DLMn silent at every setting |
+| Flight sensitivity | DLMn c-f below 2 Hz at every setting | DLMn c-f below 2 Hz at every setting (at most 0.82 Hz, at tau_m 5 ms) |
 | Feeding | 4 scored, all pass | 2 scored, both pass; F4 and F5 reported, as the audit decided |
 | AstA on Mi1 (reported, never scored) | "Mi1 stays silent" (the peptide never acted) | **the peptide acts**: Mi1 0.0002 to 0.0375 spikes per flash; knockdown returns it to 0.0001 |
 | DNp31 and ear-to-wing traces | | structural findings unchanged; under loom drive DNp31 and the wing motor pool stay silent |
 
-**The A2 artefact, measured.** The audit found that the two A2 arms differed in more than sound.
-In loom-alone trials the ear afferents loaded the giant fiber; in loom-plus-sound trials they did
-not. With that removed, facilitation is +0.358 instead of +0.41, and its interval still lies
-well above zero. The registered result stands.
+**The A2 artefact.** The audit found that the two A2 arms differed in more than sound. In
+loom-alone trials the ear afferents loaded the giant fiber; in loom-plus-sound trials they did
+not. With that removed, the registered test gives +0.358, and its interval lies well above zero.
+The registered result stands.
+
+The two runs cannot be compared directly: the input, the adaptation and the working point also
+changed between them. At the original gain of 0.6, however, the rerun sweep gives +0.40 against
+the original +0.408. Whatever the artefact contributed, the effect did not depend on it.
 
 **R2 is now a real failure.** With the wing afferents excluded from the relay layer, the selectivity
 of SNpp16 for the upstroke muscles fails at three of seven cord settings:
@@ -115,7 +121,9 @@ in the battery. Two things changed from the September battery (16/16 almost ever
   0.56 mV depolarisation. A4 is the weakest control.
 
 **Not rerun:** `roi_membership`, `check_modulators` and `fit_regional`. These need the ROI volumes
-(menu 25); no scored result depends on them.
+(menu 25), which the cloud machines do not have. One consequence: in the cloud, feeding
+F2b's SEZ readout (calibrated) fell back to the type-name rule instead of the anatomical SEZ. It
+passes either way (0.0025 against a 0.02 Hz limit), but the anatomical readout needs menu 25.
 
 **Fixed along the way:**
 - **Registered tests could not be rerun.** A registered test compared its saved criteria with its
@@ -235,8 +243,8 @@ lobula columnar populations at measured amplitudes fires the giant fiber 1.46 ti
 cell with a response probability of 0.575 (95% CI 0.42 to 0.71, 40 trials) and a latency of 39.7 ms
 (rerun 11 October 2026 at `45126da`, adaptation 10 mV; earlier 1.06, 0.68 and 37 ms).
 Each GF spike drives exactly one TTMn spike 0.9 ms later through a modelled gap junction. Without
-the electrical model TTMn is silent; on a degree-preserving rewired connectome nothing fires at
-all. This is a sensory-to-motor cascade across the neck connective at physiological latency.
+the electrical model TTMn is silent. On a degree-preserving rewired connectome neither the giant
+fiber nor TTMn fires (population rate 4e-7 Hz). This is a sensory-to-motor cascade across the neck connective at physiological latency.
 
 **Auditory input to the giant fiber** (`benchmarks/auditory.py`, 4 scored checks). Johnston's organ
 drive alone leaves GF subthreshold, as recorded in vivo. Removing both the electrical model and
@@ -258,16 +266,16 @@ ear afferents' load on the giant fiber kept in both arms) chose gain 0.8:
 | difference | | **+0.358 (+0.240 to +0.463)** |
 
 The original registered run (`c097e41`, gain 0.6) gave 5/120 against 54/120, +0.408 (+0.308 to
-+0.501). Part of that difference came from the load artefact the audit found (10 October 2026).
++0.501). The runs differ in input, adaptation and working point, so the two differences cannot
+be compared directly. At the same gain of 0.6 the rerun sweep gives +0.40 (below).
 
 **A2R: PASS.** The interval lies entirely above zero, so the model reproduces the facilitation. Sound
 alone stays subthreshold (A1), a near-threshold loom rarely fires the giant fiber, and together they
-fire it on nearly half of trials. This resolves a question the project had carried as "unresolved"
+fire it on more than half of trials. This resolves a question the project had carried as "unresolved"
 since its first week; the earlier inconclusive readings came from too few trials and from an interval
 function that was wrong until it was corrected and verified. Caveat: the calibrated working point
-moved from gain 0.8 in earlier runs to 0.6 here, because the loom input changed to the measured
-stationary amplitudes in between, and this run does not show how the effect varies across working
-points. That caveat was then tested:
+moves with the loom input and the adaptation (0.6 in the original run, 0.8 in the rerun), and one
+run does not show how the effect varies across working points. That caveat was then tested:
 
 **Facilitation is robust across working points** (`benchmarks/a2_robustness.py`; registered at
 `cc8d759`). The same protocol at five fixed loom gains, 100 trials per arm, with "near threshold"
@@ -291,13 +299,16 @@ observations:
 - **The effect rises, then levels off** from gain 0.6 (+0.40, +0.40, +0.38). The September sweep
   peaked at 0.6 and fell to +0.27 at 0.8, where the loom alone already fired 36 of 100. With the
   ear afferents' load now kept in both arms (and the stationary input and 10 mV adaptation), the
-  loom alone fires less at each gain, and the drop is not reached inside the grid.
+  loom alone fires less from gain 0.6 up (0, 10 and 18 of 100, against 3, 16 and 36), and the
+  drop is not reached inside the grid.
 - **It replicates.** At gain 0.8 the sweep gives 0.180 to 0.560, against 0.175 to 0.533 in the
   registered 120-trial run.
 
-**Feeding, partially** (`benchmarks/feeding.py`, 4 scored checks). Each of MN9's excitatory
-second-order inputs drives it when stimulated directly; MN9 is silent on a rewired null; activity
-stays inside the SEZ; motor rates stay physiological. What fails is the part that matters, below.
+**Feeding, partially** (`benchmarks/feeding.py`, 2 scored checks since the audit). Activity stays
+inside the SEZ and motor rates stay physiological. Each of MN9's excitatory second-order inputs
+drives it when stimulated directly, and MN9 is silent on a rewired null. Both are now reported,
+not scored, because the audit found they could not fail (F4 in fallback mode, F5). What fails is
+the part that matters, below.
 
 ---
 
@@ -809,8 +820,9 @@ input (`scripts/overnight.py`, `results/overnight/`):
 | **targeted NT inversion** | **all pass, 0 failures** | - |
 
 The targeted arm inverts the sign of every neuron whose own per-T-bar predictions disagree with
-the aggregate label used for signing: 132,680 edges, 2.0% of synaptic weight. It costs nothing
-anywhere, so **no scored result rests on a transmitter call the classifier is uncertain about**.
+the aggregate label used for signing: 132,680 edges, 2.0% of synaptic weight. (Since the audit,
+disagreement is judged by sign: 110,462 edges, 1.6%. The 11 October rerun gives the same result.) It
+costs nothing anywhere, so **no scored result rests on a transmitter call the classifier is uncertain about**.
 That is stronger than surviving an arbitrary 5% flip, which is why both are reported. The weight
 scale has a genuine plateau rather than a knife edge: 0.30 and 0.35 both pass and the two failures
 sit on opposite sides. The last two rows have 17 checks because the auditory benchmark gained one
