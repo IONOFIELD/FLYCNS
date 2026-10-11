@@ -21,7 +21,7 @@
       "gf_hit": 0.0,
       "gf_lat_ms": NaN,
       "pop_rate_hz": 0.0007449967442911879,
-      "wall_s": 149.5,
+      "wall_s": 279.5,
       "n_trials": 40,
       "gf_depol_mV": 2.612484624488095
     },
@@ -30,7 +30,7 @@
       "gf_hit": 0.0,
       "gf_lat_ms": NaN,
       "pop_rate_hz": 0.0014575317568049817,
-      "wall_s": 153.8,
+      "wall_s": 280.0,
       "n_trials": 40,
       "gf_depol_mV": 3.602992810101761
     },
@@ -39,7 +39,7 @@
       "gf_hit": 0.125,
       "gf_lat_ms": 45.1800000000002,
       "pop_rate_hz": 0.0022556845868816518,
-      "wall_s": 133.9,
+      "wall_s": 255.3,
       "n_trials": 40,
       "gf_depol_mV": 4.579613364501378
     },
@@ -48,7 +48,7 @@
       "gf_hit": 0.35,
       "gf_lat_ms": 41.2785714285715,
       "pop_rate_hz": 0.0031702938797097224,
-      "wall_s": 133.0,
+      "wall_s": 257.3,
       "n_trials": 40,
       "gf_depol_mV": 5.45742049383857
     },
@@ -57,7 +57,7 @@
       "gf_hit": 0.95,
       "gf_lat_ms": 42.271052631578804,
       "pop_rate_hz": 0.005040089630087605,
-      "wall_s": 133.6,
+      "wall_s": 256.6,
       "n_trials": 40,
       "gf_depol_mV": 6.574275466048133
     },
@@ -97,7 +97,7 @@
       "gf_hit": 0.0,
       "gf_lat_ms": NaN,
       "pop_rate_hz": 0.003760645813521642,
-      "wall_s": 137.8,
+      "wall_s": 258.9,
       "n_trials": 40,
       "gf_depol_mV": 1.5813421035924158
     },
@@ -106,7 +106,7 @@
       "gf_hit": 0.0,
       "gf_lat_ms": NaN,
       "pop_rate_hz": 0.003760645813521642,
-      "wall_s": 130.9,
+      "wall_s": 241.1,
       "n_trials": 40,
       "gf_depol_mV": 0.08116931799289313
     },
@@ -115,7 +115,7 @@
       "gf_hit": 1.0,
       "gf_lat_ms": 14.464999999999495,
       "pop_rate_hz": 0.003790244599971397,
-      "wall_s": 134.6,
+      "wall_s": 247.4,
       "n_trials": 40,
       "gf_depol_mV": 3.67133265490943
     },
@@ -124,7 +124,7 @@
       "gf_hit": 0.125,
       "gf_lat_ms": 45.1800000000002,
       "pop_rate_hz": 0.0022556845868816518,
-      "wall_s": 136.7,
+      "wall_s": 259.0,
       "n_trials": 40,
       "gf_depol_mV": 4.579613364501378
     },
@@ -133,7 +133,7 @@
       "gf_hit": 0.025,
       "gf_lat_ms": 13.800000000000182,
       "pop_rate_hz": 0.006244086662352357,
-      "wall_s": 138.2,
+      "wall_s": 268.4,
       "n_trials": 40,
       "gf_depol_mV": 2.7795457699983315
     },
@@ -142,7 +142,7 @@
       "gf_hit": 0.0,
       "gf_lat_ms": NaN,
       "pop_rate_hz": 0.000251589684822922,
-      "wall_s": 135.2,
+      "wall_s": 250.2,
       "n_trials": 40,
       "gf_depol_mV": 0.0
     },
@@ -180,8 +180,8 @@
   },
   "pass": true,
   "provenance": {
-    "written_at": "2026-10-11T10:04:46",
-    "git_commit": "329488d",
+    "written_at": "2026-10-11T14:42:45",
+    "git_commit": "d72fe77",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -198,6 +198,7 @@
     },
     "engine": "cython",
     "platform": "win32",
+    "machine": "AMD64",
     "loom_input": {
       "source": "MEASURED (stationary trials, 13 series): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09)",
       "state": "stationary",
@@ -208,7 +209,11 @@
       "min_weight": 5,
       "n_neurons": 176422,
       "n_signed_edges": 6127738,
-      "n_signed_synapses": 88316807
+      "n_signed_synapses": 88316807,
+      "n_dropped_unsigned_edges": 160051,
+      "n_dropped_unsigned_synapses": 1980492,
+      "n_silent_presynaptic": 8020,
+      "edges_nt_used": false
     },
     "data": {
       "dir": "data",
