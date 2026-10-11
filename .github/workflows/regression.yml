@@ -122,10 +122,14 @@ jobs:
           Must .\.venv\Scripts\python.exe scripts\make_testdata.py | Out-Null
           Copy-Item testdata\*.parquet data\
           Must .\.venv\Scripts\python.exe -m flycns.integrity write data | Out-Null
-          # registrations made on the real connectome do not fit the toy graph; the toy registers its own
-          Must git rm -q --ignore-unmatch "results/*/criteria.json" "results/*/registration.json" | Out-Null
+          # Registrations made on the real connectome do not fit the toy graph; the toy registers its own.
+          # Deleting them in a commit would be refused (a deleted registration may not register again), so
+          # the stand-in project starts as a fresh history: one commit, this tree, no registrations.
+          Must git checkout -q --orphan fresh | Out-Null
+          Must git rm -q --cached --ignore-unmatch "results/*/criteria.json" "results/*/registration.json" | Out-Null
+          Get-ChildItem results -Recurse -Include criteria.json, registration.json | Remove-Item
           Must git add data/MANIFEST.json | Out-Null
-          Must git commit -qm "CI: toy data pinned in place of the connectome" | Out-Null
+          Must git commit -qm "CI: a fresh project on toy data" | Out-Null
           # a registered test scores only under a committed registration: register the toy's own first,
           # as a maintainer registers before a run (flycns/registry.py)
           $env:FLYCNS_REGISTER_ONLY = "1"
@@ -135,11 +139,18 @@ jobs:
           Remove-Item Env:FLYCNS_REGISTER_ONLY
           Must git add results | Out-Null
           Must git commit -qm "CI: register the toy's own tests" | Out-Null
-          Must git push -q | Out-Null
+          Must git branch -M ci-main | Out-Null
+          Must git push -q -f origin ci-main | Out-Null
+          Must git branch -q -u origin/ci-main | Out-Null
           $before = [int](Must git -C "$w\remote.git" rev-list --count HEAD).Trim()
           $out = "51`n`nq`n" | .\fly.cmd 2>&1 | Out-String
           Write-Output $out
-          if ($LASTEXITCODE -ne 0 -or $out.Contains("STOPPED") -or $out.Contains("Traceback")) { Fail "menu 51 did not finish" $out }
+          if ($LASTEXITCODE -ne 0 -or $out.Contains("STOPPED") -or $out.Contains("Traceback")) {
+            # the lines that say why, not the menu that follows them
+            $why = ($out -split "`n" | Select-String -Pattern "refuse|STOPPED|Traceback|Error|\[integrity\]|\[registry\]|failed" |
+                    Select-Object -Last 12 | ForEach-Object { $_.Line }) -join "`n"
+            Fail "menu 51 did not finish" ($(if ($why) { $why } else { $out }))
+          }
           $after = [int](Must git -C "$w\remote.git" rev-list --count HEAD).Trim()
           $last = (Must git -C "$w\remote.git" log -1 --format=%s).Trim()
           Write-Output "remote commits: $before -> $after; last: $last"
