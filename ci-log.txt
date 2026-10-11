@@ -1,0 +1,51 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+campaniform afferents 413; DLMn c-f 8; DVMn 1a-c 6; DNg02 subtypes 7
+excitatory relays onto DLMn c-f: 92, by superclass: {'vnc_intrinsic': 74, 'ascending_neuron': 12, 'descending_neuron': 5, 'vnc_sensory': 1}
+varying ONLY: ['vnc_intrinsic', 'ascending_neuron', 'descending_neuron']
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+tau_m_ms      =   5.0        | DLMn c-f   0.82 | DVMn   2.27 | steer   40.4 | exc relays  12/92 | CNS 0.825 | 109s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+tau_m_ms      =   5.0 +DNg02 | DLMn c-f   0.82 | DVMn   2.69 | steer   40.7 | exc relays  11/92 | CNS 0.825 | 96s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+tau_m_ms      =  10.0        | DLMn c-f   0.00 | DVMn   7.66 | steer   17.6 | exc relays   7/92 | CNS 0.179 | 44s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+tau_m_ms      =  10.0 +DNg02 | DLMn c-f   0.00 | DVMn   9.26 | steer   16.6 | exc relays   7/92 | CNS 0.177 | 36s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+tau_m_ms      =  20.0        | DLMn c-f   0.00 | DVMn   6.48 | steer   16.4 | exc relays   6/92 | CNS 0.141 | 36s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+tau_m_ms      =  20.0 +DNg02 | DLMn c-f   0.00 | DVMn   6.82 | steer   16.4 | exc relays   6/92 | CNS 0.141 | 36s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+tau_m_ms      =  40.0        | DLMn c-f   0.00 | DVMn   6.31 | steer   19.9 | exc relays   6/92 | CNS 0.133 | 36s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+tau_m_ms      =  40.0 +DNg02 | DLMn c-f   0.00 | DVMn   6.99 | steer   19.9 | exc relays   6/92 | CNS 0.133 | 38s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+v_thresh_mV   = -48.0        | DLMn c-f   0.00 | DVMn   9.68 | steer    6.2 | exc relays  17/92 | CNS 0.188 | 37s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+v_thresh_mV   = -48.0 +DNg02 | DLMn c-f   0.00 | DVMn  10.69 | steer    6.1 | exc relays  15/92 | CNS 0.188 | 41s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+v_thresh_mV   = -46.5        | DLMn c-f   0.00 | DVMn   6.73 | steer   12.3 | exc relays  10/92 | CNS 0.158 | 36s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+v_thresh_mV   = -46.5 +DNg02 | DLMn c-f   0.00 | DVMn   7.66 | steer   12.3 | exc relays  10/92 | CNS 0.158 | 37s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+v_thresh_mV   = -45.0        | DLMn c-f   0.00 | DVMn   6.48 | steer   16.4 | exc relays   6/92 | CNS 0.141 | 36s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+v_thresh_mV   = -45.0 +DNg02 | DLMn c-f   0.00 | DVMn   6.82 | steer   16.4 | exc relays   6/92 | CNS 0.141 | 37s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+v_thresh_mV   = -42.0        | DLMn c-f   0.00 | DVMn   6.06 | steer   20.7 | exc relays   3/92 | CNS 0.131 | 37s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+v_thresh_mV   = -42.0 +DNg02 | DLMn c-f   0.00 | DVMn   6.31 | steer   20.4 | exc relays   3/92 | CNS 0.131 | 37s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+refractory_ms =   1.0        | DLMn c-f   0.00 | DVMn   6.57 | steer   17.4 | exc relays   6/92 | CNS 0.142 | 37s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+refractory_ms =   1.0 +DNg02 | DLMn c-f   0.00 | DVMn   6.90 | steer   17.5 | exc relays   6/92 | CNS 0.142 | 38s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+refractory_ms =   2.2        | DLMn c-f   0.00 | DVMn   6.48 | steer   16.4 | exc relays   6/92 | CNS 0.141 | 36s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+refractory_ms =   2.2 +DNg02 | DLMn c-f   0.00 | DVMn   6.82 | steer   16.4 | exc relays   6/92 | CNS 0.141 | 38s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+refractory_ms =   5.0        | DLMn c-f   0.00 | DVMn   6.48 | steer   16.8 | exc relays   7/92 | CNS 0.139 | 39s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+refractory_ms =   5.0 +DNg02 | DLMn c-f   0.00 | DVMn   7.07 | steer   16.6 | exc relays   7/92 | CNS 0.139 | 37s
+
+VERDICT: DLMn c-f stays below 2 Hz across the whole sweep of relay-layer tau_m, threshold gap and refractory period, with and without the DNg02 command: the flight claim does not rest on the relay layer's inherited parameters.
+wrote results\sensitivity_flight\grid.csv and summary.json
