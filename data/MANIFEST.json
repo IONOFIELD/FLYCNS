@@ -2,7 +2,7 @@
   "algorithm": "rowhash-v2",
   "pandas": "3.0.6",
   "dataset": "male-cns:v1.0 (neuprint.janelia.org)",
-  "written_at": "2026-10-11T12:32:28",
+  "written_at": "2026-10-11T16:47:37",
   "files": {
     "edges.parquet": {
       "digest": "becf568580708ba9d6c6170e2daa407a806a8ac64ffcbb70a29cc8bfdae78d3d",
@@ -19,7 +19,8 @@
         "pre": "18683378936444",
         "sign": 1499819.0,
         "weight": "90297299"
-      }
+      },
+      "sha256": "2a0629ed00a876c382a48846f5fc75da554c7eaf938ef32ce462ee788d752414"
     },
     "edges_nt.parquet": {
       "digest": "4bcc6084a7fde88b6f318435717ddd03fded1e9d571399300cad8f45bdaf9641",
@@ -40,7 +41,8 @@
         "pre": "18683378936444",
         "sign": 1499819.0,
         "weight": "90297299"
-      }
+      },
+      "sha256": "480ab88439fc647fb325fa146f2ed6a26cdbfe8b5d7bcfbdb94645032af3d86a"
     },
     "neurons.parquet": {
       "digest": "06ea0afb48c414adecc6419b51a3fd8357ecbc0067ab9f55cc8cb7f06da3cb93",
@@ -73,7 +75,8 @@
         "x": 6882363994.0,
         "y": 4592901473.0,
         "z": 5503515286.0
-      }
+      },
+      "sha256": "b60448d9e2f26bfc0389cada9bb08a1a4d5f4d2149163da3fdd3e48621ee9e21"
     },
     "roi_membership.parquet": {
       "digest": "5fce5c5d54e455704cc91124b0327e6be770447c1304d4d6b49ddbd406677d60",
@@ -90,7 +93,8 @@
         "dominant_frac": 132068.894561,
         "n_syn": "173844672",
         "sez_frac": 7160.603613
-      }
+      },
+      "sha256": "34eb88a9bda0aab28e897f97e69eaee822320565c61d706d53deec588849a4df"
     }
   }
 }
