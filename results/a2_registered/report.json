@@ -22,30 +22,49 @@
     ]
   },
   "loom_plus_sound": {
-    "k": 64,
-    "p": 0.5333333333333333,
+    "k": 61,
+    "p": 0.5083333333333333,
     "ci": [
-      0.44442629105796966,
-      0.6201723575383018
+      0.420023820848017,
+      0.5961258413010508
     ]
   },
-  "difference": 0.35833333333333334,
+  "difference": 0.3333333333333333,
   "difference_ci95": [
-    0.24021950706448786,
-    0.46253630486715763
+    0.21566862415888308,
+    0.43833222669354754
   ],
   "outcome": "PASS facilitation",
   "auditory_report_ci": [
-    0.24021950706448786,
-    0.46253630486715763
+    0.21566862415888308,
+    0.43833222669354754
   ],
   "checks": {
     "A2R_facilitation": true
   },
-  "wall_s": 4257,
+  "wall_s": 4289,
+  "uncertainty": {
+    "A2R_facilitation": {
+      "estimate": 0.3333333333333333,
+      "ci95": [
+        0.21566862415888308,
+        0.43833222669354754
+      ],
+      "band": [
+        0,
+        null
+      ],
+      "method": "newcombe (as registered)",
+      "verdict": "PASS",
+      "band_lower_exclusive": true,
+      "n": 120,
+      "note": "P(GF|loom+sound) - P(GF|loom) at the calibrated working point; Newcombe 1998 method 10 recomputed from counts (n per arm). Registered outcomes: CI above zero PASS, below zero FAIL, spans zero FAIL (unresolved at this trial count)",
+      "registered_outcome": "PASS facilitation"
+    }
+  },
   "provenance": {
-    "written_at": "2026-10-11T14:39:08",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T18:41:01",
+    "git_commit": "e4e5524",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -60,6 +79,7 @@
     "engine": "not used",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "data": {
       "dir": "data",
       "digests": {
