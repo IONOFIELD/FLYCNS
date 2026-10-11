@@ -30,22 +30,24 @@ GitHub's Windows machines (`.github/workflows/rerun.yml`), one machine per run. 
 benchmarks never rerun under integrity stamping: pc1 song, DNp13 control, feeding by modality,
 gustatory map, sugar laterality, SNpp16 and SNpp16 graded. The final run (run 5) reran everything
 at one commit.
-- **Data.** Two tables are pinned in `data/MANIFEST.json`:
-  - the connectome from neuPrint: 176,422 neurons and 6,287,789 edges;
+- **Data.** Three files are pinned in `data/MANIFEST.json`:
+  - the connectome from neuPrint: neurons (176,422) and edges (6,287,789);
   - each neuron's neuropil membership, which defines the anatomical SEZ: 174,802 neurons.
 
-  Every rerun fetches both again, and setup refuses data that differ from the pin. All four
-  fetches matched.
-- **Code.** Every report in `results/` was produced at commit `fcff151`, on committed code.
-- **Engine.** Every simulation used the compiled engine, on Windows. Wrapper and static-analysis
-  scripts record "not used".
+  Every rerun (runs 2 to 5) fetched them again, and setup refuses data that differ from the pin.
+  Every run passed that check.
+- **Code.** Every stamped result was produced at commit `fcff151`, on committed code: every
+  report.json, the two traces and the flight sensitivity summary, 75 files in all.
+- **Engine.** Every stamped simulation used the compiled engine, on Windows. Wrapper and
+  static-analysis scripts record "not used".
 
 **Result: every report in `results/SUITE.md` now carries a clean stamp. None is stale, unstamped,
 dirty or perturbed.** 36 of 48 scored checks pass under one parameter set; the independent checks
 pass 13 of 24.
 
-The reruns are deterministic. Run 5 reproduced run 2 to the last digit in every benchmark. The
-only exceptions are the readouts that use the SEZ, which changed as intended (below). The seven
+The reruns are deterministic. Run 5 reproduced the earlier runs to the last digit in every
+benchmark: run 2, and run 3 for the seven benchmarks below. The only exceptions are the readouts
+that use the SEZ, which changed as intended (below). The seven
 benchmarks rerun for stamping reproduced their earlier pass and fail pattern exactly:
 - pc1 song: 4 of 4;
 - DNp13: 1 of 2;
@@ -70,7 +72,7 @@ of 2, and 5 mV fails it at 2.3.
 
 | result | before | now |
 |---|---|---|
-| Escape (calibrated) | P 0.68, 1.06 spikes per response, 37 ms | P 0.575 (0.42 to 0.71), 1.46 spikes, 39.7 ms; all 8 checks pass |
+| Escape (calibrated) | quoted as P 0.68, 1.06 spikes, 37 ms; the committed report (a perturbed run) gave 0.65, 1.19, 38.7 ms | P 0.575 (0.42 to 0.71), 1.46 spikes, 39.7 ms; all 8 checks pass |
 | A2R, sound facilitates a near-threshold loom (registered) | 0.042 to 0.450, +0.41 | **0.175 to 0.533, +0.358 (95% CI +0.240 to +0.463): PASS** |
 | RA2, facilitation across working points (registered) | PASS | **PASS at all five gains**, +0.20 to +0.40 |
 | Stricter null, superclass-preserving (registered; first committed run) | not run | **PASS**: escape and pC1 song both silent on it |
@@ -130,12 +132,23 @@ table and the manifest pins it. With the anatomical SEZ (primary ROIs only, 4,60
 neurons):
 - **Feeding F2b (calibrated).** The rate outside the SEZ is 0.00035 Hz against a 0.02 Hz limit:
   pass. Under the name rule it was 0.0025 Hz.
-- **check_modulators.** There is still no aminergic modulator in the SEZ. None of the 900
-  output-dominated midline SEZ bodies is predicted dopaminergic (862 bodies before the nested-ROI
-  fix).
+- **check_modulators.** There is still no dopaminergic or octopaminergic SEZ modulator. No such
+  cell has more than half its synapses in the SEZ; one dopaminergic and two octopaminergic cells
+  now pass 20%, against none before the nested-ROI fix. Serotonin keeps its 10 SEZ cells. None of
+  the 900 output-dominated midline SEZ bodies is predicted dopaminergic (862 before).
 - **fit_regional** (the retired SEZ gain). No SEZ gain from 1.5 to 2.5 lets taste drive MN9, as
-  before. With adaptation at 10 mV, the fit's quick escape check (GF hit at least 0.8) now fails
-  at every gain (0.67). The regional gain stays retired at 1.0.
+  before. The fit's quick escape check (GF hit at least 0.8) now fails at every gain (0.67). The
+  previous grid ran with 15 mV adaptation, the all-trials input and the name-based SEZ, so the
+  cause is not isolated. The regional gain stays retired at 1.0.
+
+**Not rerun, and unstamped:** the diagnostics outside the suite.
+- `sensitivity_cord` (the "Cord parameters" paragraph below dates from 9 September, under 30 mV
+  adaptation and the all-trials input);
+- `embodiment/gate.json`, `feeding/mechanism.json` and the feeding afferent screens;
+- the baseline and gain fits;
+- the brainsets export and the Turner 2022 extraction.
+
+These scripts write no integrity stamp yet.
 
 **Fixed along the way:**
 - **Registered tests could not be rerun.** A registered test compared its saved criteria with its
@@ -149,8 +162,12 @@ neurons):
 - **The cloud rerun had no anatomical SEZ.** See "The SEZ trio" above.
 - **Two misleading log lines.** Registered tests printed the current commit as the registration
   commit. Flight runs warned about "no outgoing edges" when they had no stimulus types to warn
-  about.
-- **The citation check missed four references.** It now resolves all 48 tags.
+  about. Still open: the SNpp16 graded report's `registration` field also records the run's commit
+  (fcff151). The true registration (fae9fdb, 25 September) is in its `criteria.json`. This is
+  deferred to the next model change, because any edit to a benchmark marks every report stale.
+- **The citation check missed three references** (Namiki et al. 2022, Sasaki & Burrows 1998,
+  Newcombe 1998). It also raised false alarms on dates and on accents (Pezier, Pézier). It now
+  resolves all 48 tags.
 
 ---
 
@@ -254,10 +271,11 @@ affected committed results are marked **rerun pending** and must not be quoted u
 
 ## 1. What passes
 
-**Loom escape** (`benchmarks/gf_escape.py`, 8 scored checks). Driving the nine loom-sensitive
-lobula columnar populations at measured amplitudes fires the giant fiber 1.46 times per responding
+**Loom escape** (`benchmarks/gf_escape.py`, 8 scored checks). Driving the 13 loom-sensitive
+visual projection types (2,526 cells) at measured amplitudes fires the giant fiber 1.46 times per responding
 cell with a response probability of 0.575 (95% CI 0.42 to 0.71, 40 trials) and a latency of 39.7 ms
-(rerun 11 October 2026 at `fcff151`, adaptation 10 mV; earlier 1.06, 0.68 and 37 ms).
+(rerun 11 October 2026 at `fcff151`, adaptation 10 mV; quoted earlier as 1.06, 0.68 and 37 ms,
+values no committed report confirms).
 Each GF spike drives exactly one TTMn spike 0.9 ms later through a modelled gap junction. Without
 the electrical model TTMn is silent. On a degree-preserving rewired connectome neither the giant
 fiber nor TTMn fires (population rate 4e-7 Hz). This is a sensory-to-motor cascade across the neck connective at physiological latency.
@@ -781,13 +799,14 @@ neither can the alternatives (`fit/check_modulators.py`):
   6, NPF 4), but there is no TH-VUM. AKH-producing cells are absent as expected for a
   neuroendocrine organ outside the CNS.
 - **By transmitter and region:** of 396 dopaminergic and 101 octopaminergic neurons, **none has
-  even 20% of its synapses in SEZ compartments**; they sit in the mushroom body, central complex
-  and abdominal neuromere. Only serotonin has any SEZ presence (10 cells above 50%). This also
+  half of its synapses in SEZ compartments**; they sit in the mushroom body, central complex and
+  abdominal neuromere. (Rerun 11 October 2026 over primary ROIs only: one dopaminergic and two
+  octopaminergic cells pass 20%. Before the nested-ROI fix none did.) Only serotonin has any SEZ presence (10 cells above 50%). This also
   rules out the SEZ octopaminergic AKHR route.
-- **By morphology:** of 1,037 midline bodies with more than half their synapses in the SEZ, 862
+- **By morphology:** of 1,088 midline bodies with more than half their synapses in the SEZ, 900
   are output-dominated (the nSyb-GFP phenotype Marella describes), and **zero are
-  dopamine-predicted**. Four contact MN9's relays at all; two are cholinergic and therefore
-  excitatory, two have unclear transmitters with contact weights under 110 synapses against the
+  dopamine-predicted** (rerun 11 October 2026; 1,037 and 862 before the nested-ROI fix). Five
+  contact MN9's relays at all. The largest contact is 168 synapses (body 331473), against the
   ~6,000 reaching MN9.
 
 The likeliest explanation is a classifier blind spot rather than a missing neuron: Eckstein et al.
@@ -855,7 +874,8 @@ neurons. Every escape check passes at every setting except one. At a 10 mV thres
 GF-to-TTMn spikelet is subthreshold, so the one-to-one relay and its lag fail: the TTMn/GF ratio is
 0.31 and the lag 24.6 ms. (Correction, 10 October 2026: this paragraph previously said "every metric
 unchanged" and "14,153 neurons", contradicting the committed grid.) The escape result therefore
-depends on the cord threshold staying within about 9 mV of rest.
+depends on the cord threshold staying within about 9 mV of rest. *This sweep dates from 9 September
+(30 mV adaptation, all-trials input) and has not been rerun.*
 
 ---
 
