@@ -42,10 +42,10 @@
   "checks": {
     "A2R_facilitation": true
   },
-  "wall_s": 4313,
+  "wall_s": 4600,
   "provenance": {
-    "written_at": "2026-10-11T07:40:33",
-    "git_commit": "fcff151",
+    "written_at": "2026-10-11T10:54:17",
+    "git_commit": "329488d",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
