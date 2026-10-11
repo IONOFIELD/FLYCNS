@@ -11,36 +11,53 @@
       "spans": "FAIL unresolved at this trial count"
     }
   },
-  "working_point_loom_gain": 0.6,
+  "working_point_loom_gain": 0.8,
   "n_trials_per_arm": 120,
   "loom_alone": {
-    "k": 5,
-    "p": 0.041666666666666664,
+    "k": 21,
+    "p": 0.175,
     "ci": [
-      0.017926452505837808,
-      0.09384212929543091
+      0.11740448670592564,
+      0.25275868948042857
     ]
   },
   "loom_plus_sound": {
-    "k": 54,
-    "p": 0.45,
+    "k": 60,
+    "p": 0.5,
     "ci": [
-      0.3639158452162006,
-      0.5391861818893925
+      0.411937137430229,
+      0.588062862569771
     ]
   },
-  "difference": 0.4083333333333333,
+  "difference": 0.325,
   "difference_ci95": [
-    0.3076717189743001,
-    0.5006251141613671
+    0.2075202930132353,
+    0.430225048898018
   ],
   "outcome": "PASS facilitation",
   "auditory_report_ci": [
-    0.3076717189743001,
-    0.5006251141613671
+    0.2075202930132353,
+    0.430225048898018
   ],
   "checks": {
     "A2R_facilitation": true
   },
-  "wall_s": 3385
+  "wall_s": 4300,
+  "provenance": {
+    "written_at": "2026-10-11T00:10:08",
+    "git_commit": "d313cfa",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "not used",
+    "platform": "win32"
+  }
 }
