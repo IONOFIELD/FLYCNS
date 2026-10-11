@@ -38,7 +38,7 @@
         "ps1 MN": 6.414,
         "tp1 MN": 1.162
       },
-      "wall_s": 266,
+      "wall_s": 316,
       "seed": 0,
       "undriven_spikes": 21156,
       "per_wing_type_sd": {
@@ -145,7 +145,7 @@
         "ps1 MN": 6.262,
         "tp1 MN": 0.96
       },
-      "wall_s": 168,
+      "wall_s": 209,
       "seed": 0,
       "undriven_spikes": 60889,
       "per_wing_type_sd": {
@@ -263,7 +263,7 @@
         "ps1 MN": 6.008,
         "tp1 MN": 1.264
       },
-      "wall_s": 165,
+      "wall_s": 203,
       "seed": 0,
       "undriven_spikes": 77534,
       "per_wing_type_sd": {
@@ -381,7 +381,7 @@
         "iii3 MN": 12.978,
         "ps1 MN": 5.706
       },
-      "wall_s": 165,
+      "wall_s": 209,
       "seed": 0,
       "undriven_spikes": 97668,
       "per_wing_type_sd": {
@@ -496,7 +496,7 @@
         "iii3 MN": 29.24,
         "ps1 MN": 0.354
       },
-      "wall_s": 166,
+      "wall_s": 206,
       "seed": 0,
       "undriven_spikes": 108443,
       "per_wing_type_sd": {
@@ -610,7 +610,7 @@
         "iii3 MN": 22.778,
         "ps1 MN": 6.618
       },
-      "wall_s": 164,
+      "wall_s": 225,
       "seed": 0,
       "undriven_spikes": 167396,
       "per_wing_type_sd": {
@@ -726,7 +726,7 @@
         "iii3 MN": 3.484,
         "tp2 MN": 0.908
       },
-      "wall_s": 169,
+      "wall_s": 208,
       "seed": 0,
       "undriven_spikes": 372873,
       "per_wing_type_sd": {
@@ -832,7 +832,7 @@
       "per_wing_type_hz": {
         "DLMn c-f": 0.606
       },
-      "wall_s": 165,
+      "wall_s": 196,
       "seed": 0,
       "undriven_spikes": 13765,
       "per_wing_type_sd": {
@@ -931,7 +931,7 @@
         "iii3 MN": 2.78,
         "tp2 MN": 1.52
       },
-      "wall_s": 51,
+      "wall_s": 56,
       "load_trace": [
         {
           "t_ms": 250.0,
@@ -1165,7 +1165,7 @@
         "tp1 MN": 0.86,
         "tp2 MN": 1.618
       },
-      "wall_s": 238,
+      "wall_s": 269,
       "seed": 0,
       "undriven_spikes": 61113,
       "per_wing_type_sd": {
@@ -1286,7 +1286,7 @@
         "tp1 MN": 0.456,
         "tp2 MN": 26.11
       },
-      "wall_s": 173,
+      "wall_s": 200,
       "seed": 0,
       "undriven_spikes": 62655,
       "per_wing_type_sd": {
@@ -1409,7 +1409,7 @@
         "tp1 MN": 0.202,
         "tp2 MN": 66.712
       },
-      "wall_s": 178,
+      "wall_s": 201,
       "seed": 0,
       "undriven_spikes": 67536,
       "per_wing_type_sd": {
@@ -1542,7 +1542,7 @@
         "ps1 MN": 45.396,
         "tp2 MN": 127.562
       },
-      "wall_s": 168,
+      "wall_s": 200,
       "seed": 0,
       "undriven_spikes": 86778,
       "per_wing_type_sd": {
@@ -1648,7 +1648,7 @@
     "L3_leg_mn_not_entrained": true,
     "L4_steering_specific_vs_null": true,
     "L5_DLMn_cf_2_to_12_hz_with_DNg02": false,
-    "L6_DVMn_still_in_band_with_DNg02": false
+    "L6_DVMn_still_in_band_with_DNg02": null
   },
   "anchor": {
     "load": 0.25,
@@ -1743,6 +1743,7 @@
       "onto_wing_mn": 3670
     }
   },
+  "L6_as_coded_equals_L5": false,
   "uncertainty": {
     "L1a_DVMn_2_to_12_hz": {
       "estimate": 0.2,
@@ -2040,208 +2041,6 @@
       ],
       "verdict": "FAIL",
       "note": "some DNg02 rate with DLMn c-f and DVMn 1a-c both in band per recruitment seed"
-    },
-    "L6_DVMn_still_in_band_with_DNg02": {
-      "estimate": null,
-      "ci95": null,
-      "band": null,
-      "method": "any of 4 parts",
-      "parts": [
-        {
-          "estimate": null,
-          "ci95": null,
-          "band": null,
-          "method": "all of 2 parts",
-          "parts": [
-            {
-              "estimate": 0.0,
-              "ci95": null,
-              "band": [
-                2.0,
-                12.0
-              ],
-              "method": "per-draw (0 of 5 in band; pass needs 4)",
-              "draws": [
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "n": 5,
-              "verdict": "FAIL",
-              "note": "DLMn c-f, DNg02 10 Hz"
-            },
-            {
-              "estimate": 0.2,
-              "ci95": null,
-              "band": [
-                2.0,
-                12.0
-              ],
-              "method": "per-draw (1 of 5 in band; pass needs 4)",
-              "draws": [
-                6.82,
-                0.08,
-                0.0,
-                12.79,
-                17.09
-              ],
-              "n": 5,
-              "verdict": "FAIL",
-              "note": "DVMn 1a-c, DNg02 10 Hz"
-            }
-          ],
-          "verdict": "FAIL",
-          "note": "DNg02 10 Hz"
-        },
-        {
-          "estimate": null,
-          "ci95": null,
-          "band": null,
-          "method": "all of 2 parts",
-          "parts": [
-            {
-              "estimate": 0.0,
-              "ci95": null,
-              "band": [
-                2.0,
-                12.0
-              ],
-              "method": "per-draw (0 of 5 in band; pass needs 4)",
-              "draws": [
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "n": 5,
-              "verdict": "FAIL",
-              "note": "DLMn c-f, DNg02 25 Hz"
-            },
-            {
-              "estimate": 0.2,
-              "ci95": null,
-              "band": [
-                2.0,
-                12.0
-              ],
-              "method": "per-draw (1 of 5 in band; pass needs 4)",
-              "draws": [
-                8.25,
-                1.18,
-                0.67,
-                15.4,
-                19.44
-              ],
-              "n": 5,
-              "verdict": "FAIL",
-              "note": "DVMn 1a-c, DNg02 25 Hz"
-            }
-          ],
-          "verdict": "FAIL",
-          "note": "DNg02 25 Hz"
-        },
-        {
-          "estimate": null,
-          "ci95": null,
-          "band": null,
-          "method": "all of 2 parts",
-          "parts": [
-            {
-              "estimate": 0.0,
-              "ci95": null,
-              "band": [
-                2.0,
-                12.0
-              ],
-              "method": "per-draw (0 of 5 in band; pass needs 4)",
-              "draws": [
-                0.06,
-                0.0,
-                0.0,
-                0.06,
-                0.0
-              ],
-              "n": 5,
-              "verdict": "FAIL",
-              "note": "DLMn c-f, DNg02 50 Hz"
-            },
-            {
-              "estimate": 0.6,
-              "ci95": null,
-              "band": [
-                2.0,
-                12.0
-              ],
-              "method": "per-draw (3 of 5 in band; pass needs 4)",
-              "draws": [
-                11.95,
-                4.88,
-                3.28,
-                21.8,
-                25.42
-              ],
-              "n": 5,
-              "verdict": "UNRESOLVED",
-              "note": "DVMn 1a-c, DNg02 50 Hz"
-            }
-          ],
-          "verdict": "FAIL",
-          "note": "DNg02 50 Hz"
-        },
-        {
-          "estimate": null,
-          "ci95": null,
-          "band": null,
-          "method": "all of 2 parts",
-          "parts": [
-            {
-              "estimate": 0.6,
-              "ci95": null,
-              "band": [
-                2.0,
-                12.0
-              ],
-              "method": "per-draw (3 of 5 in band; pass needs 4)",
-              "draws": [
-                11.74,
-                10.54,
-                18.81,
-                16.22,
-                4.92
-              ],
-              "n": 5,
-              "verdict": "UNRESOLVED",
-              "note": "DLMn c-f, DNg02 100 Hz"
-            },
-            {
-              "estimate": 0.0,
-              "ci95": null,
-              "band": [
-                2.0,
-                12.0
-              ],
-              "method": "per-draw (0 of 5 in band; pass needs 4)",
-              "draws": [
-                35.18,
-                31.48,
-                30.38,
-                53.53,
-                51.68
-              ],
-              "n": 5,
-              "verdict": "FAIL",
-              "note": "DVMn 1a-c, DNg02 100 Hz"
-            }
-          ],
-          "verdict": "FAIL",
-          "note": "DNg02 100 Hz"
-        }
-      ],
-      "verdict": "FAIL",
-      "note": "some DNg02 rate with DLMn c-f and DVMn 1a-c both in band per recruitment seed; L6 is identical to L5 as coded"
     }
   },
   "reported": {
@@ -2291,9 +2090,18 @@
     "afferent_params_cross_species": "Holorusia (Fox & Daniel 2008; Fox et al. 2010), Sarcophaga (Yarger & Fox 2018), Calliphora (Fayyazuddin & Dickinson 1996)"
   },
   "pass": false,
+  "registration": {
+    "file": "results/flight_loop/registration.json",
+    "version": 2,
+    "git_commit": "4c39a8f",
+    "model_hash": "cfc5267784eb57a67b48e14d8b1a36d0f1c3ca3ecc44a4d1e4c08bad570234b3",
+    "registered_at": "2026-10-11T12:41:16",
+    "matches": true,
+    "problems": []
+  },
   "provenance": {
-    "written_at": "2026-10-11T17:39:42",
-    "git_commit": "a4eef18",
+    "written_at": "2026-10-11T20:56:16",
+    "git_commit": "b7eba83",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -2318,7 +2126,11 @@
       "n_dropped_unsigned_edges": 160051,
       "n_dropped_unsigned_synapses": 1980492,
       "n_silent_presynaptic": 8020,
-      "edges_nt_used": false
+      "edges_nt_used": false,
+      "glu_vnc": "inhibitory",
+      "n_glu_vnc_flipped": 0,
+      "jon_mode": "electrical",
+      "jon_compound_mv": 3.0
     },
     "data": {
       "dir": "data",

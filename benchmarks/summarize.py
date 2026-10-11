@@ -178,7 +178,7 @@ if missing:
 # in the file (a "provenance" key) or beside it (<file>.stamp.json, flycns/bench.py stamp)
 EXEMPT = {"results/turner2022": "input extraction from 22 GB of Turner et al. 2022 imaging; its output is a "
                                 "model input, hashed into every report's loom_input stamp"}
-NOT_RESULTS = {"criteria.json", "progress.json"}   # registrations and in-progress state
+NOT_RESULTS = {"criteria.json", "registration.json", "progress.json"}   # registrations and in-progress state
 
 
 def file_stamp(f):

@@ -1,0 +1,181 @@
+{
+  "benchmark": "a2_contact_em",
+  "variant": "em",
+  "criteria": {
+    "question": "sound-loom facilitation at the giant fiber with the JON -> GF contact as EM annotates it",
+    "contact": "679 EM chemical synapses, transmitter-signed, no electrical coupling (FLYCNS_JON=em)",
+    "protocol": "benchmarks/auditory.py in A2-only mode: working point calibrated per run on seeds BASE+1000.., loom alone on seed BASE, loom + sound on seed BASE+1, 150 Hz on the auditory JO types",
+    "trials_per_arm": 120,
+    "statistic": "P(GF | loom + sound) - P(GF | loom), Newcombe 1998 method 10 95% interval",
+    "checks": {
+      "C1_em_facilitation": {
+        "bands": [
+          [
+            null,
+            0.3
+          ],
+          [
+            0.0,
+            null
+          ]
+        ],
+        "band_lower_exclusive_on_difference": true,
+        "rule": "BOTH parts: sound alone subthreshold (Wilson interval on its GF response probability at or below 0.3) AND the difference interval above 0; FAIL if either part fails; UNRESOLVED otherwise"
+      }
+    }
+  },
+  "a2": {
+    "loom_gain": 0.6,
+    "n_trials_per_arm": 120,
+    "loom_alone_hit": 0.13333333333333333,
+    "loom_plus_jo_hit": 1.0,
+    "difference": 0.8666666666666667,
+    "difference_ci95": [
+      0.7879781397928677,
+      0.9162346282244686
+    ],
+    "loom_alone_depol_mV": 4.565542846585602,
+    "loom_plus_jo_depol_mV": 4.136794208454473,
+    "mode": "A2 only",
+    "seeds": {
+      "loom_alone": 0,
+      "loom_plus_jo": 1,
+      "sound_alone": 2
+    },
+    "calibration_seed_base": 1000
+  },
+  "construction": {
+    "sound_potential_mV": [
+      0.31502693615349847,
+      6.971414238755162
+    ],
+    "sound_arm": "A2_sound_alone",
+    "sound_alone_hit": 1.0,
+    "gap_mV": 7.0,
+    "jon_mode": "em",
+    "loom_alone_hit": 0.13333333333333333,
+    "predicted_hit_by_summation": 1.0,
+    "observed_hit": 1.0,
+    "residual": 0.0,
+    "residual_ci95": [
+      0.0,
+      0.0
+    ],
+    "note": "residual = observed loom+sound response probability minus the probability predicted by adding each giant fiber's measured sound-alone peak depolarisation to its loom-alone peak, per trial; percentile bootstrap resampling the loom-alone, loom+sound and sound-alone trials; peaks at different times over-predict summation, so the residual is biased low"
+  },
+  "calibration": {
+    "gains": [
+      {
+        "gain": 0.4,
+        "hit": 0.0,
+        "depol_mV": 3.1450841694411844
+      },
+      {
+        "gain": 0.6,
+        "hit": 0.2,
+        "depol_mV": 4.382392965339336
+      },
+      {
+        "gain": 0.8,
+        "hit": 0.525,
+        "depol_mV": 5.641885364985905
+      },
+      {
+        "gain": 1.0,
+        "hit": 0.8,
+        "depol_mV": 6.373361814493078
+      },
+      {
+        "gain": 1.3,
+        "hit": 0.975,
+        "depol_mV": 6.9382236188735025
+      }
+    ],
+    "chosen_gain": 0.6,
+    "rule": "largest gain with GF hit <= 0.3 and depol >= 2 mV"
+  },
+  "checks": {
+    "C1_em_facilitation": false
+  },
+  "uncertainty": {
+    "C1_em_facilitation": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 2 parts",
+      "parts": [
+        {
+          "estimate": 1.0,
+          "ci95": [
+            0.9123783988027135,
+            1.0
+          ],
+          "band": [
+            null,
+            0.3
+          ],
+          "method": "wilson",
+          "verdict": "FAIL",
+          "n": 40,
+          "note": "sound alone, giant fiber response probability"
+        },
+        {
+          "estimate": 0.8666666666666667,
+          "ci95": [
+            0.7879781397928677,
+            0.9162346282244686
+          ],
+          "band": [
+            0.0,
+            null
+          ],
+          "method": "newcombe",
+          "verdict": "PASS",
+          "band_lower_exclusive": true,
+          "n": 120,
+          "note": "P(GF | loom + sound) - P(GF | loom)"
+        }
+      ],
+      "verdict": "FAIL",
+      "note": "facilitation counts only if sound alone stays subthreshold"
+    }
+  },
+  "registration": {
+    "file": "results/a2_contact_em/registration.json",
+    "version": 2,
+    "git_commit": "4c39a8f",
+    "model_hash": "5aebc5fd7f41e7c0d6a5c63d1affa89afb5d125357c9b6ce6db8e4182b2d3750",
+    "registered_at": "2026-10-11T12:41:23",
+    "matches": true,
+    "problems": []
+  },
+  "wall_s": 3533.3,
+  "provenance": {
+    "written_at": "2026-10-11T20:53:31",
+    "git_commit": "b7eba83",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "not used",
+    "platform": "win32",
+    "machine": "AMD64",
+    "float_dtype": "float64",
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9",
+        "roi_membership.parquet": "5fce5c5d54e45570"
+      },
+      "manifest": "match"
+    }
+  }
+}

@@ -18,13 +18,13 @@
       "gain": 0.4,
       "n": 100,
       "k_alone": 0,
-      "k_sound": 20,
+      "k_sound": 13,
       "p_alone": 0.0,
-      "p_sound": 0.2,
-      "difference": 0.2,
+      "p_sound": 0.13,
+      "difference": 0.13,
       "ci": [
-        0.12378506670877114,
-        0.28883096192650237
+        0.0658328568414162,
+        0.2098052189480988
       ],
       "near_threshold": true,
       "facilitation": true,
@@ -34,13 +34,13 @@
       "gain": 0.5,
       "n": 100,
       "k_alone": 0,
-      "k_sound": 32,
+      "k_sound": 22,
       "p_alone": 0.0,
-      "p_sound": 0.32,
-      "difference": 0.32,
+      "p_sound": 0.22,
+      "difference": 0.22,
       "ci": [
-        0.2288454397219542,
-        0.4166280225367919
+        0.14083579335953522,
+        0.31070534715000303
       ],
       "near_threshold": true,
       "facilitation": true,
@@ -50,13 +50,13 @@
       "gain": 0.6,
       "n": 100,
       "k_alone": 0,
-      "k_sound": 40,
+      "k_sound": 31,
       "p_alone": 0.0,
-      "p_sound": 0.4,
-      "difference": 0.4,
+      "p_sound": 0.31,
+      "difference": 0.31,
       "ci": [
-        0.3021377407553552,
-        0.4979992153815976
+        0.21985470678741065,
+        0.40626239477955695
       ],
       "near_threshold": true,
       "facilitation": true,
@@ -66,13 +66,13 @@
       "gain": 0.7,
       "n": 100,
       "k_alone": 10,
-      "k_sound": 50,
+      "k_sound": 39,
       "p_alone": 0.1,
-      "p_sound": 0.5,
-      "difference": 0.4,
+      "p_sound": 0.39,
+      "difference": 0.29000000000000004,
       "ci": [
-        0.27843027585819957,
-        0.5060810320231056
+        0.17337914233008106,
+        0.39771687612521495
       ],
       "near_threshold": true,
       "facilitation": true,
@@ -82,13 +82,13 @@
       "gain": 0.8,
       "n": 100,
       "k_alone": 18,
-      "k_sound": 56,
+      "k_sound": 50,
       "p_alone": 0.18,
-      "p_sound": 0.56,
-      "difference": 0.38000000000000006,
+      "p_sound": 0.5,
+      "difference": 0.32,
       "ci": [
-        0.24937857084403653,
-        0.492562176716436
+        0.1905344835792031,
+        0.43496754318666403
       ],
       "near_threshold": true,
       "facilitation": true,

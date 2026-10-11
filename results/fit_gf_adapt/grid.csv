@@ -1,9 +1,9 @@
 b_mV,per_response,per_response_strong,max_per_response,hit,ttmn_ratio,wall_s,C1,C2,C3,C4,ok
-0,2.1041666666666665,3.05,7.0,0.6,1.0,195,False,False,True,True,False
-5,1.625,2.3,5.5,0.6,1.0,200,True,False,True,True,False
-10,1.4565217391304348,1.95,4.5,0.575,1.0,154,True,True,True,True,True
-15,1.326086956521739,1.65,3.5,0.575,1.0,152,True,True,True,True,True
-20,1.2391304347826086,1.5,3.0,0.575,1.0,154,True,True,True,True,True
-30,1.0869565217391304,1.2,2.0,0.575,1.0,154,True,True,True,True,True
-45,1.0434782608695652,1.1,2.0,0.575,1.0,163,True,True,True,True,True
-60,1.0,1.0,1.0,0.55,1.0,155,True,True,True,True,True
+0,2.1041666666666665,3.05,7.0,0.6,1.0,289,False,False,True,True,False
+5,1.625,2.3,5.5,0.6,1.0,297,True,False,True,True,False
+10,1.4565217391304348,1.95,4.5,0.575,1.0,226,True,True,True,True,True
+15,1.326086956521739,1.65,3.5,0.575,1.0,221,True,True,True,True,True
+20,1.2391304347826086,1.5,3.0,0.575,1.0,224,True,True,True,True,True
+30,1.0869565217391304,1.2,2.0,0.575,1.0,246,True,True,True,True,True
+45,1.0434782608695652,1.1,2.0,0.575,1.0,223,True,True,True,True,True
+60,1.0,1.0,1.0,0.55,1.0,226,True,True,True,True,True

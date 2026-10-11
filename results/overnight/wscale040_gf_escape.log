@@ -1,3 +1,7 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! gf_escape: runs, but is NOT the registered result
+! model settings overridden: FLYCNS_WSCALE=0.4
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
 !   FLYCNS_WSCALE=0.4
@@ -35,7 +39,7 @@ loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pa
   vnc_intrinsic                                                   0.016
   ol_intrinsic                                                    0.001
   visual_projection                                               0.001
-[real_electrical] GF 2.64/cell hit 0.78 (95% CI 0.62-0.88) lat 34.8 ms | TTMn 2.64/cell lag 0.90 ms | pop 0.0064 Hz | 186.4s
+[real_electrical] GF 2.64/cell hit 0.78 (95% CI 0.62-0.88) lat 34.8 ms | TTMn 2.64/cell lag 0.90 ms | pop 0.0064 Hz | 328.0s
   per trial GF/TTMn spikes: 9/0 3/0 12/0 9/0 0/0 13/0 14/0 10/0 0/0 1/0 1/0 6/0 0/0 2/0 0/0 1/0 1/0 2/0 7/0 10/0 1/0 12/0 1/0 9/0 11/0 9/0 0/0 0/0 4/0 9/0 1/0 4/0 2/0 8/0 12/0 10/0 0/0 5/0 10/0 12/0
   raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
   t0  DNp01  ......||..#.##|...............
@@ -60,7 +64,7 @@ loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pa
   vnc_intrinsic                                                   0.015
   ol_intrinsic                                                    0.001
   visual_projection                                               0.001
-[real_chemical_only] GF 2.76/cell hit 0.82 (95% CI 0.68-0.91) lat 33.1 ms | TTMn 0.00/cell lag nan ms | pop 0.0062 Hz | 180.7s
+[real_chemical_only] GF 2.76/cell hit 0.82 (95% CI 0.68-0.91) lat 33.1 ms | TTMn 0.00/cell lag nan ms | pop 0.0062 Hz | 338.0s
   per trial GF/TTMn spikes: 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0
   raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
   t0  DNp01  ..............................
@@ -80,7 +84,7 @@ loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pa
   cb_sensory             ##############                           0.000
   ol_intrinsic           #########                                0.000
   cb_intrinsic           ######                                   0.000
-[rewired_null] GF 0.00/cell hit 0.00 (95% CI -0.00-0.09) lat nan ms | TTMn 0.00/cell lag nan ms | pop 0.0000 Hz | 217.7s
+[rewired_null] GF 0.00/cell hit 0.00 (95% CI -0.00-0.09) lat nan ms | TTMn 0.00/cell lag nan ms | pop 0.0000 Hz | 361.2s
 
 CHECKS
   FAIL  gf_spikes_per_response_1_to_2

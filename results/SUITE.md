@@ -1,10 +1,10 @@
 # MaleCNS v1.0 LIF benchmark suite
 
-**31/51 checks pass under ONE parameter set** (same LIFParams for every circuit).
+**32/53 checks pass under ONE parameter set** (same LIFParams for every circuit).
 
-**By role:** independent 6/18 (4 unresolved) | control 11/13 (2 unresolved) | robustness 2/4 (1 unresolved) | structural 3/5 | calibrated 5/7 (1 unresolved) | construction 4/4
+**By role:** independent 6/19 (4 unresolved) | control 12/14 (2 unresolved) | robustness 2/4 (1 unresolved) | structural 3/5 | calibrated 5/7 (1 unresolved) | construction 4/4
 
-**Uncertainty:** 51 of 51 scored checks carry a 95% interval or a per-draw or null score (flycns/stats.py); 8 are UNRESOLVED (the interval crosses a band edge) and count as not passing. A PASS means the whole interval lies inside the band.
+**Uncertainty:** 53 of 53 scored checks carry a 95% interval or a per-draw or null score (flycns/stats.py); 8 are UNRESOLVED (the interval crosses a band edge) and count as not passing. A PASS means the whole interval lies inside the band.
 
 Only *independent* checks test the model; *calibrated* and *construction* checks were made to pass by a declared parameter (docs/CALIBRATION.md). *control* checks show the machinery is not trivial. *structural* checks count over the wiring with no simulation.
 
@@ -45,13 +45,16 @@ effective chemical kick per synapse: 0.0825 mV (Shiu 2024 unitary 0.275 mV x Mal
 ## Checks
 | benchmark | check | result | estimate [95% interval] and band | role | flags |
 |---|---|---|---|---|---|
-| a2_registered | A2R_facilitation | PASS | 0.358 [0.24, 0.463] in (0, inf]; newcombe (as registered) | construction | - |
+| a2_contact_em | C1_em_facilitation | FAIL | -; all of 2 parts | independent | - |
+| a2_contact_em_flip | C2_flip_no_facilitation | PASS | -0.133 [-0.206, -0.0749] in [-inf, 0]; newcombe | control | - |
+| a2_registered | A2R_facilitation | PASS | 0.333 [0.216, 0.438] in (0, inf]; newcombe (as registered) | construction | - |
+| a2_registered | A2R2_beyond_summation | FAIL | -0.492 [-0.575, -0.391] in (0, inf] | independent | - |
 | a2_robustness | RA2_facilitation_at_every_near_threshold_gain | PASS | -; all of 6 parts | robustness | - |
 | auditory | A1_jo_alone_mostly_subthreshold | PASS | 0.05 [0.0138, 0.165] in [-inf, 0.3]; wilson | calibrated | - |
 | auditory | A2_jo_effect_on_near_threshold_loom_REPORTED | SKIP | - | reported | - |
 | auditory | A3_declared_pairs_carry_jo_drive | PASS | -; all of 2 parts | control | - |
 | auditory | A4_null_silent | PASS | -; all of 2 parts | control | - |
-| auditory | A5_cns_quiet | PASS | 0.00659; point | calibrated | - |
+| auditory | A5_cns_quiet | PASS | 0.00633; point | calibrated | - |
 | dnp13_control | D1_dnp13_reachable | PASS | 14.3 [13.2, 15.4] in [0.5, inf] | control | - |
 | dnp13_control | D2_pc1_1b_sine_choice | FAIL | -; all of 2 parts | independent | - |
 | feeding | F2b_extra_SEZ_quiet | PASS | 0.000348 [0.000323, 0.000372] in [-inf, 0.02] | calibrated | - |
@@ -71,7 +74,7 @@ effective chemical kick per synapse: 0.0825 mV (Shiu 2024 unitary 0.275 mV x Mal
 | flight_loop | L3_leg_mn_not_entrained | PASS | 1 in [-inf, 20.2]; per-draw (5 of 5 in band; pass needs 4) | independent | - |
 | flight_loop | L4_steering_specific_vs_null | PASS | 1 in [5, inf]; per-draw (5 of 5 in band; pass needs 4) | control | - |
 | flight_loop | L5_DLMn_cf_2_to_12_hz_with_DNg02 | FAIL | -; any of 4 parts | independent | - |
-| flight_loop | L6_DVMn_still_in_band_with_DNg02 | FAIL | -; any of 4 parts | independent | - |
+| flight_loop | L6_DVMn_still_in_band_with_DNg02 | SKIP | - | reported | - |
 | flight_snpp16 | N1_snpp16_sufficient_dvmn_in_band | FAIL | 0 in [2, 12]; per-draw (0 of 3 in band; pass needs 3) | independent | - |
 | flight_snpp16 | N2_snpp16_necessary_dvmn_below_2hz | FAIL | 0 in [-inf, 2]; per-draw (0 of 3 in band; pass needs 3) | independent | - |
 | flight_snpp16_graded | G1_graded | UNRESOLVED | -; all of 12 parts | independent | - |
@@ -104,35 +107,40 @@ effective chemical kick per synapse: 0.0825 mV (Shiu 2024 unitary 0.275 mV x Mal
 | pc1_song | P4_null_silent | PASS | 0 [0, 0] in [-inf, 0.1] | control | - |
 | sugar_laterality | L1_sugar_contralateral_bias | PASS | 1.73; point | structural | - |
 
-Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); UNSTAMPED = written before integrity stamping, rerun to stamp; UNPINNED = no record of the input tables; ALLOW-DIRTY = run with FLYCNS_ALLOW_DIRTY=1, which waives the integrity guards; TRIALS a<b = run at fewer trials than the canonical b.
+Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); UNSTAMPED = written before integrity stamping, rerun to stamp; UNPINNED = no record of the input tables; ALLOW-DIRTY = run with FLYCNS_ALLOW_DIRTY=1, which waives the integrity guards; UNREGISTERED = not scored under a matching registration of the frozen model (flycns/registry.py); TRIALS a<b = run at fewer trials than the canonical b.
 
 Declared deviations from the raw connectome: see each results/*/provenance.md and flycns/graph.py.
 
 ## Report provenance
 | benchmark | written | commit | data (neurons / edges) | env overrides |
 |---|---|---|---|---|
-| a2_registered | 2026-10-11T18:46:25 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| a2_robustness | 2026-10-11T19:37:35 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| auditory | 2026-10-11T18:08:30 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| dnp13_control | 2026-10-11T18:46:57 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| feeding | 2026-10-11T18:20:02 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| feeding_by_modality | 2026-10-11T18:15:50 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_loop | 2026-10-11T17:39:42 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_snpp16 | 2026-10-11T17:07:00 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_snpp16_graded | 2026-10-11T17:51:57 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_snpp16_robustness | 2026-10-11T19:26:25 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| gf_escape | 2026-10-11T17:19:59 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| gustatory_signed_map | 2026-10-11T18:22:49 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| null_dc_auditory | 2026-10-11T18:39:29 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| null_dc_escape | 2026-10-11T19:33:53 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| null_dc_song | 2026-10-11T18:54:04 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| null_strict | 2026-10-11T18:49:21 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| pc1_song | 2026-10-11T18:37:41 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| peptide_asta | 2026-10-11T18:11:19 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| sugar_laterality | 2026-10-11T17:47:31 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| a2_contact_em | 2026-10-11T20:53:31 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| a2_contact_em_flip | 2026-10-11T20:32:31 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| a2_registered | 2026-10-11T20:55:21 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| a2_robustness | 2026-10-11T22:48:03 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| auditory | 2026-10-11T21:01:58 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| dnp13_control | 2026-10-11T21:28:50 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| feeding | 2026-10-11T21:13:31 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| feeding_by_modality | 2026-10-11T20:01:09 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_loop | 2026-10-11T20:56:16 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_snpp16 | 2026-10-11T21:07:32 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_snpp16_graded | 2026-10-11T20:40:44 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_snpp16_robustness | 2026-10-11T21:01:12 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| gf_escape | 2026-10-11T20:13:21 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| gustatory_signed_map | 2026-10-11T20:22:50 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| null_dc_auditory | 2026-10-11T22:13:45 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| null_dc_escape | 2026-10-11T21:33:40 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| null_dc_song | 2026-10-11T21:30:50 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| null_strict | 2026-10-11T21:43:01 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| pc1_song | 2026-10-11T20:09:12 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| peptide_asta | 2026-10-11T20:01:50 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| select_wscale | 2026-10-11T20:28:00 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| sugar_laterality | 2026-10-11T21:03:10 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | - |
 
-## Citation check: 48/48 tags resolve in REFERENCES.md
+## Citation check: 49/49 tags resolve in REFERENCES.md
 
 ## Stamp inventory
-96 of 96 result files carry a stamp (commits: a4eef18 x96); 0 flagged, 0 unstamped.
+110 of 110 result files carry a stamp (commits: b7eba83 x108, d72fe77 x2); 2 flagged, 0 unstamped.
+- flagged: results/fit_gains/best.json (STALE)
+- flagged: results/fit_gains/grid.csv (STALE)
 - exempt: results/turner2022/ (input extraction from 22 GB of Turner et al. 2022 imaging; its output is a model input, hashed into every report's loom_input stamp)

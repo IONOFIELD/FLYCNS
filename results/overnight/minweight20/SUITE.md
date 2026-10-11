@@ -1,6 +1,6 @@
 # MaleCNS v1.0 LIF benchmark suite  [minweight20]
 
-**13/14 checks pass, but NOT all under the declared parameter set:** see the flags column.
+**13/14 checks pass, but NOT all as registered under the declared parameter set:** see the flags column.
 
 **By role:** independent 1/1 | control 4/4 | calibrated 5/6 (1 unresolved) | construction 3/3
 
@@ -45,37 +45,37 @@ effective chemical kick per synapse: 0.0825 mV (Shiu 2024 unitary 0.275 mV x Mal
 ## Checks
 | benchmark | check | result | estimate [95% interval] and band | role | flags |
 |---|---|---|---|---|---|
-| auditory | A1_jo_alone_mostly_subthreshold | PASS | 0 [0, 0.0876] in [-inf, 0.3]; wilson | calibrated | PERTURBED |
-| auditory | A2_jo_effect_on_near_threshold_loom_REPORTED | SKIP | - | reported | PERTURBED |
-| auditory | A3_declared_pairs_carry_jo_drive | PASS | -; all of 2 parts | control | PERTURBED |
-| auditory | A4_null_silent | PASS | -; all of 2 parts | control | PERTURBED |
-| auditory | A5_cns_quiet | PASS | 0.00531; point | calibrated | PERTURBED |
-| feeding | F2b_extra_SEZ_quiet | PASS | 0.00016 [0.000143, 0.000183] in [-inf, 0.02] | calibrated | PERTURBED |
-| feeding | F2c_motor_rate_physiological | PASS | 3.75 [2.92, 5.28] in (0, 100] | construction | PERTURBED |
-| feeding | F2_dose_response_REPORTED | SKIP | - | reported | PERTURBED |
-| feeding | F1_laterality_matches_wiring | SKIP | - | reported | PERTURBED |
-| feeding | F1_shiu_contralateral_bias | SKIP | - | reported | PERTURBED |
-| feeding | F3_bitter_suppresses | SKIP | - | reported | PERTURBED |
-| feeding | F4_second_order_sufficient | SKIP | - | reported | PERTURBED |
-| feeding | F5_null_silent | SKIP | - | reported | PERTURBED |
-| gf_escape | gf_spikes_per_response_1_to_2 | PASS | 1.29 [1.05, 1.6] in [1, 2] | calibrated | PERTURBED |
-| gf_escape | gf_response_prob_0.5_to_1 | UNRESOLVED | 0.525 [0.375, 0.671] in [0.5, 1]; wilson | calibrated | PERTURBED |
-| gf_escape | gf_latency_10_60ms | PASS | 40.1 [34.8, 45.4] in [10, 60] | independent | PERTURBED |
-| gf_escape | ttmn_one_to_one | PASS | 1 [1, 1] in [0.8, 1.2]; bootstrap (ratio of sums) | construction | PERTURBED |
-| gf_escape | ttmn_lag_0.5_1.5ms | PASS | 0.9 [0.9, 0.9] in [0.5, 1.5] | construction | PERTURBED |
-| gf_escape | cns_quiet | PASS | 0.00373; point | calibrated | PERTURBED |
-| gf_escape | electrical_necessary | PASS | -0.0538 [-0.0813, -0.0312] in [-inf, 0]; bootstrap (two independent arms) | control | PERTURBED |
-| gf_escape | null_silent | PASS | 0 [0, 0.0876] in [-inf, 0.1]; wilson | control | PERTURBED |
+| auditory | A1_jo_alone_mostly_subthreshold | PASS | 0 [0, 0.0876] in [-inf, 0.3]; wilson | calibrated | PERTURBED, UNREGISTERED |
+| auditory | A2_jo_effect_on_near_threshold_loom_REPORTED | SKIP | - | reported | PERTURBED, UNREGISTERED |
+| auditory | A3_declared_pairs_carry_jo_drive | PASS | -; all of 2 parts | control | PERTURBED, UNREGISTERED |
+| auditory | A4_null_silent | PASS | -; all of 2 parts | control | PERTURBED, UNREGISTERED |
+| auditory | A5_cns_quiet | PASS | 0.0051; point | calibrated | PERTURBED, UNREGISTERED |
+| feeding | F2b_extra_SEZ_quiet | PASS | 0.00016 [0.000143, 0.000183] in [-inf, 0.02] | calibrated | PERTURBED, UNREGISTERED |
+| feeding | F2c_motor_rate_physiological | PASS | 3.75 [2.92, 5.28] in (0, 100] | construction | PERTURBED, UNREGISTERED |
+| feeding | F2_dose_response_REPORTED | SKIP | - | reported | PERTURBED, UNREGISTERED |
+| feeding | F1_laterality_matches_wiring | SKIP | - | reported | PERTURBED, UNREGISTERED |
+| feeding | F1_shiu_contralateral_bias | SKIP | - | reported | PERTURBED, UNREGISTERED |
+| feeding | F3_bitter_suppresses | SKIP | - | reported | PERTURBED, UNREGISTERED |
+| feeding | F4_second_order_sufficient | SKIP | - | reported | PERTURBED, UNREGISTERED |
+| feeding | F5_null_silent | SKIP | - | reported | PERTURBED, UNREGISTERED |
+| gf_escape | gf_spikes_per_response_1_to_2 | PASS | 1.29 [1.05, 1.6] in [1, 2] | calibrated | PERTURBED, UNREGISTERED |
+| gf_escape | gf_response_prob_0.5_to_1 | UNRESOLVED | 0.525 [0.375, 0.671] in [0.5, 1]; wilson | calibrated | PERTURBED, UNREGISTERED |
+| gf_escape | gf_latency_10_60ms | PASS | 40.1 [34.8, 45.4] in [10, 60] | independent | PERTURBED, UNREGISTERED |
+| gf_escape | ttmn_one_to_one | PASS | 1 [1, 1] in [0.8, 1.2]; bootstrap (ratio of sums) | construction | PERTURBED, UNREGISTERED |
+| gf_escape | ttmn_lag_0.5_1.5ms | PASS | 0.9 [0.9, 0.9] in [0.5, 1.5] | construction | PERTURBED, UNREGISTERED |
+| gf_escape | cns_quiet | PASS | 0.00373; point | calibrated | PERTURBED, UNREGISTERED |
+| gf_escape | electrical_necessary | PASS | -0.0538 [-0.0813, -0.0312] in [-inf, 0]; bootstrap (two independent arms) | control | PERTURBED, UNREGISTERED |
+| gf_escape | null_silent | PASS | 0 [0, 0.0876] in [-inf, 0.1]; wilson | control | PERTURBED, UNREGISTERED |
 
-Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); UNSTAMPED = written before integrity stamping, rerun to stamp; UNPINNED = no record of the input tables; ALLOW-DIRTY = run with FLYCNS_ALLOW_DIRTY=1, which waives the integrity guards; TRIALS a<b = run at fewer trials than the canonical b.
+Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); UNSTAMPED = written before integrity stamping, rerun to stamp; UNPINNED = no record of the input tables; ALLOW-DIRTY = run with FLYCNS_ALLOW_DIRTY=1, which waives the integrity guards; UNREGISTERED = not scored under a matching registration of the frozen model (flycns/registry.py); TRIALS a<b = run at fewer trials than the canonical b.
 
 Declared deviations from the raw connectome: see each results/*/provenance.md and flycns/graph.py.
 
 ## Report provenance
 | benchmark | written | commit | data (neurons / edges) | env overrides |
 |---|---|---|---|---|
-| auditory | 2026-10-11T17:54:31 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
-| feeding | 2026-10-11T18:03:41 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
-| gf_escape | 2026-10-11T17:15:46 | a4eef18 | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
+| auditory | 2026-10-11T20:31:37 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
+| feeding | 2026-10-11T20:36:52 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
+| gf_escape | 2026-10-11T20:08:49 | b7eba83 | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
 
-## Citation check: 48/48 tags resolve in REFERENCES.md
+## Citation check: 49/49 tags resolve in REFERENCES.md
