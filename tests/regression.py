@@ -61,6 +61,9 @@ RUNS = [  # (label, argv relative to the copy, extra env, sentinel substring or 
     ("a2_registered", ["benchmarks/a2_registered.py", "4", "testdata"], {}, None),
     ("a2_robustness", ["benchmarks/a2_robustness.py", "2", "testdata"], {}, None),
     ("null_strict", ["benchmarks/null_strict.py", "testdata"], {}, None),
+    ("null_distribution escape", ["benchmarks/null_distribution.py", "escape", "3", "2", "testdata"], {}, "_wiring_specific"),
+    ("null_distribution song", ["benchmarks/null_distribution.py", "song", "3", "2", "testdata"], {}, "_wiring_specific"),
+    ("null_distribution auditory", ["benchmarks/null_distribution.py", "auditory", "3", "2", "testdata"], {}, "_wiring_specific"),
     # diagnostics outside the suite: each must run and leave its stamp
     ("diagnose_feeding", ["benchmarks/diagnose_feeding.py", "testdata"], {}, None),
     # its path products were NaN on the real data for a month, unseen: the golden file now holds them

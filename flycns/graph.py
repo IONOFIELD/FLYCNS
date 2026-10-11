@@ -383,10 +383,18 @@ def drop_mixed_chemical(edges, neurons):
     return edges[keep].reset_index(drop=True)
 
 
-NULL_MODES = ("global", "superclass", "superclass_side")
+NULL_MODES = ("global", "superclass", "superclass_side", "degree_corrected")
+WEIGHT_BINS = (10, 20, 50, 100)   # synapses per connection: 5-9, 10-19, 20-49, 50-99, 100+
 
 
-def rewire_null(edges, seed=None, mode=None, neurons=None):
+def _dominant_roi(data_dir):
+    f = Path(data_dir) / "roi_membership.parquet" if data_dir else None
+    if f is None or not f.exists():
+        return None
+    return pd.read_parquet(f, columns=["bodyId", "dominant_roi"]).set_index("bodyId")["dominant_roi"]
+
+
+def rewire_null(edges, seed=None, mode=None, neurons=None, data_dir=None):
     """Degree-preserving null: permute postsynaptic targets, keep out-degree,
     synapse counts and NT sign of every presynaptic neuron.
 
@@ -400,6 +408,15 @@ def rewire_null(edges, seed=None, mode=None, neurons=None):
                        the class is shuffled. A circuit that survives this null depends on the
                        specific wiring, not on class-level statistics.
       superclass_side  as superclass, and the target also keeps its body side.
+      degree_corrected targets permuted only among connections that share the target's superclass AND
+                       neuropil (its dominant ROI, data/roi_membership.parquet) AND the connection's
+                       sign AND its size class (5-9, 10-19, 20-49, 50-99, 100+ synapses). Every cell
+                       keeps its incoming connections per sign and size class, so its input strength
+                       and excitation/inhibition balance, as well as its class and neuropil; every
+                       sender keeps all its outgoing connections. Unlike the global null, which
+                       scatters each source over 167,000 cells and cannot fire at all, this null keeps
+                       convergence within class and neuropil and stays active (audit 2026-10-11, gap 5).
+                       Without the ROI table it falls back to superclass x sign x size and says so.
     Each target keeps its in-degree in every mode. A shuffle can give a sender the same target twice;
     such repeats are kept and summed by the simulator, so each sender keeps its synapse count and
     connection count but not always its number of distinct partners. Self-loops created by the shuffle are
@@ -421,12 +438,33 @@ def rewire_null(edges, seed=None, mode=None, neurons=None):
         group = meta["superclass"].fillna("?").astype(str)
         if mode == "superclass_side":
             group = group + "|" + infer_side(meta).fillna("?").astype(str)
-        g = out["post"].map(group).fillna("?").to_numpy()
+        if mode == "degree_corrected":
+            from .integrity import LOADED
+            roi = _dominant_roi(data_dir or LOADED.get("data_dir"))
+            neuropil = "roi_membership.parquet" if roi is not None else \
+                "none (no roi_membership.parquet): superclass x sign x size only"
+            if roi is not None:
+                group = group + "|" + roi.reindex(meta.index).fillna("?").astype(str)
+        g = out["post"].map(group).fillna("?").astype(str)
+        if mode == "degree_corrected":
+            g = g + "|" + np.sign(out["sign"]).astype(int).astype(str) + "|" + \
+                pd.Series(np.digitize(out["weight"], WEIGHT_BINS), index=out.index).astype(str)
+        g = g.to_numpy()
         post = out["post"].to_numpy().copy()
-        for label in pd.unique(g):
-            idx = np.flatnonzero(g == label)
-            post[idx] = post[idx][rng.permutation(len(idx))]
+        if mode == "degree_corrected":
+            # thousands of groups over millions of edges: permute within every group in one sort
+            # (the loop below compares every edge with every group label)
+            codes = pd.factorize(g)[0]
+            base = np.argsort(codes, kind="stable")
+            shuffled = np.lexsort((rng.random(len(codes)), codes))
+            post[base] = out["post"].to_numpy()[shuffled]
+        else:   # unchanged, so the registered superclass null draws exactly as before
+            for label in pd.unique(g):
+                idx = np.flatnonzero(g == label)
+                post[idx] = post[idx][rng.permutation(len(idx))]
         out["post"] = post
     out = out[out["pre"] != out["post"]].reset_index(drop=True)
     out.attrs["null_mode"] = mode
+    if mode == "degree_corrected":
+        out.attrs["neuropil_source"] = neuropil
     return out
