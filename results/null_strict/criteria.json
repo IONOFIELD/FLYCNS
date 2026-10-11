@@ -1,0 +1,11 @@
+{
+  "criteria": {
+    "null_mode": "superclass (flycns/graph.py rewire_null): targets permuted only within the post cell's superclass",
+    "S1": "gf_escape, 40 trials: rewired-null GF hit rate < 0.1 (threshold of null_silent)",
+    "S2": "pc1_song at its registered trial count: pMP2 under pC1_14a at 100 Hz on the null < 0.1 spikes/cell/pulse (threshold of P4)",
+    "reported": "whole-CNS rate on each null beside the real network"
+  },
+  "registered_at": "2026-10-11T02:11:38",
+  "git_commit": "45126da",
+  "script_uncommitted": false
+}

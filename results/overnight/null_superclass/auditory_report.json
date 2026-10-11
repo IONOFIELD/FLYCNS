@@ -1,0 +1,222 @@
+{
+  "benchmark": "auditory",
+  "n_trials": 40,
+  "jo_types": [
+    "JO-A1",
+    "JO-A2",
+    "JO-A3",
+    "JO-A4",
+    "JO-B1_a",
+    "JO-B1_b",
+    "JO-B1_c",
+    "JO-B2",
+    "JO-B3",
+    "JO-CA1",
+    "JO-CA2"
+  ],
+  "jo_hz": 150,
+  "arms": {
+    "cal_loom_gain_0.4": {
+      "gf_per_cell": 0.0,
+      "gf_hit": 0.0,
+      "gf_lat_ms": NaN,
+      "pop_rate_hz": 0.0008184414124375413,
+      "wall_s": 216.1,
+      "n_trials": 40,
+      "gf_depol_mV": 2.8425646394320845
+    },
+    "cal_loom_gain_0.6": {
+      "gf_per_cell": 0.0,
+      "gf_hit": 0.0,
+      "gf_lat_ms": NaN,
+      "pop_rate_hz": 0.0016023922348616015,
+      "wall_s": 232.2,
+      "n_trials": 40,
+      "gf_depol_mV": 3.9693625710776765
+    },
+    "cal_loom_gain_0.8": {
+      "gf_per_cell": 0.0625,
+      "gf_hit": 0.125,
+      "gf_lat_ms": 40.299999999998946,
+      "pop_rate_hz": 0.0025003648901537577,
+      "wall_s": 211.3,
+      "n_trials": 40,
+      "gf_depol_mV": 4.970160271970336
+    },
+    "cal_loom_gain_1.0": {
+      "gf_per_cell": 0.35,
+      "gf_hit": 0.575,
+      "gf_lat_ms": 42.16956521738983,
+      "pop_rate_hz": 0.0034596090641757444,
+      "wall_s": 212.9,
+      "n_trials": 40,
+      "gf_depol_mV": 5.892503678256547
+    },
+    "cal_loom_gain_1.3": {
+      "gf_per_cell": 1.4625,
+      "gf_hit": 0.925,
+      "gf_lat_ms": 38.159459459459164,
+      "pop_rate_hz": 0.005471830662726942,
+      "wall_s": 214.1,
+      "n_trials": 40,
+      "gf_depol_mV": 6.883263082597166
+    },
+    "A2_calibration": {
+      "gains": [
+        {
+          "gain": 0.4,
+          "hit": 0.0,
+          "depol_mV": 2.8425646394320845
+        },
+        {
+          "gain": 0.6,
+          "hit": 0.0,
+          "depol_mV": 3.9693625710776765
+        },
+        {
+          "gain": 0.8,
+          "hit": 0.125,
+          "depol_mV": 4.970160271970336
+        },
+        {
+          "gain": 1.0,
+          "hit": 0.575,
+          "depol_mV": 5.892503678256547
+        },
+        {
+          "gain": 1.3,
+          "hit": 0.925,
+          "depol_mV": 6.883263082597166
+        }
+      ],
+      "chosen_gain": 0.8,
+      "rule": "largest gain with GF hit <= 0.3 and depol >= 2 mV"
+    },
+    "A1_jo_alone_electrical": {
+      "gf_per_cell": 0.025,
+      "gf_hit": 0.05,
+      "gf_lat_ms": 30.699999999999363,
+      "pop_rate_hz": 0.0038862406641327666,
+      "wall_s": 217.9,
+      "n_trials": 40,
+      "gf_depol_mV": 2.1898564388867103
+    },
+    "A3_jo_alone_no_electrical_no_mixed_edges": {
+      "gf_per_cell": 0.0,
+      "gf_hit": 0.0,
+      "gf_lat_ms": NaN,
+      "pop_rate_hz": 0.0038842407461294045,
+      "wall_s": 237.7,
+      "n_trials": 40,
+      "gf_depol_mV": 0.3667009314730111
+    },
+    "ref_jo_alone_chem_only_EM_as_annotated": {
+      "gf_per_cell": 1.6875,
+      "gf_hit": 1.0,
+      "gf_lat_ms": 11.482499999999423,
+      "pop_rate_hz": 0.0039422383682268984,
+      "wall_s": 209.9,
+      "n_trials": 40,
+      "gf_depol_mV": 3.6429540560867806
+    },
+    "subthreshold_loom_alone": {
+      "gf_per_cell": 0.0625,
+      "gf_hit": 0.125,
+      "gf_lat_ms": 40.299999999998946,
+      "pop_rate_hz": 0.0025003648901537577,
+      "wall_s": 246.5,
+      "n_trials": 40,
+      "gf_depol_mV": 4.970160271970336
+    },
+    "A2_loom_plus_jo": {
+      "gf_per_cell": 0.3375,
+      "gf_hit": 0.65,
+      "gf_lat_ms": 29.911538461538164,
+      "pop_rate_hz": 0.006593664568346595,
+      "wall_s": 232.2,
+      "n_trials": 40,
+      "gf_depol_mV": 4.210009440787036
+    },
+    "A4_jo_rewired_null_chem": {
+      "gf_per_cell": 0.0,
+      "gf_hit": 0.0,
+      "gf_lat_ms": NaN,
+      "pop_rate_hz": 0.0002747887336619196,
+      "wall_s": 223.3,
+      "n_trials": 40,
+      "gf_depol_mV": 0.5566580735855113
+    },
+    "A2_prediction": {
+      "loom_gain": 0.8,
+      "n_trials_per_arm": 40,
+      "loom_alone_hit": 0.125,
+      "loom_alone_ci95": [
+        0.05459419773541283,
+        0.26112420670238146
+      ],
+      "loom_plus_jo_hit": 0.65,
+      "loom_plus_jo_ci95": [
+        0.4950559699353738,
+        0.7786566682895085
+      ],
+      "difference": 0.525,
+      "difference_ci95": [
+        0.31875390402962667,
+        0.6716612262592836
+      ],
+      "resolved": true,
+      "direction": "facilitation",
+      "loom_alone_depol_mV": 4.970160271970336,
+      "loom_plus_jo_depol_mV": 4.210009440787036,
+      "note": "model measurement at a calibrated near-threshold working point; in vivo direction not established in cited references. With few trials the difference is not resolvable: set FLYCNS_A2_TRIALS>=120 for a usable estimate."
+    }
+  },
+  "checks": {
+    "A1_jo_alone_mostly_subthreshold": true,
+    "A2_jo_effect_on_near_threshold_loom_REPORTED": null,
+    "A3_declared_pairs_carry_jo_drive": true,
+    "A4_null_silent": false,
+    "A5_cns_quiet": true
+  },
+  "pass": false,
+  "provenance": {
+    "written_at": "2026-10-11T01:54:30",
+    "git_commit": "45126da",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {
+      "FLYCNS_NULL": "superclass",
+      "FLYCNS_RUN_TAG": "null_superclass"
+    },
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "cython",
+    "platform": "win32",
+    "loom_input": {
+      "source": "MEASURED (stationary trials, 13 series): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09)",
+      "state": "stationary",
+      "sha256": "65f83c332223b0f7"
+    },
+    "graph": {
+      "data_dir": "data",
+      "min_weight": 5,
+      "n_neurons": 176422,
+      "n_signed_edges": 6127738,
+      "n_signed_synapses": 88316807
+    },
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9"
+      },
+      "manifest": "match"
+    }
+  }
+}

@@ -49,7 +49,7 @@
       },
       "pop_rate_hz": 0.11169621980176314,
       "peptide_applied": [],
-      "wall_s": 99
+      "wall_s": 170
     },
     "flash_plus_Pm3_synaptic": {
       "arm": "flash_plus_Pm3_synaptic",
@@ -69,27 +69,53 @@
       },
       "pop_rate_hz": 0.11155103704082171,
       "peptide_applied": [],
-      "wall_s": 96
+      "wall_s": 157
     },
     "flash_plus_Pm3_AstA": {
       "arm": "flash_plus_Pm3_AstA",
       "peptide_gain_scale": 1.0,
       "excluded": [],
       "spikes_per_cell_per_flash": {
-        "L1": 0.0001,
+        "L1": 0.0042,
         "L2": 0.0,
         "L4": 0.0,
-        "C2": 0.0,
-        "Mi1": 0.0002,
+        "C2": 0.001,
+        "Mi1": 0.0375,
         "Mi15": 0.0,
-        "Dm9": 1.5498,
+        "Dm9": 4.2923,
         "Tm2": 0.0,
-        "TmY3": 0.0,
-        "T2": 0.0
+        "TmY3": 0.0018,
+        "T2": 0.0056
       },
-      "pop_rate_hz": 0.11155103704082171,
-      "peptide_applied": [],
-      "wall_s": 98
+      "pop_rate_hz": 0.1208781112385863,
+      "peptide_applied": [
+        {
+          "peptide": "AstA",
+          "source": "Pm3",
+          "n_source": 69,
+          "source_is_stimulus": true,
+          "n_target": 14481,
+          "target_types": [
+            "L1",
+            "L2",
+            "L3",
+            "L4",
+            "L5",
+            "C2",
+            "Mi1",
+            "Mi15",
+            "Dm9",
+            "Tm2",
+            "TmY3",
+            "T2"
+          ],
+          "gain": 0.5,
+          "tau_s": 2.0,
+          "excluded": [],
+          "citation": "Krieger 2023, PhD thesis (Stanford), Ch. 2 Figs 1-4; AstA-R2 additionally in L2"
+        }
+      ],
+      "wall_s": 121
     },
     "AstA_minus_Mi1": {
       "arm": "AstA_minus_Mi1",
@@ -98,35 +124,89 @@
         "Mi1"
       ],
       "spikes_per_cell_per_flash": {
-        "L1": 0.0001,
+        "L1": 0.0032,
         "L2": 0.0,
         "L4": 0.0,
-        "C2": 0.0,
-        "Mi1": 0.0002,
+        "C2": 0.001,
+        "Mi1": 0.0001,
         "Mi15": 0.0,
-        "Dm9": 1.5498,
+        "Dm9": 4.2923,
         "Tm2": 0.0,
-        "TmY3": 0.0,
-        "T2": 0.0
+        "TmY3": 0.0018,
+        "T2": 0.0055
       },
-      "pop_rate_hz": 0.11155103704082171,
-      "peptide_applied": [],
-      "wall_s": 101
+      "pop_rate_hz": 0.12010208235173232,
+      "peptide_applied": [
+        {
+          "peptide": "AstA",
+          "source": "Pm3",
+          "n_source": 69,
+          "source_is_stimulus": true,
+          "n_target": 12708,
+          "target_types": [
+            "L1",
+            "L2",
+            "L3",
+            "L4",
+            "L5",
+            "C2",
+            "Mi15",
+            "Dm9",
+            "Tm2",
+            "TmY3",
+            "T2"
+          ],
+          "gain": 0.5,
+          "tau_s": 2.0,
+          "excluded": [
+            "Mi1"
+          ],
+          "citation": "Krieger 2023, PhD thesis (Stanford), Ch. 2 Figs 1-4; AstA-R2 additionally in L2"
+        }
+      ],
+      "wall_s": 106
     }
   },
   "comparison": {
     "Mi1_flash_only": 0.0006,
     "Mi1_flash_plus_Pm3_synaptic": 0.0002,
-    "Mi1_flash_plus_Pm3_AstA": 0.0002,
-    "Mi1_receptor_knockdown": 0.0002,
+    "Mi1_flash_plus_Pm3_AstA": 0.0375,
+    "Mi1_receptor_knockdown": 0.0001,
     "Pm3_synaptic_effect": 0.333,
-    "AstA_effect_over_synaptic": 1.0,
-    "knockdown_returns_to_synaptic": 1.0,
+    "AstA_effect_over_synaptic": 187.5,
+    "knockdown_returns_to_synaptic": 0.5,
     "note": "published effect is an increase in the peak-to-trough dynamic range of a graded biphasic calcium response, blocked by AstA-R1 knockdown in Mi1; this is a spike-count analogue in a model with no graded compartment, reported and never scored"
   },
   "provenance": {
-    "written_at": "2026-09-09T15:43:57",
-    "git_commit": "00a6afb",
-    "env": {}
+    "written_at": "2026-10-11T01:00:36",
+    "git_commit": "45126da",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "cython",
+    "platform": "win32",
+    "graph": {
+      "data_dir": "data",
+      "min_weight": 5,
+      "n_neurons": 176422,
+      "n_signed_edges": 6127738,
+      "n_signed_synapses": 88316807
+    },
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9"
+      },
+      "manifest": "match"
+    }
   }
 }

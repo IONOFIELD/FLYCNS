@@ -39,19 +39,19 @@
     "R2": [
       {
         "k": 7,
-        "dvmn_mean": 33.44783333333333,
-        "dlmn_mean": 15.301499999999999,
-        "steer_mean": 2.7450357142857142,
+        "dvmn_mean": 34.97966666666666,
+        "dlmn_mean": 14.329375000000002,
+        "steer_mean": 2.4745,
         "b1_mean": 0.0,
-        "dlmn_max": 23.60875,
+        "dlmn_max": 20.4525,
         "steer_max": 3.535,
         "b1_max": 0.0,
         "dvmn_per_draw": [
-          36.78,
-          35.35,
+          37.96,
+          36.61,
           33.92,
-          32.4,
-          28.79
+          34.68,
+          31.73
         ],
         "dvmn_in_band": 0,
         "param": "tau_m_ms",
@@ -59,18 +59,18 @@
       },
       {
         "k": 7,
-        "dvmn_mean": 7.170999999999999,
+        "dvmn_mean": 7.204666666666665,
         "dlmn_mean": 0.0,
-        "steer_mean": 2.059678571428571,
+        "steer_mean": 2.0380357142857144,
         "b1_mean": 0.0,
         "dlmn_max": 0.0,
         "steer_max": 2.6873214285714284,
         "b1_max": 0.0,
         "dvmn_per_draw": [
-          9.68,
-          6.99,
+          9.6,
+          7.07,
           6.23,
-          6.31,
+          6.48,
           6.65
         ],
         "dvmn_in_band": 5,
@@ -119,7 +119,7 @@
       },
       {
         "k": 7,
-        "dvmn_mean": 0.0,
+        "dvmn_mean": 7.187833333333333,
         "dlmn_mean": 0.0,
         "steer_mean": 0.0,
         "b1_mean": 0.0,
@@ -127,19 +127,19 @@
         "steer_max": 0.0,
         "b1_max": 0.0,
         "dvmn_per_draw": [
-          0.0,
-          0.0,
-          0.0,
-          0.0,
-          0.0
+          9.85,
+          7.15,
+          5.81,
+          6.48,
+          6.65
         ],
-        "dvmn_in_band": 0,
+        "dvmn_in_band": 5,
         "param": "v_thresh_gap_mV",
         "value": 10.0
       },
       {
         "k": 7,
-        "dvmn_mean": 7.591833333333334,
+        "dvmn_mean": 7.406666666666666,
         "dlmn_mean": 0.0,
         "steer_mean": 0.0,
         "b1_mean": 0.0,
@@ -147,11 +147,11 @@
         "steer_max": 0.0,
         "b1_max": 0.0,
         "dvmn_per_draw": [
-          10.61,
-          7.41,
-          6.4,
-          6.73,
-          6.82
+          10.27,
+          7.32,
+          6.06,
+          6.65,
+          6.73
         ],
         "dvmn_in_band": 5,
         "param": "refractory_ms",
@@ -159,7 +159,7 @@
       },
       {
         "k": 7,
-        "dvmn_mean": 0.9595,
+        "dvmn_mean": 7.373,
         "dlmn_mean": 0.0,
         "steer_mean": 0.0,
         "b1_mean": 0.0,
@@ -167,13 +167,13 @@
         "steer_max": 0.0,
         "b1_max": 0.0,
         "dvmn_per_draw": [
-          3.2,
-          0.93,
-          0.0,
-          0.25,
-          0.42
+          10.27,
+          7.24,
+          6.14,
+          6.57,
+          6.65
         ],
-        "dvmn_in_band": 1,
+        "dvmn_in_band": 5,
         "param": "refractory_ms",
         "value": 5.0
       }
@@ -236,7 +236,7 @@
         },
         {
           "k": 4,
-          "dvmn_mean": 0.4208333333333334,
+          "dvmn_mean": 0.404,
           "dlmn_mean": 0.0,
           "steer_mean": 0.0,
           "b1_mean": 0.0,
@@ -246,7 +246,7 @@
           "dvmn_per_draw": [
             0.0,
             0.0,
-            2.1,
+            2.02,
             0.0,
             0.0
           ],
@@ -262,11 +262,11 @@
           "steer_max": 0.0,
           "b1_max": 0.0,
           "dvmn_per_draw": [
-            4.54,
+            4.46,
             0.0,
             3.2,
             0.0,
-            6.57
+            6.65
           ],
           "dvmn_in_band": 3
         },
@@ -283,8 +283,8 @@
             5.64,
             0.0,
             0.0,
-            4.21,
-            5.22
+            4.29,
+            5.13
           ],
           "dvmn_in_band": 3
         },
@@ -298,17 +298,17 @@
           "steer_max": 0.0,
           "b1_max": 0.0,
           "dvmn_per_draw": [
-            5.47,
-            12.29,
+            5.55,
+            12.2,
             10.27,
-            10.27,
-            4.54
+            10.18,
+            4.63
           ],
           "dvmn_in_band": 4
         },
         {
           "k": 8,
-          "dvmn_mean": 10.924833333333334,
+          "dvmn_mean": 10.941666666666666,
           "dlmn_mean": 0.0,
           "steer_mean": 0.0,
           "b1_mean": 0.0,
@@ -316,17 +316,17 @@
           "steer_max": 0.0,
           "b1_max": 0.0,
           "dvmn_per_draw": [
-            10.94,
+            11.03,
             10.27,
-            12.46,
+            12.37,
             11.87,
-            9.09
+            9.17
           ],
           "dvmn_in_band": 4
         },
         {
           "k": 9,
-          "dvmn_mean": 16.227333333333334,
+          "dvmn_mean": 16.176833333333335,
           "dlmn_mean": 0.0,
           "steer_mean": 0.0,
           "b1_mean": 0.0,
@@ -336,15 +336,15 @@
           "dvmn_per_draw": [
             16.5,
             16.16,
-            17.17,
-            16.5,
-            14.81
+            17.09,
+            16.41,
+            14.73
           ],
           "dvmn_in_band": 0
         },
         {
           "k": 10,
-          "dvmn_mean": 17.28783333333333,
+          "dvmn_mean": 17.30466666666667,
           "dlmn_mean": 0.0,
           "steer_mean": 0.0,
           "b1_mean": 0.0,
@@ -352,17 +352,17 @@
           "steer_max": 0.0,
           "b1_max": 0.0,
           "dvmn_per_draw": [
-            14.9,
-            14.39,
-            19.11,
-            19.53,
-            18.52
+            14.81,
+            14.48,
+            18.94,
+            19.61,
+            18.68
           ],
           "dvmn_in_band": 0
         },
         {
           "k": 11,
-          "dvmn_mean": 20.890166666666666,
+          "dvmn_mean": 20.907,
           "dlmn_mean": 0.0,
           "steer_mean": 0.0,
           "b1_mean": 0.0,
@@ -370,17 +370,17 @@
           "steer_max": 0.0,
           "b1_max": 0.0,
           "dvmn_per_draw": [
-            25.42,
-            19.7,
-            18.26,
-            19.53,
-            21.55
+            25.33,
+            19.78,
+            18.35,
+            19.44,
+            21.63
           ],
           "dvmn_in_band": 0
         },
         {
           "k": 12,
-          "dvmn_mean": 29.121666666666663,
+          "dvmn_mean": 29.155333333333335,
           "dlmn_mean": 0.0,
           "steer_mean": 0.0,
           "b1_mean": 0.0,
@@ -390,15 +390,15 @@
           "dvmn_per_draw": [
             29.21,
             27.35,
-            30.47,
-            27.94,
-            30.64
+            30.72,
+            27.69,
+            30.8
           ],
           "dvmn_in_band": 0
         },
         {
           "k": 13,
-          "dvmn_mean": 33.56566666666667,
+          "dvmn_mean": 33.64983333333333,
           "dlmn_mean": 0.0,
           "steer_mean": 0.0,
           "b1_mean": 0.0,
@@ -406,11 +406,11 @@
           "steer_max": 0.0,
           "b1_max": 0.0,
           "dvmn_per_draw": [
+            33.92,
             33.84,
-            33.41,
             33.5,
-            33.58,
-            33.5
+            33.25,
+            33.75
           ],
           "dvmn_in_band": 0
         }
@@ -420,8 +420,35 @@
     }
   },
   "provenance": {
-    "written_at": "2026-09-26T12:17:55",
-    "git_commit": "77e0cc5",
-    "env": {}
+    "written_at": "2026-10-11T01:58:49",
+    "git_commit": "45126da",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "cython",
+    "platform": "win32",
+    "graph": {
+      "data_dir": "data",
+      "min_weight": 5,
+      "n_neurons": 176422,
+      "n_signed_edges": 6127738,
+      "n_signed_synapses": 88316807
+    },
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9"
+      },
+      "manifest": "match"
+    }
   }
 }
