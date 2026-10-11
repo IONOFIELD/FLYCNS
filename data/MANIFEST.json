@@ -2,7 +2,7 @@
   "algorithm": "rowhash-v2",
   "pandas": "3.0.6",
   "dataset": "male-cns:v1.0 (neuprint.janelia.org)",
-  "written_at": "2026-10-11T06:15:49",
+  "written_at": "2026-10-11T12:32:28",
   "files": {
     "edges.parquet": {
       "digest": "becf568580708ba9d6c6170e2daa407a806a8ac64ffcbb70a29cc8bfdae78d3d",
@@ -15,6 +15,27 @@
         "weight"
       ],
       "sums": {
+        "post": "11517611213871",
+        "pre": "18683378936444",
+        "sign": 1499819.0,
+        "weight": "90297299"
+      }
+    },
+    "edges_nt.parquet": {
+      "digest": "4bcc6084a7fde88b6f318435717ddd03fded1e9d571399300cad8f45bdaf9641",
+      "rows": 6287789,
+      "columns": [
+        "nt",
+        "nt_agree",
+        "nt_conf",
+        "post",
+        "pre",
+        "sign",
+        "weight"
+      ],
+      "sums": {
+        "nt_agree": 5796598.921814,
+        "nt_conf": 5719571.37964,
         "post": "11517611213871",
         "pre": "18683378936444",
         "sign": 1499819.0,
