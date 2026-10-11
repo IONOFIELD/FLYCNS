@@ -57,6 +57,7 @@ RUNS = [  # (label, argv relative to the copy, extra env, sentinel substring or 
     ("flight_snpp16", ["benchmarks/flight_snpp16.py", "20", "testdata"], {}, None),
     ("flight_snpp16_graded (registers on toy data)", ["benchmarks/flight_snpp16_graded.py", "20", "testdata"], {}, None),
     ("flight_loop", ["benchmarks/flight_loop.py", "20", "testdata"], {}, None),
+    ("flight_snpp16_robustness (registers on toy data)", ["benchmarks/flight_snpp16_robustness.py", "10", "testdata"], {}, None),
     ("peptide_asta", ["benchmarks/peptide_asta.py", "2", "testdata"], {}, None),
     ("a2_registered", ["benchmarks/a2_registered.py", "4", "testdata"], {}, None),
     ("a2_robustness", ["benchmarks/a2_robustness.py", "2", "testdata"], {}, None),
@@ -199,6 +200,9 @@ def main():
         results.append(("make toy graph", r.returncode == 0, r.stderr.strip()[-200:]))
         for f in (work / "testdata").glob("*.parquet"):
             shutil.copy(f, work / "data" / f.name)          # scripts that read data/ directly
+        # the measured loom input is a model input: without it the toy ran on the built-in tuning, so the
+        # golden file never covered the loom amplitudes the real runs use
+        shutil.copy(ROOT / "data" / "loom_tuning_measured.json", work / "data" / "loom_tuning_measured.json")
         got = {}
         for label, argv, env, sentinel in RUNS:
             before = _reports(work)

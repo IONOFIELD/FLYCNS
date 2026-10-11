@@ -146,8 +146,9 @@ CRITERIA_V2 = dict(
             rule=("some swept DNg02 rate puts DLMn c-f (first band) and DVMn 1a-c (second band) both in 2-12 Hz, "
                   "each scored per recruitment seed: any of the rates, each rate the conjunction of its two parts")),
         "L6_DVMn_still_in_band_with_DNg02": dict(
-            bands=[[2.0, 12.0], [2.0, 12.0]],
-            rule="the same record as L5 (as coded, L6 is true exactly when L5 is)"),
+            scored=False,
+            rule=("reported, not scored: as coded, L6 is true exactly when L5 is (the DNg02 rule already requires "
+                  "DVMn in band), so scoring both would count one measurement twice")),
     },
 )
 REG = registry.register(LABEL, CRITERIA_V2, scripts=[__file__], supersedes=None)
@@ -405,8 +406,10 @@ report["checks"] = {
     "L3_leg_mn_not_entrained": bool((best["leg_mn_hz"] if best["leg_mn_hz"] == best["leg_mn_hz"] else 0) < 0.1 * WINGBEAT_HZ),
     "L4_steering_specific_vs_null": bool(steer_real > 5.0 * max(steer_null, 0.2)),
     "L5_DLMn_cf_2_to_12_hz_with_DNg02": bool(chosen is not None),
-    "L6_DVMn_still_in_band_with_DNg02": bool(chosen is not None and 2.0 <= chosen["dvmn_hz"] <= 12.0),
+    # reported, not scored: identical to L5 as coded (audit check, 11 October 2026); its value is kept below
+    "L6_DVMn_still_in_band_with_DNg02": None,
 }
+report["L6_as_coded_equals_L5"] = bool(chosen is not None and 2.0 <= chosen["dvmn_hz"] <= 12.0)
 
 
 # ---- uncertainty (flycns/stats.py): one record per scored check, three-way verdict. Every scored arm is
@@ -466,15 +469,13 @@ else:
     unc["L4_steering_specific_vs_null"] = stats.unresolved(
         "the rewired null fired no spike outside the driven afferents in any seed, so the comparison only asks "
         "whether real steering exceeds the 1 Hz floor and cannot test wiring specificity", estimate=steer_real)
-# L5 and L6: the DNg02 rule needs DLMn c-f AND DVMn 1a-c in band; per draw, some rate must put both in band.
-# As coded, L6 (DVMn in band at the chosen rate) is true exactly when L5 is (the rule already requires DVMn in
-# band), so both checks carry this same record.
+# L5: the DNg02 rule needs DLMn c-f AND DVMn 1a-c in band; per draw, some rate must put both in band. (L6,
+# DVMn in band at the chosen rate, is true exactly when L5 is, so it is reported and not scored.)
 l5 = _any([stats.combine([stats.per_draw(a["per_seed_scored"]["dlmn"], 2.0, 12.0, note=f"DLMn c-f, DNg02 {a['dng02_hz']:.0f} Hz"),
                           stats.per_draw(a["per_seed_scored"]["dvmn"], 2.0, 12.0, note=f"DVMn 1a-c, DNg02 {a['dng02_hz']:.0f} Hz")],
                          note=f"DNg02 {a['dng02_hz']:.0f} Hz") for a in stage2],
           note="some DNg02 rate with DLMn c-f and DVMn 1a-c both in band per recruitment seed")
 unc["L5_DLMn_cf_2_to_12_hz_with_DNg02"] = l5
-unc["L6_DVMn_still_in_band_with_DNg02"] = dict(l5, note=l5["note"] + "; L6 is identical to L5 as coded")
 report["uncertainty"] = unc
 
 report["reported"] = dict(
@@ -490,7 +491,7 @@ report["reported"] = dict(
     afferent_params_cross_species="Holorusia (Fox & Daniel 2008; Fox et al. 2010), Sarcophaga (Yarger & Fox 2018), Calliphora (Fayyazuddin & Dickinson 1996)")
 for a in report["arms"].values():
     a.pop("_spikes", None)
-report["pass"] = all(report["checks"].values())
+report["pass"] = all(v for v in report["checks"].values() if v is not None)
 # verify_bands skips a conditional check only when its record is absent; a check whose condition was not met
 # carries a stats.unresolved record (no band), so the band check reads the records scored as designed
 registry.verify_bands(REG, {k: u for k, u in report["uncertainty"].items() if u["method"] != "not scorable as designed"})
@@ -499,7 +500,7 @@ report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECKS")
 for k, v in report["checks"].items():
-    print(f"  {'PASS' if v else 'FAIL'}  {k}")
+    print(f"  {'REPORTED' if v is None else 'PASS' if v else 'FAIL'}  {k}")
 print("\nUNCERTAINTY (flycns/stats.py; three-way verdict, scored per recruitment seed)")
 for k, u in report["uncertainty"].items():
     _print_record(k, u)

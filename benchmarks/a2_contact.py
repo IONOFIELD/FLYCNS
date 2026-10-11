@@ -12,7 +12,15 @@ calibrated per run on its own seeds, 120 trials per arm, independent seeds for t
 Newcombe interval on the difference in giant fiber response probability.
 
 Checks (registered in results/a2_contact_<variant>/registration.json before the run):
-  em       C1_em_facilitation      the 95% interval on P(GF | loom + sound) - P(GF | loom) lies above 0
+  em       C1_em_facilitation      BOTH: sound alone stays subthreshold (giant fiber response probability to
+                                   sound alone, Wilson 95% interval, at or below 0.3, as A1 asks of the declared
+                                   model and as the literature reports qualitatively: Pezier et al. 2016), AND
+                                   the 95% interval on P(GF | loom + sound) - P(GF | loom) lies above 0.
+                                   Without the first part, "facilitation" could be sound firing the giant fiber
+                                   on its own. (Known before this registration: the committed auditory report's
+                                   reference arm, JON -> GF chemical only as EM annotates it with no other
+                                   change, fires the giant fiber on 40 of 40 sound-alone trials. The first part is
+                                   therefore not a blind prediction; it is kept so C1 cannot pass vacuously.)
   em_flip  C2_flip_no_facilitation the 95% interval lies at or below 0 (sign-inverted input cannot
                                    facilitate); above 0 fails; spanning 0 is unresolved
 
@@ -40,6 +48,7 @@ LABEL = f"a2_contact_{VARIANT}"
 OUT = Path("results") / LABEL
 CHECK = {"em": "C1_em_facilitation", "em_flip": "C2_flip_no_facilitation"}[VARIANT]
 BAND = {"em": [0.0, None], "em_flip": [None, 0.0]}[VARIANT]
+SOUND_ALONE_BAND = [None, 0.3]
 CRITERIA = dict(
     question="sound-loom facilitation at the giant fiber with the JON -> GF contact as EM annotates it",
     contact=dict(em="679 EM chemical synapses, transmitter-signed, no electrical coupling (FLYCNS_JON=em)",
@@ -48,10 +57,12 @@ CRITERIA = dict(
               "loom alone on seed BASE, loom + sound on seed BASE+1, 150 Hz on the auditory JO types"),
     trials_per_arm=TRIALS,
     statistic="P(GF | loom + sound) - P(GF | loom), Newcombe 1998 method 10 95% interval",
-    checks={CHECK: dict(band=BAND, band_lower_exclusive=(VARIANT == "em"),
-                        rule=("PASS if the interval lies above 0; FAIL if at or below 0; UNRESOLVED if it spans 0"
-                              if VARIANT == "em" else
-                              "PASS if the interval lies at or below 0; FAIL if above 0; UNRESOLVED if it spans 0"))},
+    checks={CHECK: (dict(bands=[SOUND_ALONE_BAND, BAND], band_lower_exclusive_on_difference=True,
+                         rule=("BOTH parts: sound alone subthreshold (Wilson interval on its GF response probability "
+                               "at or below 0.3) AND the difference interval above 0; FAIL if either part fails; "
+                               "UNRESOLVED otherwise"))
+                    if VARIANT == "em" else
+                    dict(band=BAND, rule="PASS if the interval lies at or below 0; FAIL if above 0; UNRESOLVED if it spans 0"))},
 )
 REG = registry.register(LABEL, CRITERIA, scripts=[__file__, Path(__file__).with_name("auditory.py")])
 require_clean(LABEL)
@@ -71,7 +82,13 @@ child = json.loads((child_out / "report.json").read_text(encoding="utf-8"))
 a2 = child["arms"]["A2_prediction"]
 d, (lo, hi) = a2["difference"], a2["difference_ci95"]
 if VARIANT == "em":
-    rec = stats.scored(d, lo, hi, low=0.0, strict=True, method="newcombe", n=a2["n_trials_per_arm"])
+    so = child["arms"]["A2_sound_alone"]
+    k_so, n_so = int(round(so["gf_hit"] * so["n_trials"])), so["n_trials"]
+    rec = stats.combine([stats.proportion(k_so, n_so, high=SOUND_ALONE_BAND[1],
+                                          note="sound alone, giant fiber response probability"),
+                         stats.scored(d, lo, hi, low=0.0, strict=True, method="newcombe", n=a2["n_trials_per_arm"],
+                                      note="P(GF | loom + sound) - P(GF | loom)")],
+                        note="facilitation counts only if sound alone stays subthreshold")
 else:
     rec = stats.scored(d, lo, hi, high=0.0, method="newcombe", n=a2["n_trials_per_arm"])
 uncertainty = {CHECK: rec}

@@ -123,6 +123,7 @@ for rep in reports:
 total, passed = sum(counts.values()), sum(passed_by_role.values())
 unresolved = sum(unresolved_by_role.values())
 canonical = not any(("PERTURBED" in f or "DIRTY" in f or "ALLOW-DIRTY" in f or "DATA-MISMATCH" in f or "UNPINNED" in f
+                     or "STALE" in f or "UNREGISTERED" in f
                      or any(x.startswith("TRIALS") for x in f)) for f in flags.values())
 p = LIFParams().__dict__
 tag = os.environ.get("FLYCNS_RUN_TAG", "")
@@ -132,7 +133,8 @@ role_line = " | ".join(f"{rl} {passed_by_role[rl]}/{counts[rl]}"
 md = ["# MaleCNS v1.0 LIF benchmark suite" + (f"  [{tag}]" if tag else ""), "",
       (f"**{passed}/{total} checks pass under ONE parameter set** (same LIFParams for every circuit)."
        if canonical else
-       f"**{passed}/{total} checks pass, but NOT all under the declared parameter set:** see the flags column."),
+       f"**{passed}/{total} checks pass, but NOT all as registered under the declared parameter set:** see the "
+       f"flags column."),
       "", f"**By role:** {role_line}",
       "", f"**Uncertainty:** {with_interval} of {total} scored checks carry a 95% interval or a per-draw or null "
           f"score (flycns/stats.py); {unresolved} are UNRESOLVED (the interval crosses a band edge) and count as not "

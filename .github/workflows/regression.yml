@@ -126,6 +126,15 @@ jobs:
           Must git rm -q --ignore-unmatch "results/*/criteria.json" "results/*/registration.json" | Out-Null
           Must git add data/MANIFEST.json | Out-Null
           Must git commit -qm "CI: toy data pinned in place of the connectome" | Out-Null
+          # a registered test scores only under a committed registration: register the toy's own first,
+          # as a maintainer registers before a run (flycns/registry.py)
+          $env:FLYCNS_REGISTER_ONLY = "1"
+          foreach ($b in @("gf_escape", "auditory", "feeding", "pc1_song", "null_strict")) {
+            Must .\.venv\Scripts\python.exe "benchmarks\$b.py" | Out-Null
+          }
+          Remove-Item Env:FLYCNS_REGISTER_ONLY
+          Must git add results | Out-Null
+          Must git commit -qm "CI: register the toy's own tests" | Out-Null
           Must git push -q | Out-Null
           $before = [int](Must git -C "$w\remote.git" rev-list --count HEAD).Trim()
           $out = "51`n`nq`n" | .\fly.cmd 2>&1 | Out-String

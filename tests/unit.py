@@ -655,7 +655,7 @@ def t_summary_counts_and_flags(tmp):
     unresolved_ok = rows[("auditory", "A1_jo_alone_mostly_subthreshold")][0] == "UNRESOLVED" and "1 are UNRESOLVED" in md
     ok = (head and (int(head[1]), int(head[2])) == (n_pass, n_scored) == (2, 5)
           and sum(int(t[2]) for t in tallies) == n_scored and sum(int(t[1]) for t in tallies) == n_pass
-          and "NOT all under the declared parameter set" in md and flags_ok and unresolved_ok)
+          and "NOT all as registered under the declared parameter set" in md and flags_ok and unresolved_ok)
     return ok, ("headline 2/5 equals the rows (an in-band point with an interval across the edge is UNRESOLVED, "
                 "not a pass); role tallies sum to it; all nine flags exactly where expected" if ok else
                 f"head {head and head.group(0)}, rows {n_pass}/{n_scored}, tallies {tallies}, flags {got}, "
@@ -925,10 +925,13 @@ def t_registry_freezes_model(tmp):
     def run(*a, **e):
         return subprocess.run([sys.executable, "probe.py", *a], cwd=r, capture_output=True, text=True,
                               encoding="utf-8", errors="replace", env={**env, **e})
+    unregistered = run()                                  # no registration yet: refused, nothing scored
     reg_only = run(FLYCNS_REGISTER_ONLY="1")
     wrote = (r / "results/probe/registration.json").exists() and "RAN" not in reg_only.stdout
+    uncommitted = run()                                   # written but not committed: refused
     subprocess.run([*g, "add", "-A"], cwd=r, check=True); subprocess.run([*g, "commit", "-qm", "register"], cwd=r, check=True)
     ok_run = run()
+    perturbed = run(FLYCNS_WSCALE="0.45")                 # runs, but is not the registered result
     bad_band = run("[0.4, 1.0]")
     with open(r / "flycns/model.py", "a", encoding="utf-8") as f:
         f.write("\n# a later change\n")
@@ -938,12 +941,18 @@ def t_registry_freezes_model(tmp):
     (r / "probe.py").write_text(_PROBE.replace("THRESH = 0.5", "THRESH = 0.3"), encoding="utf-8")
     subprocess.run([*g, "commit", "-qam", "threshold edit"], cwd=r, check=True)
     thresh_changed = run()
-    ok = (wrote and "RAN" in ok_run.stdout and '"matches": true' in ok_run.stdout
+    ok = (unregistered.returncode != 0 and "not registered" in unregistered.stderr
+          and uncommitted.returncode != 0 and "not committed" in uncommitted.stderr
+          and "RAN" in perturbed.stdout and '"matches": false' in perturbed.stdout
+          and wrote and "RAN" in ok_run.stdout and '"matches": true' in ok_run.stdout
           and bad_band.returncode != 0 and "differ from the registration" in bad_band.stderr
           and model_changed.returncode != 0 and "flycns/model.py" in model_changed.stderr
           and thresh_changed.returncode != 0)
-    return ok, ("registered before running; refuses a changed model file, an edited threshold and a band that "
-                "differs from the registration" if ok else
+    return ok, ("refuses to score unregistered or with an uncommitted registration; registered before running; "
+                "refuses a changed model file, an edited threshold and a band that differs; a perturbed run is "
+                "marked not registered" if ok else
+                f"unreg {unregistered.returncode} uncommitted {uncommitted.returncode} {uncommitted.stderr[-120:]!r} "
+                f"perturbed {perturbed.stdout[-120:]!r}; "
                 f"wrote {wrote}; ok {ok_run.stdout[-120:]!r} {ok_run.stderr[-160:]!r}; band {bad_band.returncode}; "
                 f"model {model_changed.returncode} {model_changed.stderr[-160:]!r}; thresh {thresh_changed.returncode}")
 

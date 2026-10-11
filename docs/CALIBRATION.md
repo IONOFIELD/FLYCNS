@@ -80,6 +80,14 @@ The **held-out tests** are the circuits no value above was fitted to:
 - the SNpp16 tests
 
 Not counted as tests, though pre-registered:
+- **Sound-loom facilitation beyond summation** (`a2_registered`, A2R2, registered version 2) is
+  **independent**: it scores only the facilitation that adding the model's own measured sound-alone
+  depolarisation to each loom-alone trial does not predict.
+- **Sound-loom facilitation with the contact as EM annotates it** (`a2_contact_em`, C1) is
+  **independent**, with one caveat recorded in its registration: the committed reference arm already
+  showed that the EM-annotated contact alone fires the giant fiber on every sound-alone trial, so
+  C1's "sound alone stays subthreshold" part is not a blind prediction. It is kept so C1 cannot pass
+  on sound firing the giant fiber by itself.
 - **Sound-loom facilitation** (`a2_registered`, A2R) is **construction**. The working-point rule parks
   the loom-alone giant fiber about 2 mV below threshold, and the sound input is a hand-set, untraced
   3 mV compound potential. In a one-compartment cell, summation of the two crosses threshold unless

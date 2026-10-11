@@ -23,8 +23,9 @@ Outcomes fixed in advance:
   CI spans zero   FAIL: unresolved even at 120 trials per arm
 Added with the version 2 registration (results/a2_registered/registration.json, which supersedes criteria.json):
   A2R2 facilitation beyond summation: the 95% bootstrap interval on the observed P(GF | loom + sound) minus
-       what adding the declared compound sound potential to each loom-alone trial predicts lies above zero
-       (auditory.py, A2_construction). Above zero PASS, at or below zero FAIL, spanning zero UNRESOLVED.
+       what adding the model's measured sound-alone peak depolarisation to each loom-alone trial's peak
+       depolarisation (most depolarised giant fiber) predicts lies above zero (auditory.py, A2_construction).
+       Above zero PASS, at or below zero FAIL, spanning zero UNRESOLVED.
 
 Run:  python benchmarks/a2_registered.py [trials_per_arm] [data_dir]      (default 120; ~40+ min)
 """
@@ -56,7 +57,7 @@ from flycns import registry  # noqa: E402
 CRITERIA_V2 = dict(
     version=2,
     hypothesis=("sound facilitates the giant fiber's response to a near-threshold loom (Tootoonian et al. 2012, "
-                "J Neurosci 32:787-798, Fig. 2D), and does so beyond what adding the declared compound sound "
+                "J Neurosci 32:787-798, Fig. 2D), and does so beyond what adding the model's own measured sound-alone "
                 "potential to the loom alone predicts"),
     protocol=dict(
         trials_per_arm=A2_TRIALS,
@@ -79,8 +80,9 @@ CRITERIA_V2 = dict(
             condition=("scored when the auditory report carries A2_construction (the registered auditory.py always "
                        "writes it); otherwise UNRESOLVED"),
             rule=("facilitation beyond summation: PASS if the 95% interval on the observed P(GF | loom + sound) minus "
-                  "the probability predicted by adding the declared compound potential to each loom-alone trial's "
-                  "peak depolarisation lies above 0; FAIL if at or below 0; UNRESOLVED if it spans 0")),
+                  "the probability predicted by adding the measured sound-alone peak depolarisation (same run) to "
+                  "each loom-alone trial's peak depolarisation of its most depolarised giant fiber lies above 0; "
+                  "FAIL if at or below 0; UNRESOLVED if it spans 0")),
     },
 )
 _v1 = OUT / "criteria.json"
@@ -161,16 +163,16 @@ if outcome == "spans":
     unc["verdict"] = "FAIL"
 unc["registered_outcome"] = CRITERIA["outcomes"][outcome]
 report["uncertainty"] = {"A2R_facilitation": unc}
-# A2R2 (registered version 2): facilitation beyond what summation of the declared compound potential predicts
+# A2R2 (registered version 2): facilitation beyond what summation of the measured sound potential predicts
 cons = rep["arms"].get("A2_construction")
-if cons and cons.get("residual_ci95"):
+if cons and cons.get("residual_ci95") and cons.get("predicted_hit_by_summation") is not None:
     rlo, rhi = cons["residual_ci95"]
     unc2 = stats.scored(cons["residual"], rlo, rhi, low=0.0, strict=True, method="bootstrap",
                         note=(f"observed P(GF|loom+sound) {cons['observed_hit']:.3f} minus the {cons['predicted_hit_by_summation']:.3f} "
-                              f"predicted by adding the declared compound potential ({cons['compound_mV']} mV, JON "
-                              f"{cons['jon_mode']}) to each loom-alone trial's peak depolarisation (rest to threshold "
-                              f"{cons['gap_mV']} mV); percentile bootstrap over trials, the two arms resampled on their "
-                              f"own (auditory.py A2_construction)"))
+                              f"predicted by adding the measured sound-alone peak depolarisation ({cons['sound_potential_mV']:.2f} mV, "
+                              f"JON {cons['jon_mode']}) to each loom-alone trial's peak depolarisation of its most "
+                              f"depolarised giant fiber (rest to threshold {cons['gap_mV']} mV); percentile bootstrap over "
+                              f"trials, the two arms resampled on their own (auditory.py A2_construction)"))
 else:
     unc2 = stats.unresolved("the auditory report carries no A2_construction, so facilitation beyond summation "
                             "cannot be scored")

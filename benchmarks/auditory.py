@@ -193,7 +193,21 @@ def _pt(arm, key):
 # (what the Newcombe interval assumes).
 BASE_SEED = LIFParams().seed
 CAL_SEED = BASE_SEED + 1000          # calibration arms: BASE_SEED + 1000 + index of the gain
-A2_SEEDS = dict(loom_alone=BASE_SEED, loom_plus_jo=BASE_SEED + 1)
+A2_SEEDS = dict(loom_alone=BASE_SEED, loom_plus_jo=BASE_SEED + 1, sound_alone=BASE_SEED + 2)
+
+
+def _peak_max_mV(m, onsets, window_ms):
+    """Per trial, the peak depolarisation above rest of the MOST depolarised monitored giant fiber (a
+    response counts when any giant fiber spikes, so summation is judged on the cell nearest threshold)."""
+    if m.vmon is None:
+        return []
+    from brian2 import ms as _ms, mV as _mV
+    t = np.array(m.vmon.t / _ms); v = np.array(m.vmon.v / _mV)
+    out = []
+    for on in onsets:
+        w = (t >= on) & (t < on + window_ms)
+        out.append(float((v[:, w].max(axis=1) - m.p.v_rest_mV).max()) if w.any() else None)
+    return out
 
 
 def run(label, stim_types, electrical=True, edge_df=edges, jo=True, loom=False, n_trials=None, seed=None):
@@ -226,6 +240,7 @@ def run(label, stim_types, electrical=True, edge_df=edges, jo=True, loom=False, 
     depol = m.peak_depolarization_mV(onsets, 100)
     s["gf_depol_mV"] = float(np.nanmean(depol))
     s["per_trial"]["depol_mV"] = [None if np.isnan(x) else float(x) for x in depol]
+    s["per_trial"]["depol_max_mV"] = _peak_max_mV(m, onsets, 100)
     print(f"[{label}] GF {s['gf_per_cell']:.2f}/cell hit {s['gf_hit']:.2f} lat {s['gf_lat_ms']:.1f} ms "
           f"depol {s['gf_depol_mV']:.2f} mV | CNS {s['pop_rate_hz']:.4f} Hz | {s['wall_s']}s")
     report["arms"][label] = s
@@ -251,26 +266,36 @@ report["arms"]["A2_calibration"] = dict(gains=[dict(gain=g, hit=h, depol_mV=d) f
 print(f"A2 working point: loom gain {SUB_LOOM_GAIN}")
 
 
-def construction_prediction(lo, a2):
+def construction_prediction(lo, a2, sound):
     """What summation alone predicts for loom + sound (audit gap 1): a loom-alone trial would become a
-    giant fiber response if its peak depolarisation plus the declared compound sound potential reaches
-    the rest-to-threshold gap. The facilitation the model shows beyond this is the part that is not
-    arithmetic (polysynaptic effects, timing); only that residual can be a test."""
-    from flycns.graph import jon_compound_mv, jon_mode
+    giant fiber response if the peak depolarisation of its most depolarised giant fiber, plus the sound
+    potential this model actually produces (the mean peak depolarisation of the sound-alone arm, in this
+    same run), reaches the rest-to-threshold gap. Trials that already fired count as responses. The
+    facilitation beyond this prediction is the part that is not arithmetic (polysynaptic effects, timing,
+    adaptation); only that residual can be a test. (Before 11 October 2026, later, the prediction added
+    the declared 3 mV target instead of the measured potential, and the mean of the two giant fibers.)"""
+    from flycns.graph import jon_mode
     p = LIFParams()
     gap = p.v_thresh_mV - p.v_rest_mV
-    c = jon_compound_mv() if jon_mode() == "electrical" else 0.0
+    c = float(sound["gf_depol_mV"]) if sound is not None else float("nan")
     hit = np.asarray(lo["per_trial"]["hit"], dtype=float)
-    dep = np.asarray([np.nan if x is None else x for x in lo["per_trial"]["depol_mV"]], dtype=float)
-    pred = np.where(hit > 0, 1.0, np.where(np.isnan(dep), np.nan, (dep + c >= gap).astype(float)))
+    dep = np.asarray([np.nan if x is None else x for x in lo["per_trial"].get("depol_max_mV", [])], dtype=float)
+    if len(dep) != len(hit) or np.isnan(c):
+        pred = np.full(len(hit), np.nan)
+    else:
+        pred = np.where(hit > 0, 1.0, np.where(np.isnan(dep), np.nan, (dep + c >= gap).astype(float)))
     obs = np.asarray(a2["per_trial"]["hit"], dtype=float)
     est, rlo, rhi = stats.bootstrap_diff(obs, pred)
-    return dict(compound_mV=c, gap_mV=gap, jon_mode=jon_mode(), loom_alone_hit=float(np.nanmean(hit)),
-                predicted_hit_by_summation=float(np.nanmean(pred)), observed_hit=float(np.nanmean(obs)),
-                residual=est, residual_ci95=[rlo, rhi],
+    return dict(sound_potential_mV=c, sound_arm=sound.get("label") if sound else None, sound_alone_hit=(
+                    float(sound["gf_hit"]) if sound is not None else None), gap_mV=gap, jon_mode=jon_mode(),
+                loom_alone_hit=float(np.nanmean(hit)),
+                predicted_hit_by_summation=float(np.nanmean(pred)) if np.isfinite(pred).any() else None,
+                observed_hit=float(np.nanmean(obs)), residual=est, residual_ci95=[rlo, rhi],
                 note=("residual = observed loom+sound response probability minus the probability predicted by adding "
-                      "the declared compound potential to each loom-alone trial's peak depolarisation; arms are "
-                      "independent (different seeds), so the interval resamples each on its own"))
+                      "the measured sound-alone peak depolarisation to each loom-alone trial's peak depolarisation of "
+                      "its most depolarised giant fiber; arms are independent (different seeds), so the interval "
+                      "resamples each on its own"))
+
 
 if A2_ONLY:
     lo = run("subthreshold_loom_alone", list(LOOM_TUNING), electrical=True, jo=False, loom=True, n_trials=A2_TRIALS,
@@ -284,7 +309,11 @@ if A2_ONLY:
         loom_alone_hit=lo["gf_hit"], loom_plus_jo_hit=a2["gf_hit"], difference=d, difference_ci95=[dlo, dhi],
         loom_alone_depol_mV=lo["gf_depol_mV"], loom_plus_jo_depol_mV=a2["gf_depol_mV"], mode="A2 only",
         seeds=A2_SEEDS, calibration_seed_base=CAL_SEED)
-    report["arms"]["A2_construction"] = construction_prediction(lo, a2)
+    # the sound-alone arm in the same mode (its own seed): the measured sound potential for the summation
+    # prediction, and whether sound alone stays subthreshold (a2_contact's C1 needs that)
+    so = run("A2_sound_alone", jo_types, electrical=True, n_trials=N_TRIALS, seed=A2_SEEDS["sound_alone"])
+    so["label"] = "A2_sound_alone"
+    report["arms"]["A2_construction"] = construction_prediction(lo, a2, so)
     report["provenance"] = provenance()
     (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
     print(f"A2 only at gain {SUB_LOOM_GAIN}: {lo['gf_hit']:.3f} -> {a2['gf_hit']:.3f}, difference {d:+.3f} "
@@ -322,9 +351,10 @@ report["arms"]["A2_prediction"] = dict(loom_gain=SUB_LOOM_GAIN, n_trials_per_arm
     note=("model measurement at a calibrated near-threshold working point; in vivo direction not "
           "established in cited references. With few trials the difference is not resolvable: "
           "set FLYCNS_A2_TRIALS>=120 for a usable estimate."), seeds=A2_SEEDS, calibration_seed_base=CAL_SEED)
-report["arms"]["A2_construction"] = construction_prediction(lo, a2)
+a1["label"] = "A1_jo_alone_electrical"
+report["arms"]["A2_construction"] = construction_prediction(lo, a2, a1)
 _c = report["arms"]["A2_construction"]
-print(f"A2 by summation alone: {_c['loom_alone_hit']:.2f} -> predicted {_c['predicted_hit_by_summation']:.2f}, "
+print(f"A2 by summation alone: {_c['loom_alone_hit']:.2f} -> predicted {_c['predicted_hit_by_summation'] or float('nan'):.2f}, "
       f"observed {_c['observed_hit']:.2f}; residual {_c['residual']:+.2f} "
       f"(95% CI {_c['residual_ci95'][0]:+.2f} to {_c['residual_ci95'][1]:+.2f})")
 print(f"A2 (reported, {n1} trials/arm): loom alone {lo['gf_hit']:.2f} -> with JO {a2['gf_hit']:.2f}; "
