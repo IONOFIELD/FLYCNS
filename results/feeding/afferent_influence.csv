@@ -9,8 +9,8 @@ LB3a,426.0,4,106.5,17,acetylcholine
 LB3d,618.0,6,103.0,26,acetylcholine
 BM_Vt_PoOc,255.0,6,42.5,8,acetylcholine
 BM_MaPa,84.0,2,42.0,15,acetylcholine
-BM_vOcci_vPoOr,140.0,4,35.0,26,acetylcholine
 ENS1,140.0,4,35.0,6,acetylcholine
+BM_vOcci_vPoOr,140.0,4,35.0,26,acetylcholine
 BM_InOm,30.0,1,30.0,745,acetylcholine
 LB3c,-252.0,11,-22.90909090909091,23,acetylcholine
 SNxx14,-25.0,1,-25.0,66,acetylcholine
@@ -28,8 +28,8 @@ PhG14,-120.0,2,-60.0,2,acetylcholine
 LB1c,-66.0,1,-66.0,16,acetylcholine
 SNpp55,-144.0,2,-72.0,7,acetylcholine
 PhG1c,-295.0,4,-73.75,4,acetylcholine
-SNxx20,-940.0,12,-78.33333333333333,26,acetylcholine
 SNxx15,-235.0,3,-78.33333333333333,10,acetylcholine
+SNxx20,-940.0,12,-78.33333333333333,26,acetylcholine
 SNpp59,-180.0,2,-90.0,6,acetylcholine
 DNx02,-108.0,1,-108.0,4,acetylcholine
 SNpp41,-468.0,4,-117.0,22,acetylcholine
