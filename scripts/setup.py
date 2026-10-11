@@ -13,8 +13,9 @@ Steps:
      pure-Python engine (same results, slower); offers to install the Build Tools with winget
   4. --check: the regression test, then stop
   5. the neuPrint token: asked once, saved to %USERPROFILE%\\.neuprint_token
-  6. the connectome (skipped if already present), annotations, the stimulus audit, and the data
-     fingerprint: written to data\\MANIFEST.json the first time, verified every time after
+  6. the connectome (skipped if already present), annotations, each neuron's neuropil membership
+     (the anatomical SEZ), the stimulus audit, and the data fingerprint: written to
+     data\\MANIFEST.json the first time, verified every time after
 """
 import os
 import shutil
@@ -201,7 +202,7 @@ def step_data():
                  "  Registered tests refuse to run until this is resolved. Send Claude the lines above.")
     if not present and vpy("scripts/fetch_malecns.py") != 0:
         sys.exit("  the connectome download failed; see above")
-    for script in ("scripts/fetch_annotations.py", "scripts/fetch_dimorphism.py"):
+    for script in ("scripts/fetch_annotations.py", "scripts/fetch_dimorphism.py", "fit/roi_membership.py"):
         if vpy(script) != 0:
             sys.exit(f"  {script} failed; see above")
     if vpy("fit/audit_stimuli.py", "data") != 0:
@@ -225,6 +226,9 @@ if __name__ == "__main__":
         step_check()
     if data_pinned():
         say("[5/6] data: present and matching data\\MANIFEST.json, nothing to fetch")
+        if not (ROOT / "data/roi_membership.parquet").exists():
+            say("  NOTE: no data\\roi_membership.parquet, so the SEZ is defined by cell-type name, not anatomy.\n"
+                "        The committed results use the anatomical SEZ: run menu 25 once to match them.")
         say("\nready. Run  .\\fly.cmd  for the menu.")
         sys.exit(0)
     step_token()

@@ -9,7 +9,7 @@ written to results/flight_snpp16_robustness/criteria.json, stamped with the comm
 simulation; the script refuses to run against changed criteria.
 
   R1  transmitter uncertainty. Invert the sign of every neuron whose own per-T-bar predictions
-      disagree in sign with its aggregate label (fit/synapse_nt.py; about 3% of synaptic weight). At k=7:
+      disagree in sign with its aggregate label (fit/synapse_nt.py; 1.6% of the model's signed weight). At k=7:
       DVMn 1a-c in 2-12 Hz in >= 4 of 5 draws, and steering, b1, DLMn c-f each below 1 Hz.
   R2  cord single-neuron parameters. Vary tau_m (5, 10, 40 ms), threshold gap (4, 10 mV) and
       refractory period (1, 5 ms), one at a time, for the relay-layer superclasses read from the
@@ -75,7 +75,8 @@ if crit_f.exists():
 else:
     crit_f.write_text(json.dumps(dict(criteria=CRITERIA, registered_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
                                       git_commit=commit, script_uncommitted=dirty), indent=2), encoding="utf-8")
-print(f"criteria registered at commit {commit or '?'}{' (SCRIPT UNCOMMITTED: commit before running)' if dirty else ''}")
+reg = json.loads(crit_f.read_text(encoding="utf-8")).get("git_commit") or "?"
+print(f"criteria registered at commit {reg}; this run at {commit or '?'}{' (SCRIPT UNCOMMITTED: commit before running)' if dirty else ''}")
 
 neurons, edges = load_graph(DATA)
 os.environ["FLYCNS_SIGNFLIP_TARGETED"] = "1"

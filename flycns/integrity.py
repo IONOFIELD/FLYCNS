@@ -349,7 +349,9 @@ def provenance_record():
         rec["graph"] = {k: v for k, v in LOADED.items()}
         dd = LOADED.get("data_dir")
         if dd:
-            names = ["neurons.parquet", "edges.parquet"]
+            # the anatomical SEZ table changes region readouts, so it is stamped too when present
+            names = ["neurons.parquet", "edges.parquet"] + \
+                (["roi_membership.parquet"] if (Path(dd) / "roi_membership.parquet").exists() else [])
             try:
                 fps = fingerprints(dd, names)
                 rec["data"] = dict(dir=str(dd), digests={k: v["digest"][:16] for k, v in fps.items()},
