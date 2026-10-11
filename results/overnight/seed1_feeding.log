@@ -1,3 +1,7 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! feeding: runs, but is NOT the registered result
+! model settings overridden: FLYCNS_SEED=1
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
 !   FLYCNS_SEED=1
@@ -67,5 +71,8 @@ CHECKS
   SKIP  F3_bitter_suppresses
   SKIP  F4_second_order_sufficient
   SKIP  F5_null_silent
+UNCERTAINTY (95% intervals, flycns/stats.py: PASS only if the whole interval lies in the band)
+  PASS        F2b_extra_SEZ_quiet: 0.000377 [0.000333, 0.000421] in [-inf, 0.02] (bootstrap)
+  PASS        F2c_motor_rate_physiological: 5.42 [4.17, 6.25] in (0, 100] (bootstrap)
 
 BENCHMARK PASS  -> results\feeding/report.json
