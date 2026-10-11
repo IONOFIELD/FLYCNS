@@ -1,5 +1,11 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_SEED=1
+!   FLYCNS_SIGNFLIP=0.05
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 [graph] SIGN-FLIP PERTURBATION: 306,977 edges (5%) sign-inverted
-[graph] 176,422 neurons, 6,127,738 signed edges (dropped 110,136 unknown-NT pairs and modulatory amines)
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
 
   taste ->  gustatory afferents (MxLbN, aPhN)  ==chem==>  SEZ interneurons (GNG...)  ==chem==>  MN9  ->  proboscis
   wind  ->  JO-FV (control)      must NOT reach MN9
@@ -23,33 +29,33 @@ F2 sugar  25 Hz -> MN9 0.00 spikes/cell, CNS 0.0016 Hz
   t1  MN9    ...............................
   t1  CNS    .23355553444442335435554343....   (log2 spikes/bin, 9 = flood)
 
-  region activity (spikes per neuron over 40 stimulus windows):
-  descending_neuron      ######################################## 2.099
-  cb_motor               #######################################  2.047
-  ascending_neuron       #############                            0.713
-  cb_intrinsic           ###########                              0.577
-  vnc_motor              #                                        0.084
-F2 sugar  50 Hz -> MN9 0.00 spikes/cell, CNS 0.0066 Hz
-  outside-SEZ rate 0.0012 Hz | recruited motor mean 4.3 Hz | 3 of 43 cb_motor types active: ['MN2Db', 'MN2Da', 'MN7']
+  region activity (spikes per neuron over 6 stimulus windows):
+  cb_motor               ######################################## 0.349
+  descending_neuron      #######################################  0.344
+  ascending_neuron       ###########                              0.104
+  cb_intrinsic           ##########                               0.089
+  vnc_motor              #                                        0.013
+F2 sugar  50 Hz -> MN9 0.00 spikes/cell, CNS 0.0064 Hz
+  outside-SEZ rate 0.0030 Hz | recruited motor mean 7.1 Hz | 2 of 43 cb_motor types active: ['MN2Db', 'MN2Da']
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
-F2 sugar 100 Hz -> MN9 0.00 spikes/cell, CNS 0.0202 Hz
+F2 sugar 100 Hz -> MN9 0.00 spikes/cell, CNS 0.0188 Hz
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
-F2 sugar 200 Hz -> MN9 0.00 spikes/cell, CNS 0.0547 Hz
+F2 sugar 200 Hz -> MN9 0.00 spikes/cell, CNS 0.0508 Hz
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
 ALL gustatory arm (42 types, every tastant at once) at 50 Hz -> MN9 0.00 spikes/cell (reported, not scored; expected ~0)
 sugar drive: 140 neurons, 69 inferred left
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
    structural 2-hop drive from left afferents: MN9-L 25,650 vs MN9-R 350; functional contra dominant -> does NOT match wiring
-F1 left sugar 100 Hz: MN9 ipsi 0.00, contra 0.00 spikes/cell  [210s]
+F1 left sugar 100 Hz: MN9 ipsi 0.00, contra 0.00 spikes/cell  [57s]
 F3 skipped: no bitter GRN type resolved
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
-F4 DNge062 50 Hz -> MN9 1.39
+F4 DNge062 50 Hz -> MN9 1.33
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
-F4 GNG120 50 Hz -> MN9 0.97
+F4 GNG120 50 Hz -> MN9 0.92
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
-F4 GNG117 50 Hz -> MN9 0.89
+F4 GNG117 50 Hz -> MN9 0.83
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
-F4 GNG108 50 Hz -> MN9 1.02
+F4 GNG108 50 Hz -> MN9 1.00
 F5 rewired null -> MN9 0.00
 
 mechanism: taste -> MN9 in MaleCNS is disinhibitory; a silent network cannot express that, and no uniform manipulation restores it with specificity. Reproducing feeding needs cell-specific spontaneous activity, i.e. the state-dependent modulation this model omits (cf. Shiu et al. 2024, which reported the same limitation for inhibitory neurons at 0 Hz baseline).
@@ -61,7 +67,7 @@ CHECKS
   SKIP  F1_laterality_matches_wiring
   SKIP  F1_shiu_contralateral_bias
   SKIP  F3_bitter_suppresses
-  PASS  F4_second_order_sufficient
-  PASS  F5_null_silent
+  SKIP  F4_second_order_sufficient
+  SKIP  F5_null_silent
 
-BENCHMARK PASS  -> results/feeding/report.json
+BENCHMARK PASS  -> results\feeding/report.json
