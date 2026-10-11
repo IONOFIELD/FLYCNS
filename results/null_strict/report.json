@@ -21,20 +21,96 @@
       "pMP2": 0.0,
       "DNp13": 0.0,
       "pIP10": 0.0,
-      "cns_hz": 0.00011087756599793082
+      "cns_hz": 0.00011087756599793082,
+      "per_trial": {
+        "pMP2": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "DNp13": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pIP10": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
     },
     "real": {
       "pMP2": 8.15,
       "DNp13": 0.0,
       "pIP10": 5.7,
-      "cns_hz": 0.011883857523658224
+      "cns_hz": 0.011883857523658224,
+      "per_trial": {
+        "pMP2": [
+          10.0,
+          7.0,
+          7.5,
+          6.5,
+          8.0,
+          8.0,
+          8.5,
+          7.5,
+          10.0,
+          8.5
+        ],
+        "DNp13": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pIP10": [
+          7.5,
+          6.0,
+          5.5,
+          5.0,
+          4.5,
+          6.0,
+          5.5,
+          5.0,
+          7.0,
+          5.0
+        ]
+      }
     },
     "n_trials": 10
   },
-  "wall_s": 1749.1,
+  "wall_s": 1762.9,
   "provenance": {
-    "written_at": "2026-10-11T14:41:38",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T21:43:01",
+    "git_commit": "b7eba83",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -49,6 +125,7 @@
     "engine": "not used",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "data": {
       "dir": "data",
       "digests": {
@@ -58,5 +135,46 @@
       },
       "manifest": "match"
     }
+  },
+  "uncertainty": {
+    "S1_escape_null_silent_superclass": {
+      "estimate": 0.0,
+      "ci95": [
+        0.0,
+        0.08762160119728664
+      ],
+      "band": [
+        null,
+        0.1
+      ],
+      "method": "wilson",
+      "verdict": "PASS",
+      "n": 40,
+      "note": "GF hit on the superclass null: 0 of 40 trials (Wilson). The superclass null is nearly silent on the real data (whole-CNS rate here: null 2.029e-06 Hz vs real 0.00385 Hz, see the report), so a silent readout on it says little about wiring specificity; the degree-corrected null distribution (benchmarks/null_distribution.py) is the informative version."
+    },
+    "S2_pc1_null_silent_superclass": {
+      "estimate": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "band": [
+        null,
+        0.1
+      ],
+      "method": "bootstrap",
+      "verdict": "PASS",
+      "n": 10,
+      "note": "pMP2 per pulse under pC1_14a at 100 Hz on the superclass null, bootstrap over pulses. The superclass null is nearly silent on the real data (whole-CNS rate here: null 0.0001109 Hz vs real 0.01188 Hz, see the report), so a silent readout on it says little about wiring specificity; the degree-corrected null distribution (benchmarks/null_distribution.py) is the informative version."
+    }
+  },
+  "registration": {
+    "file": "results/null_strict/registration.json",
+    "version": 2,
+    "git_commit": "4c39a8f",
+    "model_hash": "f2be9db1f4f29e0cb155e94f11524403d72bdf24c2d1f1f4ff8152f3d2d660d8",
+    "registered_at": "2026-10-11T12:41:11",
+    "matches": true,
+    "problems": []
   }
 }
