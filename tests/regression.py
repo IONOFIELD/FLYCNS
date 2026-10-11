@@ -91,6 +91,10 @@ RUNS = [  # (label, argv relative to the copy, extra env, sentinel substring or 
     ("every toy-scored check has a role", ["-c", "import sys,pathlib; t=pathlib.Path('results/SUITE.md').read_text(); "
      "bad=[l for l in t.splitlines() if '| unclassified |' in l]; print('\\n'.join(bad) or 'all classified'); "
      "sys.exit(1 if bad else 0)"], {}, "all classified"),
+    # every scored check carries an interval, a per-draw or null score, or says why it is a point (stats.py)
+    ("every toy-scored check has an uncertainty record", ["-c", "import sys,pathlib; t=pathlib.Path('results/SUITE.md').read_text(); "
+     "bad=[l for l in t.splitlines() if '| point, no interval |' in l]; print('\\n'.join(bad) or 'all carry a record'); "
+     "sys.exit(1 if bad else 0)"], {}, "all carry a record"),
 ]
 # The isolated copy is not a git checkout, so the registered tests' clean-tree guard would refuse to
 # run; the override is the documented escape hatch and is stamped into every toy report.
