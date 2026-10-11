@@ -1,0 +1,12 @@
+criteria registered at commit cbc0cc5; this run at b7eba83
+working point: loom gain 0.8, 120 trials per arm
+loom alone      21/120 = 0.175  (95% CI 0.117 to 0.253)
+loom + sound    61/120 = 0.508  (95% CI 0.420 to 0.596)
+difference      +0.333  (95% CI +0.216 to +0.438)
+
+CHECK (criterion registered before the run)
+  PASS  A2R_facilitation  -> PASS facilitation
+UNCERTAINTY (95% interval, registered rule)
+  PASS        A2R_facilitation: difference +0.3333 [+0.2157, +0.4383] band (0, -) (newcombe (as registered))
+  FAIL        A2R2_beyond_summation: residual -0.4917 [-0.575, -0.3915] band (0, -) (bootstrap)
+wrote results\a2_registered\report.json  (3656s)
