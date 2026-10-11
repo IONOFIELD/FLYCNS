@@ -144,31 +144,79 @@
     "sugar": {
       "50Hz": {
         "mn9_spikes_per_cell": 0.0,
-        "cns_hz": 0.00043279611402521234
+        "cns_hz": 0.00043279611402521234,
+        "mn9_per_trial": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
       },
       "100Hz": {
         "mn9_spikes_per_cell": 0.0,
-        "cns_hz": 0.001959159363900138
+        "cns_hz": 0.001959159363900138,
+        "mn9_per_trial": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
       }
     },
     "bitter": {
       "50Hz": {
         "mn9_spikes_per_cell": 0.0,
-        "cns_hz": 0.0007338071732857143
+        "cns_hz": 0.0007338071732857143,
+        "mn9_per_trial": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
       },
       "100Hz": {
         "mn9_spikes_per_cell": 0.0,
-        "cns_hz": 0.002990442339676491
+        "cns_hz": 0.002990442339676491,
+        "mn9_per_trial": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
       }
     },
     "old_mixed_proxy": {
       "50Hz": {
         "mn9_spikes_per_cell": 0.0,
-        "cns_hz": 0.00635163348722322
+        "cns_hz": 0.00635163348722322,
+        "mn9_per_trial": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
       },
       "100Hz": {
         "mn9_spikes_per_cell": 0.0,
-        "cns_hz": 0.019202820096753705
+        "cns_hz": 0.019202820096753705,
+        "mn9_per_trial": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
       }
     }
   },
@@ -178,9 +226,49 @@
     "F3_sugar_drives_mn9_at_100hz": false,
     "F4_bitter_below_sugar_at_100hz": false
   },
+  "uncertainty": {
+    "F2_sugar_ratio_exceeds_bitter": {
+      "estimate": 0.675,
+      "ci95": null,
+      "band": null,
+      "method": "point",
+      "verdict": "PASS",
+      "note": "graph arithmetic over the fixed connectome, no sampling: sugar ratio 0.675 minus bitter ratio 0.0 (synapses onto MN9's excitatory / inhibitory relays)"
+    },
+    "F3_sugar_drives_mn9_at_100hz": {
+      "estimate": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "band": [
+        0.5,
+        null
+      ],
+      "method": "bootstrap",
+      "verdict": "FAIL",
+      "n": 6,
+      "note": "MN9 spikes/cell/pulse under sugar at 100 Hz, bootstrap over pulses"
+    },
+    "F4_bitter_below_sugar_at_100hz": {
+      "estimate": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "band": [
+        0,
+        null
+      ],
+      "method": "bootstrap",
+      "verdict": "FAIL",
+      "band_lower_exclusive": true,
+      "note": "MN9 under sugar minus under bitter at 100 Hz: two separate simulations, each resampled over its own pulses (6 and 6)"
+    }
+  },
   "provenance": {
-    "written_at": "2026-10-11T13:05:49",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T18:15:50",
+    "git_commit": "a4eef18",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -195,6 +283,7 @@
     "engine": "cython",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "graph": {
       "data_dir": "data",
       "min_weight": 5,

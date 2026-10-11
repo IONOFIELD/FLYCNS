@@ -100,10 +100,115 @@
   "checks": {
     "RA2_facilitation_at_every_near_threshold_gain": true
   },
-  "wall_s": 7013,
+  "wall_s": 3765,
+  "uncertainty": {
+    "RA2_facilitation_at_every_near_threshold_gain": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 6 parts",
+      "parts": [
+        {
+          "estimate": 5.0,
+          "ci95": null,
+          "band": null,
+          "method": "point",
+          "verdict": "PASS",
+          "note": "number of grid gains that qualify as near-threshold (loom-alone GF probability <= 0.3 on the point estimate, the registered definition); at least 3 must qualify. A count under a registered definition, scored on its value, not resampled"
+        },
+        {
+          "estimate": 0.2,
+          "ci95": [
+            0.12378506670877114,
+            0.28883096192650237
+          ],
+          "band": [
+            0,
+            null
+          ],
+          "method": "newcombe (as registered)",
+          "verdict": "PASS",
+          "band_lower_exclusive": true,
+          "n": 100,
+          "note": "gain 0.4: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 recomputed from counts (n per arm)",
+          "gain": 0.4
+        },
+        {
+          "estimate": 0.32,
+          "ci95": [
+            0.2288454397219542,
+            0.4166280225367919
+          ],
+          "band": [
+            0,
+            null
+          ],
+          "method": "newcombe (as registered)",
+          "verdict": "PASS",
+          "band_lower_exclusive": true,
+          "n": 100,
+          "note": "gain 0.5: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 recomputed from counts (n per arm)",
+          "gain": 0.5
+        },
+        {
+          "estimate": 0.4,
+          "ci95": [
+            0.3021377407553552,
+            0.4979992153815976
+          ],
+          "band": [
+            0,
+            null
+          ],
+          "method": "newcombe (as registered)",
+          "verdict": "PASS",
+          "band_lower_exclusive": true,
+          "n": 100,
+          "note": "gain 0.6: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 recomputed from counts (n per arm)",
+          "gain": 0.6
+        },
+        {
+          "estimate": 0.4,
+          "ci95": [
+            0.27843027585819957,
+            0.5060810320231056
+          ],
+          "band": [
+            0,
+            null
+          ],
+          "method": "newcombe (as registered)",
+          "verdict": "PASS",
+          "band_lower_exclusive": true,
+          "n": 100,
+          "note": "gain 0.7: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 recomputed from counts (n per arm)",
+          "gain": 0.7
+        },
+        {
+          "estimate": 0.38000000000000006,
+          "ci95": [
+            0.24937857084403653,
+            0.492562176716436
+          ],
+          "band": [
+            0,
+            null
+          ],
+          "method": "newcombe (as registered)",
+          "verdict": "PASS",
+          "band_lower_exclusive": true,
+          "n": 100,
+          "note": "gain 0.8: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 recomputed from counts (n per arm)",
+          "gain": 0.8
+        }
+      ],
+      "verdict": "PASS",
+      "note": "RA2 as registered: >= 3 near-threshold gains, and at every one the 95% CI on the difference lies above zero"
+    }
+  },
   "provenance": {
-    "written_at": "2026-10-11T15:21:36",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T19:37:35",
+    "git_commit": "a4eef18",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -118,6 +223,7 @@
     "engine": "not used",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "data": {
       "dir": "data",
       "digests": {

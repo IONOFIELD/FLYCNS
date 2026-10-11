@@ -42,10 +42,29 @@
   "checks": {
     "A2R_facilitation": true
   },
-  "wall_s": 4257,
+  "wall_s": 4387,
+  "uncertainty": {
+    "A2R_facilitation": {
+      "estimate": 0.35833333333333334,
+      "ci95": [
+        0.24021950706448786,
+        0.46253630486715763
+      ],
+      "band": [
+        0,
+        null
+      ],
+      "method": "newcombe (as registered)",
+      "verdict": "PASS",
+      "band_lower_exclusive": true,
+      "n": 120,
+      "note": "P(GF|loom+sound) - P(GF|loom) at the calibrated working point; Newcombe 1998 method 10 recomputed from counts (n per arm). Registered outcomes: CI above zero PASS, below zero FAIL, spans zero FAIL (unresolved at this trial count)",
+      "registered_outcome": "PASS facilitation"
+    }
+  },
   "provenance": {
-    "written_at": "2026-10-11T14:39:08",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T18:46:25",
+    "git_commit": "a4eef18",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -60,6 +79,7 @@
     "engine": "not used",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "data": {
       "dir": "data",
       "digests": {
