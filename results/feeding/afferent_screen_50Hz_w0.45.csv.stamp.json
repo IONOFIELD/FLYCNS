@@ -22,8 +22,8 @@
     "BM_Vib"
   ],
   "provenance": {
-    "written_at": "2026-10-11T13:13:09",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T20:39:15",
+    "git_commit": "b7eba83",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -38,6 +38,7 @@
     "engine": "cython",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "graph": {
       "data_dir": "data",
       "min_weight": 5,
@@ -47,7 +48,11 @@
       "n_dropped_unsigned_edges": 160051,
       "n_dropped_unsigned_synapses": 1980492,
       "n_silent_presynaptic": 8020,
-      "edges_nt_used": false
+      "edges_nt_used": false,
+      "glu_vnc": "inhibitory",
+      "n_glu_vnc_flipped": 0,
+      "jon_mode": "electrical",
+      "jon_compound_mv": 3.0
     },
     "data": {
       "dir": "data",
