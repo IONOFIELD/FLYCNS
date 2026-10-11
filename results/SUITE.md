@@ -140,7 +140,5 @@ Declared deviations from the raw connectome: see each results/*/provenance.md an
 ## Citation check: 49/49 tags resolve in REFERENCES.md
 
 ## Stamp inventory
-110 of 110 result files carry a stamp (commits: b7eba83 x108, d72fe77 x2); 2 flagged, 0 unstamped.
-- flagged: results/fit_gains/best.json (STALE)
-- flagged: results/fit_gains/grid.csv (STALE)
+110 of 110 result files carry a stamp (commits: b7eba83 x110); 0 flagged, 0 unstamped.
 - exempt: results/turner2022/ (input extraction from 22 GB of Turner et al. 2022 imaging; its output is a model input, hashed into every report's loom_input stamp)
