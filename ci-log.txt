@@ -1,0 +1,48 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+auditory JO afferents 114, wind/gravity 475, wing motor neurons 52
+
+first-order targets of auditory afferents:
+            w  cells
+ty                  
+SAD001    979      5
+SAD108    789      2
+SAD097    713      2
+DNp01     689      2
+GNG301    683      2
+SAD103    608      1
+WED196    583      1
+CB1076    552      4
+SAD107    511      2
+DNg29     508      2
+SAD064    502      3
+AN08B007  483      2
+
+wing motor neuron input by presynaptic type (signed):
+ty
+IN19B043             15030
+IN19B067             12355
+dMS2                  5947
+AN19B001              5034
+IN19B075              4097
+IN17A071,IN17A081     3639
+IN19B008              3537
+IN19B040              3453
+IN12A052_b            3241
+DNp31                 3019
+  DNp02    -> wing premotor    818   -> wing MN direct     18
+  DNp06    -> wing premotor    806   -> wing MN direct      0
+  DNp11    -> wing premotor    568   -> wing MN direct     96
+  DNg108   -> wing premotor    489   -> wing MN direct     32
+  DNp01    -> wing premotor      6   -> wing MN direct      0
+
+two-hop weighted input by modality:
+  DNp02    auditory      703,723  wind      589,953  loom    2,437,293  loom/auditory 3.5x
+  DNp06    auditory      306,386  wind      269,857  loom   11,707,490  loom/auditory 38.2x
+  DNp11    auditory      470,971  wind      319,118  loom    4,581,603  loom/auditory 9.7x
+  DNg108   auditory      377,767  wind      184,672  loom    9,784,515  loom/auditory 25.9x
+  DNp01    auditory      686,643  wind      430,695  loom   10,869,522  loom/auditory 15.8x
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+
+under measured loom drive (6 trials): DN spikes {'DNp02': 0, 'DNp06': 0, 'DNp11': 0, 'DNg108': 0, 'DNp01': 7}, wing motor spikes 0
+
+wrote results\auditory_wing\trace.json

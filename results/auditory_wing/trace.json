@@ -1,6 +1,6 @@
 {
   "benchmark": "auditory_wing_trace",
-  "tuning_source": "MEASURED (all trials): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09)",
+  "tuning_source": "MEASURED (stationary trials, 13 series): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09)",
   "n_auditory_afferents": 114,
   "n_wind_afferents": 475,
   "n_wing_motor": 52,
@@ -134,10 +134,10 @@
     "n_trials": 6,
     "dn_spikes": {
       "DNp02": 0,
-      "DNp06": 1,
+      "DNp06": 0,
       "DNp11": 0,
       "DNg108": 0,
-      "DNp01": 10
+      "DNp01": 7
     },
     "wing_motor_spikes": 0,
     "note": "nothing downstream of GF fires under physiological loom drive, so a multisensory test at the wing motor output would compare zero against zero; fourth circuit blocked by the absence of cell-specific spontaneous activity"
@@ -152,8 +152,40 @@
     "Turner MH, Krieger A, Pang MM, Clandinin TR (2022). Visual and motor signatures of locomotion dynamically shape a population code for feature detection in Drosophila. eLife 11:e82587. Source of the measured loom amplitudes used for the drive here."
   ],
   "provenance": {
-    "written_at": "2026-09-15T20:59:02",
-    "git_commit": "61e2f14",
-    "env": {}
+    "written_at": "2026-10-11T00:53:16",
+    "git_commit": "45126da",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "cython",
+    "platform": "win32",
+    "loom_input": {
+      "source": "MEASURED (stationary trials, 13 series): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09)",
+      "state": "stationary",
+      "sha256": "65f83c332223b0f7"
+    },
+    "graph": {
+      "data_dir": "data",
+      "min_weight": 5,
+      "n_neurons": 176422,
+      "n_signed_edges": 6127738,
+      "n_signed_synapses": 88316807
+    },
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9"
+      },
+      "manifest": "match"
+    }
   }
 }
