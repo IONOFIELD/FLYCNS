@@ -33,7 +33,7 @@
   "arms": {
     "real_electrical": {
       "arm": "real_electrical",
-      "region_source": "type-name prefix fallback",
+      "region_source": "anatomical (roiInfo, 4,606 SEZ-intrinsic neurons)",
       "n_lif": 167649,
       "n_chem_syn": 5837592,
       "n_stim": 2526,
@@ -50,11 +50,11 @@
       "ttmn_lag_ms": 0.8999999999998171,
       "psi_per_cell": 0.225,
       "ttmn_to_gf_ratio": 1.0,
-      "wall_s": 262.3
+      "wall_s": 178.4
     },
     "real_chemical_only": {
       "arm": "real_chemical_only",
-      "region_source": "type-name prefix fallback",
+      "region_source": "anatomical (roiInfo, 4,606 SEZ-intrinsic neurons)",
       "n_lif": 167649,
       "n_chem_syn": 5837611,
       "n_stim": 2526,
@@ -71,11 +71,11 @@
       "ttmn_lag_ms": NaN,
       "psi_per_cell": 0.0,
       "ttmn_to_gf_ratio": 0.0,
-      "wall_s": 259.6
+      "wall_s": 168.3
     },
     "rewired_null": {
       "arm": "rewired_null",
-      "region_source": "type-name prefix fallback",
+      "region_source": "anatomical (roiInfo, 4,606 SEZ-intrinsic neurons)",
       "n_lif": 167649,
       "n_chem_syn": 5821202,
       "n_stim": 2526,
@@ -92,7 +92,7 @@
       "ttmn_lag_ms": NaN,
       "psi_per_cell": 0.0,
       "ttmn_to_gf_ratio": NaN,
-      "wall_s": 305.9
+      "wall_s": 195.9
     }
   },
   "checks": {
@@ -107,8 +107,8 @@
   },
   "pass": false,
   "provenance": {
-    "written_at": "2026-10-11T01:05:01",
-    "git_commit": "45126da",
+    "written_at": "2026-10-11T06:37:25",
+    "git_commit": "fcff151",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -141,7 +141,8 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9"
+        "edges.parquet": "becf568580708ba9",
+        "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"
     }
