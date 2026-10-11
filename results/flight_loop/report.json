@@ -38,8 +38,9 @@
         "ps1 MN": 6.414,
         "tp1 MN": 1.162
       },
-      "wall_s": 319,
+      "wall_s": 266,
       "seed": 0,
+      "undriven_spikes": 21156,
       "per_wing_type_sd": {
         "b1 MN": 22.815,
         "b2 MN": 6.76,
@@ -66,7 +67,51 @@
         2,
         3,
         4
-      ]
+      ],
+      "per_seed_scored": {
+        "dvmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1_hz": [
+          31.5625,
+          54.54,
+          35.097500000000004,
+          66.9125,
+          0.0
+        ],
+        "steer_mn_hz": [
+          7.19625,
+          10.713214285714287,
+          4.743392857142857,
+          8.260357142857144,
+          1.965892857142857
+        ],
+        "leg_mn_hz": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "undriven_spikes": [
+          4774,
+          4565,
+          3432,
+          4328,
+          4057
+        ]
+      }
     },
     "open_load_0.25": {
       "arm": "open_load_0.25",
@@ -100,8 +145,9 @@
         "ps1 MN": 6.262,
         "tp1 MN": 0.96
       },
-      "wall_s": 206,
+      "wall_s": 168,
       "seed": 0,
+      "undriven_spikes": 60889,
       "per_wing_type_sd": {
         "DLMn a, b": 0.304,
         "DVMn 1a-c": 6.196,
@@ -138,7 +184,51 @@
         2,
         3,
         4
-      ]
+      ],
+      "per_seed_scored": {
+        "dvmn": [
+          6.48,
+          0.0,
+          0.0,
+          12.12,
+          15.23
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1_hz": [
+          54.54,
+          61.8625,
+          164.63,
+          107.06,
+          138.875
+        ],
+        "steer_mn_hz": [
+          16.448571428571427,
+          10.280357142857143,
+          24.853214285714287,
+          20.668928571428573,
+          25.935357142857143
+        ],
+        "leg_mn_hz": [
+          0.007829457364341085,
+          0.003914728682170542,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "undriven_spikes": [
+          12054,
+          12123,
+          13118,
+          11762,
+          11832
+        ]
+      }
     },
     "open_load_0.3": {
       "arm": "open_load_0.3",
@@ -173,8 +263,9 @@
         "ps1 MN": 6.008,
         "tp1 MN": 1.264
       },
-      "wall_s": 200,
+      "wall_s": 165,
       "seed": 0,
+      "undriven_spikes": 77534,
       "per_wing_type_sd": {
         "DLMn a, b": 1.212,
         "DVMn 1a-c": 5.341,
@@ -212,7 +303,51 @@
         2,
         3,
         4
-      ]
+      ],
+      "per_seed_scored": {
+        "dvmn": [
+          3.2,
+          0.0,
+          2.1,
+          13.8,
+          10.77
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1_hz": [
+          119.4325,
+          154.7825,
+          106.3025,
+          145.6925,
+          136.855
+        ],
+        "steer_mn_hz": [
+          17.548750000000002,
+          25.19589285714286,
+          24.330178571428572,
+          19.965535714285714,
+          34.03339285714286
+        ],
+        "leg_mn_hz": [
+          0.0,
+          0.04697674418604651,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "undriven_spikes": [
+          16221,
+          16854,
+          15556,
+          15461,
+          13442
+        ]
+      }
     },
     "open_load_0.35": {
       "arm": "open_load_0.35",
@@ -246,8 +381,9 @@
         "iii3 MN": 12.978,
         "ps1 MN": 5.706
       },
-      "wall_s": 206,
+      "wall_s": 165,
       "seed": 0,
+      "undriven_spikes": 97668,
       "per_wing_type_sd": {
         "DLMn a, b": 0.1,
         "DVMn 1a-c": 9.653,
@@ -284,7 +420,51 @@
         2,
         3,
         4
-      ]
+      ],
+      "per_seed_scored": {
+        "dvmn": [
+          7.32,
+          25.92,
+          12.88,
+          0.0,
+          0.0
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1_hz": [
+          146.45,
+          127.5125,
+          68.9325,
+          123.4725,
+          131.0475
+        ],
+        "steer_mn_hz": [
+          33.816964285714285,
+          23.211964285714288,
+          14.93357142857143,
+          25.845178571428573,
+          33.14964285714286
+        ],
+        "leg_mn_hz": [
+          0.0,
+          0.2583720930232558,
+          0.5010852713178294,
+          0.03523255813953488,
+          0.0
+        ],
+        "undriven_spikes": [
+          15182,
+          21960,
+          20263,
+          22388,
+          17875
+        ]
+      }
     },
     "open_load_0.4": {
       "arm": "open_load_0.4",
@@ -316,8 +496,9 @@
         "iii3 MN": 29.24,
         "ps1 MN": 0.354
       },
-      "wall_s": 214,
+      "wall_s": 166,
       "seed": 0,
+      "undriven_spikes": 108443,
       "per_wing_type_sd": {
         "DVMn 1a-c": 7.638,
         "b1 MN": 21.896,
@@ -352,7 +533,51 @@
         2,
         3,
         4
-      ]
+      ],
+      "per_seed_scored": {
+        "dvmn": [
+          14.9,
+          31.73,
+          23.4,
+          13.3,
+          11.19
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1_hz": [
+          99.7375,
+          149.985,
+          110.3425,
+          156.2975,
+          132.0575
+        ],
+        "steer_mn_hz": [
+          22.075714285714287,
+          35.06142857142857,
+          29.0375,
+          23.78910714285714,
+          40.255714285714284
+        ],
+        "leg_mn_hz": [
+          0.0,
+          0.0,
+          0.0,
+          0.45410852713178296,
+          0.0
+        ],
+        "undriven_spikes": [
+          20597,
+          21550,
+          22246,
+          23520,
+          20530
+        ]
+      }
     },
     "open_load_0.5": {
       "arm": "open_load_0.5",
@@ -385,8 +610,9 @@
         "iii3 MN": 22.778,
         "ps1 MN": 6.618
       },
-      "wall_s": 220,
+      "wall_s": 164,
       "seed": 0,
+      "undriven_spikes": 167396,
       "per_wing_type_sd": {
         "DVMn 1a-c": 19.491,
         "DVMn 3a, b": 1.176,
@@ -422,7 +648,51 @@
         2,
         3,
         4
-      ]
+      ],
+      "per_seed_scored": {
+        "dvmn": [
+          33.5,
+          22.22,
+          0.0,
+          58.83,
+          39.98
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1_hz": [
+          185.5875,
+          151.5,
+          158.065,
+          171.195,
+          168.4175
+        ],
+        "steer_mn_hz": [
+          43.48410714285715,
+          31.039464285714285,
+          41.73464285714286,
+          34.520357142857144,
+          41.518214285714286
+        ],
+        "leg_mn_hz": [
+          0.0,
+          0.8025193798449612,
+          0.0,
+          0.6185271317829457,
+          0.44627906976744186
+        ],
+        "undriven_spikes": [
+          28949,
+          36815,
+          30304,
+          37256,
+          34072
+        ]
+      }
     },
     "open_load_1.0": {
       "arm": "open_load_1.0",
@@ -456,8 +726,9 @@
         "iii3 MN": 3.484,
         "tp2 MN": 0.908
       },
-      "wall_s": 208,
+      "wall_s": 169,
       "seed": 0,
+      "undriven_spikes": 372873,
       "per_wing_type_sd": {
         "DLMn a, b": 0.122,
         "DVMn 1a-c": 0.155,
@@ -494,7 +765,51 @@
         2,
         3,
         4
-      ]
+      ],
+      "per_seed_scored": {
+        "dvmn": [
+          83.49,
+          83.58,
+          83.49,
+          83.58,
+          83.91
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1_hz": [
+          261.59,
+          261.59,
+          261.3375,
+          261.3375,
+          261.3375
+        ],
+        "steer_mn_hz": [
+          65.45160714285714,
+          65.41553571428571,
+          65.86642857142857,
+          65.34339285714286,
+          65.75821428571429
+        ],
+        "leg_mn_hz": [
+          0.4658527131782946,
+          0.45019379844961244,
+          0.45410852713178296,
+          0.44236434108527134,
+          0.45019379844961244
+        ],
+        "undriven_spikes": [
+          74522,
+          74540,
+          74771,
+          74474,
+          74566
+        ]
+      }
     },
     "rewired_null_load_0.25": {
       "arm": "rewired_null_load_0.25",
@@ -517,8 +832,9 @@
       "per_wing_type_hz": {
         "DLMn c-f": 0.606
       },
-      "wall_s": 205,
+      "wall_s": 165,
       "seed": 0,
+      "undriven_spikes": 13765,
       "per_wing_type_sd": {
         "DLMn c-f": 1.212
       },
@@ -537,7 +853,51 @@
         2,
         3,
         4
-      ]
+      ],
+      "per_seed_scored": {
+        "dvmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          3.03
+        ],
+        "b1_hz": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "steer_mn_hz": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "leg_mn_hz": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "undriven_spikes": [
+          2625,
+          3366,
+          3391,
+          2437,
+          1946
+        ]
+      }
     },
     "closed_from_0.25": {
       "arm": "closed_from_0.25",
@@ -571,7 +931,7 @@
         "iii3 MN": 2.78,
         "tp2 MN": 1.52
       },
-      "wall_s": 56,
+      "wall_s": 51,
       "load_trace": [
         {
           "t_ms": 250.0,
@@ -769,7 +1129,8 @@
           "load": 1.0
         }
       ],
-      "seed": 0
+      "seed": 0,
+      "undriven_spikes": 69903
     },
     "anchor_plus_DNg02_10Hz": {
       "arm": "anchor_plus_DNg02_10Hz",
@@ -804,8 +1165,9 @@
         "tp1 MN": 0.86,
         "tp2 MN": 1.618
       },
-      "wall_s": 268,
+      "wall_s": 238,
       "seed": 0,
+      "undriven_spikes": 61113,
       "per_wing_type_sd": {
         "DLMn a, b": 0.608,
         "DVMn 1a-c": 6.806,
@@ -844,6 +1206,50 @@
         3,
         4
       ],
+      "per_seed_scored": {
+        "dvmn": [
+          6.82,
+          0.08,
+          0.0,
+          12.79,
+          17.09
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1_hz": [
+          54.035000000000004,
+          60.6,
+          164.3775,
+          106.05,
+          138.1175
+        ],
+        "steer_mn_hz": [
+          16.35839285714286,
+          10.22625,
+          25.322142857142858,
+          20.86732142857143,
+          25.989464285714288
+        ],
+        "leg_mn_hz": [
+          0.011744186046511628,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "undriven_spikes": [
+          12105,
+          12211,
+          13192,
+          11730,
+          11875
+        ]
+      },
       "dlmn_cf_hz": 0.0,
       "dvmn_hz": 7.356
     },
@@ -880,8 +1286,9 @@
         "tp1 MN": 0.456,
         "tp2 MN": 26.11
       },
-      "wall_s": 200,
+      "wall_s": 173,
       "seed": 0,
+      "undriven_spikes": 62655,
       "per_wing_type_sd": {
         "DLMn a, b": 1.616,
         "DVMn 1a-c": 7.497,
@@ -920,6 +1327,50 @@
         3,
         4
       ],
+      "per_seed_scored": {
+        "dvmn": [
+          8.25,
+          1.18,
+          0.67,
+          15.4,
+          19.44
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1_hz": [
+          54.035000000000004,
+          59.3375,
+          164.125,
+          105.7975,
+          137.36
+        ],
+        "steer_mn_hz": [
+          17.368392857142858,
+          12.174107142857142,
+          28.06357142857143,
+          22.779107142857143,
+          27.865178571428572
+        ],
+        "leg_mn_hz": [
+          0.007829457364341085,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "undriven_spikes": [
+          12300,
+          12504,
+          13727,
+          11955,
+          12169
+        ]
+      },
       "dlmn_cf_hz": 0.0,
       "dvmn_hz": 8.988
     },
@@ -958,8 +1409,9 @@
         "tp1 MN": 0.202,
         "tp2 MN": 66.712
       },
-      "wall_s": 201,
+      "wall_s": 178,
       "seed": 0,
+      "undriven_spikes": 67536,
       "per_wing_type_sd": {
         "DLMn a, b": 1.794,
         "DLMn c-f": 0.029,
@@ -1007,6 +1459,50 @@
         3,
         4
       ],
+      "per_seed_scored": {
+        "dvmn": [
+          11.95,
+          4.88,
+          3.28,
+          21.8,
+          25.42
+        ],
+        "dlmn": [
+          0.06,
+          0.0,
+          0.0,
+          0.06,
+          0.0
+        ],
+        "b1_hz": [
+          52.52,
+          57.3175,
+          162.3575,
+          105.7975,
+          136.6025
+        ],
+        "steer_mn_hz": [
+          20.10982142857143,
+          15.799285714285714,
+          31.5625,
+          25.57464285714286,
+          30.642678571428572
+        ],
+        "leg_mn_hz": [
+          0.007829457364341085,
+          0.007829457364341085,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "undriven_spikes": [
+          13465,
+          13652,
+          14479,
+          12813,
+          13127
+        ]
+      },
       "dlmn_cf_hz": 0.024,
       "dvmn_hz": 13.466
     },
@@ -1046,8 +1542,9 @@
         "ps1 MN": 45.396,
         "tp2 MN": 127.562
       },
-      "wall_s": 202,
+      "wall_s": 168,
       "seed": 0,
+      "undriven_spikes": 86778,
       "per_wing_type_sd": {
         "DLMn a, b": 10.705,
         "DLMn c-f": 4.807,
@@ -1096,6 +1593,50 @@
         3,
         4
       ],
+      "per_seed_scored": {
+        "dvmn": [
+          35.18,
+          31.48,
+          30.38,
+          53.53,
+          51.68
+        ],
+        "dlmn": [
+          11.74,
+          10.54,
+          18.81,
+          16.22,
+          4.92
+        ],
+        "b1_hz": [
+          47.975,
+          52.7725,
+          160.59,
+          103.525,
+          134.07750000000001
+        ],
+        "steer_mn_hz": [
+          26.025535714285713,
+          20.921428571428574,
+          36.973214285714285,
+          30.227857142857143,
+          35.331964285714285
+        ],
+        "leg_mn_hz": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "undriven_spikes": [
+          17149,
+          17336,
+          18336,
+          16735,
+          17222
+        ]
+      },
       "dlmn_cf_hz": 12.446,
       "dvmn_hz": 40.45
     }
@@ -1202,6 +1743,507 @@
       "onto_wing_mn": 3670
     }
   },
+  "uncertainty": {
+    "L1a_DVMn_2_to_12_hz": {
+      "estimate": 0.2,
+      "ci95": null,
+      "band": [
+        2.0,
+        12.0
+      ],
+      "method": "per-draw (1 of 5 in band; pass needs 4)",
+      "draws": [
+        6.48,
+        0.0,
+        0.0,
+        12.12,
+        15.23
+      ],
+      "n": 5,
+      "verdict": "FAIL",
+      "note": "DVMn 1a-c at the anchor load 0.25, per recruitment seed"
+    },
+    "L1b_DLMn_cf_2_to_12_hz": {
+      "estimate": 0.0,
+      "ci95": null,
+      "band": [
+        2.0,
+        12.0
+      ],
+      "method": "per-draw (0 of 5 in band; pass needs 4)",
+      "draws": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n": 5,
+      "verdict": "FAIL",
+      "note": "DLMn c-f at the anchor load 0.25, per recruitment seed"
+    },
+    "L2_b1_0.5_to_1.2_spikes_per_wingbeat": {
+      "estimate": 0.6,
+      "ci95": null,
+      "band": [
+        101.0,
+        242.39999999999998
+      ],
+      "method": "per-draw (3 of 5 in band; pass needs 4)",
+      "draws": [
+        54.54,
+        61.8625,
+        164.63,
+        107.06,
+        138.875
+      ],
+      "n": 5,
+      "verdict": "UNRESOLVED",
+      "note": "b1 MN rate in Hz at the anchor load 0.25, per recruitment seed"
+    },
+    "L3_leg_mn_not_entrained": {
+      "estimate": 1.0,
+      "ci95": null,
+      "band": [
+        null,
+        20.200000000000003
+      ],
+      "method": "per-draw (5 of 5 in band; pass needs 4)",
+      "draws": [
+        0.007829457364341085,
+        0.003914728682170542,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n": 5,
+      "verdict": "PASS",
+      "note": "leg MN rate in Hz at the anchor load 0.25, per recruitment seed; the check is strict, per_draw's edge is inclusive"
+    },
+    "L4_steering_specific_vs_null": {
+      "estimate": 1.0,
+      "ci95": null,
+      "band": [
+        5.0,
+        null
+      ],
+      "method": "per-draw (5 of 5 in band; pass needs 4)",
+      "draws": [
+        82.24285714285713,
+        51.401785714285715,
+        124.26607142857144,
+        103.34464285714286,
+        129.6767857142857
+      ],
+      "n": 5,
+      "verdict": "PASS",
+      "note": "real steering / max(null steering, 0.2 Hz), paired by recruitment seed; the check is strict (> 5x), per_draw's edge is inclusive; the null fired 13765 spikes outside the afferents"
+    },
+    "L5_DLMn_cf_2_to_12_hz_with_DNg02": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "any of 4 parts",
+      "parts": [
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 2 parts",
+          "parts": [
+            {
+              "estimate": 0.0,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (0 of 5 in band; pass needs 4)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "DLMn c-f, DNg02 10 Hz"
+            },
+            {
+              "estimate": 0.2,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (1 of 5 in band; pass needs 4)",
+              "draws": [
+                6.82,
+                0.08,
+                0.0,
+                12.79,
+                17.09
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "DVMn 1a-c, DNg02 10 Hz"
+            }
+          ],
+          "verdict": "FAIL",
+          "note": "DNg02 10 Hz"
+        },
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 2 parts",
+          "parts": [
+            {
+              "estimate": 0.0,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (0 of 5 in band; pass needs 4)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "DLMn c-f, DNg02 25 Hz"
+            },
+            {
+              "estimate": 0.2,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (1 of 5 in band; pass needs 4)",
+              "draws": [
+                8.25,
+                1.18,
+                0.67,
+                15.4,
+                19.44
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "DVMn 1a-c, DNg02 25 Hz"
+            }
+          ],
+          "verdict": "FAIL",
+          "note": "DNg02 25 Hz"
+        },
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 2 parts",
+          "parts": [
+            {
+              "estimate": 0.0,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (0 of 5 in band; pass needs 4)",
+              "draws": [
+                0.06,
+                0.0,
+                0.0,
+                0.06,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "DLMn c-f, DNg02 50 Hz"
+            },
+            {
+              "estimate": 0.6,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (3 of 5 in band; pass needs 4)",
+              "draws": [
+                11.95,
+                4.88,
+                3.28,
+                21.8,
+                25.42
+              ],
+              "n": 5,
+              "verdict": "UNRESOLVED",
+              "note": "DVMn 1a-c, DNg02 50 Hz"
+            }
+          ],
+          "verdict": "FAIL",
+          "note": "DNg02 50 Hz"
+        },
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 2 parts",
+          "parts": [
+            {
+              "estimate": 0.6,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (3 of 5 in band; pass needs 4)",
+              "draws": [
+                11.74,
+                10.54,
+                18.81,
+                16.22,
+                4.92
+              ],
+              "n": 5,
+              "verdict": "UNRESOLVED",
+              "note": "DLMn c-f, DNg02 100 Hz"
+            },
+            {
+              "estimate": 0.0,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (0 of 5 in band; pass needs 4)",
+              "draws": [
+                35.18,
+                31.48,
+                30.38,
+                53.53,
+                51.68
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "DVMn 1a-c, DNg02 100 Hz"
+            }
+          ],
+          "verdict": "FAIL",
+          "note": "DNg02 100 Hz"
+        }
+      ],
+      "verdict": "FAIL",
+      "note": "some DNg02 rate with DLMn c-f and DVMn 1a-c both in band per recruitment seed"
+    },
+    "L6_DVMn_still_in_band_with_DNg02": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "any of 4 parts",
+      "parts": [
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 2 parts",
+          "parts": [
+            {
+              "estimate": 0.0,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (0 of 5 in band; pass needs 4)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "DLMn c-f, DNg02 10 Hz"
+            },
+            {
+              "estimate": 0.2,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (1 of 5 in band; pass needs 4)",
+              "draws": [
+                6.82,
+                0.08,
+                0.0,
+                12.79,
+                17.09
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "DVMn 1a-c, DNg02 10 Hz"
+            }
+          ],
+          "verdict": "FAIL",
+          "note": "DNg02 10 Hz"
+        },
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 2 parts",
+          "parts": [
+            {
+              "estimate": 0.0,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (0 of 5 in band; pass needs 4)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "DLMn c-f, DNg02 25 Hz"
+            },
+            {
+              "estimate": 0.2,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (1 of 5 in band; pass needs 4)",
+              "draws": [
+                8.25,
+                1.18,
+                0.67,
+                15.4,
+                19.44
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "DVMn 1a-c, DNg02 25 Hz"
+            }
+          ],
+          "verdict": "FAIL",
+          "note": "DNg02 25 Hz"
+        },
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 2 parts",
+          "parts": [
+            {
+              "estimate": 0.0,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (0 of 5 in band; pass needs 4)",
+              "draws": [
+                0.06,
+                0.0,
+                0.0,
+                0.06,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "DLMn c-f, DNg02 50 Hz"
+            },
+            {
+              "estimate": 0.6,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (3 of 5 in band; pass needs 4)",
+              "draws": [
+                11.95,
+                4.88,
+                3.28,
+                21.8,
+                25.42
+              ],
+              "n": 5,
+              "verdict": "UNRESOLVED",
+              "note": "DVMn 1a-c, DNg02 50 Hz"
+            }
+          ],
+          "verdict": "FAIL",
+          "note": "DNg02 50 Hz"
+        },
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 2 parts",
+          "parts": [
+            {
+              "estimate": 0.6,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (3 of 5 in band; pass needs 4)",
+              "draws": [
+                11.74,
+                10.54,
+                18.81,
+                16.22,
+                4.92
+              ],
+              "n": 5,
+              "verdict": "UNRESOLVED",
+              "note": "DLMn c-f, DNg02 100 Hz"
+            },
+            {
+              "estimate": 0.0,
+              "ci95": null,
+              "band": [
+                2.0,
+                12.0
+              ],
+              "method": "per-draw (0 of 5 in band; pass needs 4)",
+              "draws": [
+                35.18,
+                31.48,
+                30.38,
+                53.53,
+                51.68
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "DVMn 1a-c, DNg02 100 Hz"
+            }
+          ],
+          "verdict": "FAIL",
+          "note": "DNg02 100 Hz"
+        }
+      ],
+      "verdict": "FAIL",
+      "note": "some DNg02 rate with DLMn c-f and DVMn 1a-c both in band per recruitment seed; L6 is identical to L5 as coded"
+    }
+  },
   "reported": {
     "b1_vector_strength": 0.053195909123882945,
     "b1_phase_locking_note": "uniform afferent phase by assumption; no Drosophila phase map exists, so locking is untestable here",
@@ -1250,8 +2292,8 @@
   },
   "pass": false,
   "provenance": {
-    "written_at": "2026-10-11T13:58:53",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T17:39:42",
+    "git_commit": "a4eef18",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -1266,6 +2308,7 @@
     "engine": "cython",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "graph": {
       "data_dir": "data",
       "min_weight": 5,

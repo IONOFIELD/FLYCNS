@@ -37,6 +37,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from brian2 import Synapses, mV
 from flycns import load_graph, CNSModel, LIFParams
+from flycns import stats
 from flycns.bench import provenance, spike_source
 from flycns.graph import rewire_null
 
@@ -112,7 +113,7 @@ def arm(label, src, edge_df=edges):
     return rec
 
 
-report = dict(benchmark="flight_snpp16", target_type=TARGET, n_target=len(target), n_others=len(others),
+report = dict(benchmark="flight_snpp16", n_cycles=N_CYCLES, target_type=TARGET, n_target=len(target), n_others=len(others),
               target_share_of_dvmn_synapses=syn_to_dvm / max(syn_all, 1), seeds=SEEDS, arms={})
 report["arms"]["S1_snpp16_alone"] = arm(f"S1 {TARGET} alone", target)
 report["arms"]["S2_all_but_snpp16"] = arm(f"S2 all but {TARGET}", others)
@@ -124,6 +125,17 @@ report["checks"] = {
     "N1_snpp16_sufficient_dvmn_in_band": all(2.0 <= x <= 12.0 for x in s1["dvmn_per_seed"]),
     "N2_snpp16_necessary_dvmn_below_2hz": all(x < 2.0 for x in s2["dvmn_per_seed"]),
 }
+# ---- uncertainty (flycns/stats.py): one record per scored check. Both checks read DVMn 1a-c over the
+# phase/jitter seeds, so each seed is one draw and the check is scored per draw (PASS needs ceil(0.8 n)
+# of the n seeds in band, FAIL at most floor(0.2 n)), never on the mean; the same rounded per-seed
+# values the checks use.
+report["uncertainty"] = {
+    "N1_snpp16_sufficient_dvmn_in_band": stats.per_draw(
+        s1["dvmn_per_seed"], 2.0, 12.0, note=f"S1 ({TARGET} alone): DVMn 1a-c per phase seed"),
+    "N2_snpp16_necessary_dvmn_below_2hz": stats.per_draw(
+        s2["dvmn_per_seed"], high=2.0, note=f"S2 (all but {TARGET}): DVMn 1a-c per phase seed; the check is "
+                                            f"strict (< 2 Hz), per_draw's upper edge is inclusive"),
+}
 report["reported"] = dict(
     specificity=dict(real=s1["dvmn_mean"], rewired_null=report["arms"]["null_snpp16_alone"]["dvmn_mean"]),
     prediction=(f"silencing {TARGET} in a flying fly should suppress DVM motor neuron activity; the "
@@ -133,4 +145,7 @@ report["provenance"] = provenance()
 print("\nCHECKS")
 for k, v in report["checks"].items():
     print(f"  {'PASS' if v else 'FAIL'}  {k}")
+print("\nUNCERTAINTY (flycns/stats.py; three-way verdict, scored per seed)")
+for k, u in report["uncertainty"].items():
+    print(f"  {u['verdict']:<10}  {k}: {u['method']}, draws {u.get('draws')}")
 print(f"\nwrote {OUT / 'report.json'}")

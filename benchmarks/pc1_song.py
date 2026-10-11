@@ -48,6 +48,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, CNSModel, LIFParams
 from flycns.bench import pulse_protocol, readout_rates, provenance
 from flycns.graph import rewire_null
+from flycns import stats
 
 N_TRIALS = int(sys.argv[1]) if len(sys.argv) > 1 else 10
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
@@ -130,11 +131,14 @@ def drive(group, edge_df, hz):
     tl = [x for x in GROUPS[group] if x in types]
     m = CNSModel(neurons, edge_df, tl, LIFParams(), electrical=True)
     on = pulse_protocol(m, {x: hz for x in tl}, n_trials=N_TRIALS, pulse_ms=200)
-    out = {}
+    out, per_trial = {}, {}
     for r in READOUTS:
         rr = readout_rates(m, on, [r], 250, meta)
         out[r] = float(rr.spikes_per_cell.mean()) if len(rr) else 0.0
+        # the same readout per pulse (mean over sides within a pulse); their mean is out[r]
+        per_trial[r] = [float(x) for x in rr.groupby("trial").spikes_per_cell.mean().sort_index()] if len(rr) else []
     out["cns_hz"] = float(m.population_rate_hz())
+    out["per_trial"] = per_trial
     return out
 
 dynamic = {}
@@ -158,9 +162,72 @@ report = dict(benchmark="pc1_song", criteria=CRITERIA, pc1_types_present=pc1_pre
                       "P2_pc1_13_14_pulse_over_sine": bool(d1314["pMP2"] >= 0.5 and d1314["pMP2"] > d1314["DNp13"]),
                       "P3_14a_exceeds_15_16_on_pulse": bool(d14["pMP2"] > d1516["pMP2"]),
                       "P4_null_silent": bool(null["pMP2"] < 0.1)})
+
+
+# ---- uncertainty (flycns/stats.py): 95% intervals over pulses, three-way verdicts
+def _pp(d, r):
+    """Per-pulse values of readout r in arm d; a readout with no cells is 0 in every pulse, as d[r] is."""
+    return d["per_trial"][r] or [0.0] * N_TRIALS
+
+
+# "pMP2 > DNp13" only tests a pulse-versus-sine choice if DNp13 fires somewhere on the real network
+dnp13_silent = all(not any(_pp(d, "DNp13")) for arms in dynamic.values() for d in arms.values())
+
+
+def _pulse_floor(d):
+    v = _pp(d, "pMP2"); est, lo, hi = stats.bootstrap(v)
+    return stats.scored(est, lo, hi, low=0.5, n=len(v), note="pMP2 spikes/cell/pulse, bootstrap over pulses")
+
+
+def _pulse_over_sine(d):
+    if dnp13_silent:
+        return stats.unresolved("DNp13 is silent in every arm (0 spikes in every pulse of every group and rate on the "
+                                "real network), so 'pMP2 > DNp13' adds nothing to 'pMP2 >= 0.5' and cannot show a "
+                                "pulse-over-sine choice; benchmarks/dnp13_control.py tests whether DNp13 is reachable",
+                                estimate=d["pMP2"] - d["DNp13"])
+    diff = np.asarray(_pp(d, "pMP2")) - np.asarray(_pp(d, "DNp13"))
+    est, lo, hi = stats.bootstrap(diff)
+    return stats.scored(est, lo, hi, low=0, strict=True, n=len(diff),
+                        note="pMP2 - DNp13 paired per pulse (same simulation and pulses), bootstrap over pulses")
+
+
+_a, _b = _pp(d14, "pMP2"), _pp(d1516, "pMP2")
+_p3 = stats.bootstrap_diff(_a, _b)
+_p4 = _pp(null, "pMP2")
+report["uncertainty"] = {
+    "P1_pc1_14a_pulse_over_sine": stats.combine([_pulse_floor(d14), _pulse_over_sine(d14)]),
+    "P2_pc1_13_14_pulse_over_sine": stats.combine([_pulse_floor(d1314), _pulse_over_sine(d1314)]),
+    "P3_14a_exceeds_15_16_on_pulse": stats.scored(*_p3, low=0, strict=True,
+                                                  note=f"pMP2 under pC1_14a minus under pC1_15_16: two separate "
+                                                       f"simulations, each resampled over its own pulses ({len(_a)} and {len(_b)})"),
+    "P4_null_silent": stats.scored(*stats.bootstrap(_p4), high=0.1, n=len(_p4),
+                                   note="pMP2 on the rewired null, bootstrap over pulses"),
+}
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECKS (criteria registered before the run)")
 for k, v in report["checks"].items():
     print(f"  {'PASS' if v else 'FAIL'}  {k}")
+
+
+def _g(x):
+    return "-" if x is None else (f"{x:.3g}" if isinstance(x, float) else str(x))
+
+
+def _desc(u):
+    """One line for an uncertainty record: estimate [95% interval] in band (method); a conjunction lists its parts."""
+    if u.get("parts"):
+        return "; ".join(f"{p['verdict']} {_desc(p)}" for p in u["parts"])
+    s, ci, band = _g(u.get("estimate")), u.get("ci95"), u.get("band")
+    if ci:
+        s += f" [{_g(ci[0])}, {_g(ci[1])}]"
+    if band and any(b is not None for b in band):
+        s += (f" in {'(' if u.get('band_lower_exclusive') else '['}{'-inf' if band[0] is None else _g(band[0])}, "
+              f"{'inf' if band[1] is None else _g(band[1])}]")
+    return s + f" ({u['method']})" + (f": {u['note']}" if u["method"] == "not scorable as designed" else "")
+
+
+print("UNCERTAINTY (95% intervals, flycns/stats.py: PASS only if the whole interval lies in the band)")
+for k, u in report["uncertainty"].items():
+    print(f"  {u['verdict']:<10}  {k}: {_desc(u)}")
 print(f"wrote {OUT / 'report.json'}")

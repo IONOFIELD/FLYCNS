@@ -159,7 +159,7 @@ for path in sorted(glob.glob(str(ROOT / "datafiles" / "*.hdf5"))):
                 print(f"  {os.path.basename(path)} {fly} {sname} {proto:<13} {df.shape[0]:>3} loom trials, {df.shape[1]} gloms")
 
 if not per_fly:
-    raise SystemExit("no loom series extracted; check protocol names and photodiode detection")
+    raise SystemExit("no loom series extracted; check protocol names and epoch clock stamps")
 amp = pd.concat(per_fly, axis=1)                       # gloms x series
 mean_amp = amp.mean(axis=1); sem_amp = amp.std(axis=1) / np.sqrt(amp.shape[1])
 normed = (mean_amp / mean_amp.max()).clip(lower=0)

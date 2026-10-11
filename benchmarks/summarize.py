@@ -14,7 +14,27 @@ from flycns.calibration import role
 from flycns.integrity import PLUMBING
 
 rows, stamps, flags = [], {}, {}
-counts, passed_by_role = Counter(), Counter()
+counts, passed_by_role, unresolved_by_role = Counter(), Counter(), Counter()
+with_interval = 0
+
+
+def _fmt(x):
+    return "-" if x is None else (f"{x:.3g}" if isinstance(x, float) else str(x))
+
+
+def interval_text(u):
+    """The estimate, its interval and band (or how it was scored) for the checks table."""
+    if not u:
+        return "point, no interval"
+    est, ci, band = u.get("estimate"), u.get("ci95"), u.get("band")
+    txt = _fmt(est)
+    if ci:
+        txt += f" [{_fmt(ci[0])}, {_fmt(ci[1])}]"
+    if band and any(b is not None for b in band):
+        lo_b = "(" if u.get("band_lower_exclusive") else "["
+        txt += f" in {lo_b}{_fmt(band[0]) if band[0] is not None else '-inf'}, {_fmt(band[1]) if band[1] is not None else 'inf'}]"
+    m = u.get("method", "")
+    return txt + (f"; {m}" if m and m not in ("bootstrap",) else "")
 # optional benchmark names restrict the summary (the battery summarises only the suite it reran)
 only = set(sys.argv[1:])
 reports = sorted(p for p in Path("results").glob("*/report.json") if not only or p.parent.name in only)
@@ -29,7 +49,8 @@ _changed = {}
 # the trial counts the committed results are run at (fly.py defaults, scripts/run_all.py, rerun.yml)
 CANONICAL_TRIALS = {"gf_escape": 40, "auditory": 40, "feeding": 6, "peptide_asta": 10, "pc1_song": 10,
                     "dnp13_control": 10, "feeding_by_modality": 6, "a2_registered": 120, "a2_robustness": 100,
-                    "flight_loop": 400, "flight_snpp16_graded": 400, "flight_snpp16_robustness": 400}
+                    "flight_loop": 400, "flight_snpp16": 400, "flight_snpp16_graded": 400, "flight_snpp16_robustness": 400,
+                    "null_dc_escape": 40, "null_dc_song": 30, "null_dc_auditory": 40}
 
 
 def trial_count(r):
@@ -57,10 +78,12 @@ for rep in reports:
     r = json.loads(rep.read_text(encoding="utf-8"))
     name = r.get("benchmark", rep.parent.name)
     prov = r.get("provenance", {})
-    model_env = {k: v for k, v in (prov.get("env") or {}).items() if k not in PLUMBING}
+    model_env = {k: v for k, v in (prov.get("env") or {}).items() if k not in PLUMBING and k != "FLYCNS_ALLOW_DIRTY"}
     f = []
     if model_env:
         f.append("PERTURBED")
+    if prov.get("allow_dirty") or (prov.get("env") or {}).get("FLYCNS_ALLOW_DIRTY") == "1":
+        f.append("ALLOW-DIRTY")   # the guards were waived for this run
     if prov.get("git_dirty"):
         f.append("DIRTY")
     if (prov.get("data") or {}).get("manifest") == "mismatch":
@@ -80,36 +103,48 @@ for rep in reports:
     flags[name] = f
     stamps[name] = dict(written_at=prov.get("written_at", "unstamped"), commit=prov.get("git_commit", ""),
                         env=model_env, data=((prov.get("data") or {}).get("digests") or {}))
+    unc = r.get("uncertainty") or {}
     for k, v in r.get("checks", {}).items():
         rl, why = role(name, k) if v is not None else ("reported", "reported, not scored")
+        u = unc.get(k) if v is not None else None
+        # the three-way verdict (flycns/stats.py) when the report carries one; else the point verdict
+        res = "SKIP" if v is None else (u["verdict"] if u else ("PASS" if v else "FAIL"))
         if v is not None:
             counts[rl] += 1
-            passed_by_role[rl] += bool(v)
-        res = "SKIP" if v is None else ("PASS" if v else "FAIL")
-        rows.append(f"| {name} | {k} | {res} | {rl} | {', '.join(f) or '-'} |")
+            passed_by_role[rl] += res == "PASS"
+            unresolved_by_role[rl] += res == "UNRESOLVED"
+            with_interval += bool(u)
+        rows.append(f"| {name} | {k} | {res} | {interval_text(u) if v is not None else '-'} | {rl} | {', '.join(f) or '-'} |")
 
 total, passed = sum(counts.values()), sum(passed_by_role.values())
-canonical = not any(("PERTURBED" in f or "DIRTY" in f or "DATA-MISMATCH" in f or "UNPINNED" in f
+unresolved = sum(unresolved_by_role.values())
+canonical = not any(("PERTURBED" in f or "DIRTY" in f or "ALLOW-DIRTY" in f or "DATA-MISMATCH" in f or "UNPINNED" in f
                      or any(x.startswith("TRIALS") for x in f)) for f in flags.values())
 p = LIFParams().__dict__
 tag = os.environ.get("FLYCNS_RUN_TAG", "")
-role_line = " | ".join(f"{rl} {passed_by_role[rl]}/{counts[rl]}" for rl in
+role_line = " | ".join(f"{rl} {passed_by_role[rl]}/{counts[rl]}"
+                       + (f" ({unresolved_by_role[rl]} unresolved)" if unresolved_by_role[rl] else "") for rl in
                        ["independent", "control", "robustness", "structural", "calibrated", "construction", "unclassified"] if counts[rl])
 md = ["# MaleCNS v1.0 LIF benchmark suite" + (f"  [{tag}]" if tag else ""), "",
       (f"**{passed}/{total} checks pass under ONE parameter set** (same LIFParams for every circuit)."
        if canonical else
        f"**{passed}/{total} checks pass, but NOT all under the declared parameter set:** see the flags column."),
       "", f"**By role:** {role_line}",
+      "", f"**Uncertainty:** {with_interval} of {total} scored checks carry a 95% interval or a per-draw or null "
+          f"score (flycns/stats.py); {unresolved} are UNRESOLVED (the interval crosses a band edge) and count as not "
+          f"passing. A PASS means the whole interval lies inside the band.",
       "", "Only *independent* checks test the model; *calibrated* and *construction* checks were made to pass "
           "by a declared parameter (docs/CALIBRATION.md). *control* checks show the machinery is not trivial. "
           "*structural* checks count over the wiring with no simulation.", "",
       "## Parameters", "```", json.dumps(p, indent=2), "```",
       f"effective chemical kick per synapse: {p['w_syn_mV']*p['w_scale']:.4f} mV "
       f"(Shiu 2024 unitary {p['w_syn_mV']} mV x MaleCNS rescale {p['w_scale']})", "",
-      "## Checks", "| benchmark | check | result | role | flags |", "|---|---|---|---|---|"] + rows + [
+      "## Checks", "| benchmark | check | result | estimate [95% interval] and band | role | flags |",
+      "|---|---|---|---|---|---|"] + rows + [
       "", "Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; "
           "DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); "
           "UNSTAMPED = written before integrity stamping, rerun to stamp; UNPINNED = no record of the input tables; "
+          "ALLOW-DIRTY = run with FLYCNS_ALLOW_DIRTY=1, which waives the integrity guards; "
           "TRIALS a<b = run at fewer trials than the canonical b.",
       "", "Declared deviations from the raw connectome: see each results/*/provenance.md and flycns/graph.py."]
 # citation integrity: every author-year tag in code must resolve in REFERENCES.md

@@ -43,6 +43,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from brian2 import Synapses, mV
 from flycns import load_graph, CNSModel, LIFParams
+from flycns import stats
 from flycns.bench import provenance, spike_source
 from flycns.graph import rewire_null
 
@@ -142,7 +143,11 @@ def drive(src, edge_df, seed):
         ids_ = [b for b in ids_ if b in m.lif_index.index]
         return float(sp.bodyId.isin(ids_).sum() / max(len(ids_), 1) / dur_s)
 
-    return dict(dvmn=rate(dvm), dlmn=rate(dlm), steer=rate(steer), b1=rate(b1), cns=float(m.population_rate_hz()))
+    # spikes in cells other than the driven ones: 0 means nothing downstream fired (a silent null cannot
+    # fail a "null below 1 Hz" check, so its uncertainty record is UNRESOLVED)
+    undriven = int((~sp.bodyId.isin(list(src))).sum())
+    return dict(dvmn=rate(dvm), dlmn=rate(dlm), steer=rate(steer), b1=rate(b1), cns=float(m.population_rate_hz()),
+                undriven_spikes=undriven)
 
 
 def draws_at_k(k, edge_df=None, extra=()):
@@ -156,7 +161,8 @@ def draws_at_k(k, edge_df=None, extra=()):
     agg = {f: [r[f] for r in out] for f in out[0]}
     return dict(k=k, **{f"{f}_mean": float(np.mean(v)) for f, v in agg.items()},
                 dvmn_per_draw=[round(x, 2) for x in agg["dvmn"]],
-                dvmn_in_band=int(sum(BAND[0] <= x <= BAND[1] for x in agg["dvmn"])))
+                dvmn_in_band=int(sum(BAND[0] <= x <= BAND[1] for x in agg["dvmn"])),
+                draws={f: [float(x) for x in v] for f, v in agg.items()})   # unrounded, for the uncertainty records
 
 
 report = dict(benchmark="flight_snpp16_graded", criteria=CRITERIA, registration=registered, sweep=[])
@@ -188,6 +194,74 @@ report["null_at_k_star"] = null_at_k
 report["checks"] = {"G1_graded": g1, "G2_in_band_window": g2, "G3_selective_at_k_star": g3,
                     "G4_wiring_specific_at_k_star": g4, "G5_reliable_at_k_star": g5}
 
+
+# ---- uncertainty (flycns/stats.py): one record per scored check, three-way verdict. The draws at each k
+# are independent seed replicates (cell identity and phase), so readouts are scored per draw (stats.per_draw:
+# PASS needs 4 of 5 draws in band, FAIL at most 1), never on the mean of the draws. G1 is a trend of means
+# over k and is scored on bootstrap intervals of adjacent differences instead. k* is the registered rule's
+# k* (mean-based, unchanged).
+def _any(records, note=None):
+    """Disjunction of parts, the counterpart of stats.combine: PASS if any part passes, FAIL if every part
+    fails, else UNRESOLVED. The parts are kept in the record."""
+    vs = [r["verdict"] for r in records]
+    vd = "PASS" if "PASS" in vs else ("FAIL" if all(v == "FAIL" for v in vs) else "UNRESOLVED")
+    rec = dict(estimate=None, ci95=None, band=None, method=f"any of {len(records)} parts", parts=list(records), verdict=vd)
+    if note:
+        rec["note"] = note
+    return rec
+
+
+def _rec_text(r):
+    """One console line for an uncertainty record: method, estimate [95% interval] or draws, note."""
+    txt = r["method"]
+    if r.get("ci95") and None not in r["ci95"] and r.get("estimate") is not None:
+        txt += f", est {r['estimate']:.3g} [{r['ci95'][0]:.3g}, {r['ci95'][1]:.3g}]"
+    elif r.get("draws") is not None:
+        txt += f", draws {[round(x, 2) for x in r['draws']]}"
+    return txt + (f" ({r['note']})" if r.get("note") else "")
+
+
+def _print_record(name, u):
+    print(f"  {u['verdict']:<10}  {name}: {_rec_text(u)}")
+    parts = u.get("parts", [])
+    if parts:
+        tally = {v: sum(p["verdict"] == v for p in parts) for v in ("PASS", "UNRESOLVED", "FAIL")}
+        print(f"      parts: {tally['PASS']} PASS, {tally['UNRESOLVED']} UNRESOLVED, {tally['FAIL']} FAIL")
+        for p in parts if len(parts) <= 6 else [p for p in parts if p["verdict"] != "FAIL"][:6]:
+            print(f"      {p['verdict']:<10}  {_rec_text(p)}")
+
+
+unc = {}
+g1_parts = []
+for a, b in zip(sw[:-1], sw[1:]):
+    d, lo, hi = stats.bootstrap_diff(b["draws"]["dvmn"], a["draws"]["dvmn"])
+    g1_parts.append(stats.scored(d, lo, hi, low=-0.5, method="bootstrap difference, independent draws", n=N_DRAWS,
+                                 note=f"mean DVMn at k={b['k']} minus k={a['k']}"))
+unc["G1_graded"] = stats.combine(g1_parts, note="every adjacent step of the mean DVMn >= -0.5 Hz; adjacent k use "
+                                               "different cells and seeds, so each step is two independent arms")
+unc["G2_in_band_window"] = _any(
+    [stats.per_draw(r["draws"]["dvmn"], *BAND, note=f"DVMn at k={r['k']}") for r in sw],
+    note="some k with DVMn in band per draw (the registered rule reads the mean over draws)")
+if kstar:
+    dk = kstar["draws"]
+    unc["G3_selective_at_k_star"] = stats.combine(
+        [stats.per_draw(dk[f], high=1.0, note=f"{f} at k*={kstar['k']}") for f in ("steer", "b1", "dlmn")],
+        note="steering, b1 and DLMn c-f each below 1 Hz per draw (the check is strict; per_draw's edge is inclusive)")
+    if sum(null_at_k["draws"]["undriven_spikes"]) > 0:
+        unc["G4_wiring_specific_at_k_star"] = stats.per_draw(
+            null_at_k["draws"]["dvmn"], high=1.0, note=f"rewired null, DVMn at k*={kstar['k']}; the null fired "
+                                                         f"{int(sum(null_at_k['draws']['undriven_spikes']))} spikes "
+                                                         f"outside the driven cells, so it can fail")
+    else:
+        unc["G4_wiring_specific_at_k_star"] = stats.unresolved(
+            "the rewired null fired no spike outside the driven cells in any draw, so 'null DVMn below 1 Hz' "
+            "cannot fail", estimate=null_at_k["dvmn_mean"])
+    unc["G5_reliable_at_k_star"] = stats.per_draw(dk["dvmn"], *BAND, note=f"DVMn at k*={kstar['k']}")
+else:
+    for kk in ("G3_selective_at_k_star", "G4_wiring_specific_at_k_star", "G5_reliable_at_k_star"):
+        unc[kk] = stats.unresolved("no k* (no k put mean DVMn in band, G2), so the condition at k* cannot be evaluated")
+report["uncertainty"] = unc
+
 # ---- reported, not scored
 rep = {}
 if partner:
@@ -208,4 +282,7 @@ report["provenance"] = provenance()
 print("\nCHECKS (criteria registered before the run)")
 for kk, v in report["checks"].items():
     print(f"  {'PASS' if v else 'FAIL'}  {kk}")
+print("\nUNCERTAINTY (flycns/stats.py; three-way verdict on the 95% interval or per draw)")
+for kk, u in report["uncertainty"].items():
+    _print_record(kk, u)
 print(f"\nBENCHMARK {'PASS' if all(report['checks'].values()) else 'FAIL'}  -> {OUT / 'report.json'}")

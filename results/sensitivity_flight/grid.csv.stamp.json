@@ -5,8 +5,8 @@
     "400"
   ],
   "provenance": {
-    "written_at": "2026-10-11T13:11:24",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T17:19:04",
+    "git_commit": "a4eef18",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -21,6 +21,7 @@
     "engine": "cython",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "graph": {
       "data_dir": "data",
       "min_weight": 5,

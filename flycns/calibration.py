@@ -109,6 +109,10 @@ CHECK_ROLES = {
         "S1_escape_null_silent_superclass": (CTL, "pre-registered stricter null"),
         "S2_pc1_null_silent_superclass": (CTL, "pre-registered stricter null"),
     },
+    # degree-corrected null distribution (benchmarks/null_distribution.py): not yet registered
+    "null_dc_escape": {"N1_escape_gf_wiring_specific": (CTL, "real readout vs 20 degree-corrected null draws")},
+    "null_dc_song": {"N2_song_pmp2_wiring_specific": (CTL, "real readout vs 20 degree-corrected null draws")},
+    "null_dc_auditory": {"N3_jo_gf_chemical_wiring_specific": (CTL, "real readout vs 20 degree-corrected null draws")},
 }
 
 

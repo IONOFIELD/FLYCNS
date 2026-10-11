@@ -40,6 +40,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, rewire_null, CNSModel, LIFParams
+from flycns import stats
 from flycns.graph import drop_mixed_chemical
 from flycns.protocols import LOOM_TUNING
 from flycns.bench import find_types, pulse_protocol
@@ -90,8 +91,12 @@ def gf_stats(model, onsets, window_ms=160):
         rows.append(dict(gf=len(w) / max(len(gf_ids), 1), hit=int(len(w) > 0),
                          lat=(w.t_ms.min() - on) if len(w) else np.nan))
     df = pd.DataFrame(rows)
+    # per_trial keeps the values the means average away (None where a trial has no GF spike), so the
+    # checks can be scored with 95% intervals over trials (flycns/stats.py)
     return dict(gf_per_cell=float(df.gf.mean()), gf_hit=float(df.hit.mean()),
-                gf_lat_ms=float(df.lat.mean()), pop_rate_hz=float(model.population_rate_hz()))
+                gf_lat_ms=float(df.lat.mean()), pop_rate_hz=float(model.population_rate_hz()),
+                per_trial=dict(gf=[float(x) for x in df.gf], hit=[int(x) for x in df.hit],
+                               lat_ms=[None if pd.isna(x) else float(x) for x in df.lat]))
 
 
 def wilson(k, n, z=1.96):
@@ -117,6 +122,19 @@ def two_prop_ci(k1, n1, k2, n2, z=1.96):
     lo = d - np.sqrt((p2 - l2) ** 2 + (u1 - p1) ** 2)
     hi = d + np.sqrt((u2 - p2) ** 2 + (p1 - l1) ** 2)
     return d, lo, hi
+
+
+def _unc_text(u):
+    """One console line for an uncertainty record: estimate [95% interval] band (method)."""
+    f = lambda x: "-" if x is None else (f"{x:.4g}" if isinstance(x, float) else str(x))  # noqa: E731
+    ci = f" [{f(u['ci95'][0])}, {f(u['ci95'][1])}]" if u.get("ci95") else ""
+    band = f" band [{f(u['band'][0])}, {f(u['band'][1])}]" if u.get("band") else ""
+    return f"{f(u.get('estimate'))}{ci}{band} ({u['method']})"
+
+
+def _pt(arm, key):
+    """An arm's per-trial values as a float array (NaN where the trial has no value)."""
+    return np.array([np.nan if x is None else x for x in arm["per_trial"][key]], dtype=float)
 
 
 def run(label, stim_types, electrical=True, edge_df=edges, jo=True, loom=False, n_trials=None):
@@ -146,7 +164,9 @@ def run(label, stim_types, electrical=True, edge_df=edges, jo=True, loom=False, 
         onsets = pulse_protocol(m, {t: JO_HZ for t in stim_types}, n_trials=N, pulse_ms=60)
     s = gf_stats(m, onsets); s["wall_s"] = round(time.time() - t0, 1); s["n_trials"] = len(onsets)
     A.raster(m, onsets, ["DNp01"], window_ms=100, max_trials=2)
-    s["gf_depol_mV"] = float(np.nanmean(m.peak_depolarization_mV(onsets, 100)))
+    depol = m.peak_depolarization_mV(onsets, 100)
+    s["gf_depol_mV"] = float(np.nanmean(depol))
+    s["per_trial"]["depol_mV"] = [None if np.isnan(x) else float(x) for x in depol]
     print(f"[{label}] GF {s['gf_per_cell']:.2f}/cell hit {s['gf_hit']:.2f} lat {s['gf_lat_ms']:.1f} ms "
           f"depol {s['gf_depol_mV']:.2f} mV | CNS {s['pop_rate_hz']:.4f} Hz | {s['wall_s']}s")
     report["arms"][label] = s
@@ -218,6 +238,35 @@ report["arms"]["A2_prediction"] = dict(loom_gain=SUB_LOOM_GAIN, n_trials_per_arm
 print(f"A2 (reported, {n1} trials/arm): loom alone {lo['gf_hit']:.2f} -> with JO {a2['gf_hit']:.2f}; "
       f"difference {d:+.2f} (95% CI {dlo:+.2f} to {dhi:+.2f}) -> {direction}")
 report["pass"] = all(v for v in report["checks"].values() if v is not None)
+
+# ---- uncertainty (flycns/stats.py): one record per scored check, three-way verdict on the 95% interval.
+# A2 is reported, not scored, so it has no record. The A1/A3/A4 arms are separate simulations, so a
+# comparison between two of them resamples each arm on its own.
+a1_hit, a4_hit = _pt(a1, "hit"), _pt(a4, "hit")
+a1_dep, a3_dep, a4_dep = _pt(a1, "depol_mV"), _pt(a3, "depol_mV"), _pt(a4, "depol_mV")
+n_ok = lambda v: int((~np.isnan(v)).sum())  # noqa: E731
+unc = {
+    "A1_jo_alone_mostly_subthreshold": stats.proportion(
+        int(a1_hit.sum()), len(a1_hit), high=0.3, note="trials with any GF spike, JO drive alone (electrical); band <= 0.3"),
+    "A3_declared_pairs_carry_jo_drive": stats.combine([
+        stats.scored(*stats.bootstrap(a1_dep), low=0.5, strict=True, n=n_ok(a1_dep),
+                     note="A1 GF peak depolarisation (mV) per trial, with the electrical JON-GF pairs; must exceed 0.5 mV"),
+        stats.scored(*stats.bootstrap_diff(a3_dep, 0.5 * a1_dep), high=0, method="bootstrap (two independent arms)",
+                     n=n_ok(a3_dep), note="A3 depolarisation (no electrical, no mixed EM edges) minus 0.5 x A1 "
+                                          "depolarisation, per trial (n per arm); must be < 0"),
+    ], note="A1 depolarisation > 0.5 mV and A3 depolarisation < 0.5 x A1"),
+    "A4_null_silent": stats.combine([
+        stats.proportion(int(a4_hit.sum()), len(a4_hit), high=0.1,
+                         note="trials with any GF spike, rewired null (chemical only); band < 0.1"),
+        stats.scored(*stats.bootstrap(a4_dep), high=0.5, n=n_ok(a4_dep),
+                     note="GF peak depolarisation (mV) per trial, rewired null; band < 0.5 mV"),
+    ], note="GF hit rate < 0.1 and GF depolarisation < 0.5 mV in the rewired null"),
+    "A5_cns_quiet": stats.point(
+        max(a1["pop_rate_hz"], a2["pop_rate_hz"]), max(a1["pop_rate_hz"], a2["pop_rate_hz"]) < 0.05,
+        note="the larger of two whole-run population rates (A1 and A2 arms; spikes per neuron per second over each "
+             "whole run): readouts with no trial structure, scored on the point value; band < 0.05 Hz"),
+}
+report["uncertainty"] = unc
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 prov = ["# Provenance: auditory (JON -> GF)", "", f"JO types: {jo_types} at {JO_HZ} Hz",
@@ -226,4 +275,9 @@ prov = ["# Provenance: auditory (JON -> GF)", "", f"JO types: {jo_types} at {JO_
         "", "## Checks"] + [f"- {k}: {'REPORTED' if v is None else ('PASS' if v else 'FAIL')}" for k, v in report["checks"].items()]
 (OUT / "provenance.md").write_text("\n".join(prov), encoding="utf-8")
 print("\nCHECKS"); [print(f"  {'REPORTED' if v is None else ('PASS' if v else 'FAIL')}  {k}") for k, v in report["checks"].items()]
+print("\nUNCERTAINTY (95% interval; PASS only if the whole interval lies in the band)")
+for k, u in unc.items():
+    print(f"  {u['verdict']:<10}  {k}: {_unc_text(u)}")
+    for p in u.get("parts", []):
+        print(f"      {p['verdict']:<10}  {_unc_text(p)}")
 print(f"\nBENCHMARK {'PASS' if report['pass'] else 'FAIL'}  -> {OUT}/report.json")

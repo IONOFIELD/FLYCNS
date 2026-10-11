@@ -107,6 +107,18 @@ report = dict(benchmark="a2_registered", criteria=CRITERIA, working_point_loom_g
               difference=d, difference_ci95=[lo, hi], outcome=CRITERIA["outcomes"][outcome],
               auditory_report_ci=a2.get("difference_ci95"),
               checks={"A2R_facilitation": outcome == "above"}, wall_s=round(time.time() - t0))
+# Uncertainty record (flycns/stats.py), expressing the registered rule with the registered interval. The
+# three-way verdict would call a CI that spans zero UNRESOLVED; the registered outcomes fix that case as
+# FAIL ("unresolved at this trial count") in advance, so the record keeps the registered verdict.
+from flycns import stats  # noqa: E402
+unc = stats.scored(d, lo, hi, low=0, strict=True, method="newcombe (as registered)", n=n,
+                   note="P(GF|loom+sound) - P(GF|loom) at the calibrated working point; Newcombe 1998 method 10 "
+                        "recomputed from counts (n per arm). Registered outcomes: CI above zero PASS, below zero "
+                        "FAIL, spans zero FAIL (unresolved at this trial count)")
+if outcome == "spans":
+    unc["verdict"] = "FAIL"
+unc["registered_outcome"] = CRITERIA["outcomes"][outcome]
+report["uncertainty"] = {"A2R_facilitation": unc}
 from flycns.bench import provenance  # noqa: E402
 report["provenance"] = provenance(DATA)
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
@@ -116,4 +128,6 @@ print(f"loom + sound    {k2}/{n} = {p2:.3f}  (95% CI {l2:.3f} to {u2:.3f})")
 print(f"difference      {d:+.3f}  (95% CI {lo:+.3f} to {hi:+.3f})")
 print(f"\nCHECK (criterion registered before the run)\n  {'PASS' if outcome == 'above' else 'FAIL'}  A2R_facilitation"
       f"  -> {CRITERIA['outcomes'][outcome]}")
+print(f"UNCERTAINTY (95% interval, registered rule)\n  {unc['verdict']:<10}  A2R_facilitation: difference {d:+.4g} "
+      f"[{lo:+.4g}, {hi:+.4g}] band (0, -) ({unc['method']})")
 print(f"wrote {OUT / 'report.json'}  ({report['wall_s']}s)")

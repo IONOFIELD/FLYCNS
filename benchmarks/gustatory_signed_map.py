@@ -43,6 +43,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph
 from flycns.bench import provenance, stamp
 from flycns.graph import GUSTATORY_SUBCLASSES
+from flycns import stats
 
 DATA = sys.argv[1] if len(sys.argv) > 1 else "data"
 OUT = Path("results/gustatory_signed_map")
@@ -178,6 +179,18 @@ report = dict(benchmark="gustatory_signed_map", criteria=CRITERIA, n_grn_types=l
                   lb3d_counterfactual={k: {m: groups_cf[k][m]["cumulative"] for m in mn_types} for k in groups_cf},
                   lb3d_effect_on_proboscis=dict(declared=cum(groups_signed["LB3d"], PROBOSCIS),
                                                 as_glutamatergic=cum(groups_cf["LB3d"], PROBOSCIS))))
+# ---- uncertainty (flycns/stats.py): every check here is graph arithmetic, so each is scored on its point value
+_GRAPH = "graph arithmetic over the fixed connectome (signed path products), no simulation and no random draws: "
+_top = sorted(ing.items(), key=lambda x: -x[1])
+report["uncertainty"] = {
+    "S1_valence_signed_on_proboscis": stats.point(
+        float(app), s1, note=_GRAPH + f"appetitive mean {app:+.3e} > 0 and bitter mean {bit:+.3e} below it"),
+    "S2_per_type_sign_agreement": stats.point(
+        int(agree), s2, note=_GRAPH + f"{agree} of 7 types have a signed influence on MN9 matching valence; 5 needed"),
+    "S3_LB2_dominates_pharyngeal_pumping": stats.point(
+        float(ing.get("LB2", float("nan"))), s3,
+        note=_GRAPH + f"|signed| on MN11D+MN11V, largest group {_top[0][0] if _top else '-'}"),
+}
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 
@@ -193,4 +206,7 @@ print(f"LB3d on proboscis MNs: declared (ACh) {lb['declared']:+.3e} -> as glutam
 print("\nCHECKS (criteria registered before the run)")
 for k, v in report["checks"].items():
     print(f"  {'PASS' if v else 'FAIL'}  {k}")
+print("UNCERTAINTY (flycns/stats.py): graph arithmetic, no sampling, so each check is scored on its point value")
+for k, u in report["uncertainty"].items():
+    print(f"  {u['verdict']:<10}  {k}: {u['estimate']} ({u['method']})")
 print(f"wrote {OUT}/signed.csv, unsigned.csv, report.json")

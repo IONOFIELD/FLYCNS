@@ -246,31 +246,42 @@ def t_registration_guard(tmp):
     subprocess.run([*g, "add", "-A"], cwd=b, check=True)
     subprocess.run([*g, "commit", "-qm", "rewrite"], cwd=b, check=True)
     rewritten = run(b)
+    # the audit's recipe: delete the registration in a commit and rerun, so the test registers afresh
+    c = repo("reg_c")
+    subprocess.run([*g, "rm", "-q", "results/probe/criteria.json"], cwd=c, check=True)
+    subprocess.run([*g, "commit", "-qm", "delete"], cwd=c, check=True)
+    deleted = run(c)
     ok = ("RAN" in first.stdout and edited.returncode != 0 and committed_edit.returncode != 0
           and "changed after it was committed" in committed_edit.stderr
-          and rewritten.returncode != 0 and "deleted and written again" in rewritten.stderr)
-    return ok, "an edited, re-committed or deleted-and-rewritten registration is refused" if ok else \
-        f"first={first.stdout!r} edited={edited.returncode} committed={committed_edit.stderr[-160:]!r} rewritten={rewritten.stderr[-160:]!r}"
+          and rewritten.returncode != 0 and "deleted and written again" in rewritten.stderr
+          and deleted.returncode != 0 and "registered and then deleted" in deleted.stderr)
+    return ok, "an edited, re-committed, deleted, or deleted-and-rewritten registration is refused" if ok else \
+        (f"first={first.stdout!r} edited={edited.returncode} committed={committed_edit.stderr[-160:]!r} "
+         f"rewritten={rewritten.stderr[-160:]!r} deleted={deleted.returncode} {deleted.stderr[-160:]!r}")
 
 
 def t_fingerprint_cache_cannot_vouch(tmp):
-    """Registered tests rehash from content: a tampered fingerprint cache cannot make data 'match', and a
-    changed file is never served from the cache."""
+    """Data are checked from the files themselves. A forged cache file changes nothing; the pinned file
+    is recognised by the sha256 of its bytes; an edited table is caught; the same rows written to
+    different bytes still match on content."""
     from flycns import integrity
     d = tmp / "fp"; d.mkdir()
     n, e = _tables()
     e.to_parquet(d / "edges.parquet", index=False)
-    true = integrity.fingerprints(d)["edges.parquet"]["digest"]
-    cf = d / integrity.CACHE
-    cache = json.loads(cf.read_text(encoding="utf-8"))
-    cf.write_text(json.dumps({k: {**v, "digest": "0" * 64} for k, v in cache.items()}), encoding="utf-8")
-    trusted = integrity.fingerprints(d)["edges.parquet"]["digest"]
-    fresh = integrity.fingerprints(d, fresh=True)["edges.parquet"]["digest"]
+    man = integrity.write_manifest(d)
+    pinned_sha = man["files"]["edges.parquet"].get("sha256")
+    (d / integrity.CACHE).write_text(json.dumps({"edges.parquet": {"digest": "0" * 64}}), encoding="utf-8")
+    first = integrity.verify_data(d)["status"]
+    forged_ignored = integrity.fingerprints(d)["edges.parquet"]["digest"] == man["files"]["edges.parquet"]["digest"]
     e2 = e.copy(); e2.loc[0, "weight"] += 1
     e2.to_parquet(d / "edges.parquet", index=False)
-    changed = integrity.fingerprints(d)["edges.parquet"]["digest"]
-    ok = trusted == "0" * 64 and fresh == true and changed not in (true, "0" * 64)
-    return ok, "fresh rehash ignores a tampered cache; a changed file is rehashed" if ok else f"{trusted[:8]} {fresh[:8]} {changed[:8]}"
+    edited = integrity.verify_data(d)["status"]
+    e.sample(frac=1.0, random_state=1).to_parquet(d / "edges.parquet", index=False, compression="gzip")
+    rewritten = integrity.verify_data(d)["status"]
+    ok = bool(pinned_sha) and first == "match" and forged_ignored and edited == "mismatch" and rewritten == "match"
+    return ok, ("pinned bytes recognised; a forged cache is ignored; an edit is caught; the same rows in other "
+                "bytes still match" if ok else f"sha {bool(pinned_sha)} first {first} forged_ignored {forged_ignored} "
+                f"edited {edited} rewritten {rewritten}")
 
 
 def t_refuse_overrides():
@@ -281,8 +292,12 @@ def t_refuse_overrides():
                          errors="replace", env={**base, "FLYCNS_WSCALE": "0.5"})
     fine = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True, encoding="utf-8",
                           errors="replace", env={**base, "FLYCNS_WSCALE": "0.3", "FLYCNS_CODEGEN": "numpy"})
-    ok = bad.returncode != 0 and "FLYCNS_WSCALE=0.5" in bad.stderr and "RAN" in fine.stdout
-    return ok, "an override is refused; a default value and the engine choice are not" if ok else f"{bad.stderr[-160:]!r} {fine.stdout!r}"
+    waived = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True, encoding="utf-8",
+                            errors="replace", env={**base, "FLYCNS_ALLOW_DIRTY": "1"})
+    ok = (bad.returncode != 0 and "FLYCNS_WSCALE=0.5" in bad.stderr and "RAN" in fine.stdout
+          and waived.returncode != 0 and "FLYCNS_ALLOW_DIRTY=1" in waived.stderr)
+    return ok, ("an override is refused, and so is waiving the guards; a default value and the engine choice are not"
+                if ok else f"{bad.stderr[-160:]!r} {fine.stdout!r} {waived.stderr[-160:]!r}")
 
 
 def t_every_check_has_a_role():
@@ -558,8 +573,14 @@ def t_registrations_never_changed():
     if shallow.strip() == "true":
         return True, "SKIPPED: shallow clone (no history to check)"
     bad, n = [], 0
-    for f in sorted((ROOT / "results").glob("*/criteria.json")):
+    # every registration ever added, including any later deleted (a deleted one could register afresh)
+    _, added = git("log", "--diff-filter=A", "--name-only", "--format=", "--", "results/*/criteria.json")
+    ever = sorted({ROOT / x for x in added.split()} | set((ROOT / "results").glob("*/criteria.json")))
+    for f in ever:
         rel = f.relative_to(ROOT).as_posix()
+        if not f.exists():
+            bad.append(f"{rel}: registered and later deleted")
+            continue
         _, log = git("log", "--format=%H", "--", rel)
         commits = log.split()
         if not commits:
@@ -582,9 +603,13 @@ def t_summary_counts_and_flags(tmp):
     reps = {
         "gf_escape": dict(n_trials=40, provenance=good,
                           checks={"gf_spikes_per_response_1_to_2": True, "gf_response_prob_0.5_to_1": False}),
-        "auditory": dict(n_trials=10, provenance={**good, "env": {"FLYCNS_WSCALE": "0.5"}, "git_dirty": True,
+        "auditory": dict(n_trials=10, provenance={**good, "env": {"FLYCNS_WSCALE": "0.5", "FLYCNS_ALLOW_DIRTY": "1"},
+                                                  "git_dirty": True, "allow_dirty": True,
                                                   "data": {**good["data"], "manifest": "mismatch"}},
-                         checks={"A1_jo_alone_mostly_subthreshold": True, "A2_jo_effect_on_near_threshold_loom_REPORTED": None}),
+                         checks={"A1_jo_alone_mostly_subthreshold": True, "A2_jo_effect_on_near_threshold_loom_REPORTED": None},
+                         # in band on its point value, but the interval crosses the edge: not a pass
+                         uncertainty={"A1_jo_alone_mostly_subthreshold": dict(
+                             estimate=0.1, ci95=[0.02, 0.4], band=[0, 0.3], method="wilson", verdict="UNRESOLVED")}),
         "pc1_song": dict(provenance={**good, "written_at": "2026-10-11T09:00:00", "data": None},
                          checks={"P1_pc1_14a_pulse_over_sine": True}),
         "sugar_laterality": dict(checks={"L1_sugar_contralateral_bias": False}),
@@ -600,21 +625,24 @@ def t_summary_counts_and_flags(tmp):
     md = (w / "results/SUITE.md").read_text(encoding="utf-8")
     import re
     checks = md.split("## Checks")[1].split("\n## ")[0]
-    rows = [l.split("|")[1:-1] for l in checks.splitlines() if l.startswith("| ") and l.count("|") == 6
+    rows = [l.split("|")[1:-1] for l in checks.splitlines() if l.startswith("| ") and l.count("|") == 7
             and not l.startswith("| benchmark")]
-    rows = {(c[0].strip(), c[1].strip()): (c[2].strip(), c[3].strip(), c[4].strip()) for c in rows}
-    n_pass = sum(v[0] == "PASS" for v in rows.values()); n_scored = sum(v[0] in ("PASS", "FAIL") for v in rows.values())
+    rows = {(c[0].strip(), c[1].strip()): (c[2].strip(), c[4].strip(), c[5].strip()) for c in rows}
+    n_pass = sum(v[0] == "PASS" for v in rows.values()); n_scored = sum(v[0] in ("PASS", "FAIL", "UNRESOLVED") for v in rows.values())
     head = re.search(r"\*\*(\d+)/(\d+) checks pass", md)
     tallies = re.findall(r"(\w+) (\d+)/(\d+)", md.split("**By role:**")[1].splitlines()[0])
-    want = {"gf_escape": set(), "auditory": {"PERTURBED", "DIRTY", "DATA-MISMATCH", "TRIALS 10<40"},
+    want = {"gf_escape": set(), "auditory": {"PERTURBED", "DIRTY", "ALLOW-DIRTY", "DATA-MISMATCH", "TRIALS 10<40"},
             "pc1_song": {"UNPINNED", "STALE"}, "sugar_laterality": {"UNSTAMPED"}}
     got = {b: {x.strip() for x in v[2].split(",") if x.strip() not in ("-", "")} for (b, _), v in rows.items()}
     flags_ok = all(got[b] == want[b] for b in want)
-    ok = (head and (int(head[1]), int(head[2])) == (n_pass, n_scored) == (3, 5)
+    unresolved_ok = rows[("auditory", "A1_jo_alone_mostly_subthreshold")][0] == "UNRESOLVED" and "1 are UNRESOLVED" in md
+    ok = (head and (int(head[1]), int(head[2])) == (n_pass, n_scored) == (2, 5)
           and sum(int(t[2]) for t in tallies) == n_scored and sum(int(t[1]) for t in tallies) == n_pass
-          and "NOT all under the declared parameter set" in md and flags_ok)
-    return ok, ("headline 3/5 equals the rows; role tallies sum to it; all seven flags exactly where expected" if ok else
-                f"head {head and head.group(0)}, rows {n_pass}/{n_scored}, tallies {tallies}, flags {got}")
+          and "NOT all under the declared parameter set" in md and flags_ok and unresolved_ok)
+    return ok, ("headline 2/5 equals the rows (an in-band point with an interval across the edge is UNRESOLVED, "
+                "not a pass); role tallies sum to it; all eight flags exactly where expected" if ok else
+                f"head {head and head.group(0)}, rows {n_pass}/{n_scored}, tallies {tallies}, flags {got}, "
+                f"unresolved {unresolved_ok}")
 
 
 def t_side_inference_precedence():
@@ -748,6 +776,50 @@ def t_every_named_script_exists():
     return not missing and len(named) > 20, (f"all {len(named)} named scripts exist" if not missing else f"missing: {missing}")
 
 
+
+def t_stats_rules():
+    """flycns/stats.py: Wilson limits, the three-way verdict at each band edge, per-draw scoring, the
+    null percentile (a silent null scores nothing) and a reproducible bootstrap."""
+    from flycns import stats as S
+    lo, hi = S.wilson(23, 40)
+    cases = [S.verdict(0.42, 0.71, 0.5, 1.0) == "UNRESOLVED", S.verdict(0.55, 0.9, 0.5, 1.0) == "PASS",
+             S.verdict(0.1, 0.4, 0.5, 1.0) == "FAIL", S.verdict(0.0, 0.2, 0, strict=True) == "UNRESOLVED",
+             S.verdict(-0.2, 0.0, 0, strict=True) == "FAIL", S.verdict(float("nan"), 1, 0, 1) == "UNRESOLVED",
+             S.per_draw([6.48, 0, 0, 12.12, 15.23], 2, 12)["verdict"] == "FAIL",
+             S.per_draw([3, 4, 5, 6, 30], 2, 12)["verdict"] == "PASS",
+             S.per_draw([3, 4, 30, 40, 5], 2, 12)["verdict"] == "UNRESOLVED",
+             S.null_percentile(0.6, [0.0] * 20)["verdict"] == "PASS",
+             S.null_percentile(0.6, [0.0] * 20, null_alive=False)["verdict"] == "UNRESOLVED",
+             S.null_percentile(0.3, [0.0] * 10 + [0.5] * 10)["verdict"] == "UNRESOLVED",
+             S.null_percentile(0.0, [0.0] * 20)["verdict"] == "FAIL",
+             S.bootstrap([1, 2, 3, 4, 9]) == S.bootstrap([1, 2, 3, 4, 9]),
+             abs(lo - 0.4220) < 1e-4 and abs(hi - 0.7149) < 1e-4]
+    return all(cases), (f"Wilson 23/40 = {lo:.4f}-{hi:.4f}; all {len(cases)} verdict rules hold" if all(cases)
+                        else f"failing cases: {[i for i, c in enumerate(cases) if not c]}")
+
+
+def t_degree_corrected_null(tmp):
+    """The degree-corrected null keeps, for every cell, its incoming connections per sign and size class,
+    its class and its neuropil; every sender keeps its outgoing rows; and it actually moves targets."""
+    from collections import Counter
+    from flycns.graph import WEIGHT_BINS, rewire_null
+    rng = np.random.default_rng(4)
+    n = pd.DataFrame(dict(bodyId=np.arange(600), superclass=rng.choice(["a", "b"], 600), type="t", somaSide="L"))
+    e = pd.DataFrame(dict(pre=rng.integers(0, 60, 20000), post=rng.integers(60, 600, 20000),
+                          weight=rng.integers(5, 300, 20000)))
+    e["sign"] = rng.choice([1.0, -1.0], len(e))
+    d = tmp / "dc"; d.mkdir()
+    roi = pd.DataFrame(dict(bodyId=n.bodyId, dominant_roi=rng.choice(["GNG", "SMP(R)", "LAL(L)"], 600)))
+    roi.to_parquet(d / "roi_membership.parquet", index=False)
+    a = rewire_null(e, seed=2, mode="degree_corrected", neurons=n, data_dir=str(d))
+    key = lambda x: Counter(zip(x.post, np.sign(x.sign), np.digitize(x.weight, WEIGHT_BINS)))  # noqa: E731
+    grp = (n.set_index("bodyId")["superclass"] + "|" + roi.set_index("bodyId")["dominant_roi"])
+    ok = (key(a) == key(e) and len(a) == len(e) and (a.pre.values == e.pre.values).all()
+          and (grp[a.post].values == grp[e.post].values).all() and (a.post.values != e.post.values).mean() > 0.5
+          and a.attrs.get("neuropil_source") == "roi_membership.parquet")
+    return ok, (f"{len(e):,} connections: every cell keeps its input per sign and size, class and neuropil; "
+                f"{(a.post.values != e.post.values).mean():.0%} of targets moved" if ok else str(a.attrs))
+
 def run_all():
     out = []
     tmp = Path(tempfile.mkdtemp(prefix="flycns_unit_"))
@@ -785,7 +857,9 @@ def run_all():
                          ("audit refuses a missing partner", lambda: t_audit_refuses_missing_partner(tmp)),
                          ("preserved() restores exactly", lambda: t_preserved_restores_exactly(tmp)),
                          ("side null and its default table", t_null_side_mode_and_default_table),
-                         ("every named script exists", t_every_named_script_exists)]:
+                         ("every named script exists", t_every_named_script_exists),
+                         ("uncertainty rules", t_stats_rules),
+                         ("degree-corrected null invariants", lambda: t_degree_corrected_null(tmp))]:
             try:
                 ok, msg = fn()
             except (Exception, SystemExit) as ex:  # a crashing or exiting check is a failing check

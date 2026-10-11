@@ -3,8 +3,8 @@
   "script": "benchmarks/diagnose_feeding.py",
   "args": [],
   "provenance": {
-    "written_at": "2026-10-11T12:55:36",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T18:05:15",
+    "git_commit": "a4eef18",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -19,6 +19,7 @@
     "engine": "not used",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "graph": {
       "data_dir": "data",
       "min_weight": 5,

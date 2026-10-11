@@ -53,6 +53,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, CNSModel, LIFParams
 from flycns.bench import pulse_protocol, readout_rates, provenance
 from flycns.graph import GUSTATORY_MN9_DRIVING
+from flycns import stats
 
 N_TRIALS = int(sys.argv[1]) if len(sys.argv) > 1 else 6
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
@@ -153,6 +154,9 @@ for g in ["sugar", "bitter", "old_mixed_proxy"]:
         r = readout_rates(m, on, ["MN9"], 250, meta)
         val = float(r.spikes_per_cell.mean()) if len(r) else 0.0
         dynamic[g][f"{hz:.0f}Hz"] = dict(mn9_spikes_per_cell=val, cns_hz=float(m.population_rate_hz()))
+        # the same readout per pulse (mean over sides within a pulse); their mean is val
+        dynamic[g][f"{hz:.0f}Hz"]["mn9_per_trial"] = ([float(x) for x in r.groupby("trial").spikes_per_cell.mean().sort_index()]
+                                                      if len(r) else [0.0] * N_TRIALS)
         print(f"  {g:<16} {hz:>5.0f} Hz | MN9 {val:5.2f} spikes/cell/pulse | CNS {m.population_rate_hz():.4f} Hz | "
               f"{round(time.time() - t0)}s")
 
@@ -166,10 +170,45 @@ report = dict(benchmark="feeding_by_modality", criteria=CRITERIA, resolved=resol
                       "F3_sugar_drives_mn9_at_100hz": bool(dynamic["sugar"]["100Hz"]["mn9_spikes_per_cell"] >= 0.5),
                       "F4_bitter_below_sugar_at_100hz": bool(dynamic["bitter"]["100Hz"]["mn9_spikes_per_cell"]
                                                              < dynamic["sugar"]["100Hz"]["mn9_spikes_per_cell"])})
+# ---- uncertainty (flycns/stats.py): 95% intervals over pulses, three-way verdicts
+_sug, _bit = dynamic["sugar"]["100Hz"]["mn9_per_trial"], dynamic["bitter"]["100Hz"]["mn9_per_trial"]
+report["uncertainty"] = {
+    "F2_sugar_ratio_exceeds_bitter": stats.point(
+        s["ratio"] - b["ratio"], report["checks"]["F2_sugar_ratio_exceeds_bitter"],
+        note=f"graph arithmetic over the fixed connectome, no sampling: sugar ratio {s['ratio']} minus bitter ratio "
+             f"{b['ratio']} (synapses onto MN9's excitatory / inhibitory relays)"),
+    "F3_sugar_drives_mn9_at_100hz": stats.scored(*stats.bootstrap(_sug), low=0.5, n=len(_sug),
+                                                 note="MN9 spikes/cell/pulse under sugar at 100 Hz, bootstrap over pulses"),
+    "F4_bitter_below_sugar_at_100hz": stats.scored(*stats.bootstrap_diff(_sug, _bit), low=0, strict=True,
+                                                   note=f"MN9 under sugar minus under bitter at 100 Hz: two separate simulations, "
+                                                        f"each resampled over its own pulses ({len(_sug)} and {len(_bit)})"),
+}
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"\nF1 VERDICT: {report['F1_verdict']}")
 print("CHECKS (criteria registered before the run)")
 for k, v in report["checks"].items():
     print(f"  {'PASS' if v else 'FAIL'}  {k}")
+
+
+def _g(x):
+    return "-" if x is None else (f"{x:.3g}" if isinstance(x, float) else str(x))
+
+
+def _desc(u):
+    """One line for an uncertainty record: estimate [95% interval] in band (method); a conjunction lists its parts."""
+    if u.get("parts"):
+        return "; ".join(f"{p['verdict']} {_desc(p)}" for p in u["parts"])
+    s, ci, band = _g(u.get("estimate")), u.get("ci95"), u.get("band")
+    if ci:
+        s += f" [{_g(ci[0])}, {_g(ci[1])}]"
+    if band and any(b is not None for b in band):
+        s += (f" in {'(' if u.get('band_lower_exclusive') else '['}{'-inf' if band[0] is None else _g(band[0])}, "
+              f"{'inf' if band[1] is None else _g(band[1])}]")
+    return s + f" ({u['method']})" + (f": {u['note']}" if u["method"] == "not scorable as designed" else "")
+
+
+print("UNCERTAINTY (95% intervals, flycns/stats.py: PASS only if the whole interval lies in the band)")
+for k, u in report["uncertainty"].items():
+    print(f"  {u['verdict']:<10}  {k}: {_desc(u)}")
 print(f"wrote {OUT / 'report.json'}")

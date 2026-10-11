@@ -32,6 +32,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns.bench import provenance  # noqa: E402
 from flycns.integrity import preserved, require_clean, require_data, criteria_differ  # noqa: E402
+from flycns import stats  # noqa: E402
 
 DATA = sys.argv[1] if len(sys.argv) > 1 else "data"
 OUT = Path("results/null_strict")
@@ -82,6 +83,25 @@ report = dict(benchmark="null_strict", criteria=CRITERIA, checks=checks,
                           real_gf_hit=real_e["gf_hit"], real_pop_rate_hz=real_e["pop_rate_hz"]),
               pc1=dict(null=null_p, real=real_p, n_trials=PC1_TRIALS),
               wall_s=round(time.time() - t0, 1), provenance=provenance(DATA))
+# ---- uncertainty (flycns/stats.py): 95% intervals, three-way verdicts
+_caveat = ("The superclass null is nearly silent on the real data (whole-CNS rate here: null "
+           "{null_hz:.4g} Hz vs real {real_hz:.4g} Hz, see the report), so a silent readout on it says little about "
+           "wiring specificity; the degree-corrected null distribution (benchmarks/null_distribution.py) is the "
+           "informative version.")
+_k = int(round(null_e["gf_hit"] * ESCAPE_TRIALS))
+_s1 = stats.proportion(_k, ESCAPE_TRIALS, high=0.1,
+                       note=f"GF hit on the superclass null: {_k} of {ESCAPE_TRIALS} trials (Wilson). "
+                            + _caveat.format(null_hz=null_e["pop_rate_hz"], real_hz=real_e["pop_rate_hz"]))
+_c2 = _caveat.format(null_hz=null_p.get("cns_hz", float("nan")), real_hz=real_p.get("cns_hz", float("nan")))
+_pt = (null_p.get("per_trial") or {}).get("pMP2")
+if _pt:
+    _s2 = stats.scored(*stats.bootstrap(_pt), high=0.1, n=len(_pt),
+                       note="pMP2 per pulse under pC1_14a at 100 Hz on the superclass null, bootstrap over pulses. " + _c2)
+else:
+    _s2 = stats.point(null_p["pMP2"], checks["S2_pc1_null_silent_superclass"],
+                      note="the pc1_song report carries no per-pulse values, so the mean over pulses is scored on its "
+                           "point value (no trial structure to resample). " + _c2)
+report["uncertainty"] = {"S1_escape_null_silent_superclass": _s1, "S2_pc1_null_silent_superclass": _s2}
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"\nescape: null GF hit {null_e['gf_hit']:.2f} (real {real_e['gf_hit']:.2f}); "
       f"null CNS {null_e['pop_rate_hz']:.4f} Hz vs real {real_e['pop_rate_hz']:.4f} Hz")
@@ -89,3 +109,10 @@ print(f"pc1:    null pMP2 {null_p['pMP2']:.2f} (real {real_p['pMP2']:.2f}); "
       f"null CNS {null_p.get('cns_hz', float('nan')):.4f} Hz vs real {real_p.get('cns_hz', float('nan')):.4f} Hz")
 for k, v in checks.items():
     print(f"  {'PASS' if v else 'FAIL'}  {k}")
+print("UNCERTAINTY (95% intervals, flycns/stats.py: PASS only if the whole interval lies in the band)")
+for k, u in report["uncertainty"].items():
+    ci = u.get("ci95")
+    print(f"  {u['verdict']:<10}  {k}: {u['estimate']}" + (f" [{ci[0]:.3g}, {ci[1]:.3g}]" if ci else "")
+          + f" in [-inf, 0.1] ({u['method']})")
+print("  note: on the real data the superclass null is nearly silent; the degree-corrected null distribution "
+      "(benchmarks/null_distribution.py) is the informative version")

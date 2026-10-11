@@ -81,6 +81,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from brian2 import SpikeGeneratorGroup, Synapses, ms, mV
 from flycns import load_graph, CNSModel, LIFParams
+from flycns import stats
 from flycns.bench import provenance, spike_source
 from flycns.graph import rewire_null, SIGN_MAP
 
@@ -226,6 +227,9 @@ def run_arm(label, edge_df, load, closed=False, dn_hz=0.0, seed=0, quiet=False):
         rec["load_trace"] = trace
     rec["_spikes"] = rec_sp
     rec["seed"] = seed
+    # spikes outside the campaniform afferents (the only driven cells; DNg02 sources are not LIF cells):
+    # 0 means nothing downstream fired, and a silent null cannot test specificity (uncertainty record)
+    rec["undriven_spikes"] = int((~sp.bodyId.isin(aff)).sum())
     if quiet:
         return rec
     print(f"[{label}] load {load:.2f} DNg02 {dn_hz:>5.0f} Hz ({n_src} src, {n_src_syn} syn) | power MN {power_hz:6.2f} Hz | steering MN {steer_hz:6.2f} Hz | "
@@ -251,6 +255,12 @@ def run_multi(label, edge_df, load, dn_hz=0.0):
     out["b1_vector_strength"] = float(np.mean(vs)) if vs else float("nan")
     out["seeds"] = RECRUIT_SEEDS
     out["wall_s"] = sum(r["wall_s"] for r in recs)
+    # every scored readout per recruitment seed, as the checks read it (DVMn/DLMn: the per-type rates the
+    # means above are taken over; b1, steering, leg: unrounded), for per-draw uncertainty records
+    out["per_seed_scored"] = dict(dvmn=per.get("DVMn 1a-c", [0.0] * len(recs)), dlmn=per.get("DLMn c-f", [0.0] * len(recs)),
+                                  **{f: [float(r[f]) for r in recs] for f in ("b1_hz", "steer_mn_hz", "leg_mn_hz")},
+                                  undriven_spikes=[r["undriven_spikes"] for r in recs])
+    out["undriven_spikes"] = int(sum(r["undriven_spikes"] for r in recs))
     dv = per.get("DVMn 1a-c", [0.0]); dl = per.get("DLMn c-f", [0.0])
     print(f"[{label}] load {load:.2f} DNg02 {dn_hz:>5.0f} Hz | DVMn 1a-c {np.mean(dv):6.2f} +/- {np.std(dv):5.2f} "
           f"(range {min(dv):.1f}-{max(dv):.1f}) | DLMn c-f {np.mean(dl):5.2f} | steering {out['steer_mn_hz']:6.1f} | "
@@ -342,6 +352,76 @@ report["checks"] = {
     "L5_DLMn_cf_2_to_12_hz_with_DNg02": bool(chosen is not None),
     "L6_DVMn_still_in_band_with_DNg02": bool(chosen is not None and 2.0 <= chosen["dvmn_hz"] <= 12.0),
 }
+
+
+# ---- uncertainty (flycns/stats.py): one record per scored check, three-way verdict. Every scored arm is
+# repeated over RECRUIT_SEEDS (independent recruitment draws), so each check is scored per draw
+# (stats.per_draw: PASS needs ceil(0.8 n) of the n seeds in band, FAIL at most floor(0.2 n)), never on the
+# mean of the draws. The anchor load and the DNg02 rate are still chosen by their rules on the means.
+def _any(records, note=None):
+    """Disjunction of parts, the counterpart of stats.combine: PASS if any part passes, FAIL if every part
+    fails, else UNRESOLVED. The parts are kept in the record."""
+    vs = [r["verdict"] for r in records]
+    vd = "PASS" if "PASS" in vs else ("FAIL" if all(v == "FAIL" for v in vs) else "UNRESOLVED")
+    rec = dict(estimate=None, ci95=None, band=None, method=f"any of {len(records)} parts", parts=list(records), verdict=vd)
+    if note:
+        rec["note"] = note
+    return rec
+
+
+def _rec_text(r):
+    """One console line for an uncertainty record: method, estimate [95% interval] or draws, note."""
+    txt = r["method"]
+    if r.get("ci95") and None not in r["ci95"] and r.get("estimate") is not None:
+        txt += f", est {r['estimate']:.3g} [{r['ci95'][0]:.3g}, {r['ci95'][1]:.3g}]"
+    elif r.get("draws") is not None:
+        txt += f", draws {[round(x, 2) for x in r['draws']]}"
+    return txt + (f" ({r['note']})" if r.get("note") else "")
+
+
+def _print_record(name, u, ind="  ", depth=0):
+    print(f"{ind}{u['verdict']:<10}  {name}{': ' if name else ''}{_rec_text(u)}")
+    if depth < 1:   # one level of parts on the console; the report keeps them all
+        for part in u.get("parts", []):
+            _print_record("", part, ind + "    ", depth + 1)
+
+
+ps, ps_null = best["per_seed_scored"], null["per_seed_scored"]
+at = f"at the anchor load {ANCHOR_LOAD}, per recruitment seed"
+unc = {
+    "L1a_DVMn_2_to_12_hz": stats.per_draw(ps["dvmn"], 2.0, 12.0, note=f"DVMn 1a-c {at}"),
+    "L1b_DLMn_cf_2_to_12_hz": stats.per_draw(ps["dlmn"], 2.0, 12.0, note=f"DLMn c-f {at}"),
+    "L2_b1_0.5_to_1.2_spikes_per_wingbeat": stats.per_draw(ps["b1_hz"], 0.5 * WINGBEAT_HZ, 1.2 * WINGBEAT_HZ,
+                                                           note=f"b1 MN rate in Hz {at}"),
+}
+if len(meta.index[t.str.match(LEG_MN)]):
+    unc["L3_leg_mn_not_entrained"] = stats.per_draw(
+        ps["leg_mn_hz"], high=0.1 * WINGBEAT_HZ, note=f"leg MN rate in Hz {at}; the check is strict, per_draw's edge is inclusive")
+else:
+    unc["L3_leg_mn_not_entrained"] = stats.unresolved("no neuron matches the leg motor neuron pattern, so the leg rate "
+                                                      "is undefined and the check cannot fail")
+if null["undriven_spikes"] > 0:
+    # real and null arms share RECRUIT_SEEDS, so seed s recruits the same afferents with the same phases in both
+    ratio = [r / max(n, 0.2) for r, n in zip(ps["steer_mn_hz"], ps_null["steer_mn_hz"])]
+    unc["L4_steering_specific_vs_null"] = stats.per_draw(
+        ratio, low=5.0, note="real steering / max(null steering, 0.2 Hz), paired by recruitment seed; the check is "
+                             f"strict (> 5x), per_draw's edge is inclusive; the null fired {null['undriven_spikes']} "
+                             "spikes outside the afferents")
+else:
+    unc["L4_steering_specific_vs_null"] = stats.unresolved(
+        "the rewired null fired no spike outside the driven afferents in any seed, so the comparison only asks "
+        "whether real steering exceeds the 1 Hz floor and cannot test wiring specificity", estimate=steer_real)
+# L5 and L6: the DNg02 rule needs DLMn c-f AND DVMn 1a-c in band; per draw, some rate must put both in band.
+# As coded, L6 (DVMn in band at the chosen rate) is true exactly when L5 is (the rule already requires DVMn in
+# band), so both checks carry this same record.
+l5 = _any([stats.combine([stats.per_draw(a["per_seed_scored"]["dlmn"], 2.0, 12.0, note=f"DLMn c-f, DNg02 {a['dng02_hz']:.0f} Hz"),
+                          stats.per_draw(a["per_seed_scored"]["dvmn"], 2.0, 12.0, note=f"DVMn 1a-c, DNg02 {a['dng02_hz']:.0f} Hz")],
+                         note=f"DNg02 {a['dng02_hz']:.0f} Hz") for a in stage2],
+          note="some DNg02 rate with DLMn c-f and DVMn 1a-c both in band per recruitment seed")
+unc["L5_DLMn_cf_2_to_12_hz_with_DNg02"] = l5
+unc["L6_DVMn_still_in_band_with_DNg02"] = dict(l5, note=l5["note"] + "; L6 is identical to L5 as coded")
+report["uncertainty"] = unc
+
 report["reported"] = dict(
     b1_vector_strength=best["b1_vector_strength"],
     b1_phase_locking_note="uniform afferent phase by assumption; no Drosophila phase map exists, so locking is untestable here",
@@ -361,6 +441,9 @@ report["provenance"] = provenance()
 print("\nCHECKS")
 for k, v in report["checks"].items():
     print(f"  {'PASS' if v else 'FAIL'}  {k}")
+print("\nUNCERTAINTY (flycns/stats.py; three-way verdict, scored per recruitment seed)")
+for k, u in report["uncertainty"].items():
+    _print_record(k, u)
 if chosen:
     print(f"STAGE 2  DNg02 {chosen['dng02_hz']:.0f} Hz: DLMn c-f {chosen['dlmn_cf_hz']:.1f} Hz, DVMn {chosen['dvmn_hz']:.1f} Hz, "
           f"b1 {chosen['b1_hz']:.0f} Hz, steering {chosen['steer_mn_hz']:.0f} Hz, CNS {chosen['pop_rate_hz']:.3f} Hz")
