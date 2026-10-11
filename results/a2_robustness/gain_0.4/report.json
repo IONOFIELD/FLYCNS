@@ -25,44 +25,76 @@
       "gf_per_cell": 0.0,
       "gf_hit": 0.0,
       "gf_lat_ms": NaN,
-      "pop_rate_hz": 0.0010271690063723099,
-      "wall_s": 558.0,
+      "pop_rate_hz": 0.0008557824644356086,
+      "wall_s": 778.4,
       "n_trials": 100,
-      "gf_depol_mV": 3.097997670333512
+      "gf_depol_mV": 2.908603006718337
     },
     "A2_loom_plus_jo": {
-      "gf_per_cell": 0.12,
-      "gf_hit": 0.24,
-      "gf_lat_ms": 30.787499999999824,
-      "pop_rate_hz": 0.005055385549232942,
-      "wall_s": 559.0,
+      "gf_per_cell": 0.1,
+      "gf_hit": 0.2,
+      "gf_lat_ms": 30.174999999999272,
+      "pop_rate_hz": 0.0048809371780833615,
+      "wall_s": 815.9,
       "n_trials": 100,
-      "gf_depol_mV": 3.161526436097998
+      "gf_depol_mV": 3.237777441409818
     },
     "A2_prediction": {
       "loom_gain": 0.4,
       "n_trials_per_arm": 100,
       "loom_alone_hit": 0.0,
-      "loom_plus_jo_hit": 0.24,
-      "difference": 0.24,
+      "loom_plus_jo_hit": 0.2,
+      "difference": 0.2,
       "difference_ci95": [
-        0.15808263275226442,
-        0.3323251872329213
+        0.12378506670877114,
+        0.28883096192650237
       ],
-      "loom_alone_depol_mV": 3.097997670333512,
-      "loom_plus_jo_depol_mV": 3.161526436097998,
+      "loom_alone_depol_mV": 2.908603006718337,
+      "loom_plus_jo_depol_mV": 3.237777441409818,
       "mode": "A2 only"
     }
   },
   "checks": {},
   "provenance": {
-    "written_at": "2026-09-28T07:42:42",
-    "git_commit": "cc8d759",
+    "written_at": "2026-10-11T01:17:49",
+    "git_commit": "45126da",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
     "env": {
-      "FLYCNS_A2_ONLY": "1",
       "FLYCNS_A2_GAIN": "0.4",
+      "FLYCNS_A2_ONLY": "1",
       "FLYCNS_A2_TRIALS": "100",
-      "FLYCNS_AUDITORY_OUT": "results/a2_robustness/gain_0.4"
+      "FLYCNS_AUDITORY_OUT": "results\\a2_robustness\\gain_0.4"
+    },
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "cython",
+    "platform": "win32",
+    "loom_input": {
+      "source": "MEASURED (stationary trials, 13 series): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09)",
+      "state": "stationary",
+      "sha256": "65f83c332223b0f7"
+    },
+    "graph": {
+      "data_dir": "data",
+      "min_weight": 5,
+      "n_neurons": 176422,
+      "n_signed_edges": 6127738,
+      "n_signed_synapses": 88316807
+    },
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9"
+      },
+      "manifest": "match"
     }
   }
 }

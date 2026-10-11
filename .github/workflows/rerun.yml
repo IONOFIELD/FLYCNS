@@ -4,8 +4,9 @@ name: real-data rerun
 #   rerun/<label>             every rerun listed in RERUNS below
 #   rerun/<label>--a+b        only the named ones, e.g. rerun/2026-10-11--flight-robustness+core
 #
-#   data          setup.cmd as a user runs it: environment, connectome from neuPrint, fingerprint.
-#                 The tables are cached, so later reruns skip the download.
+#   data          setup.cmd as a user runs it: environment, connectome from neuPrint (about 6 minutes),
+#                 checked against data/MANIFEST.json. Cached for the run's other jobs (GitHub keeps a
+#                 cache per branch, so each rerun branch fetches once).
 #   transmitters  menu 24: per-T-bar transmitter table (2.7 GB from Google Storage), cached likewise.
 #   run           one machine per rerun, all at once. Each pushes its results (and its console log,
 #                 ci-log.txt) to the branch rerun-out/<run number>/<name>. Nothing reaches main until
@@ -33,6 +34,13 @@ env:
       {"name": "flight-robustness",         "run": "benchmarks/flight_snpp16_robustness.py 400", "nt": true},
       {"name": "flight-loop",               "run": "benchmarks/flight_loop.py 400"},
       {"name": "sensitivity-flight",        "run": "benchmarks/sensitivity_flight.py 400"},
+      {"name": "flight-snpp16",             "run": "benchmarks/flight_snpp16.py 400"},
+      {"name": "flight-graded",             "run": "benchmarks/flight_snpp16_graded.py 400"},
+      {"name": "pc1-song",                  "run": "benchmarks/pc1_song.py 10"},
+      {"name": "dnp13-control",             "run": "benchmarks/dnp13_control.py 10"},
+      {"name": "feeding-by-modality",       "run": "benchmarks/feeding_by_modality.py 6"},
+      {"name": "gustatory-map",             "run": "benchmarks/gustatory_signed_map.py"},
+      {"name": "sugar-laterality",          "run": "benchmarks/sugar_laterality.py"},
       {"name": "battery-seed1",             "run": "scripts/overnight.py seed1"},
       {"name": "battery-seed2",             "run": "scripts/overnight.py seed2"},
       {"name": "battery-signflip05_a",      "run": "scripts/overnight.py signflip05_a"},

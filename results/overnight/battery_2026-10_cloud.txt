@@ -1,0 +1,15 @@
+Robustness battery, 11 October 2026: GitHub Windows machines, one run per machine, commit 45126da
+(.github/workflows/rerun.yml run 2). Each run: gf_escape 40, auditory 40, feeding 6 trials.
+
+seed1              14/14 checks pass
+seed2              14/14 checks pass
+signflip05_a       13/14 checks pass   fails: gf_escape gf_response_prob_0.5_to_1
+signflip05_b       14/14 checks pass
+signflip10         13/14 checks pass   fails: gf_escape gf_response_prob_0.5_to_1
+signflip_targeted  14/14 checks pass
+wscale025          13/14 checks pass   fails: gf_escape gf_response_prob_0.5_to_1
+wscale035          13/14 checks pass   fails: gf_escape gf_spikes_per_response_1_to_2
+wscale040          13/14 checks pass   fails: gf_escape gf_spikes_per_response_1_to_2
+minweight10        14/14 checks pass
+minweight20        14/14 checks pass
+null_superclass    13/14 checks pass   fails: auditory A4_null_silent

@@ -35,6 +35,7 @@ in a manuscript. This project builds on the work below; it does not contradict i
 - *Note:* the model represents the JON-GF contact as electrical only, calibrated to a ~3 mV subthreshold compound potential. That value has not been traced to a specific figure in these sources and is a calibration target pending verification.
 
 ## Wing and haltere proprioception, flight motor physiology
+- **Namiki et al. 2022** — Namiki S, Ros IG, Morrow C, Rowell WJ, Card GM, Korff W, Dickinson MH. A population of descending neurons that regulates the flight motor of *Drosophila*. *Curr Biol* 32:1189-1196.e6 (2022). doi:10.1016/j.cub.2022.01.008. DNg02: at least 15 near-identical pairs; optogenetic activation of more cells raises wingbeat amplitude (population code). Gives no firing rate.
 - **Court R, Namiki S, Pacheco JD, et al. 2020** — A systematic nomenclature for the Drosophila ventral nerve cord. *Neuron* 107:1071-1079. Nerve names: ADMN = anterior dorsal mesothoracic (wing) nerve; DMetaN = dorsal metathoracic (haltere) nerve; AbN1-4 and AbNT abdominal.
 - **Lesser E, Moussa A, et al. (2025/26)** — Peripheral anatomy and central connectivity of proprioceptive sensory neurons in the Drosophila wing. *eLife* 107867. All 490 left-wing-nerve (ADMN) afferents reconstructed in FANC; wing campaniform sensilla, chordotonal organs and a hair plate enter through ADMN.
 - **Vogel S 1967** — Flight in Drosophila. I. Flight performance of tethered flies. *J Exp Biol* 44:567-578. Wingbeat frequency 202 +/- 2.8 Hz SE in tethered D. melanogaster.
@@ -76,6 +77,7 @@ in a manuscript. This project builds on the work below; it does not contradict i
 
 ## Motor neuron physiology
 - **Azevedo et al. 2020** — Azevedo AW, Dickinson ES, Gurung P, Cherry L, Ahmed AW, Tuthill JC. A size principle for recruitment of Drosophila leg motor neurons. *eLife* 9:e56754 (2020). Tibia flexor MN input resistance 150/300/700 MOhm for fast/intermediate/slow (Fig. 3E, n=15/11/14); covarying resting potential, spontaneous firing rate and soma, neurite and axon diameter (Fig. 3C-E); slow MN spontaneous firing maintained by cholinergic input and setting resting muscle force (Fig. 4C); somatic current injection fails to evoke spikes in fast and intermediate MNs (spike initiation zone electrically isolated from the soma); recruitment ordered weakest to strongest (Fig. 5).
+- **Sasaki & Burrows 1998** — Sasaki K, Burrows M. Innervation pattern of a pool of nine excitatory motor neurons in the flexor tibiae muscle of a locust hind leg. *J Exp Biol* 201:1885-1893 (1998). doi:10.1242/jeb.201.12.1885. Locust flexor tibiae pool; each motor neuron innervates a restricted array of fibres and gives slow, fast or intermediate movements. Cited in `flycns/graph.py` as Azevedo et al. 2020 cite it; that specific claim (spike initiation zone isolated from the soma) has not been checked against this source. [verify]
 
 ## Feeding circuit
 - **Gordon & Scott 2009** — Gordon MD, Scott K. Motor control in a Drosophila taste circuit. *Neuron* 61:373–384 (2009). MN9 necessary and sufficient for proboscis extension.
@@ -83,6 +85,9 @@ in a manuscript. This project builds on the work below; it does not contradict i
 
 ## Larval connectome (referenced in planning)
 - **Winding et al. 2023** — Winding M, Pedigo BD, Barnes CL, et al. The connectome of an insect brain. *Science* 379:eadd9330 (2023).
+
+## Statistics
+- **Newcombe 1998** — Newcombe RG. Interval estimation for the difference between independent proportions: comparison of eleven methods. *Stat Med* 17:873-890 (1998). doi:10.1002/(SICI)1097-0258(19980430)17:8<873::AID-SIM779>3.0.CO;2-I. Method 10 (Wilson-score hybrid) gives the A2 and RA2 confidence intervals.
 
 ## Decoding (planned)
 - **Azabou et al. 2023** — Azabou M, Arora V, Ganesh V, et al. A unified, scalable framework for neural population decoding (POYO). *NeurIPS* (2023). arXiv:2310.16046.

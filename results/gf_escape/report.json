@@ -33,49 +33,49 @@
   "arms": {
     "real_electrical": {
       "arm": "real_electrical",
-      "region_source": "anatomical (roiInfo, 3,519 SEZ-intrinsic neurons)",
+      "region_source": "type-name prefix fallback",
       "n_lif": 167649,
       "n_chem_syn": 5837592,
       "n_stim": 2526,
-      "pop_rate_hz": 0.004408303175370078,
-      "gf_per_cell": 0.675,
-      "gf_hit": 0.65,
+      "pop_rate_hz": 0.0038503671604461225,
+      "gf_per_cell": 0.7125,
+      "gf_hit": 0.575,
       "gf_hit_ci95": [
-        0.4950559699353738,
-        0.7786566682895085
+        0.4219480043605999,
+        0.7149083147518411
       ],
-      "gf_per_hit": 1.1923076923076923,
-      "gf_lat_ms": 38.67692307692159,
-      "ttmn_per_cell": 0.675,
-      "ttmn_lag_ms": 0.90000000000015,
-      "psi_per_cell": 0.675,
+      "gf_per_hit": 1.4565217391304348,
+      "gf_lat_ms": 39.704347826085346,
+      "ttmn_per_cell": 0.7125,
+      "ttmn_lag_ms": 0.9000000000001577,
+      "psi_per_cell": 0.7125,
       "ttmn_to_gf_ratio": 1.0,
-      "wall_s": 156.6
+      "wall_s": 329.1
     },
     "real_chemical_only": {
       "arm": "real_chemical_only",
-      "region_source": "anatomical (roiInfo, 3,519 SEZ-intrinsic neurons)",
+      "region_source": "type-name prefix fallback",
       "n_lif": 167649,
       "n_chem_syn": 5837611,
       "n_stim": 2526,
-      "pop_rate_hz": 0.004367726010648336,
-      "gf_per_cell": 0.775,
-      "gf_hit": 0.775,
+      "pop_rate_hz": 0.0038089784524299453,
+      "gf_per_cell": 0.825,
+      "gf_hit": 0.725,
       "gf_hit_ci95": [
-        0.6249660359590695,
-        0.8768404674532148
+        0.5716474916687543,
+        0.8389214656685691
       ],
-      "gf_per_hit": 1.1935483870967742,
-      "gf_lat_ms": 36.79032258064399,
+      "gf_per_hit": 1.4137931034482758,
+      "gf_lat_ms": 36.206896551723354,
       "ttmn_per_cell": 0.0,
       "ttmn_lag_ms": NaN,
       "psi_per_cell": 0.0,
       "ttmn_to_gf_ratio": 0.0,
-      "wall_s": 151.5
+      "wall_s": 313.6
     },
     "rewired_null": {
       "arm": "rewired_null",
-      "region_source": "anatomical (roiInfo, 3,519 SEZ-intrinsic neurons)",
+      "region_source": "type-name prefix fallback",
       "n_lif": 167649,
       "n_chem_syn": 5821202,
       "n_stim": 2526,
@@ -92,7 +92,7 @@
       "ttmn_lag_ms": NaN,
       "psi_per_cell": 0.0,
       "ttmn_to_gf_ratio": NaN,
-      "wall_s": 157.4
+      "wall_s": 338.9
     }
   },
   "checks": {
@@ -107,14 +107,40 @@
   },
   "pass": true,
   "provenance": {
-    "written_at": "2026-09-11T12:21:29",
-    "git_commit": "8b95326",
-    "env": {
-      "FLYCNS_SEED": "0",
-      "FLYCNS_SIGNFLIP_TARGETED": "1",
-      "FLYCNS_RUN_TAG": "signflip_targeted",
-      "FLYCNS_SIGNFLIP": "0",
-      "FLYCNS_WSCALE": "0.3"
+    "written_at": "2026-10-11T01:11:58",
+    "git_commit": "45126da",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "cython",
+    "platform": "win32",
+    "loom_input": {
+      "source": "MEASURED (stationary trials, 13 series): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09)",
+      "state": "stationary",
+      "sha256": "65f83c332223b0f7"
+    },
+    "graph": {
+      "data_dir": "data",
+      "min_weight": 5,
+      "n_neurons": 176422,
+      "n_signed_edges": 6127738,
+      "n_signed_synapses": 88316807
+    },
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9"
+      },
+      "manifest": "match"
     }
   }
 }

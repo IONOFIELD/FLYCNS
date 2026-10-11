@@ -179,8 +179,35 @@
     "F4_bitter_below_sugar_at_100hz": false
   },
   "provenance": {
-    "written_at": "2026-09-26T18:54:44",
-    "git_commit": "4cfae84",
-    "env": {}
+    "written_at": "2026-10-11T03:07:39",
+    "git_commit": "b33610d",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "cython",
+    "platform": "win32",
+    "graph": {
+      "data_dir": "data",
+      "min_weight": 5,
+      "n_neurons": 176422,
+      "n_signed_edges": 6127738,
+      "n_signed_synapses": 88316807
+    },
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9"
+      },
+      "manifest": "match"
+    }
   }
 }

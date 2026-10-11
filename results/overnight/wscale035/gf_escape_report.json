@@ -1,0 +1,149 @@
+{
+  "benchmark": "gf_escape",
+  "n_trials": 40,
+  "params": {
+    "v_rest_mV": -52.0,
+    "v_thresh_mV": -45.0,
+    "v_reset_mV": -52.0,
+    "tau_m_ms": 20.0,
+    "tau_syn_ms": 5.0,
+    "refractory_ms": 2.2,
+    "w_syn_mV": 0.275,
+    "w_scale": 0.35,
+    "tau_adapt_ms": 100.0,
+    "gap_delay_ms": 0.8,
+    "chem_delay_ms": 1.8,
+    "dt_ms": 0.1,
+    "seed": 0,
+    "class_gains": {
+      "sensory": 1.0,
+      "relay": 1.0,
+      "local": 1.0
+    },
+    "region_gains": {
+      "SEZ": 1.0,
+      "other": 1.0
+    },
+    "superclass_params": {},
+    "peptide_gain_scale": 0.0,
+    "peptide_exclude": [],
+    "baseline_depol_mV": 0.0,
+    "baseline_noise_mV": 0.0
+  },
+  "arms": {
+    "real_electrical": {
+      "arm": "real_electrical",
+      "region_source": "type-name prefix fallback",
+      "n_lif": 167649,
+      "n_chem_syn": 5837592,
+      "n_stim": 2526,
+      "pop_rate_hz": 0.004934589001811075,
+      "gf_per_cell": 1.75,
+      "gf_hit": 0.75,
+      "gf_hit_ci95": [
+        0.5980574093302989,
+        0.8581303210445049
+      ],
+      "gf_per_hit": 2.4833333333333334,
+      "gf_lat_ms": 37.07333333333277,
+      "ttmn_per_cell": 1.75,
+      "ttmn_lag_ms": 0.9000000000001004,
+      "psi_per_cell": 1.75,
+      "ttmn_to_gf_ratio": 1.0,
+      "wall_s": 283.1
+    },
+    "real_chemical_only": {
+      "arm": "real_chemical_only",
+      "region_source": "type-name prefix fallback",
+      "n_lif": 167649,
+      "n_chem_syn": 5837611,
+      "n_stim": 2526,
+      "pop_rate_hz": 0.0048254364287095885,
+      "gf_per_cell": 1.8625,
+      "gf_hit": 0.825,
+      "gf_hit_ci95": [
+        0.6804970794560756,
+        0.9125469700311694
+      ],
+      "gf_per_hit": 2.4242424242424243,
+      "gf_lat_ms": 35.645454545453596,
+      "ttmn_per_cell": 0.0,
+      "ttmn_lag_ms": NaN,
+      "psi_per_cell": 0.0,
+      "ttmn_to_gf_ratio": 0.0,
+      "wall_s": 276.8
+    },
+    "rewired_null": {
+      "arm": "rewired_null",
+      "region_source": "type-name prefix fallback",
+      "n_lif": 167649,
+      "n_chem_syn": 5821202,
+      "n_stim": 2526,
+      "pop_rate_hz": 1.2173149416522675e-06,
+      "gf_per_cell": 0.0,
+      "gf_hit": 0.0,
+      "gf_hit_ci95": [
+        -6.330876522670002e-18,
+        0.08762453925039232
+      ],
+      "gf_per_hit": 0.0,
+      "gf_lat_ms": NaN,
+      "ttmn_per_cell": 0.0,
+      "ttmn_lag_ms": NaN,
+      "psi_per_cell": 0.0,
+      "ttmn_to_gf_ratio": NaN,
+      "wall_s": 287.5
+    }
+  },
+  "checks": {
+    "gf_spikes_per_response_1_to_2": false,
+    "gf_response_prob_0.5_to_1": true,
+    "gf_latency_10_60ms": true,
+    "ttmn_one_to_one": true,
+    "ttmn_lag_0.5_1.5ms": true,
+    "cns_quiet": true,
+    "electrical_necessary": true,
+    "null_silent": true
+  },
+  "pass": false,
+  "provenance": {
+    "written_at": "2026-10-11T01:08:27",
+    "git_commit": "45126da",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {
+      "FLYCNS_RUN_TAG": "wscale035",
+      "FLYCNS_WSCALE": "0.35"
+    },
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "cython",
+    "platform": "win32",
+    "loom_input": {
+      "source": "MEASURED (stationary trials, 13 series): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09)",
+      "state": "stationary",
+      "sha256": "65f83c332223b0f7"
+    },
+    "graph": {
+      "data_dir": "data",
+      "min_weight": 5,
+      "n_neurons": 176422,
+      "n_signed_edges": 6127738,
+      "n_signed_synapses": 88316807
+    },
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9"
+      },
+      "manifest": "match"
+    }
+  }
+}

@@ -1,4 +1,9 @@
-[graph] 176,422 neurons, 6,127,738 signed edges (dropped 110,136 unknown-NT pairs and modulatory amines)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_SEED=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
 
   taste ->  gustatory afferents (MxLbN, aPhN)  ==chem==>  SEZ interneurons (GNG...)  ==chem==>  MN9  ->  proboscis
   wind  ->  JO-FV (control)      must NOT reach MN9
@@ -13,7 +18,7 @@ WARNING: no sugar-specific GRN type in this annotation; driving taste-region aff
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
 F2 sugar  10 Hz -> MN9 0.00 spikes/cell, CNS 0.0002 Hz
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
-F2 sugar  25 Hz -> MN9 0.00 spikes/cell, CNS 0.0019 Hz
+F2 sugar  25 Hz -> MN9 0.00 spikes/cell, CNS 0.0018 Hz
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
   raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
   t0  MN9    ...............................
@@ -22,33 +27,33 @@ F2 sugar  25 Hz -> MN9 0.00 spikes/cell, CNS 0.0019 Hz
   t1  MN9    ...............................
   t1  CNS    .23355544445443345345563351....   (log2 spikes/bin, 9 = flood)
 
-  region activity (spikes per neuron over 40 stimulus windows):
-  descending_neuron      ######################################## 1.772
-  cb_motor               ##############################           1.349
-  ascending_neuron       #################                        0.758
-  cb_intrinsic           ##############                           0.646
-  vnc_motor                                                       0.023
-F2 sugar  50 Hz -> MN9 0.00 spikes/cell, CNS 0.0071 Hz
-  outside-SEZ rate 0.0011 Hz | recruited motor mean 3.6 Hz | 2 of 43 cb_motor types active: ['MN2Db', 'MN2Da']
+  region activity (spikes per neuron over 6 stimulus windows):
+  descending_neuron      ######################################## 0.282
+  cb_motor               ####################################     0.255
+  ascending_neuron       ################                         0.113
+  cb_intrinsic           ##############                           0.100
+  vnc_motor              #                                        0.007
+F2 sugar  50 Hz -> MN9 0.00 spikes/cell, CNS 0.0068 Hz
+  outside-SEZ rate 0.0027 Hz | recruited motor mean 5.4 Hz | 2 of 43 cb_motor types active: ['MN2Db', 'MN2Da']
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
-F2 sugar 100 Hz -> MN9 0.00 spikes/cell, CNS 0.0211 Hz
+F2 sugar 100 Hz -> MN9 0.00 spikes/cell, CNS 0.0197 Hz
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
-F2 sugar 200 Hz -> MN9 0.00 spikes/cell, CNS 0.0579 Hz
+F2 sugar 200 Hz -> MN9 0.00 spikes/cell, CNS 0.0536 Hz
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
 ALL gustatory arm (42 types, every tastant at once) at 50 Hz -> MN9 0.00 spikes/cell (reported, not scored; expected ~0)
 sugar drive: 140 neurons, 69 inferred left
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
    structural 2-hop drive from left afferents: MN9-L 25,650 vs MN9-R 350; functional contra dominant -> does NOT match wiring
-F1 left sugar 100 Hz: MN9 ipsi 0.00, contra 0.00 spikes/cell  [202s]
+F1 left sugar 100 Hz: MN9 ipsi 0.00, contra 0.00 spikes/cell  [48s]
 F3 skipped: no bitter GRN type resolved
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
-F4 DNge062 50 Hz -> MN9 1.39
+F4 DNge062 50 Hz -> MN9 1.33
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
-F4 GNG120 50 Hz -> MN9 0.97
+F4 GNG120 50 Hz -> MN9 0.92
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
-F4 GNG117 50 Hz -> MN9 0.89
+F4 GNG117 50 Hz -> MN9 0.83
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
-F4 GNG108 50 Hz -> MN9 1.02
+F4 GNG108 50 Hz -> MN9 1.00
 F5 rewired null -> MN9 0.00
 
 mechanism: taste -> MN9 in MaleCNS is disinhibitory; a silent network cannot express that, and no uniform manipulation restores it with specificity. Reproducing feeding needs cell-specific spontaneous activity, i.e. the state-dependent modulation this model omits (cf. Shiu et al. 2024, which reported the same limitation for inhibitory neurons at 0 Hz baseline).
@@ -60,7 +65,7 @@ CHECKS
   SKIP  F1_laterality_matches_wiring
   SKIP  F1_shiu_contralateral_bias
   SKIP  F3_bitter_suppresses
-  PASS  F4_second_order_sufficient
-  PASS  F5_null_silent
+  SKIP  F4_second_order_sufficient
+  SKIP  F5_null_silent
 
-BENCHMARK PASS  -> results/feeding/report.json
+BENCHMARK PASS  -> results\feeding/report.json
