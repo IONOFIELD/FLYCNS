@@ -1,0 +1,12 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+[loom] 2526 stimulated, recording 3000 downstream neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  wrote results\brainsets\flycns_sim_loom.h5: 404 spikes, 3000 units, 40 trials, 14.7 s (validated: reloads with temporaldata 0.1.6)
+[sound] 101 stimulated, recording 3000 downstream neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  wrote results\brainsets\flycns_sim_sound.h5: 639 spikes, 3000 units, 40 trials, 20.3 s (validated: reloads with temporaldata 0.1.6)
+[taste] 140 stimulated, recording 3000 downstream neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  wrote results\brainsets\flycns_sim_taste.h5: 5,799 spikes, 3000 units, 40 trials, 20.3 s (validated: reloads with temporaldata 0.1.6)
+
+every file was reloaded with temporaldata.Data.from_hdf5 and compared to what was written
