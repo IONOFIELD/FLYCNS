@@ -58,7 +58,8 @@ if crit_f.exists():
 else:
     crit_f.write_text(json.dumps(dict(criteria=CRITERIA, registered_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
                                       git_commit=commit, script_uncommitted=dirty), indent=2), encoding="utf-8")
-print(f"criteria registered at commit {commit or '?'}{' (SCRIPTS UNCOMMITTED: commit before running)' if dirty else ''}")
+reg = json.loads(crit_f.read_text(encoding="utf-8")).get("git_commit") or "?"
+print(f"criteria registered at commit {reg}; this run at {commit or '?'}{' (SCRIPTS UNCOMMITTED: commit before running)' if dirty else ''}")
 
 
 def wilson(k, n, z=1.96):

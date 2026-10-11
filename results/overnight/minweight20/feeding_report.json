@@ -25,7 +25,7 @@
     "MN8"
   ],
   "arms": {
-    "F2b_nonSEZ_rate_hz": 0.0019261413387653943,
+    "F2b_nonSEZ_rate_hz": 0.00016003548215261438,
     "F2c_motor_mean_hz": 3.7499999999999996,
     "motor_types_active": {
       "MN2Db": 12,
@@ -73,7 +73,7 @@
       "MN9_ipsi_L": 0.0,
       "MN9_contra_R": 0.0,
       "pop_rate_hz": 0.004626480302230126,
-      "wall_s": 47.2,
+      "wall_s": 46.8,
       "structural_2hop_L": 9926.0,
       "structural_2hop_R": 0.0,
       "note": "Shiu 2024 contralateral prediction concerns labellar sugar GRNs; tested separately with LB3b/LB3c in benchmarks/sugar_laterality.py"
@@ -103,8 +103,8 @@
   "pass": true,
   "mechanism": "taste -> MN9 in MaleCNS is disinhibitory; a silent network cannot express that, and no uniform manipulation restores it with specificity. Reproducing feeding needs cell-specific spontaneous activity, i.e. the state-dependent modulation this model omits (cf. Shiu et al. 2024, which reported the same limitation for inhibitory neurons at 0 Hz baseline).",
   "provenance": {
-    "written_at": "2026-10-11T02:00:56",
-    "git_commit": "45126da",
+    "written_at": "2026-10-11T07:51:59",
+    "git_commit": "fcff151",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -132,7 +132,8 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9"
+        "edges.parquet": "becf568580708ba9",
+        "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"
     }

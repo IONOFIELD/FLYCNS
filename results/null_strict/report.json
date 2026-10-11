@@ -31,10 +31,10 @@
     },
     "n_trials": 10
   },
-  "wall_s": 1768.0,
+  "wall_s": 1749.1,
   "provenance": {
-    "written_at": "2026-10-11T02:41:06",
-    "git_commit": "45126da",
+    "written_at": "2026-10-11T08:13:48",
+    "git_commit": "fcff151",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

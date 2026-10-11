@@ -1,5 +1,5 @@
-Robustness battery, 11 October 2026: GitHub Windows machines, one run per machine, commit 45126da
-(.github/workflows/rerun.yml run 2). Each run: gf_escape 40, auditory 40, feeding 6 trials.
+Robustness battery, 11 October 2026: GitHub Windows machines, one run per machine, commit fcff151
+(.github/workflows/rerun.yml run 5; run 2 at 45126da gave the same lines). Each run: gf_escape 40, auditory 40, feeding 6 trials.
 
 seed1              14/14 checks pass
 seed2              14/14 checks pass

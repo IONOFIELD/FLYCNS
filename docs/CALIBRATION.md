@@ -31,7 +31,7 @@ of the model. CI fails if a scored check has no role.
 | **G_GAP_RELAY = 0.2** (ohmic coupling, as a fraction of leak) | `flycns/graph.py` | Set by hand for a 1:1 relay pair and shared across population pairs | none scored directly |
 | **cb_motor adaptation 10 mV** | `flycns/graph.py` INTRINSIC_OVERRIDES | Keeps sustained motor rates under 100 Hz (Azevedo et al. 2020, McKellar et al. 2020) | feeding `F2c_motor_rate_physiological` holds **by construction** |
 | **flight afferent load 0.25** | `benchmarks/flight_loop.py` | The smallest load putting mean DVMn 1a-c in 2 to 12 Hz | flight `L1a_DVMn_2_to_12_hz` is **calibrated** |
-| **A2 working point** (loom gain per run; 0.8 in the 11 October 2026 rerun) | `benchmarks/auditory.py` | Pre-registered protocol: the largest loom gain leaving loom-alone GF response ≤ 0.3. It sets "near threshold". It does not target facilitation. | none. `A2R_facilitation` stays **independent**. |
+| **A2 working point** (loom gain per run; 0.8 in the 11 October 2026 rerun) | `benchmarks/auditory.py` | Pre-registered protocol: the largest loom gain leaving loom-alone GF response ≤ 0.3, with at least 2 mV depolarisation. It sets "near threshold". It does not target facilitation. | none. `A2R_facilitation` stays **independent**. |
 | SEZ regional gain | `flycns/graph.py` | Fitted to 2.0 under an earlier region definition, then **disabled (1.0)** on 2026-09-08 | none |
 | peptide modulation, tonic baseline | `flycns/model.py` | **Off** in the declared parameter set | none |
 
@@ -40,7 +40,7 @@ stationary-trial amplitudes. In fact the committed data file had no per-state sp
 silently used all trials (LC4 0.595 instead of 0.52, sigma 0.369 instead of 0.357). The file now
 carries the split and a missing state is an error. Every value chosen on loom-driven readouts was
 therefore re-checked under the stationary input, on 10 October 2026, on GitHub's Windows machines
-(`.github/workflows/rerun.yml` runs 1 and 2, identical; `results/fit_gf_adapt/`):
+(`.github/workflows/rerun.yml`; the fit gave the same grid in every run; `results/fit_gf_adapt/`):
 - **GF adaptation: refit to 10 mV** (was 30). By the fit's rule, 10 mV is now the smallest value
   that meets all four constraints. It gives 1.46 spikes per response, 1.95 on the strongest gain
   quartile (limit 2, so close), P(response) 0.575 and a 1:1 TTMn relay. At 5 mV the strong

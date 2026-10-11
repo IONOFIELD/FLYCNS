@@ -188,7 +188,7 @@ class CNSModel:
             S_stim.w = (se["weight"] * se["sign"] * gain_of.loc[se["pre"]].values).values * w_unit
             S_stim.delay = p.chem_delay_ms * ms
             objs.append(S_stim)
-        else:
+        elif len(stim):   # a model driven only by its own spike sources has no stimulus types: no warning
             print("[model] WARNING: stimulated types have no outgoing edges to LIF neurons")
         self.electrical_table = pd.DataFrame()
         if electrical:
