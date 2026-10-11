@@ -12,7 +12,7 @@ cord. That map is a wiring diagram, and on its own it does nothing. flycns turns
 through the wiring, and the result is checked against what real flies do.
 
 **What it is for.** Experiments in software first. Stimulate a sense, silence a cell type or cut a
-pathway, and see what changes. Each run takes minutes and costs nothing, so a lab can test in real
+pathway, and see what changes. A run costs nothing but computer time, so a lab can test in real
 flies only the predictions worth testing.
 
 **Why do it.** A basic question in neuroscience is how much of what a nervous system does follows
@@ -21,18 +21,23 @@ largest complete map there is, so it is where that question can be tested. This 
 circuit by circuit, including where the wiring alone is not enough.
 
 **What is different.**
-- **The whole nervous system, not only the brain.** Brain and nerve cord, so a signal travels from
-  a sense all the way to the muscles.
+- **The whole central nervous system, not only the brain.** Brain and nerve cord, so a signal
+  travels from a sense all the way to the motor neurons.
 - **The male fly.** Circuits that differ between the sexes, such as courtship song, can be simulated.
-- **Scored, not showcased.** Pass/fail criteria are written before each test runs, and failures stay
-  on the record next to the successes.
+- **Scored, not showcased.** For 25 of the 48 scored checks, the pass/fail criteria were committed
+  to git before the test ran. Failures stay on the record next to the successes: at present 36 of
+  48 checks pass, and of the 24 that count as tests of the model, 13 pass and 11 fail
+  (`results/SUITE.md`).
 - **Built to be used and to last.** Every result is traceable to its code, data and settings, and
   automated checks run on every change.
 
-**Headline result.** Without being tuned for it, the model predicted that a sound makes the fly's
-escape neuron far more likely to fire for a faint visual threat: from 18% to 53% of trials. That
-matches what was recorded in real flies (Tootoonian et al. 2012), and the test's criteria were
-committed before it ran.
+**Headline result.** The model predicts that a sound makes the fly's escape neuron far more likely
+to fire for a faint visual threat: from 18% to 53% of trials, with the criteria committed before
+the test ran. Tootoonian et al. 2012 showed the same summation in real flies with an injected
+current in place of the visual threat; sound plus a faint loom has not been recorded, so the 18%
+and 53% are predictions a lab could test. Two caveats are on the record: the sound-to-escape-neuron
+connection strength is a calibrated value, and an earlier fitting step did score facilitation
+(see `docs/CALIBRATION.md`).
 
 ## What it is
 
@@ -42,7 +47,7 @@ committed before it ran.
 
 ## What it can do
 
-- **Stimulate a sense and watch the response.** Choose sight, sound, taste or the wing's motion sensors, and see which neurons fire and in what order, all the way to the muscles. You can watch it in the terminal or in 3D.
+- **Stimulate a sense and watch the response.** Choose sight, sound, taste or the wing's motion sensors, and see which neurons fire and in what order, all the way to the motor neurons. You can watch it in the terminal or in 3D.
 - **Test what the wiring alone can explain**, and show exactly where that explanation stops.
 - **Make predictions a lab can test.** Each one names cell types and pathways and gives a specific expected result.
 - **Check the connectome itself.** It has already flagged a likely mislabelled transmitter.
@@ -51,8 +56,8 @@ committed before it ran.
 
 ## What it achieves
 
-- **Escape reflex.** A looming shadow fires the giant escape neuron, which drives the jump muscle one spike for one spike, 0.9 ms later, as in the fly. This circuit was used to set the model's few tuned values, so it shows the model is set up correctly. It is not a prediction.
-- **Sound and sight combined.** Without being tuned for it, the model predicts that a sound makes the escape neuron far more likely to fire for a faint visual threat: 18% becomes 53%. That matches a 2012 recording, and the test was registered in advance. An October 2026 audit found and removed a model difference between the two test arms; re-measured without it, the effect holds.
+- **Escape reflex.** A looming shadow fires the giant escape neuron, which drives the jump motor neuron one spike for one spike, 0.9 ms later, as in the fly. This circuit was used to set the model's few tuned values, so it shows the model is set up correctly. It is not a prediction.
+- **Sound and sight combined.** Without being tuned for it, the model predicts that a sound makes the escape neuron far more likely to fire for a faint visual threat: 18% becomes 53%. Tootoonian et al. 2012 recorded the same summation with an injected current in place of the visual threat; the test was registered in advance. An October 2026 audit found and removed a model difference between the two test arms; re-measured without it, the effect holds.
 - **Courtship song.** The model reproduces which male-only neurons drive pulse song but not sine song, as experiments showed. It also predicts a new pathway for sine song that a lab could test.
 - **Taste.** It shows which taste neurons push feeding up and which push it down, once each connection's sign (excite or inhibit) is counted.
 - **Traceable.** Every result records the exact code, data and settings that produced it. Failures and corrections stay on the record.
@@ -177,7 +182,7 @@ The house rules are in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 | circuit | outcome |
 |---|---|
 | **Visual escape** (loom to giant fiber to jump muscle) | The **calibration circuit**. The loom's rate scale and the giant fiber's adaptation were set to give 1 to 2 spikes per response, and the relay is 1:1 by construction. On that calibration, the giant fiber fires with probability 0.58, and each spike drives the jump motor neuron one-to-one 0.9 ms later. The independent part is the latency (40 ms, inside 10 to 60 ms). The controls: the jump motor neuron does not respond without the electrical synapse, and nothing responds on shuffled wiring, including wiring shuffled within cell class. Holds under other seeds, stricter connection thresholds and inversion of the transmitter calls the classifier is unsure of. Its calibrated response probability falls out of range under random sign flips (2 of 3 runs), and its spike count or response probability under a ±0.05 change in the weight scale. |
-| **Hearing to the giant fiber** | Sound alone stays subthreshold through the documented electrical synapse, which is calibrated. **Independent and pre-registered:** sound plus a near-threshold loom raises the giant fiber's response probability from 18% to 53% (re-measured October 2026 after the audit). This is the facilitation Tootoonian et al. 2012 recorded (the model's test: 120 trials per arm), and it holds at every working point tested (pre-registered sweep, five gains). |
+| **Hearing to the giant fiber** | Sound alone stays subthreshold through the documented electrical synapse, which is calibrated. **Independent and pre-registered:** sound plus a near-threshold loom raises the giant fiber's response probability from 18% to 53% (re-measured October 2026 after the audit). This is the summation Tootoonian et al. 2012 recorded with injected current in place of the loom (the model's test: 120 trials per arm), and it holds at every working point tested (pre-registered sweep, five gains). |
 | **Feeding** (taste to proboscis) | Does not reproduce feeding. The reason is measured, and the result holds when taste neurons are split by modality. |
 | **Courtship song** (male-specific pC1 neurons to song command neurons) | Pre-registered, 3 of 3 independent checks pass, and the null control passes. Activating pC1_14a drives the pulse-song neuron and not the sine-song neuron, as optogenetics showed; shuffled wiring drives nothing. A separate pathway of male-specific pIP5 neurons drives the sine neuron and not the pulse neuron, which is a new prediction. Signed paths also predict the song suppression the model cannot simulate. |
 | **Taste to feeding motor neurons** (signed map) | Appetitive taste neurons push proboscis extension up and bitter pushes it down (pre-registered pass). Of the 15 strongest unsigned influences on the proboscis motor neuron, 8 reverse to inhibitory once synaptic sign is included. Sugar neurons favour the opposite side's proboscis motor neuron, as Shiu et al. 2024 predicted, and this is visible only with sign. |
