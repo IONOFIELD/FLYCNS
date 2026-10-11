@@ -59,6 +59,42 @@ LABELLAR_GROUPS = {"LB1a-d": BITTER, "LB1e": ["LB1e"], "LB2": ["LB2a", "LB2b", "
 PROBOSCIS = ["MN9", "MN6"]
 INGESTION = ["MN11D", "MN11V"]
 
+# Version 2 registration (flycns/registry.py): criteria plus the frozen model, written before any data is loaded;
+# it supersedes the version 1 criteria.json below, which is kept and still checked. Every check is graph arithmetic
+# scored on its point value, so each rule is stated in words (with its threshold where it has one), not as a band.
+from flycns import registry  # noqa: E402
+_v1 = OUT / "criteria.json"
+CRITERIA_V2 = dict(
+    version=2,
+    question=("with transmitter sign included, does the gustatory sensory-to-motor map of MaleCNS encode valence "
+              "(Tastekin, de Haan Vicente et al. 2026 computed it unsigned)?"),
+    source="Tastekin, de Haan Vicente et al. 2026, Cell 189:5527-5551 (valence assignments; their map is unsigned)",
+    measure=dict(kind=("input-normalised path products: each neuron's incoming weights divided by its total absolute "
+                       "input, a unit vector on the source cells propagated hop by hop; influence on a motor neuron "
+                       "type is the sum over its cells"),
+                 signs="the model's edge signs (ACh +1; GABA, Glu, His -1; amines 0)",
+                 hops=N_HOPS, cumulative_hops=CUM_HOPS),
+    groups=LABELLAR_GROUPS, appetitive=APPETITIVE, bitter=BITTER, proboscis_mn=PROBOSCIS, ingestion_mn=INGESTION,
+    required_mn=REQUIRED_MN,
+    checks=dict(
+        S1_valence_signed_on_proboscis=dict(
+            threshold=0.0,
+            rule=("point record: on the proboscis-extension MNs (mean over MN9 and MN6), the mean cumulative signed "
+                  "influence of LB3a-c is above 0 AND the mean of LB1a-d is below it")),
+        S2_per_type_sign_agreement=dict(
+            threshold=5,
+            rule=("point record: at least 5 of the 7 types LB3a-c, LB1a-d have cumulative signed influence on MN9 "
+                  "whose sign matches valence (appetitive > 0, bitter < 0)")),
+        S3_LB2_dominates_pharyngeal_pumping=dict(
+            rule=("point record: LB2 (LB2a-d pooled) has the largest absolute cumulative signed influence on "
+                  "pharyngeal pumping (mean over MN11D and MN11V) among the labellar groups that have cells")),
+    ),
+    reported="signed and unsigned tables, sign disagreement with the unsigned ranking, the LB3d glutamatergic counterfactual",
+)
+REG = registry.register("gustatory_signed_map", CRITERIA_V2, scripts=[__file__],
+                        supersedes=dict(file="criteria.json", git_commit=(
+                            json.loads(_v1.read_text(encoding="utf-8")).get("git_commit") if _v1.exists() else None)))
+
 neurons, edges = load_graph(DATA)
 meta = neurons.set_index("bodyId")
 types = set(meta["type"].dropna())
@@ -191,6 +227,8 @@ report["uncertainty"] = {
         float(ing.get("LB2", float("nan"))), s3,
         note=_GRAPH + f"|signed| on MN11D+MN11V, largest group {_top[0][0] if _top else '-'}"),
 }
+registry.verify_bands(REG, report["uncertainty"])
+report["registration"] = registry.stamp(REG)
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 

@@ -48,6 +48,39 @@ OUT.mkdir(parents=True, exist_ok=True)
 READOUTS = ["DNp13", "pMP2", "pIP10"]
 HZ = 100.0
 
+# Version 2 registration (flycns/registry.py): criteria plus the frozen model, written before any data is loaded;
+# it supersedes the version 1 criteria.json below, which is kept and still checked. best_input is picked from the
+# graph after loading, so the registration states the rule; the type it picks is in criteria.json and the report.
+from flycns import registry  # noqa: E402
+_v1 = OUT / "criteria.json"
+CRITERIA_V2 = dict(
+    version=2,
+    question=("is the sine-song neuron DNp13 reachable at all in this model (D1), and does pC1_1b drive sine over "
+              "pulse (D2)?"),
+    source="Current Biology 36:4697-4716 (2026): pC1_1b acts on DNp13 and takes 13% of input from LC10a",
+    rule="best_input = type with largest cholinergic synapse count onto DNp13 (DNp13 excluded)",
+    readouts=READOUTS,
+    protocol=dict(n_trials=N_TRIALS, drive_hz=HZ, pulse_ms=200, gap_ms=300, readout_window_ms=250,
+                  arms="best_input, pC1_1b, and LC10a (every LC10a* type present; reported)",
+                  model="declared parameter set (LIFParams), electrical synapses on"),
+    checks=dict(
+        D1_dnp13_reachable=dict(
+            band=[0.5, None],
+            rule=("DNp13 spikes/cell/pulse under best_input at 100 Hz, bootstrap over pulses: PASS if the 95% "
+                  "interval lies at or above 0.5")),
+        D2_pc1_1b_sine_choice=dict(
+            bands=[[0.5, None], [0, None]],
+            rule=("conjunction, pC1_1b at 100 Hz: (a) DNp13 spikes/cell/pulse, bootstrap over pulses, 95% interval "
+                  "at or above 0.5; (b) DNp13 minus pMP2 paired per pulse, bootstrap over pulses, 95% interval "
+                  "strictly above 0; PASS only if both parts pass")),
+    ),
+    interpretation=dict(both="pulse/sine choice real both ways", D1_only="pC1_14a selectivity genuine; pC1_1b link not reproduced",
+                        D1_fail="reword pc1_song P1/P2: pulse driven, sine unreachable"),
+)
+REG = registry.register("dnp13_control", CRITERIA_V2, scripts=[__file__],
+                        supersedes=dict(file="criteria.json", git_commit=(
+                            json.loads(_v1.read_text(encoding="utf-8")).get("git_commit") if _v1.exists() else None)))
+
 neurons, edges = load_graph(DATA)
 meta = neurons.set_index("bodyId")
 types = set(meta["type"].dropna())
@@ -164,6 +197,8 @@ report["uncertainty"] = {
         stats.scored(*stats.bootstrap(_diff), low=0, strict=True, n=len(_diff),
                      note="DNp13 - pMP2 under pC1_1b, paired per pulse (same simulation and pulses), bootstrap over pulses")]),
 }
+registry.verify_bands(REG, report["uncertainty"])
+report["registration"] = registry.stamp(REG)
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECKS (criteria registered before the run)")
 for k, v in report["checks"].items():

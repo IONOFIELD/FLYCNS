@@ -77,6 +77,40 @@ CRITERIA = dict(
     F4="bitter at 100 Hz: MN9 below sugar at 100 Hz",
     n_trials=N_TRIALS, rates_hz=RATES)
 
+# Version 2 registration (flycns/registry.py): the criteria above plus the frozen model, written before any data
+# is loaded; it supersedes the version 1 criteria.json, which is kept and still checked below.
+from flycns import registry  # noqa: E402
+_v1 = OUT / "criteria.json"
+CRITERIA_V2 = dict(
+    version=2,
+    question=("with the labellar taste afferents split by modality (Tastekin et al. 2026), was the feeding negative "
+              "an artefact of mixed drive, and is valence encoded in sign?"),
+    source=CRITERIA["source"], groups=GROUPS, scored_groups=SCORED,
+    protocol=dict(n_trials=N_TRIALS, rates_hz=RATES, pulse_ms=200, gap_ms=300, readout_window_ms=250,
+                  dynamic_groups=["sugar", "bitter", "old_mixed_proxy"], path_product_hops=5,
+                  model="declared parameter set (LIFParams), electrical synapses on, no baseline, no regional gain"),
+    F1_verdict=dict(rule=("reported as a verdict, not scored: RETRACT the feeding negative if sugar's ratio >= 1.0 OR "
+                          "its signed 2-hop path product to MN9 > 0; else STRENGTHEN"),
+                    ratio_threshold=1.0, hop_2_threshold=0.0),
+    checks=dict(
+        F2_sugar_ratio_exceeds_bitter=dict(
+            threshold=0.0,
+            rule=("point record, graph arithmetic: sugar's ratio minus bitter's ratio (synapses onto MN9's excitatory "
+                  "relays / onto its inhibitory relays, denominator floored at 1) is above 0")),
+        F3_sugar_drives_mn9_at_100hz=dict(
+            band=[0.5, None],
+            rule=("MN9 spikes/cell/pulse under sugar (LB3b, LB3c) at 100 Hz, bootstrap over pulses: PASS if the 95% "
+                  "interval lies at or above 0.5")),
+        F4_bitter_below_sugar_at_100hz=dict(
+            band=[0, None], band_lower_exclusive=True,
+            rule=("MN9 under sugar minus under bitter (LB1a-d), both at 100 Hz: two separate simulations, each "
+                  "resampled over its own pulses: PASS if the 95% interval lies above 0")),
+    ),
+)
+REG = registry.register("feeding_by_modality", CRITERIA_V2, scripts=[__file__],
+                        supersedes=dict(file="criteria.json", git_commit=(
+                            json.loads(_v1.read_text(encoding="utf-8")).get("git_commit") if _v1.exists() else None)))
+
 # Registered test: refuse uncommitted code and data that differ from data/MANIFEST.json, so the
 # registered result can be traced to an exact commit and an exact dataset (flycns/integrity.py).
 from flycns.integrity import require_clean, require_data, criteria_differ  # noqa: E402
@@ -183,6 +217,8 @@ report["uncertainty"] = {
                                                    note=f"MN9 under sugar minus under bitter at 100 Hz: two separate simulations, "
                                                         f"each resampled over its own pulses ({len(_sug)} and {len(_bit)})"),
 }
+registry.verify_bands(REG, report["uncertainty"])
+report["registration"] = registry.stamp(REG)
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"\nF1 VERDICT: {report['F1_verdict']}")
