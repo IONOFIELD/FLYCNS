@@ -1,0 +1,98 @@
+{
+  "criteria": {
+    "source": "Tootoonian et al. 2012, J Neurosci 32:787-798, Fig. 2D; builds on the registered A2 result (c097e41)",
+    "gains": [
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8
+    ],
+    "trials_per_arm": 100,
+    "near_threshold": "loom-alone GF probability <= 0.3",
+    "RA2": "at every qualifying gain the 95% CI on the difference lies above zero, and >= 3 gains qualify",
+    "ci_method": "Newcombe 1998 method 10, recomputed from counts"
+  },
+  "rows": [
+    {
+      "gain": 0.4,
+      "n": 100,
+      "k_alone": 0,
+      "k_sound": 20,
+      "p_alone": 0.0,
+      "p_sound": 0.2,
+      "difference": 0.2,
+      "ci": [
+        0.12378506670877114,
+        0.28883096192650237
+      ],
+      "near_threshold": true,
+      "facilitation": true,
+      "depol_alone_mV": 2.908603006718337
+    },
+    {
+      "gain": 0.5,
+      "n": 100,
+      "k_alone": 0,
+      "k_sound": 32,
+      "p_alone": 0.0,
+      "p_sound": 0.32,
+      "difference": 0.32,
+      "ci": [
+        0.2288454397219542,
+        0.4166280225367919
+      ],
+      "near_threshold": true,
+      "facilitation": true,
+      "depol_alone_mV": 3.519096279398962
+    },
+    {
+      "gain": 0.6,
+      "n": 100,
+      "k_alone": 0,
+      "k_sound": 40,
+      "p_alone": 0.0,
+      "p_sound": 0.4,
+      "difference": 0.4,
+      "ci": [
+        0.3021377407553552,
+        0.4979992153815976
+      ],
+      "near_threshold": true,
+      "facilitation": true,
+      "depol_alone_mV": 4.128959270555259
+    },
+    {
+      "gain": 0.7,
+      "n": 100,
+      "k_alone": 10,
+      "k_sound": 50,
+      "p_alone": 0.1,
+      "p_sound": 0.5,
+      "difference": 0.4,
+      "ci": [
+        0.27843027585819957,
+        0.5060810320231056
+      ],
+      "near_threshold": true,
+      "facilitation": true,
+      "depol_alone_mV": 4.651013258938145
+    },
+    {
+      "gain": 0.8,
+      "n": 100,
+      "k_alone": 18,
+      "k_sound": 56,
+      "p_alone": 0.18,
+      "p_sound": 0.56,
+      "difference": 0.38000000000000006,
+      "ci": [
+        0.24937857084403653,
+        0.492562176716436
+      ],
+      "near_threshold": true,
+      "facilitation": true,
+      "depol_alone_mV": 5.163817064906652
+    }
+  ]
+}
