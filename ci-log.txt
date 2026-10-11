@@ -1,0 +1,22 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+afferents: 413 total | SNpp16 13 cells | others 400
+SNpp16 -> DVMn 1a-c: 664 of 1017 afferent synapses (65%)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[S1 SNpp16 alone         ]  13 afferents | DVMn 1a-c  33.58 Hz (seeds 33.7/33.4/33.7) | DLMn c-f  0.00 | steering    0.0 | b1    0.0 | CNS 0.035 | 219s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[S2 all but SNpp16       ] 400 afferents | DVMn 1a-c  14.87 Hz (seeds 15.0/14.8/14.8) | DLMn c-f  0.00 | steering   71.5 | b1  263.0 | CNS 0.596 | 110s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[S3 all afferents        ] 413 afferents | DVMn 1a-c  83.49 Hz (seeds 83.4/83.7/83.4) | DLMn c-f  0.00 | steering   65.6 | b1  261.6 | CNS 0.625 | 109s
+[null: SNpp16 alone      ]  13 afferents | DVMn 1a-c   0.00 Hz (seeds 0.0/0.0/0.0) | DLMn c-f  0.00 | steering    0.0 | b1    0.0 | CNS 0.014 | 112s
+
+CHECKS
+  FAIL  N1_snpp16_sufficient_dvmn_in_band
+  FAIL  N2_snpp16_necessary_dvmn_below_2hz
+
+wrote results\flight_snpp16\report.json
