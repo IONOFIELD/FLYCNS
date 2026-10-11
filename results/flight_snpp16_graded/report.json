@@ -13,6 +13,1449 @@
     "jitter_ms": 0.8
   },
   "registration": {
+    "file": "results/flight_snpp16_graded/registration.json",
+    "version": 2,
+    "git_commit": "4c39a8f",
+    "model_hash": "0a3321bd8bd215e6bb801dbfb4dcfdeff969773c08b1fcdc34900aa77a9bc5f3",
+    "registered_at": "2026-10-11T12:41:20",
+    "matches": true,
+    "problems": []
+  },
+  "sweep": [
+    {
+      "k": 1,
+      "dvmn_mean": 0.0,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.0010684198440270988,
+      "undriven_spikes_mean": 0.0,
+      "dvmn_per_draw": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dvmn_in_band": 0,
+      "draws": {
+        "dvmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "steer": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cns": [
+          0.0010727323358294284,
+          0.0010619511063236049,
+          0.0010700370284529724,
+          0.0010700370284529724,
+          0.0010673417210765167
+        ],
+        "undriven_spikes": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "k": 2,
+      "dvmn_mean": 0.0,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.0022403394913101025,
+      "undriven_spikes_mean": 39.4,
+      "dvmn_per_draw": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dvmn_in_band": 0,
+      "draws": {
+        "dvmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "steer": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cns": [
+          0.0021427693642824008,
+          0.0023179643437520312,
+          0.002229019200328988,
+          0.002207456741317341,
+          0.0023044878068697516
+        ],
+        "undriven_spikes": [
+          2.0,
+          71.0,
+          36.0,
+          24.0,
+          64.0
+        ]
+      }
+    },
+    {
+      "k": 3,
+      "dvmn_mean": 1.1951666666666667,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.0036920320442692237,
+      "undriven_spikes_mean": 182.4,
+      "dvmn_per_draw": [
+        0.0,
+        0.0,
+        0.0,
+        5.98,
+        0.0
+      ],
+      "dvmn_in_band": 1,
+      "draws": {
+        "dvmn": [
+          0.0,
+          0.0,
+          0.0,
+          5.975833333333334,
+          0.0
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "steer": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cns": [
+          0.0036036259623214713,
+          0.003431126290228297,
+          0.0034796418230045026,
+          0.004150773359742009,
+          0.003794992786049837
+        ],
+        "undriven_spikes": [
+          145.0,
+          89.0,
+          104.0,
+          348.0,
+          226.0
+        ]
+      }
+    },
+    {
+      "k": 4,
+      "dvmn_mean": 0.0,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.13707142857142857,
+      "b1_mean": 0.0,
+      "cns_mean": 0.005655832998754955,
+      "undriven_spikes_mean": 514.2,
+      "dvmn_per_draw": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dvmn_in_band": 0,
+      "draws": {
+        "dvmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "steer": [
+          0.0,
+          0.6853571428571429,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cns": [
+          0.005112998093136748,
+          0.007218033154148766,
+          0.004897373503020279,
+          0.004983623339066866,
+          0.006067136904402118
+        ],
+        "undriven_spikes": [
+          309.0,
+          1099.0,
+          235.0,
+          258.0,
+          670.0
+        ]
+      }
+    },
+    {
+      "k": 5,
+      "dvmn_mean": 3.8885000000000005,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.11903571428571429,
+      "b1_mean": 0.0,
+      "cns_mean": 0.008150609506402489,
+      "undriven_spikes_mean": 1042.8,
+      "dvmn_per_draw": [
+        0.0,
+        4.88,
+        4.97,
+        6.57,
+        3.03
+      ],
+      "dvmn_in_band": 4,
+      "draws": {
+        "dvmn": [
+          0.0,
+          4.881666666666667,
+          4.965833333333333,
+          6.565,
+          3.0300000000000002
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "steer": [
+          0.5951785714285714,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cns": [
+          0.008692366289070115,
+          0.009061623399644567,
+          0.007603462108981954,
+          0.007277329916430795,
+          0.00811826581788502
+        ],
+        "undriven_spikes": [
+          1242.0,
+          1386.0,
+          840.0,
+          711.0,
+          1035.0
+        ]
+      }
+    },
+    {
+      "k": 6,
+      "dvmn_mean": 4.460833333333333,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.18035714285714285,
+      "b1_mean": 0.0,
+      "cns_mean": 0.011044830567240782,
+      "undriven_spikes_mean": 1720.0,
+      "dvmn_per_draw": [
+        5.47,
+        7.66,
+        6.9,
+        0.0,
+        2.27
+      ],
+      "dvmn_in_band": 4,
+      "draws": {
+        "dvmn": [
+          5.470833333333334,
+          7.659166666666667,
+          6.901666666666666,
+          0.0,
+          2.2725
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "steer": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.9017857142857143
+        ],
+        "b1": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cns": [
+          0.009150568543067611,
+          0.011557478030242685,
+          0.012899741103717699,
+          0.009406622743830917,
+          0.012209742415345
+        ],
+        "undriven_spikes": [
+          1017.0,
+          1915.0,
+          2412.0,
+          1105.0,
+          2151.0
+        ]
+      }
+    },
+    {
+      "k": 7,
+      "dvmn_mean": 7.389833333333334,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.012893811427489497,
+      "undriven_spikes_mean": 2009.8,
+      "dvmn_per_draw": [
+        10.27,
+        7.24,
+        6.06,
+        6.65,
+        6.73
+      ],
+      "dvmn_in_band": 5,
+      "draws": {
+        "dvmn": [
+          10.268333333333333,
+          7.238333333333333,
+          6.0600000000000005,
+          6.649166666666666,
+          6.733333333333333
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "steer": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cns": [
+          0.012182789341580442,
+          0.012374156165308807,
+          0.012735327353753892,
+          0.012886264566835419,
+          0.014290519709968917
+        ],
+        "undriven_spikes": [
+          1745.0,
+          1819.0,
+          1954.0,
+          2000.0,
+          2531.0
+        ]
+      }
+    },
+    {
+      "k": 8,
+      "dvmn_mean": 9.0395,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.015745985693255075,
+      "undriven_spikes_mean": 2672.4,
+      "dvmn_per_draw": [
+        7.15,
+        9.6,
+        9.68,
+        7.58,
+        11.19
+      ],
+      "dvmn_in_band": 5,
+      "draws": {
+        "dvmn": [
+          7.154166666666667,
+          9.595,
+          9.679166666666667,
+          7.575,
+          11.194166666666668
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "steer": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cns": [
+          0.014064113890346624,
+          0.0156893842383495,
+          0.016231141021017127,
+          0.01551418925887987,
+          0.017231100057682247
+        ],
+        "undriven_spikes": [
+          2048.0,
+          2653.0,
+          2856.0,
+          2581.0,
+          3224.0
+        ]
+      }
+    },
+    {
+      "k": 9,
+      "dvmn_mean": 14.6955,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.01862726927868638,
+      "undriven_spikes_mean": 3346.0,
+      "dvmn_per_draw": [
+        16.5,
+        15.65,
+        13.47,
+        16.08,
+        11.78
+      ],
+      "dvmn_in_band": 1,
+      "draws": {
+        "dvmn": [
+          16.496666666666666,
+          15.655,
+          13.466666666666667,
+          16.075833333333332,
+          11.783333333333333
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "steer": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cns": [
+          0.01883480794667348,
+          0.0184978945246165,
+          0.017382037270763775,
+          0.01862726927868638,
+          0.01979433737269176
+        ],
+        "undriven_spikes": [
+          3421.0,
+          3303.0,
+          2883.0,
+          3340.0,
+          3783.0
+        ]
+      }
+    },
+    {
+      "k": 10,
+      "dvmn_mean": 17.944333333333336,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.02238722306884229,
+      "undriven_spikes_mean": 4344.8,
+      "dvmn_per_draw": [
+        19.44,
+        16.83,
+        21.13,
+        17.34,
+        14.98
+      ],
+      "dvmn_in_band": 0,
+      "draws": {
+        "dvmn": [
+          19.4425,
+          16.833333333333336,
+          21.125833333333336,
+          17.338333333333335,
+          14.981666666666667
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "steer": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cns": [
+          0.02345186948254235,
+          0.024974718150239904,
+          0.02189398181895087,
+          0.020637968581522444,
+          0.02097757731095588
+        ],
+        "undriven_spikes": [
+          4737.0,
+          5308.0,
+          4163.0,
+          3690.0,
+          3826.0
+        ]
+      }
+    },
+    {
+      "k": 11,
+      "dvmn_mean": 22.50616666666667,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.026370348309768744,
+      "undriven_spikes_mean": 5423.6,
+      "dvmn_per_draw": [
+        27.69,
+        21.63,
+        22.73,
+        18.43,
+        22.05
+      ],
+      "dvmn_in_band": 0,
+      "draws": {
+        "dvmn": [
+          27.690833333333334,
+          21.630833333333335,
+          22.725,
+          18.4325,
+          22.051666666666666
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "steer": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cns": [
+          0.02970498259591992,
+          0.02495854630598117,
+          0.026330457760597198,
+          0.02547335001488424,
+          0.025384404871461194
+        ],
+        "undriven_spikes": [
+          6657.0,
+          4907.0,
+          5409.0,
+          5084.0,
+          5061.0
+        ]
+      }
+    },
+    {
+      "k": 12,
+      "dvmn_mean": 29.071166666666663,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.030536754452294194,
+      "undriven_spikes_mean": 6573.2,
+      "dvmn_per_draw": [
+        30.89,
+        29.71,
+        25.25,
+        30.72,
+        28.79
+      ],
+      "dvmn_in_band": 0,
+      "draws": {
+        "dvmn": [
+          30.889166666666664,
+          29.710833333333333,
+          25.25,
+          30.720833333333335,
+          28.785
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "steer": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cns": [
+          0.03218197007488285,
+          0.029880177575389553,
+          0.028599906571573023,
+          0.03212267331260082,
+          0.029899044727024742
+        ],
+        "undriven_spikes": [
+          7177.0,
+          6331.0,
+          5860.0,
+          7158.0,
+          6340.0
+        ]
+      }
+    },
+    {
+      "k": 13,
+      "dvmn_mean": 33.548833333333334,
+      "dlmn_mean": 0.0,
+      "steer_mean": 0.0,
+      "b1_mean": 0.0,
+      "cns_mean": 0.03492094143083728,
+      "undriven_spikes_mean": 7805.2,
+      "dvmn_per_draw": [
+        33.67,
+        33.25,
+        33.41,
+        33.67,
+        33.75
+      ],
+      "dvmn_in_band": 0,
+      "draws": {
+        "dvmn": [
+          33.66666666666667,
+          33.24583333333333,
+          33.41416666666667,
+          33.66666666666667,
+          33.75083333333333
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "steer": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cns": [
+          0.03504977712343187,
+          0.034904230525103254,
+          0.03481528538168022,
+          0.0349015352177268,
+          0.03493387890624427
+        ],
+        "undriven_spikes": [
+          7846.0,
+          7806.0,
+          7769.0,
+          7795.0,
+          7810.0
+        ]
+      }
+    }
+  ],
+  "k_star": 5,
+  "null_at_k_star": {
+    "k": 5,
+    "dvmn_mean": 0.0,
+    "dlmn_mean": 0.0,
+    "steer_mean": 0.0,
+    "b1_mean": 0.0,
+    "cns_mean": 0.005404630351269269,
+    "undriven_spikes_mean": 24.0,
+    "dvmn_per_draw": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "dvmn_in_band": 0,
+    "draws": {
+      "dvmn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dlmn": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "steer": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "b1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "cns": [
+        0.005471473974205375,
+        0.005420263134052714,
+        0.005425653748805626,
+        0.005377138216029421,
+        0.005328622683253215
+      ],
+      "undriven_spikes": [
+        47.0,
+        35.0,
+        32.0,
+        6.0,
+        0.0
+      ]
+    }
+  },
+  "checks": {
+    "G1_graded": false,
+    "G2_in_band_window": true,
+    "G3_selective_at_k_star": true,
+    "G4_wiring_specific_at_k_star": true,
+    "G5_reliable_at_k_star": true
+  },
+  "uncertainty": {
+    "G1_graded": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 12 parts",
+      "parts": [
+        {
+          "estimate": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "band": [
+            -0.5,
+            null
+          ],
+          "method": "bootstrap difference, independent draws",
+          "verdict": "PASS",
+          "n": 5,
+          "note": "mean DVMn at k=2 minus k=1"
+        },
+        {
+          "estimate": 1.1951666666666667,
+          "ci95": [
+            0.0,
+            3.5855000000000006
+          ],
+          "band": [
+            -0.5,
+            null
+          ],
+          "method": "bootstrap difference, independent draws",
+          "verdict": "PASS",
+          "n": 5,
+          "note": "mean DVMn at k=3 minus k=2"
+        },
+        {
+          "estimate": -1.1951666666666667,
+          "ci95": [
+            -3.5855000000000006,
+            0.0
+          ],
+          "band": [
+            -0.5,
+            null
+          ],
+          "method": "bootstrap difference, independent draws",
+          "verdict": "UNRESOLVED",
+          "n": 5,
+          "note": "mean DVMn at k=4 minus k=3"
+        },
+        {
+          "estimate": 3.8885000000000005,
+          "ci95": [
+            1.5991666666666666,
+            5.588666666666667
+          ],
+          "band": [
+            -0.5,
+            null
+          ],
+          "method": "bootstrap difference, independent draws",
+          "verdict": "PASS",
+          "n": 5,
+          "note": "mean DVMn at k=5 minus k=4"
+        },
+        {
+          "estimate": 0.5723333333333329,
+          "ci95": [
+            -2.609166666666666,
+            3.7037541666666636
+          ],
+          "band": [
+            -0.5,
+            null
+          ],
+          "method": "bootstrap difference, independent draws",
+          "verdict": "UNRESOLVED",
+          "n": 5,
+          "note": "mean DVMn at k=6 minus k=5"
+        },
+        {
+          "estimate": 2.9290000000000003,
+          "ci95": [
+            0.18432500000000074,
+            5.908920833333332
+          ],
+          "band": [
+            -0.5,
+            null
+          ],
+          "method": "bootstrap difference, independent draws",
+          "verdict": "PASS",
+          "n": 5,
+          "note": "mean DVMn at k=7 minus k=6"
+        },
+        {
+          "estimate": 1.6496666666666666,
+          "ci95": [
+            -0.23566666666666605,
+            3.333000000000001
+          ],
+          "band": [
+            -0.5,
+            null
+          ],
+          "method": "bootstrap difference, independent draws",
+          "verdict": "PASS",
+          "n": 5,
+          "note": "mean DVMn at k=8 minus k=7"
+        },
+        {
+          "estimate": 5.655999999999999,
+          "ci95": [
+            3.5686666666666653,
+            7.608666666666666
+          ],
+          "band": [
+            -0.5,
+            null
+          ],
+          "method": "bootstrap difference, independent draws",
+          "verdict": "PASS",
+          "n": 5,
+          "note": "mean DVMn at k=9 minus k=8"
+        },
+        {
+          "estimate": 3.2488333333333372,
+          "ci95": [
+            0.9931666666666654,
+            5.808341666666663
+          ],
+          "band": [
+            -0.5,
+            null
+          ],
+          "method": "bootstrap difference, independent draws",
+          "verdict": "PASS",
+          "n": 5,
+          "note": "mean DVMn at k=10 minus k=9"
+        },
+        {
+          "estimate": 4.5618333333333325,
+          "ci95": [
+            1.5150000000000006,
+            7.7769999999999975
+          ],
+          "band": [
+            -0.5,
+            null
+          ],
+          "method": "bootstrap difference, independent draws",
+          "verdict": "PASS",
+          "n": 5,
+          "note": "mean DVMn at k=11 minus k=10"
+        },
+        {
+          "estimate": 6.564999999999994,
+          "ci95": [
+            3.0973333333333315,
+            9.561754166666665
+          ],
+          "band": [
+            -0.5,
+            null
+          ],
+          "method": "bootstrap difference, independent draws",
+          "verdict": "PASS",
+          "n": 5,
+          "note": "mean DVMn at k=12 minus k=11"
+        },
+        {
+          "estimate": 4.477666666666671,
+          "ci95": [
+            3.046833333333339,
+            6.447587500000005
+          ],
+          "band": [
+            -0.5,
+            null
+          ],
+          "method": "bootstrap difference, independent draws",
+          "verdict": "PASS",
+          "n": 5,
+          "note": "mean DVMn at k=13 minus k=12"
+        }
+      ],
+      "verdict": "UNRESOLVED",
+      "note": "every adjacent step of the mean DVMn >= -0.5 Hz; adjacent k use different cells and seeds, so each step is two independent arms"
+    },
+    "G2_in_band_window": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "any of 13 parts",
+      "parts": [
+        {
+          "estimate": 0.0,
+          "ci95": null,
+          "band": [
+            2.0,
+            12.0
+          ],
+          "method": "per-draw (0 of 5 in band; pass needs 4)",
+          "draws": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "n": 5,
+          "verdict": "FAIL",
+          "note": "DVMn at k=1"
+        },
+        {
+          "estimate": 0.0,
+          "ci95": null,
+          "band": [
+            2.0,
+            12.0
+          ],
+          "method": "per-draw (0 of 5 in band; pass needs 4)",
+          "draws": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "n": 5,
+          "verdict": "FAIL",
+          "note": "DVMn at k=2"
+        },
+        {
+          "estimate": 0.2,
+          "ci95": null,
+          "band": [
+            2.0,
+            12.0
+          ],
+          "method": "per-draw (1 of 5 in band; pass needs 4)",
+          "draws": [
+            0.0,
+            0.0,
+            0.0,
+            5.975833333333334,
+            0.0
+          ],
+          "n": 5,
+          "verdict": "FAIL",
+          "note": "DVMn at k=3"
+        },
+        {
+          "estimate": 0.0,
+          "ci95": null,
+          "band": [
+            2.0,
+            12.0
+          ],
+          "method": "per-draw (0 of 5 in band; pass needs 4)",
+          "draws": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "n": 5,
+          "verdict": "FAIL",
+          "note": "DVMn at k=4"
+        },
+        {
+          "estimate": 0.8,
+          "ci95": null,
+          "band": [
+            2.0,
+            12.0
+          ],
+          "method": "per-draw (4 of 5 in band; pass needs 4)",
+          "draws": [
+            0.0,
+            4.881666666666667,
+            4.965833333333333,
+            6.565,
+            3.0300000000000002
+          ],
+          "n": 5,
+          "verdict": "PASS",
+          "note": "DVMn at k=5"
+        },
+        {
+          "estimate": 0.8,
+          "ci95": null,
+          "band": [
+            2.0,
+            12.0
+          ],
+          "method": "per-draw (4 of 5 in band; pass needs 4)",
+          "draws": [
+            5.470833333333334,
+            7.659166666666667,
+            6.901666666666666,
+            0.0,
+            2.2725
+          ],
+          "n": 5,
+          "verdict": "PASS",
+          "note": "DVMn at k=6"
+        },
+        {
+          "estimate": 1.0,
+          "ci95": null,
+          "band": [
+            2.0,
+            12.0
+          ],
+          "method": "per-draw (5 of 5 in band; pass needs 4)",
+          "draws": [
+            10.268333333333333,
+            7.238333333333333,
+            6.0600000000000005,
+            6.649166666666666,
+            6.733333333333333
+          ],
+          "n": 5,
+          "verdict": "PASS",
+          "note": "DVMn at k=7"
+        },
+        {
+          "estimate": 1.0,
+          "ci95": null,
+          "band": [
+            2.0,
+            12.0
+          ],
+          "method": "per-draw (5 of 5 in band; pass needs 4)",
+          "draws": [
+            7.154166666666667,
+            9.595,
+            9.679166666666667,
+            7.575,
+            11.194166666666668
+          ],
+          "n": 5,
+          "verdict": "PASS",
+          "note": "DVMn at k=8"
+        },
+        {
+          "estimate": 0.2,
+          "ci95": null,
+          "band": [
+            2.0,
+            12.0
+          ],
+          "method": "per-draw (1 of 5 in band; pass needs 4)",
+          "draws": [
+            16.496666666666666,
+            15.655,
+            13.466666666666667,
+            16.075833333333332,
+            11.783333333333333
+          ],
+          "n": 5,
+          "verdict": "FAIL",
+          "note": "DVMn at k=9"
+        },
+        {
+          "estimate": 0.0,
+          "ci95": null,
+          "band": [
+            2.0,
+            12.0
+          ],
+          "method": "per-draw (0 of 5 in band; pass needs 4)",
+          "draws": [
+            19.4425,
+            16.833333333333336,
+            21.125833333333336,
+            17.338333333333335,
+            14.981666666666667
+          ],
+          "n": 5,
+          "verdict": "FAIL",
+          "note": "DVMn at k=10"
+        },
+        {
+          "estimate": 0.0,
+          "ci95": null,
+          "band": [
+            2.0,
+            12.0
+          ],
+          "method": "per-draw (0 of 5 in band; pass needs 4)",
+          "draws": [
+            27.690833333333334,
+            21.630833333333335,
+            22.725,
+            18.4325,
+            22.051666666666666
+          ],
+          "n": 5,
+          "verdict": "FAIL",
+          "note": "DVMn at k=11"
+        },
+        {
+          "estimate": 0.0,
+          "ci95": null,
+          "band": [
+            2.0,
+            12.0
+          ],
+          "method": "per-draw (0 of 5 in band; pass needs 4)",
+          "draws": [
+            30.889166666666664,
+            29.710833333333333,
+            25.25,
+            30.720833333333335,
+            28.785
+          ],
+          "n": 5,
+          "verdict": "FAIL",
+          "note": "DVMn at k=12"
+        },
+        {
+          "estimate": 0.0,
+          "ci95": null,
+          "band": [
+            2.0,
+            12.0
+          ],
+          "method": "per-draw (0 of 5 in band; pass needs 4)",
+          "draws": [
+            33.66666666666667,
+            33.24583333333333,
+            33.41416666666667,
+            33.66666666666667,
+            33.75083333333333
+          ],
+          "n": 5,
+          "verdict": "FAIL",
+          "note": "DVMn at k=13"
+        }
+      ],
+      "verdict": "PASS",
+      "note": "some k with DVMn in band per draw (the registered rule reads the mean over draws)"
+    },
+    "G3_selective_at_k_star": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 3 parts",
+      "parts": [
+        {
+          "estimate": 1.0,
+          "ci95": null,
+          "band": [
+            null,
+            1.0
+          ],
+          "method": "per-draw (5 of 5 in band; pass needs 4)",
+          "draws": [
+            0.5951785714285714,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "n": 5,
+          "verdict": "PASS",
+          "note": "steer at k*=5"
+        },
+        {
+          "estimate": 1.0,
+          "ci95": null,
+          "band": [
+            null,
+            1.0
+          ],
+          "method": "per-draw (5 of 5 in band; pass needs 4)",
+          "draws": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "n": 5,
+          "verdict": "PASS",
+          "note": "b1 at k*=5"
+        },
+        {
+          "estimate": 1.0,
+          "ci95": null,
+          "band": [
+            null,
+            1.0
+          ],
+          "method": "per-draw (5 of 5 in band; pass needs 4)",
+          "draws": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "n": 5,
+          "verdict": "PASS",
+          "note": "dlmn at k*=5"
+        }
+      ],
+      "verdict": "PASS",
+      "note": "steering, b1 and DLMn c-f each below 1 Hz per draw (the check is strict; per_draw's edge is inclusive)"
+    },
+    "G4_wiring_specific_at_k_star": {
+      "estimate": 1.0,
+      "ci95": null,
+      "band": [
+        null,
+        1.0
+      ],
+      "method": "per-draw (5 of 5 in band; pass needs 4)",
+      "draws": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n": 5,
+      "verdict": "PASS",
+      "note": "rewired null, DVMn at k*=5; the null fired 120 spikes outside the driven cells, so it can fail"
+    },
+    "G5_reliable_at_k_star": {
+      "estimate": 0.8,
+      "ci95": null,
+      "band": [
+        2.0,
+        12.0
+      ],
+      "method": "per-draw (4 of 5 in band; pass needs 4)",
+      "draws": [
+        0.0,
+        4.881666666666667,
+        4.965833333333333,
+        6.565,
+        3.0300000000000002
+      ],
+      "n": 5,
+      "verdict": "PASS",
+      "note": "DVMn at k*=5"
+    }
+  },
+  "reported": {
+    "partner_alone": {
+      "dvmn": 3.535,
+      "dlmn": 0.0,
+      "steer": 1.5751190476190475,
+      "b1": 0.0,
+      "cns": 0.017656958623162272,
+      "undriven_spikes": 1794.6666666666667
+    },
+    "k_star_plus_partner": {
+      "dvmn": 28.684000000000005,
+      "steer": 1.5510714285714284,
+      "b1": 0.0
+    },
+    "summation_ratio": 3.863945578231293
+  },
+  "registration_v1": {
     "criteria": {
       "hypothesis": "SNpp16 selectively drives the DVM motor neurons",
       "G1": "mean DVMn 1a-c non-decreasing in k, tolerance 0.5 Hz",
@@ -29,258 +1472,9 @@
     "git_commit": "fae9fdb",
     "script_uncommitted": false
   },
-  "sweep": [
-    {
-      "k": 1,
-      "dvmn_mean": 0.0,
-      "dlmn_mean": 0.0,
-      "steer_mean": 0.0,
-      "b1_mean": 0.0,
-      "cns_mean": 0.0010684198440270988,
-      "dvmn_per_draw": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ],
-      "dvmn_in_band": 0
-    },
-    {
-      "k": 2,
-      "dvmn_mean": 0.0,
-      "dlmn_mean": 0.0,
-      "steer_mean": 0.0,
-      "b1_mean": 0.0,
-      "cns_mean": 0.0022403394913101025,
-      "dvmn_per_draw": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ],
-      "dvmn_in_band": 0
-    },
-    {
-      "k": 3,
-      "dvmn_mean": 1.1951666666666667,
-      "dlmn_mean": 0.0,
-      "steer_mean": 0.0,
-      "b1_mean": 0.0,
-      "cns_mean": 0.0036920320442692237,
-      "dvmn_per_draw": [
-        0.0,
-        0.0,
-        0.0,
-        5.98,
-        0.0
-      ],
-      "dvmn_in_band": 1
-    },
-    {
-      "k": 4,
-      "dvmn_mean": 0.0,
-      "dlmn_mean": 0.0,
-      "steer_mean": 0.13707142857142857,
-      "b1_mean": 0.0,
-      "cns_mean": 0.005655832998754955,
-      "dvmn_per_draw": [
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
-      ],
-      "dvmn_in_band": 0
-    },
-    {
-      "k": 5,
-      "dvmn_mean": 3.8885000000000005,
-      "dlmn_mean": 0.0,
-      "steer_mean": 0.11903571428571429,
-      "b1_mean": 0.0,
-      "cns_mean": 0.008150609506402489,
-      "dvmn_per_draw": [
-        0.0,
-        4.88,
-        4.97,
-        6.57,
-        3.03
-      ],
-      "dvmn_in_band": 4
-    },
-    {
-      "k": 6,
-      "dvmn_mean": 4.460833333333333,
-      "dlmn_mean": 0.0,
-      "steer_mean": 0.18035714285714285,
-      "b1_mean": 0.0,
-      "cns_mean": 0.011044830567240782,
-      "dvmn_per_draw": [
-        5.47,
-        7.66,
-        6.9,
-        0.0,
-        2.27
-      ],
-      "dvmn_in_band": 4
-    },
-    {
-      "k": 7,
-      "dvmn_mean": 7.389833333333334,
-      "dlmn_mean": 0.0,
-      "steer_mean": 0.0,
-      "b1_mean": 0.0,
-      "cns_mean": 0.012893811427489497,
-      "dvmn_per_draw": [
-        10.27,
-        7.24,
-        6.06,
-        6.65,
-        6.73
-      ],
-      "dvmn_in_band": 5
-    },
-    {
-      "k": 8,
-      "dvmn_mean": 9.0395,
-      "dlmn_mean": 0.0,
-      "steer_mean": 0.0,
-      "b1_mean": 0.0,
-      "cns_mean": 0.015745985693255075,
-      "dvmn_per_draw": [
-        7.15,
-        9.6,
-        9.68,
-        7.58,
-        11.19
-      ],
-      "dvmn_in_band": 5
-    },
-    {
-      "k": 9,
-      "dvmn_mean": 14.6955,
-      "dlmn_mean": 0.0,
-      "steer_mean": 0.0,
-      "b1_mean": 0.0,
-      "cns_mean": 0.01862726927868638,
-      "dvmn_per_draw": [
-        16.5,
-        15.65,
-        13.47,
-        16.08,
-        11.78
-      ],
-      "dvmn_in_band": 1
-    },
-    {
-      "k": 10,
-      "dvmn_mean": 17.944333333333336,
-      "dlmn_mean": 0.0,
-      "steer_mean": 0.0,
-      "b1_mean": 0.0,
-      "cns_mean": 0.02238722306884229,
-      "dvmn_per_draw": [
-        19.44,
-        16.83,
-        21.13,
-        17.34,
-        14.98
-      ],
-      "dvmn_in_band": 0
-    },
-    {
-      "k": 11,
-      "dvmn_mean": 22.50616666666667,
-      "dlmn_mean": 0.0,
-      "steer_mean": 0.0,
-      "b1_mean": 0.0,
-      "cns_mean": 0.026370348309768744,
-      "dvmn_per_draw": [
-        27.69,
-        21.63,
-        22.73,
-        18.43,
-        22.05
-      ],
-      "dvmn_in_band": 0
-    },
-    {
-      "k": 12,
-      "dvmn_mean": 29.071166666666663,
-      "dlmn_mean": 0.0,
-      "steer_mean": 0.0,
-      "b1_mean": 0.0,
-      "cns_mean": 0.030536754452294194,
-      "dvmn_per_draw": [
-        30.89,
-        29.71,
-        25.25,
-        30.72,
-        28.79
-      ],
-      "dvmn_in_band": 0
-    },
-    {
-      "k": 13,
-      "dvmn_mean": 33.548833333333334,
-      "dlmn_mean": 0.0,
-      "steer_mean": 0.0,
-      "b1_mean": 0.0,
-      "cns_mean": 0.03492094143083728,
-      "dvmn_per_draw": [
-        33.67,
-        33.25,
-        33.41,
-        33.67,
-        33.75
-      ],
-      "dvmn_in_band": 0
-    }
-  ],
-  "k_star": 5,
-  "null_at_k_star": {
-    "k": 5,
-    "dvmn_mean": 0.0,
-    "dlmn_mean": 0.0,
-    "steer_mean": 0.0,
-    "b1_mean": 0.0,
-    "cns_mean": 0.005404630351269269,
-    "dvmn_per_draw": [
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0
-    ],
-    "dvmn_in_band": 0
-  },
-  "checks": {
-    "G1_graded": false,
-    "G2_in_band_window": true,
-    "G3_selective_at_k_star": true,
-    "G4_wiring_specific_at_k_star": true,
-    "G5_reliable_at_k_star": true
-  },
-  "reported": {
-    "partner_alone": {
-      "dvmn": 3.535,
-      "dlmn": 0.0,
-      "steer": 1.5751190476190475,
-      "b1": 0.0,
-      "cns": 0.017656958623162272
-    },
-    "k_star_plus_partner": {
-      "dvmn": 28.684000000000005,
-      "steer": 1.5510714285714284,
-      "b1": 0.0
-    },
-    "summation_ratio": 3.863945578231293
-  },
   "provenance": {
-    "written_at": "2026-10-11T13:21:06",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T20:40:44",
+    "git_commit": "b7eba83",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -295,6 +1489,7 @@
     "engine": "cython",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "graph": {
       "data_dir": "data",
       "min_weight": 5,
@@ -304,7 +1499,11 @@
       "n_dropped_unsigned_edges": 160051,
       "n_dropped_unsigned_synapses": 1980492,
       "n_silent_presynaptic": 8020,
-      "edges_nt_used": false
+      "edges_nt_used": false,
+      "glu_vnc": "inhibitory",
+      "n_glu_vnc_flipped": 0,
+      "jon_mode": "electrical",
+      "jon_compound_mv": 3.0
     },
     "data": {
       "dir": "data",
