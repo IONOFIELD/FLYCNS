@@ -50,6 +50,7 @@ from flycns.bench import find_types, present_types, pulse_protocol, readout_rate
 from flycns.bench import provenance, stamp
 from flycns.graph import infer_side, gustatory_afferents, GUSTATORY_MN9_DRIVING
 from flycns import ascii as A
+from flycns import stats
 
 OUT = Path("results/feeding"); OUT.mkdir(parents=True, exist_ok=True)
 N_TRIALS = int(sys.argv[1]) if len(sys.argv) > 1 else 6
@@ -120,13 +121,20 @@ def build(stim_types, edge_df=edges):
     return CNSModel(neurons, edge_df, stim_types, LIFParams(), electrical=True)
 
 
+def _per_trial(df):
+    """MN9 spikes per cell in each pulse (mean over sides within the pulse); their mean is the arm's readout."""
+    return [float(x) for x in df.groupby("trial").spikes_per_cell.mean().sort_index()] if len(df) else [0.0] * N_TRIALS
+
+
 # ---------------------------------------------------------------- F2 dose response
 curve = []
 for hz in [10, 25, 50, 100, 200]:
     m = build(sugar)
     on = pulse_protocol(m, {t: hz for t in sugar}, n_trials=N_TRIALS)
-    v = mn9(m, on).spikes_per_cell.mean()
+    _df = mn9(m, on); v = _df.spikes_per_cell.mean()
     curve.append(dict(sugar_hz=hz, MN9_spikes_per_cell=float(v), pop_rate_hz=float(m.population_rate_hz())))
+    if hz == 50:   # per pulse (mean over sides within a pulse; their mean is v), for the F3 uncertainty record
+        report["arms"]["MN9_sugar_50Hz_per_trial"] = _per_trial(_df)
     if hz == 50:
         A.raster(m, on, ["MN9"], window_ms=250, bin_ms=8, max_trials=2); A.region_bar(m, on)
     print(f"F2 sugar {hz:>3} Hz -> MN9 {v:.2f} spikes/cell, CNS {m.population_rate_hz():.4f} Hz")
@@ -153,6 +161,16 @@ for hz in [10, 25, 50, 100, 200]:
               f"| {mot.type.nunique()} of {n_types} cb_motor types active: {list(report['arms']['motor_types_active'])[:8]}")
         report["checks"]["F2b_extra_SEZ_quiet"] = bool(report["arms"]["F2b_nonSEZ_rate_hz"] < 0.02)
         report["checks"]["F2c_motor_rate_physiological"] = bool(0 < report["arms"]["F2c_motor_mean_hz"] < 100)
+        # the same two readouts per pulse, for the uncertainty records (pulses do not overlap, so every
+        # in-window spike belongs to exactly one pulse and the per-pulse values average to the readouts above)
+        _pulse = np.full(len(spf), -1)
+        for k, t_on in enumerate(on):
+            _pulse[((spf.t_ms >= t_on) & (spf.t_ms < t_on + 200)).to_numpy()] = k
+        report["arms"]["F2b_nonSEZ_rate_hz_per_pulse"] = [
+            float(((~in_sez).to_numpy() & (_pulse == k)).sum() / len(m.lif_ids) / 0.2) for k in range(len(on))]
+        _mcells, _mcol = np.unique(mot["bodyId"].to_numpy(), return_inverse=True)
+        f2c_counts = np.zeros((len(on), len(_mcells)))     # spikes per pulse (rows) of each recruited motor cell
+        np.add.at(f2c_counts, (_pulse[(scc == "cb_motor").to_numpy()], _mcol), 1)
 curve = pd.DataFrame(curve); curve.to_csv(OUT / "F2_dose.csv", index=False); stamp(OUT / "F2_dose.csv")
 if report_all_arm:
     m = build(report_all_arm)
@@ -203,6 +221,11 @@ func_sign = np.sign(contra - ipsi); struct_sign = np.sign(struct_R - struct_L)
 # a tie on either side carries no direction, so it is not scored as a match
 report["checks"]["F1_laterality_matches_wiring"] = (bool(func_sign == struct_sign)
                                                     if (ipsi + contra) > 0 and func_sign != 0 and struct_sign != 0 else None)
+# per pulse, for the uncertainty record: MN9-R minus MN9-L within each pulse (same simulation, paired)
+_f1_side = {s_: lat[lat.side == s_].groupby("trial").spikes_per_cell.mean() for s_ in ("L", "R")}
+report["arms"]["F1_left_sugar"]["MN9_ipsi_L_per_trial"] = [float(x) for x in _f1_side["L"].sort_index()]
+report["arms"]["F1_left_sugar"]["MN9_contra_R_per_trial"] = [float(x) for x in _f1_side["R"].sort_index()]
+f1_diff = (_f1_side["R"] - _f1_side["L"]).dropna().to_numpy()
 # Shiu 2024 predicted contralateral > ipsilateral MN9 for LABELLAR SUGAR GRNs. This benchmark's
 # drive is pharyngeal/taste-peg/LB3 dominated, so the comparison is not applicable HERE; it is
 # tested with the identified sugar types in benchmarks/sugar_laterality.py (registered; passes).
@@ -219,9 +242,10 @@ lat.to_csv(OUT / "F1_laterality.csv", index=False); stamp(OUT / "F1_laterality.c
 if bitter:
     m = build(sugar + bitter)
     on = pulse_protocol(m, {**{t: 50 for t in sugar}, **{t: 50 for t in bitter}}, n_trials=N_TRIALS)
-    both = mn9(m, on).spikes_per_cell.mean()
+    _df = mn9(m, on); both = _df.spikes_per_cell.mean()
     alone = float(curve.loc[curve.sugar_hz == 50, "MN9_spikes_per_cell"].iloc[0])
     report["arms"]["F3_bitter"] = dict(MN9_sugar_alone=alone, MN9_sugar_plus_bitter=float(both))
+    report["arms"]["F3_bitter"]["MN9_sugar_plus_bitter_per_trial"] = _per_trial(_df)
     report["checks"]["F3_bitter_suppresses"] = bool(both < alone)
     print(f"F3 sugar alone {alone:.2f} vs sugar+bitter {both:.2f}")
 else:
@@ -229,13 +253,15 @@ else:
     print("F3 skipped: no bitter GRN type resolved")
 
 # ---------------------------------------------------------------- F4 second-order sufficiency
-suff = {}
+suff, suff_pt = {}, {}
 for typ in [t for t in (["Fdg", "Bract", "Roundup", "Zorro"] if "Fdg" in so_have else so_have) if t in so_have]:
     m = build([typ])
     on = pulse_protocol(m, {typ: 50}, n_trials=N_TRIALS)
-    suff[typ] = float(mn9(m, on).spikes_per_cell.mean())
+    _df = mn9(m, on)
+    suff[typ] = float(_df.spikes_per_cell.mean()); suff_pt[typ] = _per_trial(_df)
     print(f"F4 {typ} 50 Hz -> MN9 {suff[typ]:.2f}")
 report["arms"]["F4_sufficiency"] = suff
+report["arms"]["F4_sufficiency_per_trial"] = suff_pt
 # Without Shiu's cell names the types tried are MN9's strongest direct excitatory inputs, which drive it
 # almost by construction: the question cannot be asked, so it is reported, not scored.
 report["arms"]["F4_mode"] = "fallback: MN9's top direct excitatory inputs (not scored)" if F4_FALLBACK else "Shiu names"
@@ -245,9 +271,10 @@ report["checks"]["F4_second_order_sufficient"] = (None if F4_FALLBACK or not suf
 # ---------------------------------------------------------------- F5 null
 m = build(sugar, rewire_null(edges))
 on = pulse_protocol(m, {t: 50 for t in sugar}, n_trials=N_TRIALS)
-nullv = float(mn9(m, on).spikes_per_cell.mean())
+_df = mn9(m, on); nullv = float(_df.spikes_per_cell.mean())
 real50 = float(curve.loc[curve.sugar_hz == 50, "MN9_spikes_per_cell"].iloc[0])
 report["arms"]["F5_null"] = dict(MN9=nullv, MN9_real_50Hz=real50)
+report["arms"]["F5_null"]["MN9_per_trial"] = _per_trial(_df)
 # a null is only informative if the real network responds; silent vs silent is not scored
 report["checks"]["F5_null_silent"] = bool(nullv < 0.1) if real50 >= 0.5 else None
 print(f"F5 rewired null -> MN9 {nullv:.2f}")
@@ -257,6 +284,53 @@ mech = Path("results/feeding/mechanism.json")
 if mech.exists():
     report["mechanism"] = json.loads(mech.read_text(encoding="utf-8"))["conclusion"]
     print("\nmechanism:", report["mechanism"])
+
+
+# ---------------------------------------------------------------- uncertainty (flycns/stats.py)
+# one record per scored check: 95% interval over pulses, three-way verdict; checks that are None get none
+def _recruited_motor_hz(counts):
+    """F2c's readout from a (pulses x recruited motor cells) spike-count matrix: the mean rate of the cells that
+    fired at least once in these pulses, over the time the drive was on (0 if none fired)."""
+    tot = counts.sum(axis=0)
+    return float(tot[tot > 0].mean() / (len(counts) * 0.2)) if (tot > 0).any() else 0.0
+
+
+ch, A_ = report["checks"], report["arms"]
+unc = {}
+if ch.get("F2b_extra_SEZ_quiet") is not None:
+    _v = A_["F2b_nonSEZ_rate_hz_per_pulse"]
+    unc["F2b_extra_SEZ_quiet"] = stats.scored(*stats.bootstrap(_v), high=0.02, n=len(_v),
+                                              note="outside-SEZ spikes per neuron per second of drive in each 200 ms "
+                                                   "pulse (sugar at 50 Hz), bootstrap over pulses")
+if ch.get("F2c_motor_rate_physiological") is not None:
+    unc["F2c_motor_rate_physiological"] = stats.scored(
+        *stats.bootstrap(f2c_counts, stat=_recruited_motor_hz), low=0, high=100, strict=True, n=len(f2c_counts),
+        note="mean rate of the recruited cb_motor cells (sugar at 50 Hz), bootstrap over pulses; a cell counts as "
+             "recruited if it fires in the resampled pulses, as in the readout")
+if ch.get("F1_laterality_matches_wiring") is not None:
+    unc["F1_laterality_matches_wiring"] = stats.scored(
+        *stats.bootstrap(f1_diff * struct_sign), low=0, strict=True, n=len(f1_diff),
+        note=f"(MN9-R minus MN9-L) x structural sign ({int(struct_sign):+d}, graph arithmetic, fixed), paired per "
+             f"pulse in one simulation, bootstrap over pulses: positive means the functional laterality matches wiring")
+if ch.get("F3_bitter_suppresses") is not None:
+    _a, _b = A_["MN9_sugar_50Hz_per_trial"], A_["F3_bitter"]["MN9_sugar_plus_bitter_per_trial"]
+    unc["F3_bitter_suppresses"] = stats.scored(
+        *stats.bootstrap_diff(_a, _b), low=0, strict=True,
+        note=f"MN9 under sugar alone minus under sugar+bitter at 50 Hz: two separate simulations, each resampled "
+             f"over its own pulses ({len(_a)} and {len(_b)})")
+if ch.get("F4_second_order_sufficient") is not None:
+    _parts = []
+    for typ, _v in suff_pt.items():
+        _parts.append(stats.scored(*stats.bootstrap(_v), low=0, strict=True, n=len(_v),
+                                   note=f"MN9 under {typ} at 50 Hz, bootstrap over pulses"))
+    unc["F4_second_order_sufficient"] = stats.combine(_parts, note="every second-order type drives MN9 above 0")
+if ch.get("F5_null_silent") is not None:
+    _v = A_["F5_null"]["MN9_per_trial"]
+    unc["F5_null_silent"] = stats.scored(
+        *stats.bootstrap(_v), high=0.1, n=len(_v),
+        note=f"MN9 on the rewired null at 50 Hz, bootstrap over pulses; scored because the real network responds "
+             f"(MN9 {real50:.3g} at 50 Hz >= 0.5, point value)")
+report["uncertainty"] = unc
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 prov = ["# Provenance: feeding (port of Shiu et al. 2024 tests to MaleCNS)", "",
@@ -265,4 +339,26 @@ prov = ["# Provenance: feeding (port of Shiu et al. 2024 tests to MaleCNS)", "",
 prov += [f"- {k}: {'SKIP' if v is None else ('PASS' if v else 'FAIL')}" for k, v in report["checks"].items()]
 (OUT / "provenance.md").write_text("\n".join(prov), encoding="utf-8")
 print("\nCHECKS"); [print(f"  {'SKIP' if v is None else ('PASS' if v else 'FAIL')}  {k}") for k, v in report["checks"].items()]
+
+
+def _g(x):
+    return "-" if x is None else (f"{x:.3g}" if isinstance(x, float) else str(x))
+
+
+def _desc(u):
+    """One line for an uncertainty record: estimate [95% interval] in band (method); a conjunction lists its parts."""
+    if u.get("parts"):
+        return "; ".join(f"{p['verdict']} {_desc(p)}" for p in u["parts"])
+    s, ci, band = _g(u.get("estimate")), u.get("ci95"), u.get("band")
+    if ci:
+        s += f" [{_g(ci[0])}, {_g(ci[1])}]"
+    if band and any(b is not None for b in band):
+        s += (f" in {'(' if u.get('band_lower_exclusive') else '['}{'-inf' if band[0] is None else _g(band[0])}, "
+              f"{'inf' if band[1] is None else _g(band[1])}]")
+    return s + f" ({u['method']})" + (f": {u['note']}" if u["method"] == "not scorable as designed" else "")
+
+
+print("UNCERTAINTY (95% intervals, flycns/stats.py: PASS only if the whole interval lies in the band)")
+for k, u in report["uncertainty"].items():
+    print(f"  {u['verdict']:<10}  {k}: {_desc(u)}")
 print(f"\nBENCHMARK {'PASS' if report['pass'] else 'FAIL'}  -> {OUT}/report.json")
