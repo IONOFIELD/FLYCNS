@@ -1,0 +1,8 @@
+# Actions are pinned by commit SHA (a tag can be moved; a SHA cannot). Dependabot proposes updates as pull
+# requests, so a new version arrives as a reviewed change, never silently.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
