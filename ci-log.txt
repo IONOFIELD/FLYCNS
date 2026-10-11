@@ -1,0 +1,251 @@
+criteria registered at commit 45126da
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+[graph] TARGETED SIGN FLIP: 110,462 edges (1.6% of weight) from neurons whose T-bars disagree with their consensus label
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+targeted sign inversion: 110462 edges differ from the declared graph
+SNpp16 13 cells | relay superclasses for R2: ['ascending_neuron', 'descending_neuron', 'vnc_intrinsic']
+
+R1  targeted transmitter-sign inversion
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  k=7, flipped               DVMn   7.39 Hz (10.3/7.2/6.1/6.7/6.7; 5/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+
+R2  relay-layer single-neuron parameters
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  tau_m_ms=5.0               DVMn  34.98 Hz (38.0/36.6/33.9/34.7/31.7; 0/5 in band) | steer max 3.54 | b1 max 0.00 | DLMn max 20.45
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  tau_m_ms=10.0              DVMn   7.20 Hz (9.6/7.1/6.2/6.5/6.7; 5/5 in band) | steer max 2.69 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  tau_m_ms=40.0              DVMn   7.26 Hz (9.9/7.2/6.0/6.6/6.7; 5/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  v_thresh_gap_mV=4.0        DVMn  10.64 Hz (14.6/9.7/9.9/9.2/9.8; 4/5 in band) | steer max 3.32 | b1 max 0.00 | DLMn max 0.06
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  v_thresh_gap_mV=10.0       DVMn   7.19 Hz (9.8/7.2/5.8/6.5/6.7; 5/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  refractory_ms=1.0          DVMn   7.41 Hz (10.3/7.3/6.1/6.7/6.7; 5/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  refractory_ms=5.0          DVMn   7.37 Hz (10.3/7.2/6.1/6.6/6.7; 5/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+
+R3  fresh cell-identity and phase draws
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  k= 1                       DVMn   0.00 Hz (0.0/0.0/0.0/0.0/0.0; 0/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  k= 2                       DVMn   0.00 Hz (0.0/0.0/0.0/0.0/0.0; 0/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  k= 3                       DVMn   0.00 Hz (0.0/0.0/0.0/0.0/0.0; 0/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  k= 4                       DVMn   0.40 Hz (0.0/0.0/2.0/0.0/0.0; 1/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  k= 5                       DVMn   2.86 Hz (4.5/0.0/3.2/0.0/6.7; 3/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  k= 6                       DVMn   3.01 Hz (5.6/0.0/0.0/4.3/5.1; 3/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  k= 7                       DVMn   8.57 Hz (5.5/12.2/10.3/10.2/4.6; 4/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  k= 8                       DVMn  10.94 Hz (11.0/10.3/12.4/11.9/9.2; 4/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  k= 9                       DVMn  16.18 Hz (16.5/16.2/17.1/16.4/14.7; 0/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  k=10                       DVMn  17.30 Hz (14.8/14.5/18.9/19.6/18.7; 0/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  k=11                       DVMn  20.91 Hz (25.3/19.8/18.4/19.4/21.6; 0/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  k=12                       DVMn  29.16 Hz (29.2/27.4/30.7/27.7/30.8; 0/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+  k=13                       DVMn  33.65 Hz (33.9/33.8/33.5/33.2/33.8; 0/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+  fresh k* = 5 (original 5); monotone within 0.5 Hz: True (reported, not scored)
+
+CHECKS (criteria registered before the run) | 3867s
+  PASS  R1_survives_transmitter_uncertainty
+  FAIL  R2_selectivity_holds_across_cord_params
+  PASS  R3_replicates_with_fresh_draws
+
+BATTERY FAIL  -> results\flight_snpp16_robustness\report.json
