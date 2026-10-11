@@ -1,0 +1,133 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+wing campaniform (ADMN) 218, haltere campaniform (DMetaN) 195
+wing motor neurons: 52 across 19 types
+DNg02 subtypes: ['DNg02_a', 'DNg02_b', 'DNg02_c', 'DNg02_d', 'DNg02_e', 'DNg02_f', 'DNg02_g'] (29 cells)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[open_load_0.125] load 0.12 DNg02     0 Hz | DVMn 1a-c   0.00 +/-  0.00 (range 0.0-0.0) | DLMn c-f  0.00 | steering    6.6 | b1   37.6 | DNp31  0.0 | CNS 0.061 | 5 draws, 265s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[open_load_0.25] load 0.25 DNg02     0 Hz | DVMn 1a-c   6.77 +/-  6.20 (range 0.0-15.2) | DLMn c-f  0.00 | steering   19.6 | b1  105.4 | DNp31  0.0 | CNS 0.129 | 5 draws, 167s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[open_load_0.3] load 0.30 DNg02     0 Hz | DVMn 1a-c   5.97 +/-  5.34 (range 0.0-13.8) | DLMn c-f  0.00 | steering   24.2 | b1  132.6 | DNp31  0.0 | CNS 0.157 | 5 draws, 163s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[open_load_0.35] load 0.35 DNg02     0 Hz | DVMn 1a-c   9.22 +/-  9.65 (range 0.0-25.9) | DLMn c-f  0.00 | steering   26.2 | b1  119.5 | DNp31  0.0 | CNS 0.187 | 5 draws, 163s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[open_load_0.4] load 0.40 DNg02     0 Hz | DVMn 1a-c  18.90 +/-  7.64 (range 11.2-31.7) | DLMn c-f  0.00 | steering   30.0 | b1  129.7 | DNp31  0.0 | CNS 0.212 | 5 draws, 163s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[open_load_0.5] load 0.50 DNg02     0 Hz | DVMn 1a-c  30.91 +/- 19.49 (range 0.0-58.8) | DLMn c-f  0.00 | steering   38.5 | b1  167.0 | DNp31  0.0 | CNS 0.280 | 5 draws, 170s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[open_load_1.0] load 1.00 DNg02     0 Hz | DVMn 1a-c  83.61 +/-  0.16 (range 83.5-83.9) | DLMn c-f  0.00 | steering   65.6 | b1  261.4 | DNp31  0.0 | CNS 0.573 | 5 draws, 170s
+
+anchor load by rule (smallest with DVMn 1a-c in 2-12 Hz): 0.25
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[rewired_null_load_0.25] load 0.25 DNg02     0 Hz | DVMn 1a-c   0.00 +/-  0.00 (range 0.0-0.0) | DLMn c-f  0.61 | steering    0.0 | b1    0.0 | DNp31  0.0 | CNS 0.108 | 5 draws, 169s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[model] WARNING: stimulated types have no outgoing edges to LIF neurons
+[closed_from_0.25] load 0.25 DNg02     0 Hz (0 src, 0 syn) | power MN  23.52 Hz | steering MN  61.72 Hz | b1  249.7 Hz (VS 0.00) | DNp31   0.0 Hz | leg MN 0.43 Hz | CNS 0.545 Hz | 50s
+DLM gating at anchor: excitatory relays 6/92 active at 3.4 Hz (first 203.8) | inhibitory relays 6/85 active at 2.2 Hz (first 220.5) | DLMn c-f 0.00 Hz
+
+STAGE 2: proprioceptive loop at anchor + DNg02 descending command
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[anchor_plus_DNg02_10Hz] load 0.25 DNg02    10 Hz | DVMn 1a-c   7.36 +/-  6.81 (range 0.0-17.1) | DLMn c-f  0.00 | steering   19.8 | b1  104.6 | DNp31  0.0 | CNS 0.130 | 5 draws, 245s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[anchor_plus_DNg02_25Hz] load 0.25 DNg02    25 Hz | DVMn 1a-c   8.99 +/-  7.50 (range 0.7-19.4) | DLMn c-f  0.00 | steering   21.7 | b1  104.1 | DNp31  0.0 | CNS 0.130 | 5 draws, 182s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[anchor_plus_DNg02_50Hz] load 0.25 DNg02    50 Hz | DVMn 1a-c  13.47 +/-  8.86 (range 3.3-25.4) | DLMn c-f  0.02 | steering   24.7 | b1  102.9 | DNp31  0.0 | CNS 0.133 | 5 draws, 166s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[anchor_plus_DNg02_100Hz] load 0.25 DNg02   100 Hz | DVMn 1a-c  40.45 +/- 10.07 (range 30.4-53.5) | DLMn c-f 12.45 | steering   29.9 | b1   99.8 | DNp31  1.6 | CNS 0.142 | 5 draws, 170s
+DNg02 rate rule: no rate puts both DLMn c-f and DVMn in band
+
+CHECKS
+  PASS  L1a_DVMn_2_to_12_hz
+  FAIL  L1b_DLMn_cf_2_to_12_hz
+  PASS  L2_b1_0.5_to_1.2_spikes_per_wingbeat
+  PASS  L3_leg_mn_not_entrained
+  PASS  L4_steering_specific_vs_null
+  FAIL  L5_DLMn_cf_2_to_12_hz_with_DNg02
+  FAIL  L6_DVMn_still_in_band_with_DNg02
+
+REPORTED  anchor load 0.25 | DVMn 6.8 Hz DLMn c-f 0.00 Hz | b1 105 Hz VS 0.05 | DNp31 0.0 Hz | closed loop saturated=True
+
+BENCHMARK FAIL  -> results\flight_loop\report.json
