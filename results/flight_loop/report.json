@@ -38,7 +38,7 @@
         "ps1 MN": 6.414,
         "tp1 MN": 1.162
       },
-      "wall_s": 265,
+      "wall_s": 310,
       "seed": 0,
       "per_wing_type_sd": {
         "b1 MN": 22.815,
@@ -100,7 +100,7 @@
         "ps1 MN": 6.262,
         "tp1 MN": 0.96
       },
-      "wall_s": 167,
+      "wall_s": 204,
       "seed": 0,
       "per_wing_type_sd": {
         "DLMn a, b": 0.304,
@@ -173,7 +173,7 @@
         "ps1 MN": 6.008,
         "tp1 MN": 1.264
       },
-      "wall_s": 163,
+      "wall_s": 202,
       "seed": 0,
       "per_wing_type_sd": {
         "DLMn a, b": 1.212,
@@ -246,7 +246,7 @@
         "iii3 MN": 12.978,
         "ps1 MN": 5.706
       },
-      "wall_s": 163,
+      "wall_s": 208,
       "seed": 0,
       "per_wing_type_sd": {
         "DLMn a, b": 0.1,
@@ -316,7 +316,7 @@
         "iii3 MN": 29.24,
         "ps1 MN": 0.354
       },
-      "wall_s": 163,
+      "wall_s": 206,
       "seed": 0,
       "per_wing_type_sd": {
         "DVMn 1a-c": 7.638,
@@ -385,7 +385,7 @@
         "iii3 MN": 22.778,
         "ps1 MN": 6.618
       },
-      "wall_s": 170,
+      "wall_s": 222,
       "seed": 0,
       "per_wing_type_sd": {
         "DVMn 1a-c": 19.491,
@@ -456,7 +456,7 @@
         "iii3 MN": 3.484,
         "tp2 MN": 0.908
       },
-      "wall_s": 170,
+      "wall_s": 208,
       "seed": 0,
       "per_wing_type_sd": {
         "DLMn a, b": 0.122,
@@ -517,7 +517,7 @@
       "per_wing_type_hz": {
         "DLMn c-f": 0.606
       },
-      "wall_s": 169,
+      "wall_s": 199,
       "seed": 0,
       "per_wing_type_sd": {
         "DLMn c-f": 1.212
@@ -571,7 +571,7 @@
         "iii3 MN": 2.78,
         "tp2 MN": 1.52
       },
-      "wall_s": 50,
+      "wall_s": 56,
       "load_trace": [
         {
           "t_ms": 250.0,
@@ -804,7 +804,7 @@
         "tp1 MN": 0.86,
         "tp2 MN": 1.618
       },
-      "wall_s": 245,
+      "wall_s": 271,
       "seed": 0,
       "per_wing_type_sd": {
         "DLMn a, b": 0.608,
@@ -880,7 +880,7 @@
         "tp1 MN": 0.456,
         "tp2 MN": 26.11
       },
-      "wall_s": 182,
+      "wall_s": 201,
       "seed": 0,
       "per_wing_type_sd": {
         "DLMn a, b": 1.616,
@@ -958,7 +958,7 @@
         "tp1 MN": 0.202,
         "tp2 MN": 66.712
       },
-      "wall_s": 166,
+      "wall_s": 203,
       "seed": 0,
       "per_wing_type_sd": {
         "DLMn a, b": 1.794,
@@ -1046,7 +1046,7 @@
         "ps1 MN": 45.396,
         "tp2 MN": 127.562
       },
-      "wall_s": 170,
+      "wall_s": 200,
       "seed": 0,
       "per_wing_type_sd": {
         "DLMn a, b": 10.705,
@@ -1250,8 +1250,8 @@
   },
   "pass": false,
   "provenance": {
-    "written_at": "2026-10-11T01:36:21",
-    "git_commit": "45126da",
+    "written_at": "2026-10-11T07:13:29",
+    "git_commit": "fcff151",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -1276,7 +1276,8 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9"
+        "edges.parquet": "becf568580708ba9",
+        "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"
     }
