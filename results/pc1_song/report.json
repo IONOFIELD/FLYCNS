@@ -125,13 +125,89 @@
         "pMP2": 3.4,
         "DNp13": 0.0,
         "pIP10": 1.45,
-        "cns_hz": 0.005326558270540596
+        "cns_hz": 0.005326558270540596,
+        "per_trial": {
+          "pMP2": [
+            4.5,
+            3.0,
+            2.5,
+            3.0,
+            4.5,
+            4.5,
+            3.5,
+            2.0,
+            3.5,
+            3.0
+          ],
+          "DNp13": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "pIP10": [
+            3.0,
+            2.0,
+            0.5,
+            0.5,
+            1.5,
+            2.0,
+            1.0,
+            1.0,
+            2.0,
+            1.0
+          ]
+        }
       },
       "100Hz": {
         "pMP2": 8.15,
         "DNp13": 0.0,
         "pIP10": 5.7,
-        "cns_hz": 0.011883857523658224
+        "cns_hz": 0.011883857523658224,
+        "per_trial": {
+          "pMP2": [
+            10.0,
+            7.0,
+            7.5,
+            6.5,
+            8.0,
+            8.0,
+            8.5,
+            7.5,
+            10.0,
+            8.5
+          ],
+          "DNp13": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "pIP10": [
+            7.5,
+            6.0,
+            5.5,
+            5.0,
+            4.5,
+            6.0,
+            5.5,
+            5.0,
+            7.0,
+            5.0
+          ]
+        }
       }
     },
     "pC1_13_14": {
@@ -139,13 +215,89 @@
         "pMP2": 3.8,
         "DNp13": 0.0,
         "pIP10": 2.1,
-        "cns_hz": 0.006732644065221935
+        "cns_hz": 0.006732644065221935,
+        "per_trial": {
+          "pMP2": [
+            3.0,
+            4.0,
+            3.5,
+            4.0,
+            5.0,
+            4.0,
+            3.0,
+            3.5,
+            3.5,
+            4.5
+          ],
+          "DNp13": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "pIP10": [
+            1.5,
+            1.5,
+            2.5,
+            2.0,
+            2.5,
+            1.5,
+            2.0,
+            2.0,
+            2.0,
+            3.5
+          ]
+        }
       },
       "100Hz": {
         "pMP2": 11.05,
         "DNp13": 0.0,
         "pIP10": 6.75,
-        "cns_hz": 0.013979772130157801
+        "cns_hz": 0.013979772130157801,
+        "per_trial": {
+          "pMP2": [
+            10.0,
+            11.5,
+            11.0,
+            11.0,
+            11.0,
+            10.5,
+            11.0,
+            12.5,
+            11.5,
+            10.5
+          ],
+          "DNp13": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "pIP10": [
+            6.5,
+            6.5,
+            7.0,
+            6.0,
+            7.0,
+            6.0,
+            6.0,
+            8.0,
+            6.5,
+            8.0
+          ]
+        }
       }
     },
     "pC1_15_16": {
@@ -153,13 +305,89 @@
         "pMP2": 0.0,
         "DNp13": 0.0,
         "pIP10": 0.2,
-        "cns_hz": 0.0006054413207048179
+        "cns_hz": 0.0006054413207048179,
+        "per_trial": {
+          "pMP2": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "DNp13": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "pIP10": [
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            0.5,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
       },
       "100Hz": {
         "pMP2": 0.0,
         "DNp13": 0.0,
         "pIP10": 1.45,
-        "cns_hz": 0.0033975681440285023
+        "cns_hz": 0.0033975681440285023,
+        "per_trial": {
+          "pMP2": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "DNp13": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "pIP10": [
+            1.0,
+            2.0,
+            0.5,
+            1.5,
+            2.0,
+            1.5,
+            2.5,
+            0.5,
+            2.0,
+            1.0
+          ]
+        }
       }
     },
     "P1a": {
@@ -167,13 +395,89 @@
         "pMP2": 0.0,
         "DNp13": 0.0,
         "pIP10": 0.0,
-        "cns_hz": 0.0002672243561362197
+        "cns_hz": 0.0002672243561362197,
+        "per_trial": {
+          "pMP2": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "DNp13": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "pIP10": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
       },
       "100Hz": {
         "pMP2": 0.0,
         "DNp13": 0.0,
         "pIP10": 0.0,
-        "cns_hz": 0.002403910390470225
+        "cns_hz": 0.002403910390470225,
+        "per_trial": {
+          "pMP2": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "DNp13": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "pIP10": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
       }
     },
     "pC1_17": {
@@ -181,13 +485,89 @@
         "pMP2": 0.0,
         "DNp13": 0.0,
         "pIP10": 0.0,
-        "cns_hz": 0.00022619289308582657
+        "cns_hz": 0.00022619289308582657,
+        "per_trial": {
+          "pMP2": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "DNp13": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "pIP10": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
       },
       "100Hz": {
         "pMP2": 0.0,
         "DNp13": 0.0,
         "pIP10": 0.3,
-        "cns_hz": 0.0019680999275850106
+        "cns_hz": 0.0019680999275850106,
+        "per_trial": {
+          "pMP2": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "DNp13": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "pIP10": [
+            0.0,
+            0.0,
+            0.0,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
       }
     }
   },
@@ -195,7 +575,45 @@
     "pMP2": 0.0,
     "DNp13": 0.0,
     "pIP10": 0.0,
-    "cns_hz": 0.00010755123901799289
+    "cns_hz": 0.00010755123901799289,
+    "per_trial": {
+      "pMP2": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "DNp13": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "pIP10": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
   },
   "checks": {
     "P1_pc1_14a_pulse_over_sine": true,
@@ -203,9 +621,114 @@
     "P3_14a_exceeds_15_16_on_pulse": true,
     "P4_null_silent": true
   },
+  "uncertainty": {
+    "P1_pc1_14a_pulse_over_sine": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 2 parts",
+      "parts": [
+        {
+          "estimate": 8.15,
+          "ci95": [
+            7.5,
+            8.85
+          ],
+          "band": [
+            0.5,
+            null
+          ],
+          "method": "bootstrap",
+          "verdict": "PASS",
+          "n": 10,
+          "note": "pMP2 spikes/cell/pulse, bootstrap over pulses"
+        },
+        {
+          "estimate": 8.15,
+          "ci95": null,
+          "band": null,
+          "method": "not scorable as designed",
+          "verdict": "UNRESOLVED",
+          "note": "DNp13 is silent in every arm (0 spikes in every pulse of every group and rate on the real network), so 'pMP2 > DNp13' adds nothing to 'pMP2 >= 0.5' and cannot show a pulse-over-sine choice; benchmarks/dnp13_control.py tests whether DNp13 is reachable"
+        }
+      ],
+      "verdict": "UNRESOLVED"
+    },
+    "P2_pc1_13_14_pulse_over_sine": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 2 parts",
+      "parts": [
+        {
+          "estimate": 11.05,
+          "ci95": [
+            10.65,
+            11.45
+          ],
+          "band": [
+            0.5,
+            null
+          ],
+          "method": "bootstrap",
+          "verdict": "PASS",
+          "n": 10,
+          "note": "pMP2 spikes/cell/pulse, bootstrap over pulses"
+        },
+        {
+          "estimate": 11.05,
+          "ci95": null,
+          "band": null,
+          "method": "not scorable as designed",
+          "verdict": "UNRESOLVED",
+          "note": "DNp13 is silent in every arm (0 spikes in every pulse of every group and rate on the real network), so 'pMP2 > DNp13' adds nothing to 'pMP2 >= 0.5' and cannot show a pulse-over-sine choice; benchmarks/dnp13_control.py tests whether DNp13 is reachable"
+        }
+      ],
+      "verdict": "UNRESOLVED"
+    },
+    "P3_14a_exceeds_15_16_on_pulse": {
+      "estimate": 8.15,
+      "ci95": [
+        7.5,
+        8.85
+      ],
+      "band": [
+        0,
+        null
+      ],
+      "method": "bootstrap",
+      "verdict": "PASS",
+      "band_lower_exclusive": true,
+      "note": "pMP2 under pC1_14a minus under pC1_15_16: two separate simulations, each resampled over its own pulses (10 and 10)"
+    },
+    "P4_null_silent": {
+      "estimate": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "band": [
+        null,
+        0.1
+      ],
+      "method": "bootstrap",
+      "verdict": "PASS",
+      "n": 10,
+      "note": "pMP2 on the rewired null, bootstrap over pulses"
+    }
+  },
+  "registration": {
+    "file": "results/pc1_song/registration.json",
+    "version": 2,
+    "git_commit": "4c39a8f",
+    "model_hash": "f36f2424cace33b32488fb2de691c2d1e08fa147ede9f43dc514673d9617d491",
+    "registered_at": "2026-10-11T12:41:08",
+    "matches": true,
+    "problems": []
+  },
   "provenance": {
-    "written_at": "2026-10-11T13:32:02",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T20:09:12",
+    "git_commit": "b7eba83",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -220,6 +743,7 @@
     "engine": "cython",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "graph": {
       "data_dir": "data",
       "min_weight": 5,
@@ -229,7 +753,11 @@
       "n_dropped_unsigned_edges": 160051,
       "n_dropped_unsigned_synapses": 1980492,
       "n_silent_presynaptic": 8020,
-      "edges_nt_used": false
+      "edges_nt_used": false,
+      "glu_vnc": "inhibitory",
+      "n_glu_vnc_flipped": 0,
+      "jon_mode": "electrical",
+      "jon_compound_mv": 3.0
     },
     "data": {
       "dir": "data",
