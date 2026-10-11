@@ -1,4 +1,5 @@
-"""Collect every results/*/report.json into results/SUITE.md with one parameter set declared.
+"""Collect every results/*/report.json (or only the named benchmarks: summarize.py gf_escape auditory)
+into results/SUITE.md with one parameter set declared.
 
 Every check is shown with its ROLE (flycns/calibration.py): only checks that were not a target of
 any fit count as tests of the model. Reports are flagged when they were produced under settings
@@ -14,7 +15,9 @@ from flycns.integrity import PLUMBING
 
 rows, stamps, flags = [], {}, {}
 counts, passed_by_role = Counter(), Counter()
-reports = sorted(Path("results").glob("*/report.json"))
+# optional benchmark names restrict the summary (the battery summarises only the suite it reran)
+only = set(sys.argv[1:])
+reports = sorted(p for p in Path("results").glob("*/report.json") if not only or p.parent.name in only)
 # staleness from the time each report was WRITTEN (its provenance stamp), not the file's modification
 # time, which a fresh checkout resets for every file
 import datetime as _dt

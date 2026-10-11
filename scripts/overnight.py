@@ -91,7 +91,8 @@ def main():
                 else:
                     failed.append(b)
                     print(f"  {b} errored (see results\\overnight\\{tag}_{b}.log)")
-            if subprocess.run([PY, "benchmarks/summarize.py"], env=env, capture_output=True).returncode != 0:
+            # summarise only the benchmarks this run reran, so every tag's line counts the same checks
+            if subprocess.run([PY, "benchmarks/summarize.py", *BENCHES], env=env, capture_output=True).returncode != 0:
                 failed.append("summary")
             else:
                 shutil.copy2(RES / "SUITE.md", out / "SUITE.md")
