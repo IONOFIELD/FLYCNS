@@ -51,6 +51,21 @@ RUNS = [  # (label, argv relative to the copy, extra env, sentinel substring or 
     ("a2_registered", ["benchmarks/a2_registered.py", "4", "testdata"], {}, None),
     ("a2_robustness", ["benchmarks/a2_robustness.py", "2", "testdata"], {}, None),
     ("null_strict", ["benchmarks/null_strict.py", "testdata"], {}, None),
+    # diagnostics outside the suite: each must run and leave its stamp
+    ("diagnose_feeding", ["benchmarks/diagnose_feeding.py", "testdata"], {}, None),
+    ("screen_afferents", ["benchmarks/screen_afferents.py", "1", "testdata", "50", "0.3"], {}, None),
+    ("embodiment_gate", ["benchmarks/embodiment_gate.py", "testdata"], {}, None),
+    ("sensitivity_cord", ["benchmarks/sensitivity_cord.py", "1", "testdata"], {}, None),
+    ("fit_gf_adapt", ["benchmarks/fit_gf_adapt.py", "2", "testdata"], {}, None),
+    ("fit_baseline", ["benchmarks/fit_baseline.py", "1", "testdata"], {}, None),
+    ("fit_regional", ["benchmarks/fit_regional.py", "1", "testdata"], {}, None),
+    ("fit_gains", ["benchmarks/fit_gains.py", "1", "testdata"], {}, None),
+    ("diagnostics left their stamps", ["-c", "import pathlib,sys; need=['results/feeding/afferent_influence.csv.stamp.json', "
+     "'results/feeding/afferent_screen_50Hz_w0.3.csv.stamp.json', 'results/sensitivity_cord/grid.csv.stamp.json', "
+     "'results/fit_gf_adapt/grid.csv.stamp.json', 'results/fit_baseline/grid.csv.stamp.json', "
+     "'results/fit_regional/grid.csv.stamp.json', 'results/fit_gains/grid.csv.stamp.json']; "
+     "miss=[n for n in need if not pathlib.Path(n).exists()]; print(miss or 'all stamped'); sys.exit(1 if miss else 0)"],
+     {}, "all stamped"),
     ("battery variant: min_weight 10", ["benchmarks/gf_escape.py", "2", "testdata"], {"FLYCNS_MIN_WEIGHT": "10"}, "min_weight 10"),
     ("a threshold below the data's floor is refused", ["benchmarks/gf_escape.py", "2", "testdata"], {"FLYCNS_MIN_WEIGHT": "3"}, "!fail:below this dataset's floor"),
     ("battery variant: superclass null", ["benchmarks/gf_escape.py", "2", "testdata"], {"FLYCNS_NULL": "superclass"}, None),

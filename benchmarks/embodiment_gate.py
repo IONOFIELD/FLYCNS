@@ -42,6 +42,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph
 from flycns.graph import SIGN_MAP
+from flycns.bench import provenance
 
 DATA = sys.argv[1] if len(sys.argv) > 1 else "data"
 OUT = Path("results/embodiment")
@@ -160,6 +161,7 @@ report["verdict"] = dict(
                "Without a cited rate the loop is a guess and should not be built. Fenton/Dickinson "
                "haltere campaniform work and Dickerson et al. on wing campaniform fields are the "
                "places to look. If not buildable: record which question failed and stop."))
+report["provenance"] = provenance()
 (OUT / "gate.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\n" + "=" * 72)
 for k, v in report["verdict"].items():

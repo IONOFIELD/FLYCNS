@@ -325,8 +325,9 @@ class preserved:
 LOADED = {}   # filled by graph.load_graph: data_dir, min_weight, counts
 
 
-def provenance_record():
-    """Everything needed to reproduce a report, or to know it cannot be reproduced."""
+def provenance_record(data_dir=None):
+    """Everything needed to reproduce a report, or to know it cannot be reproduced. data_dir names
+    the input tables for scripts that read them directly instead of through graph.load_graph."""
     st = git_state()
     rec = dict(written_at=datetime.datetime.now().isoformat(timespec="seconds"),
                git_commit=st["commit"], git_is_repo=st["is_repo"], git_dirty=not st["clean"],
@@ -347,17 +348,17 @@ def provenance_record():
                                  sha256=hashlib.sha256(lf.read_bytes()).hexdigest()[:16] if lf.exists() else None)
     if LOADED:
         rec["graph"] = {k: v for k, v in LOADED.items()}
-        dd = LOADED.get("data_dir")
-        if dd:
-            # the anatomical SEZ table changes region readouts, so it is stamped too when present
-            names = ["neurons.parquet", "edges.parquet"] + \
-                (["roi_membership.parquet"] if (Path(dd) / "roi_membership.parquet").exists() else [])
-            try:
-                fps = fingerprints(dd, names)
-                rec["data"] = dict(dir=str(dd), digests={k: v["digest"][:16] for k, v in fps.items()},
-                                   manifest=verify_data(dd, names)["status"])
-            except Exception as e:   # provenance must never crash a finished run
-                rec["data"] = dict(dir=str(dd), error=str(e)[:200])
+    dd = LOADED.get("data_dir") or data_dir
+    if dd:
+        # the anatomical SEZ table changes region readouts, so it is stamped too when present
+        names = ["neurons.parquet", "edges.parquet"] + \
+            (["roi_membership.parquet"] if (Path(dd) / "roi_membership.parquet").exists() else [])
+        try:
+            fps = fingerprints(dd, names)
+            rec["data"] = dict(dir=str(dd), digests={k: v["digest"][:16] for k, v in fps.items()},
+                               manifest=verify_data(dd, names)["status"])
+        except Exception as e:   # provenance must never crash a finished run
+            rec["data"] = dict(dir=str(dd), error=str(e)[:200])
     return rec
 
 

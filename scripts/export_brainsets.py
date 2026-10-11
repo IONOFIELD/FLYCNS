@@ -25,7 +25,7 @@ import temporaldata as td
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, CNSModel, LIFParams
 from flycns.protocols import LOOM_TUNING
-from flycns.bench import find_types
+from flycns.bench import find_types, stamp
 from flycns.graph import GUSTATORY_MN9_DRIVING
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 40
@@ -118,6 +118,7 @@ for name, cfg in SESSIONS.items():
               and len(back.units.id) == len(recorded) and len(back.trials) == len(trials))
     if not ok:
         raise SystemExit(f"VALIDATION FAILED: {f} does not round-trip through temporaldata.Data.from_hdf5")
+    stamp(f, session=name, n_trials=N)
     print(f"  wrote {f}: {len(sp):,} spikes, {len(recorded)} units, {N} trials, {t_end:.1f} s "
           f"(validated: reloads with temporaldata {td.__version__})")
 print("\nevery file was reloaded with temporaldata.Data.from_hdf5 and compared to what was written")

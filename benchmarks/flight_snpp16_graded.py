@@ -88,7 +88,8 @@ if crit_f.exists():
                          "Delete it deliberately only if the design has genuinely changed.")
 else:
     crit_f.write_text(json.dumps(registered, indent=2), encoding="utf-8")
-reg = json.loads(crit_f.read_text(encoding="utf-8")).get("git_commit") or "?"
+registered = json.loads(crit_f.read_text(encoding="utf-8"))   # the report carries the registration, not this run
+reg = registered.get("git_commit") or "?"
 print(f"criteria registered at commit {reg}; this run at {commit or '?'}{' (SCRIPT UNCOMMITTED: commit before running)' if dirty else ''}")
 
 neurons, edges = load_graph(DATA)

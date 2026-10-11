@@ -27,6 +27,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, CNSModel, LIFParams, loom_protocol
 from flycns.protocols import LOOM_TUNING
+from flycns.bench import provenance, stamp
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 20
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
@@ -81,7 +82,9 @@ spread = {c: round(float(df[c.replace("E_spikes", "gf_per_response").replace("E_
 summary = dict(n_settings=len(df), checks_failing_in_any_setting=moved, metric_std_across_sweep=spread,
                cord_superclasses=CORD,
                interpretation=("checks that never fail across a 8x range of cord tau_m, a 4-10 mV threshold "
-                               "range and a 5x refractory range do not rest on cord single-neuron parameters"))
+                               "range and a 5x refractory range do not rest on cord single-neuron parameters"),
+               n_trials=N, provenance=provenance())
+stamp(OUT / "grid.csv")
 (OUT / "summary.json").write_text(json.dumps(summary, indent=2, default=float), encoding="utf-8")
 print("\nchecks failing in at least one setting:", moved)
 print("metric spread across the sweep:", spread)

@@ -47,7 +47,7 @@ from flycns import load_graph, rewire_null, CNSModel, LIFParams
 from flycns.graph import (FEEDING_SECOND_ORDER, FEEDING_MOTOR, SUGAR_GRN_PATTERNS,
                           BITTER_GRN_PATTERNS)
 from flycns.bench import find_types, present_types, pulse_protocol, readout_rates
-from flycns.bench import provenance
+from flycns.bench import provenance, stamp
 from flycns.graph import infer_side, gustatory_afferents, GUSTATORY_MN9_DRIVING
 from flycns import ascii as A
 
@@ -153,7 +153,7 @@ for hz in [10, 25, 50, 100, 200]:
               f"| {mot.type.nunique()} of {n_types} cb_motor types active: {list(report['arms']['motor_types_active'])[:8]}")
         report["checks"]["F2b_extra_SEZ_quiet"] = bool(report["arms"]["F2b_nonSEZ_rate_hz"] < 0.02)
         report["checks"]["F2c_motor_rate_physiological"] = bool(0 < report["arms"]["F2c_motor_mean_hz"] < 100)
-curve = pd.DataFrame(curve); curve.to_csv(OUT / "F2_dose.csv", index=False)
+curve = pd.DataFrame(curve); curve.to_csv(OUT / "F2_dose.csv", index=False); stamp(OUT / "F2_dose.csv")
 if report_all_arm:
     m = build(report_all_arm)
     on = pulse_protocol(m, {t: 50 for t in report_all_arm}, n_trials=N_TRIALS)
@@ -213,7 +213,7 @@ print(f"   structural 2-hop drive from left afferents: MN9-L {struct_L:,.0f} vs 
       f"functional {'ipsi' if ipsi > contra else 'contra'} dominant -> "
       f"{'matches' if report['checks']['F1_laterality_matches_wiring'] else 'does NOT match'} wiring")
 print(f"F1 left sugar {F1_HZ:.0f} Hz: MN9 ipsi {ipsi:.2f}, contra {contra:.2f} spikes/cell  [{time.time()-t0:.0f}s]")
-lat.to_csv(OUT / "F1_laterality.csv", index=False)
+lat.to_csv(OUT / "F1_laterality.csv", index=False); stamp(OUT / "F1_laterality.csv")
 
 # ---------------------------------------------------------------- F3 bitter suppression
 if bitter:

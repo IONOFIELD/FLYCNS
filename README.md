@@ -114,6 +114,7 @@ Every result has to answer four questions: which code, which data, which setting
 | guard | what it does | where |
 |---|---|---|
 | Code | Every report records the commit and whether any code differed from it. Registered tests refuse to run on uncommitted code. | `flycns/integrity.py` |
+| Every file | Every result file carries the stamp of the run that wrote it, in the file or beside it (`<file>.stamp.json`). `results/SUITE.md` lists any file without a stamp, and flags any stamp whose model code has changed since (STALE). | `flycns/bench.py`, `benchmarks/summarize.py` |
 | Data | The fetched tables are fingerprinted by content, so the fingerprint ignores row order and file format. The fingerprint is committed in `data/MANIFEST.json`. The suite and registered tests refuse to run on data that differ, and every report records the fingerprint it ran on. | `flycns/integrity.py`, `scripts/setup.py` |
 | Settings | Any `FLYCNS_*` override prints a banner, is stamped into the report, and is flagged PERTURBED in `results/SUITE.md`. The robustness battery restores the canonical results when it finishes. | `flycns/integrity.py`, `scripts/overnight.py` |
 | Evidence | Each check has a role: independent, control, robustness, calibrated or construction. Only independent checks count as tests. CI fails if a check is unclassified. | `flycns/calibration.py`, `docs/CALIBRATION.md` |

@@ -21,7 +21,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, CNSModel, LIFParams
-from flycns.bench import pulse_protocol, readout_rates
+from flycns.bench import pulse_protocol, readout_rates, stamp
 
 N_TRIALS = int(sys.argv[1]) if len(sys.argv) > 1 else 3
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
@@ -79,6 +79,7 @@ if len(drivers):
         print(f"  suppression {t:<18} MN9 {s['mn9']:6.2f} vs {base:.2f} alone  ({(base-s['mn9'])/base:+.2f})")
     scr = scr.merge(pd.DataFrame(supp), on="type", how="left")
 scr.to_csv(OUT / f"afferent_screen{tag}.csv", index=False)
+stamp(OUT / f"afferent_screen{tag}.csv", hz=HZ, w_scale=W_SCALE, n_trials=N_TRIALS, only=ONLY)
 
 print("\nDRIVERS (MN9 > 0.5 spikes/cell, CNS quiet):")
 print(drivers[["type", "n", "mn9", "mn9_L", "mn9_R", "cns"]].to_string(index=False))

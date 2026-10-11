@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, CNSModel, LIFParams, loom_protocol
 from flycns.protocols import LOOM_TUNING
 from flycns import graph as G
+from flycns.bench import provenance, stamp
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 40
 if N < 40 and "testdata" not in " ".join(sys.argv):
@@ -68,5 +69,7 @@ for b in GRID:
 df = pd.DataFrame(rows); ok = df[df.ok]
 best = int(ok.b_mV.min()) if len(ok) else None
 print(f"\nsmallest increment satisfying C1-C4: {best} mV" if best is not None else "\nno candidate satisfies all constraints")
+stamp(OUT / "grid.csv")
 (OUT / "best.json").write_text(json.dumps(dict(b_adapt_mV=best, n_trials=N, rule="smallest b with C1-C4",
-                                               constraints="von Reyn 2014: 1-2 spikes/loom, probabilistic; Tanouye & Wyman 1980 relay"), indent=2), encoding="utf-8")
+                                               constraints="von Reyn 2014: 1-2 spikes/loom, probabilistic; Tanouye & Wyman 1980 relay",
+                                               provenance=provenance()), indent=2, default=str), encoding="utf-8")

@@ -162,5 +162,8 @@ report["part_b"] = dict(
                "(output-dominated). Candidates are ranked by that signature only; confirming "
                "identity needs NBLAST against the light-level template."))
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from flycns.bench import provenance  # noqa: E402
+report["provenance"] = provenance(str(DATA))
 (OUT / "modulator_checks.json").write_text(json.dumps(report, indent=2, default=str), encoding="utf-8")
 print(f"\nwrote {OUT / 'modulator_checks.json'}")

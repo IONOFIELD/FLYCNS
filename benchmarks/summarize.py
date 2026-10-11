@@ -22,7 +22,8 @@ reports = sorted(p for p in Path("results").glob("*/report.json") if not only or
 # written hours apart and are not stale; a report whose commit git cannot compare falls back to time
 # (written over an hour before the newest report)
 import datetime as _dt
-MODEL_CODE = ["flycns", "benchmarks", ":(exclude)benchmarks/summarize.py", "data/loom_tuning_measured.json",
+MODEL_CODE = ["flycns", "benchmarks", ":(exclude)benchmarks/summarize.py", "fit", "scripts/export_brainsets.py",
+              "data/loom_tuning_measured.json",
               "requirements.lock"]
 _changed = {}
 
@@ -98,8 +99,8 @@ refs_folded = fold(refs)
 missing = sorted(f"{a} {y}" for a, y in tags if fold(a.split()[0].rstrip(",")) not in refs_folded or y not in refs)
 stale = [b for b, f in flags.items() if "STALE" in f]
 if stale:
-    md += ["", f"**WARNING: reports more than an hour older than the newest are included: "
-                f"{', '.join(stale)}. Rerun the suite (menu 4, `scripts/run_all.py`) before quoting this table.**"]
+    md += ["", f"**WARNING: reports produced by code that has changed since: {', '.join(stale)}. "
+                f"Rerun them before quoting this table.**"]
 md += ["", "## Report provenance", "| benchmark | written | commit | data (neurons / edges) | env overrides |",
        "|---|---|---|---|---|"]
 md += [f"| {b} | {v['written_at']} | {v['commit']} | "
@@ -108,5 +109,43 @@ md += [f"| {b} | {v['written_at']} | {v['commit']} | "
 md += ["", f"## Citation check: {len(tags)-len(missing)}/{len(tags)} tags resolve in REFERENCES.md"]
 if missing:
     md += ["Unresolved: " + ", ".join(missing)]
+# Stamp inventory: every result file (JSON, CSV, HDF5) must carry the stamp of the run that wrote it,
+# in the file (a "provenance" key) or beside it (<file>.stamp.json, flycns/bench.py stamp)
+EXEMPT = {"results/turner2022": "input extraction from 22 GB of Turner et al. 2022 imaging; its output is a "
+                                "model input, hashed into every report's loom_input stamp"}
+NOT_RESULTS = {"criteria.json", "progress.json"}   # registrations and in-progress state
+
+
+def file_stamp(f):
+    if f.suffix == ".json":
+        try:
+            d = json.loads(f.read_text(encoding="utf-8"))
+        except ValueError:
+            return None
+        return d.get("provenance") if isinstance(d, dict) else None
+    side = f.with_name(f.name + ".stamp.json")
+    return json.loads(side.read_text(encoding="utf-8")).get("provenance") if side.exists() else None
+
+
+if not only:
+    files = sorted(f for f in Path("results").rglob("*") if f.suffix in (".json", ".csv", ".h5")
+                   and f.name not in NOT_RESULTS and not f.name.endswith(".stamp.json")
+                   and not any(f.as_posix().startswith(e + "/") for e in EXEMPT))
+    unstamped, flagged, commits = [], [], Counter()
+    for f in files:
+        pv = file_stamp(f)
+        if not pv or "git_dirty" not in pv:
+            unstamped.append(f.as_posix()); continue
+        commits[pv.get("git_commit", "?")] += 1
+        why = [w for w, bad in (("STALE", code_changed_since(pv.get("git_commit", ""))), ("DIRTY", pv.get("git_dirty")),
+                                ("DATA-MISMATCH", (pv.get("data") or {}).get("manifest") == "mismatch")) if bad]
+        if why:
+            flagged.append(f"{f.as_posix()} ({', '.join(why)})")
+    md += ["", "## Stamp inventory",
+           f"{len(files) - len(unstamped)} of {len(files)} result files carry a stamp "
+           f"(commits: {', '.join(f'{c} x{n}' for c, n in commits.most_common()) or 'none'}); "
+           f"{len(flagged)} flagged, {len(unstamped)} unstamped."]
+    md += [f"- flagged: {x}" for x in flagged] + [f"- unstamped: {x}" for x in unstamped]
+    md += [f"- exempt: {e}/ ({why})" for e, why in EXEMPT.items()]
 Path("results/SUITE.md").write_text("\n".join(md) + "\n", encoding="utf-8")
 print("\n".join(md))
