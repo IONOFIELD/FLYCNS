@@ -81,7 +81,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from brian2 import SpikeGeneratorGroup, Synapses, ms, mV
 from flycns import load_graph, CNSModel, LIFParams
-from flycns import stats
+from flycns import registry, stats
 from flycns.bench import provenance, spike_source
 from flycns.graph import rewire_null, SIGN_MAP
 
@@ -95,6 +95,67 @@ WING_MN = r"^(DLMn|DVMn|b[123] MN|hg[1-4] MN|i[12] MN|iii[13] MN|tp[12] MN|ps1 M
 POWER = r"^(DLMn|DVMn)"
 STEER = r"^(b[123] MN|hg[1-4] MN|i[12] MN|iii[13] MN|tp[12] MN|ps1 MN)"
 LEG_MN = r"^(Ti|Fe|Tr|Ta|Co).*MN|MN.*(tibia|femur|trochanter|coxa)"
+# DVMn 1a-c's whole proprioceptive drive comes from 41 of the 413 afferents (all ADMN), 20 of which
+# carry 83% of it, so a random 35% recruitment is a lottery over whether those few fire. Each arm is
+# therefore run over several independent recruitment draws and reported as mean and spread.
+import os as _os
+RECRUIT_SEEDS = [int(x) for x in _os.environ.get("FLYCNS_RECRUIT_SEEDS", "0,1,2,3,4").split(",")]
+
+# ---- version 2 registration (flycns/registry.py): criteria, bands and the frozen model, before any data
+LABEL = "flight_loop"
+_AT = "at the anchor load, scored per recruitment seed"
+CRITERIA_V2 = dict(
+    version=2,
+    question=("does phase-locked proprioceptive drive from the wing and haltere campaniform afferents put the "
+              "wing motor neurons in their measured ranges, and does a DNg02 descending command bring DLMn c-f in?"),
+    protocol=dict(
+        n_cycles=N_CYCLES, wingbeat_hz=WINGBEAT_HZ, jitter_ms=JITTER_MS, loads=LOADS, dng02_hz_sweep=DNG02_HZ,
+        recruit_seeds=RECRUIT_SEEDS,
+        drive=("a fraction LOAD of the campaniform afferents (ADMN, DMetaN; sorted by bodyId) recruited per seed, "
+               "one spike per wingbeat cycle at a uniform random phase with gaussian jitter (an 8 mV kick into "
+               "each afferent), after 200 ms of settling"),
+        anchor_rule=("smallest load with mean DVMn 1a-c (across recruitment draws) in 2-12 Hz; if none, the load "
+                     "nearest 6 Hz, flagged"),
+        null="rewire_null(edges, seed=0) at the anchor load, same recruitment seeds",
+        closed_loop="from the anchor load, load = clip(0.5 + 0.5 * power MN rate / 6 Hz, 0.05, 1) every 50 ms (reported)",
+        stage2_rule=("DNg02 subtypes (resolved from the data) at each swept rate, at the anchor load; chosen rate: "
+                     "the smallest with mean DLMn c-f and mean DVMn 1a-c both in 2-12 Hz"),
+        scoring=("per draw (stats.per_draw, need 0.8): each recruitment seed is one draw; PASS if ceil(0.8 n) of "
+                 "the n seeds are in band, FAIL if at most floor(0.2 n), else UNRESOLVED")),
+    checks={
+        "L1a_DVMn_2_to_12_hz": dict(band=[2.0, 12.0], rule=f"DVMn 1a-c fires 2-12 Hz {_AT}"),
+        "L1b_DLMn_cf_2_to_12_hz": dict(band=[2.0, 12.0], rule=f"DLMn c-f fires 2-12 Hz {_AT}"),
+        "L2_b1_0.5_to_1.2_spikes_per_wingbeat": dict(
+            band=[0.5 * WINGBEAT_HZ, 1.2 * WINGBEAT_HZ],
+            rule=f"b1 MN fires 0.5-1.2 spikes per wingbeat (its rate in Hz within 0.5 and 1.2 x {WINGBEAT_HZ}) {_AT}"),
+        "L3_leg_mn_not_entrained": dict(
+            band=[None, 0.1 * WINGBEAT_HZ], conditional=True,
+            condition=("scored only if some neuron matches the leg motor neuron pattern; otherwise UNRESOLVED "
+                       "(stats.unresolved, no band), since the leg rate is undefined"),
+            rule=(f"leg motor neurons fire below 0.1 spikes per wingbeat (0.1 x {WINGBEAT_HZ} Hz) {_AT} (the point "
+                  f"check is strict, per_draw's edge is inclusive)")),
+        "L4_steering_specific_vs_null": dict(
+            band=[5.0, None], null_floor_hz=0.2, conditional=True,
+            condition=("scored only if the rewired null fires a spike outside the driven afferents (summed over the "
+                       "draws); otherwise UNRESOLVED (stats.unresolved, no band), since a silent null cannot test "
+                       "wiring specificity"),
+            rule=("real steering MN rate / max(null steering MN rate, 0.2 Hz) at least 5, paired by recruitment "
+                  "seed at the anchor load (the point check is strict, per_draw's edge is inclusive)")),
+        "L5_DLMn_cf_2_to_12_hz_with_DNg02": dict(
+            bands=[[2.0, 12.0], [2.0, 12.0]],
+            rule=("some swept DNg02 rate puts DLMn c-f (first band) and DVMn 1a-c (second band) both in 2-12 Hz, "
+                  "each scored per recruitment seed: any of the rates, each rate the conjunction of its two parts")),
+        "L6_DVMn_still_in_band_with_DNg02": dict(
+            scored=False,
+            rule=("reported, not scored: as coded, L6 is true exactly when L5 is (the DNg02 rule already requires "
+                  "DVMn in band), so scoring both would count one measurement twice")),
+    },
+)
+REG = registry.register(LABEL, CRITERIA_V2, scripts=[__file__], supersedes=None)
+# registered now (version 2): committed code and pinned data, as every registered test
+from flycns.integrity import require_clean, require_data  # noqa: E402
+require_clean(LABEL)
+require_data(DATA, LABEL)
 
 neurons, edges = load_graph(DATA)
 meta = neurons.set_index("bodyId")
@@ -105,11 +166,6 @@ aff_halt = meta.index[(sub == "campaniform sensilla") & (nerve == "DMetaN")]
 # given seed. (An earlier version listed wing before haltere, another script used dataset order,
 # and the same seed recruited different subsets.)
 aff = sorted(list(aff_wing) + list(aff_halt))
-# DVMn 1a-c's whole proprioceptive drive comes from 41 of the 413 afferents (all ADMN), 20 of which
-# carry 83% of it, so a random 35% recruitment is a lottery over whether those few fire. Each arm is
-# therefore run over several independent recruitment draws and reported as mean and spread.
-import os as _os
-RECRUIT_SEEDS = [int(x) for x in _os.environ.get("FLYCNS_RECRUIT_SEEDS", "0,1,2,3,4").split(",")]
 print(f"wing campaniform (ADMN) {len(aff_wing)}, haltere campaniform (DMetaN) {len(aff_halt)}")
 if len(aff) < 50:
     raise SystemExit("too few campaniform afferents identified; check entryNerve annotation")
@@ -350,8 +406,10 @@ report["checks"] = {
     "L3_leg_mn_not_entrained": bool((best["leg_mn_hz"] if best["leg_mn_hz"] == best["leg_mn_hz"] else 0) < 0.1 * WINGBEAT_HZ),
     "L4_steering_specific_vs_null": bool(steer_real > 5.0 * max(steer_null, 0.2)),
     "L5_DLMn_cf_2_to_12_hz_with_DNg02": bool(chosen is not None),
-    "L6_DVMn_still_in_band_with_DNg02": bool(chosen is not None and 2.0 <= chosen["dvmn_hz"] <= 12.0),
+    # reported, not scored: identical to L5 as coded (audit check, 11 October 2026); its value is kept below
+    "L6_DVMn_still_in_band_with_DNg02": None,
 }
+report["L6_as_coded_equals_L5"] = bool(chosen is not None and 2.0 <= chosen["dvmn_hz"] <= 12.0)
 
 
 # ---- uncertainty (flycns/stats.py): one record per scored check, three-way verdict. Every scored arm is
@@ -411,15 +469,13 @@ else:
     unc["L4_steering_specific_vs_null"] = stats.unresolved(
         "the rewired null fired no spike outside the driven afferents in any seed, so the comparison only asks "
         "whether real steering exceeds the 1 Hz floor and cannot test wiring specificity", estimate=steer_real)
-# L5 and L6: the DNg02 rule needs DLMn c-f AND DVMn 1a-c in band; per draw, some rate must put both in band.
-# As coded, L6 (DVMn in band at the chosen rate) is true exactly when L5 is (the rule already requires DVMn in
-# band), so both checks carry this same record.
+# L5: the DNg02 rule needs DLMn c-f AND DVMn 1a-c in band; per draw, some rate must put both in band. (L6,
+# DVMn in band at the chosen rate, is true exactly when L5 is, so it is reported and not scored.)
 l5 = _any([stats.combine([stats.per_draw(a["per_seed_scored"]["dlmn"], 2.0, 12.0, note=f"DLMn c-f, DNg02 {a['dng02_hz']:.0f} Hz"),
                           stats.per_draw(a["per_seed_scored"]["dvmn"], 2.0, 12.0, note=f"DVMn 1a-c, DNg02 {a['dng02_hz']:.0f} Hz")],
                          note=f"DNg02 {a['dng02_hz']:.0f} Hz") for a in stage2],
           note="some DNg02 rate with DLMn c-f and DVMn 1a-c both in band per recruitment seed")
 unc["L5_DLMn_cf_2_to_12_hz_with_DNg02"] = l5
-unc["L6_DVMn_still_in_band_with_DNg02"] = dict(l5, note=l5["note"] + "; L6 is identical to L5 as coded")
 report["uncertainty"] = unc
 
 report["reported"] = dict(
@@ -435,12 +491,16 @@ report["reported"] = dict(
     afferent_params_cross_species="Holorusia (Fox & Daniel 2008; Fox et al. 2010), Sarcophaga (Yarger & Fox 2018), Calliphora (Fayyazuddin & Dickinson 1996)")
 for a in report["arms"].values():
     a.pop("_spikes", None)
-report["pass"] = all(report["checks"].values())
+report["pass"] = all(v for v in report["checks"].values() if v is not None)
+# verify_bands skips a conditional check only when its record is absent; a check whose condition was not met
+# carries a stats.unresolved record (no band), so the band check reads the records scored as designed
+registry.verify_bands(REG, {k: u for k, u in report["uncertainty"].items() if u["method"] != "not scorable as designed"})
+report["registration"] = registry.stamp(REG)
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECKS")
 for k, v in report["checks"].items():
-    print(f"  {'PASS' if v else 'FAIL'}  {k}")
+    print(f"  {'REPORTED' if v is None else 'PASS' if v else 'FAIL'}  {k}")
 print("\nUNCERTAINTY (flycns/stats.py; three-way verdict, scored per recruitment seed)")
 for k, u in report["uncertainty"].items():
     _print_record(k, u)

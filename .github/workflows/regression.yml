@@ -22,8 +22,8 @@ jobs:
     # Real errors only: syntax errors, undefined names, duplicate definitions. Style is not enforced.
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.12"
       - run: pip install ruff==0.16.8
@@ -46,10 +46,10 @@ jobs:
           # a machine without the Microsoft C++ Build Tools: the pure-Python engine, end to end
           - { python: "3.12", deps: requirements.lock, engine: pure-Python, codegen: numpy, expect: numpy }
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           fetch-depth: 0   # full history: staleness and registration-history checks need it
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ matrix.python }}
       - name: install (${{ matrix.deps }}; the lock from ready-made wheels only, as setup does)
@@ -71,10 +71,10 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 150
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           fetch-depth: 0   # full history: menu 51 commits, pulls and pushes like a maintainer's clone
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.12"
       - name: .\setup.cmd --check
@@ -130,6 +130,15 @@ jobs:
           Get-ChildItem results -Recurse -Include criteria.json, registration.json | Remove-Item
           Must git add data/MANIFEST.json | Out-Null
           Must git commit -qm "CI: a fresh project on toy data" | Out-Null
+          # a registered test scores only under a committed registration: register the toy's own first,
+          # as a maintainer registers before a run (flycns/registry.py)
+          $env:FLYCNS_REGISTER_ONLY = "1"
+          foreach ($b in @("gf_escape", "auditory", "feeding", "pc1_song", "null_strict")) {
+            Must .\.venv\Scripts\python.exe "benchmarks\$b.py" | Out-Null
+          }
+          Remove-Item Env:FLYCNS_REGISTER_ONLY
+          Must git add results | Out-Null
+          Must git commit -qm "CI: register the toy's own tests" | Out-Null
           Must git branch -M ci-main | Out-Null
           Must git push -q -f origin ci-main | Out-Null
           Must git branch -q -u origin/ci-main | Out-Null

@@ -77,11 +77,14 @@ def stamp(path, data_dir=None, **extra):
     path.with_name(path.name + ".stamp.json").write_text(json.dumps(rec, indent=2, default=str), encoding="utf-8")
 
 
-def spike_source(n, ids, times_ms, dt_ms=0.1):
+def spike_source(n, ids, times_ms, dt_ms=None):
     """SpikeGeneratorGroup for jittered spike trains. Brian2 refuses a source that spikes twice in one
     time step, which jitter makes possible (about 9% of runs at 400 sources); the later duplicate in a
     bin is dropped, so committed runs (which had none) are unchanged."""
     from brian2 import SpikeGeneratorGroup, ms
+    if dt_ms is None:     # the model's time step (FLYCNS_DT_MS), not a fixed 0.1 ms
+        from .model import LIFParams
+        dt_ms = LIFParams().dt_ms
     ids = np.asarray(ids, dtype=int)
     t = np.asarray(times_ms, dtype=float)
     bins = ((t + 1e-3 * dt_ms) / dt_ms).astype(np.int64)        # Brian2's own binning

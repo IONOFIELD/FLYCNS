@@ -95,6 +95,23 @@ Literature names for DNp13, its male-specific inputs and pIP10 (RESULTS.md secti
 ## Larval connectome (referenced in planning)
 - **Winding et al. 2023** — Winding M, Pedigo BD, Barnes CL, et al. The connectome of an insect brain. *Science* 379:eadd9330 (2023).
 
+## Physiology checked against hand-set values (11 October 2026)
+
+Sought to anchor the 3 mV sound potential, the loom rate scale, the sign of nerve-cord glutamate and
+per-class membrane parameters (docs/CALIBRATION.md, "Literature check"). Only values from text the
+search could read are used; values that exist only in figures are marked as not found.
+- **Lehnert et al. 2013** — Lehnert BP, Baker AE, Gaudry Q, Chiang AS, Wilson RI. Distinct roles of TRP channels in auditory transduction and amplification in Drosophila. *Neuron* 77:115–128 (2013). doi:10.1016/j.neuron.2012.11.030. GF recorded in voltage clamp only (currents, not mV); input from at most 145 AB-type JONs; sub-300 µs JON-to-GF delay.
+- **Tootoonian et al. 2012** (above) recorded the GF in current clamp with song (Fig. 2D) but gives no mV amplitude in the text.
+- **Ache et al. 2019a** — Ache JM, Polsky J, Alghailani S, et al. Neural basis for looming size and velocity encoding in the Drosophila giant fiber escape pathway. *Curr Biol* 29:1073–1081 (2019). doi:10.1016/j.cub.2019.01.079. GF loom response = linear in angular velocity (LC4) plus a Gaussian of angular size (LPLC2) [abstract].
+- **Klapoetke et al. 2017** — Klapoetke NC, Nern A, Peek MY, et al. Ultra-selective looming detection from radial motion opponency. *Nature* 551:237–241 (2017). doi:10.1038/nature24626. LPLC2 (calcium imaging, not spikes): about 80 cells, responses within the first 5° of expansion.
+- **Jang et al. 2023** — *J Exp Biol* 226:jeb244790. doi:10.1242/jeb.244790. GF responses to looms at r/v 10–80 ms (values in figures only).
+- **Rohrbough & Broadie 2002** — *J Neurophysiol* 88:847–860. doi:10.1152/jn.2002.88.2.847. Larval motor neurons: glutamate evokes picrotoxin-sensitive inhibitory responses [abstract].
+- **Kohsaka et al. 2014** — *Curr Biol* 24:2632–2642. doi:10.1016/j.cub.2014.09.026. Larval premotor interneurons inhibit motor neurons through glutamatergic synapses [abstract].
+- **Lacin et al. 2019** — *eLife* 8:e43701. doi:10.7554/eLife.43701. Glutamatergic VNC hemilineages; receptor sign not tested.
+- **Lesser et al. 2024** (connectome section above) — adult motor neurons express GluClα most highly (transcriptomic).
+- **Herrera-Valdez et al. 2013** — *J Comput Neurosci* 34:211–229. doi:10.1007/s10827-012-0416-6. Flight motor neuron MN5: R_in 97 ± 31 MΩ, V_rest −67.8 mV.
+- **Hafez et al. 2023** — *eLife* 12:e77578. doi:10.7554/eLife.77578. MBON-α3: τ_m 16.1 ± 4.9 ms (Table 1), the only central τ_m found.
+
 ## Statistics
 - **Newcombe 1998** — Newcombe RG. Interval estimation for the difference between independent proportions: comparison of eleven methods. *Stat Med* 17:873-890 (1998). doi:10.1002/(SICI)1097-0258(19980430)17:8<873::AID-SIM779>3.0.CO;2-I. Method 10 (Wilson-score hybrid) gives the A2 and RA2 confidence intervals.
 

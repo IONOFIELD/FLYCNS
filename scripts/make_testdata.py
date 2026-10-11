@@ -82,4 +82,9 @@ import os
 os.makedirs("testdata", exist_ok=True)   # git does not keep empty folders, so a fresh clone has none
 e.to_parquet("testdata/edges.parquet", index=False); n.to_parquet("testdata/neurons.parquet", index=False)
 roi[["bodyId", "dominant_roi", "dominant_frac", "sez_frac", "n_syn"]].to_parquet("testdata/roi_membership.parquet", index=False)
+# the per-synapse transmitter table the targeted sign flip reads (fit/synapse_nt.py writes the real one):
+# one row per connection, nt_agree the fraction of T-bars agreeing with the sender's label
+nt = e[["pre", "post"]].drop_duplicates().reset_index(drop=True)
+nt["nt_agree"] = _g3.random(len(nt))
+nt.to_parquet("testdata/edges_nt.parquet", index=False)
 print(len(n), "neurons", len(e), "edges", f"({e.nt.isna().sum()} unlabelled)", len(sez), "SEZ by anatomy")

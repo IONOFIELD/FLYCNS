@@ -40,7 +40,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, rewire_null, CNSModel, LIFParams
-from flycns import stats
+from flycns import registry, stats
 from flycns.graph import drop_mixed_chemical
 from flycns.protocols import LOOM_TUNING
 from flycns.bench import find_types, pulse_protocol
@@ -63,6 +63,55 @@ A2_TRIALS = int(os.environ.get("FLYCNS_A2_TRIALS", str(N_TRIALS)))
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
 JO_HZ = 150
 SUB_LOOM_GAIN = None    # calibrated per run: largest gain with hit rate <= 0.3 and GF depolarised
+
+# Version 2 registration (flycns/registry.py), recorded before any data are loaded. Only the top-level run
+# (FLYCNS_AUDITORY_OUT and FLYCNS_A2_ONLY unset) is the "auditory" benchmark: as a child of a2_contact or
+# a2_robustness it neither registers nor verifies under this label (its parent registers its own checks).
+# Every band below is the band the uncertainty record of that check is scored with.
+CRITERIA_V2 = dict(
+    version=2,
+    question=("does Johnston's organ drive reach the giant fiber through the declared JON -> GF pairs, leaving GF "
+              "mostly subthreshold on its own, with no drive through a rewired chemical-only null and the CNS quiet?"),
+    protocol=dict(
+        trials=40,
+        trials_note="canonical trial count per arm for A1, A3, A4 and the reference arm (a run at fewer is flagged TRIALS by summarize)",
+        jo_drive=(f"the JO types MaleCNS annotates as auditory ('unclear' types excluded) at {JO_HZ} Hz in 60 ms pulses, "
+                  "300 ms gaps (flycns.bench.pulse_protocol)"),
+        arms=["A1_jo_alone_electrical", "A3_jo_alone_no_electrical_no_mixed_edges",
+              "ref_jo_alone_chem_only_EM_as_annotated (reported)", "A4_jo_rewired_null_chem",
+              "subthreshold_loom_alone and A2_loom_plus_jo (A2, reported)"],
+        readouts="GF spikes in 160 ms after onset; GF peak depolarisation above rest in 100 ms after onset",
+        seeds=("the declared default seed (LIFParams().seed) = BASE for A1, A3, A4 and the reference arm; A2 calibration "
+               "arms BASE + 1000 + gain index; A2 loom alone BASE, loom + sound BASE + 1"),
+        a2_working_point=("calibrated per run over loom gains [0.4, 0.6, 0.8, 1.0, 1.3]: the largest with GF hit <= 0.3 "
+                          "and mean depolarisation >= 2 mV (A2 is reported here, scored by a2_registered)"),
+    ),
+    checks={
+        "A1_jo_alone_mostly_subthreshold": dict(
+            band=[None, 0.3], rule="PASS if the Wilson 95% interval of the fraction of A1 trials (JO drive alone, electrical) "
+                                   "with any GF spike lies at or below 0.3"),
+        "A2_jo_effect_on_near_threshold_loom_REPORTED": dict(
+            scored=False, rule="reported, not scored (benchmarks/a2_registered.py scores it)"),
+        "A3_declared_pairs_carry_jo_drive": dict(
+            bands=[[0.5, None], [None, 0]],
+            rule=("PASS if both parts pass: the bootstrap 95% interval of A1 GF peak depolarisation lies above 0.5 mV "
+                  "(exclusive), and the interval of (A3 depolarisation - 0.5 x A1 depolarisation), arms resampled "
+                  "independently, lies at or below 0")),
+        "A4_null_silent": dict(
+            bands=[[None, 0.1], [None, 0.5]],
+            rule=("PASS if both parts pass: the Wilson 95% interval of the fraction of rewired-null trials with any GF "
+                  "spike lies at or below 0.1, and the bootstrap interval of null GF peak depolarisation at or below 0.5 mV")),
+        "A5_cns_quiet": dict(
+            rule="PASS if the larger of the A1 and A2 whole-run population rates is below 0.05 Hz per neuron "
+                 "(readouts with no trial structure, scored on the point value)"),
+    },
+)
+TOP_LEVEL = os.environ.get("FLYCNS_AUDITORY_OUT") is None and not A2_ONLY
+REG = registry.register("auditory", CRITERIA_V2, scripts=[__file__]) if TOP_LEVEL else None
+# registered now (version 2): committed code and pinned data, as every registered test
+from flycns.integrity import require_clean, require_data  # noqa: E402
+require_clean("auditory")
+require_data(DATA, "auditory")
 
 neurons, edges = load_graph(DATA)
 A.sketch("auditory")
@@ -137,10 +186,48 @@ def _pt(arm, key):
     return np.array([np.nan if x is None else x for x in arm["per_trial"][key]], dtype=float)
 
 
-def run(label, stim_types, electrical=True, edge_df=edges, jo=True, loom=False, n_trials=None):
+# Seeds (audit 2026-10-11, gap 7). Before, every arm ran at the same seed, so the calibration arm at
+# the chosen gain was bit-identical to the scored loom-alone arm: the trials that chose the working
+# point were the trials that scored it. Now the calibration arms draw their own seeds, disjoint from
+# the scored arms, and the two scored A2 arms draw different seeds, so they are independent samples
+# (what the Newcombe interval assumes).
+BASE_SEED = LIFParams().seed
+CAL_SEED = BASE_SEED + 1000          # calibration arms: BASE_SEED + 1000 + index of the gain
+A2_SEEDS = dict(loom_alone=BASE_SEED, loom_plus_jo=BASE_SEED + 1, sound_alone=BASE_SEED + 2)
+
+
+def _peak_cells_mV(m, onsets, window_ms):
+    """Per trial, the peak depolarisation above rest of EACH monitored giant fiber (same cell order in every
+    arm: the monitored cells come from the same neuron table)."""
+    if m.vmon is None:
+        return []
+    from brian2 import ms as _ms, mV as _mV
+    t = np.array(m.vmon.t / _ms); v = np.array(m.vmon.v / _mV)
+    out = []
+    for on in onsets:
+        w = (t >= on) & (t < on + window_ms)
+        out.append([float(x) for x in (v[:, w].max(axis=1) - m.p.v_rest_mV)] if w.any() else None)
+    return out
+
+
+def _peak_max_mV(m, onsets, window_ms):
+    """Per trial, the peak depolarisation above rest of the MOST depolarised monitored giant fiber (a
+    response counts when any giant fiber spikes, so summation is judged on the cell nearest threshold)."""
+    if m.vmon is None:
+        return []
+    from brian2 import ms as _ms, mV as _mV
+    t = np.array(m.vmon.t / _ms); v = np.array(m.vmon.v / _mV)
+    out = []
+    for on in onsets:
+        w = (t >= on) & (t < on + window_ms)
+        out.append(float((v[:, w].max(axis=1) - m.p.v_rest_mV).max()) if w.any() else None)
+    return out
+
+
+def run(label, stim_types, electrical=True, edge_df=edges, jo=True, loom=False, n_trials=None, seed=None):
     t0 = time.time()
-    m = CNSModel(neurons, edge_df, stim_types, LIFParams(), electrical=electrical,
-                 monitor_types=("DNp01",))
+    m = CNSModel(neurons, edge_df, stim_types, LIFParams(seed=BASE_SEED if seed is None else seed),
+                 electrical=electrical, monitor_types=("DNp01",))
     N = N_TRIALS if n_trials is None else n_trials
     if loom and jo:
         # loom protocol drives LC types; add JO at fixed rate during each loom burst
@@ -167,6 +254,8 @@ def run(label, stim_types, electrical=True, edge_df=edges, jo=True, loom=False, 
     depol = m.peak_depolarization_mV(onsets, 100)
     s["gf_depol_mV"] = float(np.nanmean(depol))
     s["per_trial"]["depol_mV"] = [None if np.isnan(x) else float(x) for x in depol]
+    s["per_trial"]["depol_max_mV"] = _peak_max_mV(m, onsets, 100)
+    s["per_trial"]["depol_cells_mV"] = _peak_cells_mV(m, onsets, 100)
     print(f"[{label}] GF {s['gf_per_cell']:.2f}/cell hit {s['gf_hit']:.2f} lat {s['gf_lat_ms']:.1f} ms "
           f"depol {s['gf_depol_mV']:.2f} mV | CNS {s['pop_rate_hz']:.4f} Hz | {s['wall_s']}s")
     report["arms"][label] = s
@@ -176,10 +265,10 @@ def run(label, stim_types, electrical=True, edge_df=edges, jo=True, loom=False, 
 # ---- calibrate the near-threshold loom working point
 CAL_GAINS = [0.4, 0.6, 0.8, 1.0, 1.3]
 cal = []
-for g in ([] if A2_GAIN_FIXED else CAL_GAINS):
+for i, g in enumerate([] if A2_GAIN_FIXED else CAL_GAINS):
     SUB_LOOM_GAIN = g
     globals()["SUB_LOOM_GAIN"] = g
-    c = run(f"cal_loom_gain_{g}", list(LOOM_TUNING), electrical=True, jo=False, loom=True)
+    c = run(f"cal_loom_gain_{g}", list(LOOM_TUNING), electrical=True, jo=False, loom=True, seed=CAL_SEED + i)
     cal.append((g, c["gf_hit"], c["gf_depol_mV"]))
     print(f"  calibration: loom gain {g} -> GF hit {c['gf_hit']:.2f}, depol {c['gf_depol_mV']:.2f} mV")
 ok = [(g, h, d) for g, h, d in cal if h <= 0.3 and d >= 2.0]
@@ -191,15 +280,72 @@ report["arms"]["A2_calibration"] = dict(gains=[dict(gain=g, hit=h, depol_mV=d) f
                                               "largest gain with GF hit <= 0.3 and depol >= 2 mV"))
 print(f"A2 working point: loom gain {SUB_LOOM_GAIN}")
 
+
+def construction_prediction(lo, a2, sound, n_boot=2000, seed=0):
+    """What summation alone predicts for loom + sound (audit gap 1). Each giant fiber j has a sound
+    potential c_j, its mean peak depolarisation over the sound-alone trials of this same run. A loom-alone
+    trial would become a response if, for any giant fiber, its loom peak plus c_j reaches the
+    rest-to-threshold gap; trials that already fired count as responses. The facilitation beyond this is
+    the part that is not arithmetic (polysynaptic effects, adaptation); only that residual can be a test.
+    The interval resamples all three arms (loom alone, loom + sound, and the sound-alone trials that set
+    c_j). Adding two peaks that occur at different times over-predicts summation, so the residual is biased
+    low: a PASS is conservative. (Before 11 October 2026, later: the declared 3 mV target and the mean of
+    the two cells.)"""
+    from flycns.graph import jon_mode
+    p = LIFParams()
+    gap = p.v_thresh_mV - p.v_rest_mV
+
+    def cells(arm):
+        rows = arm["per_trial"].get("depol_cells_mV") or []
+        if not rows or any(r is None for r in rows):
+            return None
+        return np.asarray(rows, dtype=float)                    # trials x cells
+    L, S = cells(lo), (cells(sound) if sound is not None else None)
+    hit = np.asarray(lo["per_trial"]["hit"], dtype=float)
+    obs = np.asarray(a2["per_trial"]["hit"], dtype=float)
+    if L is None or S is None or L.shape[1] != S.shape[1] or len(L) != len(hit):
+        return dict(sound_arm=sound.get("label") if sound else None, gap_mV=gap, jon_mode=jon_mode(),
+                    predicted_hit_by_summation=None, residual=None, residual_ci95=None,
+                    note="per-cell peak depolarisations missing: no summation prediction")
+
+    def predict(Lr, hr, Sr):
+        c = np.nanmean(Sr, axis=0)                               # each cell's sound potential
+        return np.where(hr > 0, 1.0, ((Lr + c[None, :]) >= gap).any(axis=1).astype(float))
+    pred = predict(L, hit, S)
+    est = float(obs.mean() - pred.mean())
+    rng = np.random.default_rng(seed)
+    boots = []
+    for _ in range(n_boot):
+        i = rng.integers(0, len(L), len(L)); j = rng.integers(0, len(S), len(S)); k = rng.integers(0, len(obs), len(obs))
+        boots.append(obs[k].mean() - predict(L[i], hit[i], S[j]).mean())
+    rlo, rhi = (float(x) for x in np.percentile(boots, [2.5, 97.5]))
+    return dict(sound_potential_mV=[float(x) for x in np.nanmean(S, axis=0)], sound_arm=sound.get("label"),
+                sound_alone_hit=float(sound["gf_hit"]), gap_mV=gap, jon_mode=jon_mode(),
+                loom_alone_hit=float(hit.mean()), predicted_hit_by_summation=float(pred.mean()),
+                observed_hit=float(obs.mean()), residual=est, residual_ci95=[rlo, rhi],
+                note=("residual = observed loom+sound response probability minus the probability predicted by adding "
+                      "each giant fiber's measured sound-alone peak depolarisation to its loom-alone peak, per trial; "
+                      "percentile bootstrap resampling the loom-alone, loom+sound and sound-alone trials; peaks at "
+                      "different times over-predict summation, so the residual is biased low"))
+
+
 if A2_ONLY:
-    lo = run("subthreshold_loom_alone", list(LOOM_TUNING), electrical=True, jo=False, loom=True, n_trials=A2_TRIALS)
-    a2 = run("A2_loom_plus_jo", list(LOOM_TUNING) + jo_types, electrical=True, jo=True, loom=True, n_trials=A2_TRIALS)
+    lo = run("subthreshold_loom_alone", list(LOOM_TUNING), electrical=True, jo=False, loom=True, n_trials=A2_TRIALS,
+             seed=A2_SEEDS["loom_alone"])
+    a2 = run("A2_loom_plus_jo", list(LOOM_TUNING) + jo_types, electrical=True, jo=True, loom=True, n_trials=A2_TRIALS,
+             seed=A2_SEEDS["loom_plus_jo"])
     k1, n1 = int(round(lo["gf_hit"] * lo["n_trials"])), lo["n_trials"]
     k2, n2 = int(round(a2["gf_hit"] * a2["n_trials"])), a2["n_trials"]
     d, dlo, dhi = two_prop_ci(k1, n1, k2, n2)
     report["arms"]["A2_prediction"] = dict(loom_gain=SUB_LOOM_GAIN, n_trials_per_arm=n1,
         loom_alone_hit=lo["gf_hit"], loom_plus_jo_hit=a2["gf_hit"], difference=d, difference_ci95=[dlo, dhi],
-        loom_alone_depol_mV=lo["gf_depol_mV"], loom_plus_jo_depol_mV=a2["gf_depol_mV"], mode="A2 only")
+        loom_alone_depol_mV=lo["gf_depol_mV"], loom_plus_jo_depol_mV=a2["gf_depol_mV"], mode="A2 only",
+        seeds=A2_SEEDS, calibration_seed_base=CAL_SEED)
+    # the sound-alone arm in the same mode (its own seed): the measured sound potential for the summation
+    # prediction, and whether sound alone stays subthreshold (a2_contact's C1 needs that)
+    so = run("A2_sound_alone", jo_types, electrical=True, n_trials=N_TRIALS, seed=A2_SEEDS["sound_alone"])
+    so["label"] = "A2_sound_alone"
+    report["arms"]["A2_construction"] = construction_prediction(lo, a2, so)
     report["provenance"] = provenance()
     (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
     print(f"A2 only at gain {SUB_LOOM_GAIN}: {lo['gf_hit']:.3f} -> {a2['gf_hit']:.3f}, difference {d:+.3f} "
@@ -210,8 +356,10 @@ a1 = run("A1_jo_alone_electrical", jo_types, electrical=True)
 a3 = run("A3_jo_alone_no_electrical_no_mixed_edges", jo_types, electrical=False,
          edge_df=drop_mixed_chemical(edges, neurons))
 ref = run("ref_jo_alone_chem_only_EM_as_annotated", jo_types, electrical=False)
-lo = run("subthreshold_loom_alone", list(LOOM_TUNING), electrical=True, jo=False, loom=True, n_trials=A2_TRIALS)
-a2 = run("A2_loom_plus_jo", list(LOOM_TUNING) + jo_types, electrical=True, jo=True, loom=True, n_trials=A2_TRIALS)
+lo = run("subthreshold_loom_alone", list(LOOM_TUNING), electrical=True, jo=False, loom=True, n_trials=A2_TRIALS,
+         seed=A2_SEEDS["loom_alone"])
+a2 = run("A2_loom_plus_jo", list(LOOM_TUNING) + jo_types, electrical=True, jo=True, loom=True, n_trials=A2_TRIALS,
+         seed=A2_SEEDS["loom_plus_jo"])
 a4 = run("A4_jo_rewired_null_chem", jo_types, electrical=False,
          edge_df=rewire_null(drop_mixed_chemical(edges, neurons)))
 
@@ -234,7 +382,14 @@ report["arms"]["A2_prediction"] = dict(loom_gain=SUB_LOOM_GAIN, n_trials_per_arm
     loom_alone_depol_mV=lo["gf_depol_mV"], loom_plus_jo_depol_mV=a2["gf_depol_mV"],
     note=("model measurement at a calibrated near-threshold working point; in vivo direction not "
           "established in cited references. With few trials the difference is not resolvable: "
-          "set FLYCNS_A2_TRIALS>=120 for a usable estimate."))
+          "set FLYCNS_A2_TRIALS>=120 for a usable estimate."), seeds=A2_SEEDS, calibration_seed_base=CAL_SEED)
+a1["label"] = "A1_jo_alone_electrical"
+report["arms"]["A2_construction"] = construction_prediction(lo, a2, a1)
+_c = report["arms"]["A2_construction"]
+if _c.get("residual") is not None:
+    print(f"A2 by summation alone: {_c['loom_alone_hit']:.2f} -> predicted {_c['predicted_hit_by_summation']:.2f}, "
+          f"observed {_c['observed_hit']:.2f}; residual {_c['residual']:+.2f} "
+          f"(95% CI {_c['residual_ci95'][0]:+.2f} to {_c['residual_ci95'][1]:+.2f})")
 print(f"A2 (reported, {n1} trials/arm): loom alone {lo['gf_hit']:.2f} -> with JO {a2['gf_hit']:.2f}; "
       f"difference {d:+.2f} (95% CI {dlo:+.2f} to {dhi:+.2f}) -> {direction}")
 report["pass"] = all(v for v in report["checks"].values() if v is not None)
@@ -267,6 +422,9 @@ unc = {
              "whole run): readouts with no trial structure, scored on the point value; band < 0.05 Hz"),
 }
 report["uncertainty"] = unc
+if REG is not None:
+    registry.verify_bands(REG, unc)
+    report["registration"] = registry.stamp(REG)
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 prov = ["# Provenance: auditory (JON -> GF)", "", f"JO types: {jo_types} at {JO_HZ} Hz",

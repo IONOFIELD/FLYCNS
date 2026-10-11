@@ -21,6 +21,11 @@ Outcomes fixed in advance:
   CI above zero   PASS: facilitation reproduced
   CI below zero   FAIL: suppression, contradicting Tootoonian et al. 2012
   CI spans zero   FAIL: unresolved even at 120 trials per arm
+Added with the version 2 registration (results/a2_registered/registration.json, which supersedes criteria.json):
+  A2R2 facilitation beyond summation: the 95% bootstrap interval on the observed P(GF | loom + sound) minus
+       what adding the model's measured sound-alone peak depolarisation to each loom-alone trial's peak
+       depolarisation (most depolarised giant fiber) predicts lies above zero (auditory.py, A2_construction).
+       Above zero PASS, at or below zero FAIL, spanning zero UNRESOLVED.
 
 Run:  python benchmarks/a2_registered.py [trials_per_arm] [data_dir]      (default 120; ~40+ min)
 """
@@ -46,6 +51,45 @@ CRITERIA = dict(
     outcomes=dict(above="PASS facilitation", below="FAIL suppression (contradicts Tootoonian 2012)",
                   spans="FAIL unresolved at this trial count"))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+# Version 2 registration (flycns/registry.py): the criteria with every band the scoring uses, and the frozen
+# model, recorded before any data are loaded. It supersedes the version 1 criteria.json, which stays as is.
+from flycns import registry  # noqa: E402
+CRITERIA_V2 = dict(
+    version=2,
+    hypothesis=("sound facilitates the giant fiber's response to a near-threshold loom (Tootoonian et al. 2012, "
+                "J Neurosci 32:787-798, Fig. 2D), and does so beyond what adding the model's own measured sound-alone "
+                "potential to the loom alone predicts"),
+    protocol=dict(
+        trials_per_arm=A2_TRIALS,
+        child=("benchmarks/auditory.py 40 <data_dir> as a full run with FLYCNS_A2_TRIALS = trials_per_arm "
+               "(FLYCNS_AUDITORY_OUT, FLYCNS_A2_GAIN and FLYCNS_A2_ONLY removed)"),
+        working_point=("calibrated per run over loom gains [0.4, 0.6, 0.8, 1.0, 1.3] on seeds BASE + 1000 + gain index: "
+                       "the largest gain with loom-alone GF hit <= 0.3 and mean depolarisation >= 2 mV"),
+        arms=("loom alone on seed BASE, loom + sound on seed BASE + 1 (BASE = LIFParams().seed); sound = the auditory "
+              "JO types at 150 Hz during each 60 ms loom burst"),
+        statistics=("A2R: Newcombe 1998 method 10 interval on the difference, recomputed from counts. A2R2: percentile "
+                    "bootstrap of observed minus summation-predicted response, each arm resampled on its own"),
+    ),
+    checks={
+        "A2R_facilitation": dict(
+            band=[0.0, None], band_lower_exclusive=True,
+            rule=("PASS if the 95% interval on P(GF | loom + sound) - P(GF | loom) lies above 0; FAIL if below 0; "
+                  "FAIL also if it spans 0 (fixed in advance: unresolved at this trial count)")),
+        "A2R2_beyond_summation": dict(
+            band=[0.0, None], band_lower_exclusive=True, conditional=True,
+            condition=("scored when the auditory report carries A2_construction (the registered auditory.py always "
+                       "writes it); otherwise UNRESOLVED"),
+            rule=("facilitation beyond summation: PASS if the 95% interval on the observed P(GF | loom + sound) minus "
+                  "the probability predicted by adding each giant fiber's measured sound-alone peak depolarisation "
+                  "(same run) to its loom-alone peak, per trial, lies above 0; the interval resamples all three arms; "
+                  "FAIL if at or below 0; UNRESOLVED if it spans 0")),
+    },
+)
+_v1 = OUT / "criteria.json"
+REG = registry.register(
+    "a2_registered", CRITERIA_V2, scripts=[__file__, Path(__file__).with_name("auditory.py")],
+    supersedes=dict(file="criteria.json",
+                    git_commit=json.loads(_v1.read_text(encoding="utf-8")).get("git_commit") if _v1.exists() else None))
 # Registered test: refuse uncommitted code and data that differ from data/MANIFEST.json, so the
 # registered result can be traced to an exact commit and an exact dataset (flycns/integrity.py).
 from flycns.integrity import require_clean, require_data, criteria_differ  # noqa: E402
@@ -119,6 +163,25 @@ if outcome == "spans":
     unc["verdict"] = "FAIL"
 unc["registered_outcome"] = CRITERIA["outcomes"][outcome]
 report["uncertainty"] = {"A2R_facilitation": unc}
+# A2R2 (registered version 2): facilitation beyond what summation of the measured sound potential predicts
+cons = rep["arms"].get("A2_construction")
+if cons and cons.get("residual_ci95") and cons.get("predicted_hit_by_summation") is not None:
+    rlo, rhi = cons["residual_ci95"]
+    unc2 = stats.scored(cons["residual"], rlo, rhi, low=0.0, strict=True, method="bootstrap",
+                        note=(f"observed P(GF|loom+sound) {cons['observed_hit']:.3f} minus the {cons['predicted_hit_by_summation']:.3f} "
+                              f"predicted by adding each giant fiber's measured sound-alone peak depolarisation "
+                              f"({', '.join(f'{x:.2f}' for x in cons['sound_potential_mV'])} mV, JON {cons['jon_mode']}) to "
+                              f"its loom-alone peak per trial (rest to threshold {cons['gap_mV']} mV); percentile bootstrap "
+                              f"resampling all three arms; biased low, so a PASS is conservative (auditory.py A2_construction)"))
+else:
+    unc2 = stats.unresolved("the auditory report carries no A2_construction, so facilitation beyond summation "
+                            "cannot be scored")
+report["uncertainty"]["A2R2_beyond_summation"] = unc2
+report["checks"]["A2R2_beyond_summation"] = (unc2["verdict"] == "PASS")
+# a check that could not be scored as designed (stats.unresolved) has no band to compare; only a check
+# registered as conditional may be missing from the comparison
+registry.verify_bands(REG, {k: u for k, u in report["uncertainty"].items() if u.get("method") != "not scorable as designed"})
+report["registration"] = registry.stamp(REG)
 from flycns.bench import provenance  # noqa: E402
 report["provenance"] = provenance(DATA)
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
@@ -130,4 +193,8 @@ print(f"\nCHECK (criterion registered before the run)\n  {'PASS' if outcome == '
       f"  -> {CRITERIA['outcomes'][outcome]}")
 print(f"UNCERTAINTY (95% interval, registered rule)\n  {unc['verdict']:<10}  A2R_facilitation: difference {d:+.4g} "
       f"[{lo:+.4g}, {hi:+.4g}] band (0, -) ({unc['method']})")
+_f = lambda x: "-" if x is None else f"{x:+.4g}"  # noqa: E731
+_r = unc2["ci95"] or [None, None]
+print(f"  {unc2['verdict']:<10}  A2R2_beyond_summation: residual {_f(unc2['estimate'])} [{_f(_r[0])}, {_f(_r[1])}] "
+      f"band (0, -) ({unc2['method']})")
 print(f"wrote {OUT / 'report.json'}  ({report['wall_s']}s)")

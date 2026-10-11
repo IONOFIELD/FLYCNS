@@ -50,7 +50,8 @@ _changed = {}
 CANONICAL_TRIALS = {"gf_escape": 40, "auditory": 40, "feeding": 6, "peptide_asta": 10, "pc1_song": 10,
                     "dnp13_control": 10, "feeding_by_modality": 6, "a2_registered": 120, "a2_robustness": 100,
                     "flight_loop": 400, "flight_snpp16": 400, "flight_snpp16_graded": 400, "flight_snpp16_robustness": 400,
-                    "null_dc_escape": 40, "null_dc_song": 30, "null_dc_auditory": 40}
+                    "null_dc_escape": 40, "null_dc_song": 30, "null_dc_auditory": 40,
+                    "a2_contact_em": 120, "a2_contact_em_flip": 120}
 
 
 def trial_count(r):
@@ -97,6 +98,9 @@ for rep in reports:
         f.append("UNSTAMPED")   # written before integrity stamping (2026-10-10); rerun to stamp
     elif not prov.get("data"):
         f.append("UNPINNED")    # no record of which input tables produced it
+    scored_here = any(v is not None for v in (r.get("checks") or {}).values())
+    if scored_here and not (r.get("registration") or {}).get("matches"):
+        f.append("UNREGISTERED")   # not scored under a matching version 2 registration (flycns/registry.py)
     n_run, n_canon = trial_count(r), CANONICAL_TRIALS.get(name)
     if n_run is not None and n_canon is not None and n_run < n_canon:
         f.append(f"TRIALS {n_run}<{n_canon}")
@@ -119,6 +123,7 @@ for rep in reports:
 total, passed = sum(counts.values()), sum(passed_by_role.values())
 unresolved = sum(unresolved_by_role.values())
 canonical = not any(("PERTURBED" in f or "DIRTY" in f or "ALLOW-DIRTY" in f or "DATA-MISMATCH" in f or "UNPINNED" in f
+                     or "STALE" in f or "UNREGISTERED" in f
                      or any(x.startswith("TRIALS") for x in f)) for f in flags.values())
 p = LIFParams().__dict__
 tag = os.environ.get("FLYCNS_RUN_TAG", "")
@@ -128,7 +133,8 @@ role_line = " | ".join(f"{rl} {passed_by_role[rl]}/{counts[rl]}"
 md = ["# MaleCNS v1.0 LIF benchmark suite" + (f"  [{tag}]" if tag else ""), "",
       (f"**{passed}/{total} checks pass under ONE parameter set** (same LIFParams for every circuit)."
        if canonical else
-       f"**{passed}/{total} checks pass, but NOT all under the declared parameter set:** see the flags column."),
+       f"**{passed}/{total} checks pass, but NOT all as registered under the declared parameter set:** see the "
+       f"flags column."),
       "", f"**By role:** {role_line}",
       "", f"**Uncertainty:** {with_interval} of {total} scored checks carry a 95% interval or a per-draw or null "
           f"score (flycns/stats.py); {unresolved} are UNRESOLVED (the interval crosses a band edge) and count as not "
@@ -145,6 +151,7 @@ md = ["# MaleCNS v1.0 LIF benchmark suite" + (f"  [{tag}]" if tag else ""), "",
           "DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); "
           "UNSTAMPED = written before integrity stamping, rerun to stamp; UNPINNED = no record of the input tables; "
           "ALLOW-DIRTY = run with FLYCNS_ALLOW_DIRTY=1, which waives the integrity guards; "
+          "UNREGISTERED = not scored under a matching registration of the frozen model (flycns/registry.py); "
           "TRIALS a<b = run at fewer trials than the canonical b.",
       "", "Declared deviations from the raw connectome: see each results/*/provenance.md and flycns/graph.py."]
 # citation integrity: every author-year tag in code must resolve in REFERENCES.md
@@ -171,7 +178,7 @@ if missing:
 # in the file (a "provenance" key) or beside it (<file>.stamp.json, flycns/bench.py stamp)
 EXEMPT = {"results/turner2022": "input extraction from 22 GB of Turner et al. 2022 imaging; its output is a "
                                 "model input, hashed into every report's loom_input stamp"}
-NOT_RESULTS = {"criteria.json", "progress.json"}   # registrations and in-progress state
+NOT_RESULTS = {"criteria.json", "registration.json", "progress.json"}   # registrations and in-progress state
 
 
 def file_stamp(f):

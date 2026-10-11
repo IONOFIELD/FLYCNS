@@ -1,0 +1,24 @@
+{
+  "criteria": {
+    "purpose": "re-select the global synaptic scale w_scale blind to every benchmark (audit gap 6)",
+    "drive": "a fixed random 10% (numpy default_rng(0)) of sensory-superclass neurons whose type is not driven by any benchmark (types in LOOM_TUNING, GUSTATORY_MN9_DRIVING, peptide sources, and prefixes JO-, LC, LPLC, SNpp, pC1, DNg02, L1, L2, L3, L5, Pm3, Mi1, Tm2) and whose subclass is not auditory, campaniform sensilla, labellar bristle, pharyngeal sensillum, taste peg, wind_gravity; 20 Hz Poisson for 1000 ms after 200 ms of silence",
+    "measure": "whole-CNS rate (spikes/neuron/s) and fraction of neurons with >= 1 spike, over the driven 1000 ms",
+    "grid": [
+      0.15,
+      0.2,
+      0.25,
+      0.3,
+      0.35,
+      0.4,
+      0.5,
+      0.6,
+      0.75,
+      1.0
+    ],
+    "rule": "the largest grid value with whole-CNS rate < 1 Hz AND fraction active < 0.10",
+    "consequence": "a recommendation; adopting a value other than 0.3 requires recalibrating PEAK_HZ, b_adapt and the A2 working point"
+  },
+  "registered_at": "2026-10-11T17:34:08",
+  "git_commit": "e4e5524",
+  "script_uncommitted": false
+}

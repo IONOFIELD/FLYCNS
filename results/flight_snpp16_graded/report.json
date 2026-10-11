@@ -13,21 +13,13 @@
     "jitter_ms": 0.8
   },
   "registration": {
-    "criteria": {
-      "hypothesis": "SNpp16 selectively drives the DVM motor neurons",
-      "G1": "mean DVMn 1a-c non-decreasing in k, tolerance 0.5 Hz",
-      "G2": "some k gives mean DVMn in 2.0-12.0 Hz; smallest such k is k*",
-      "G3": "at k*: mean steering, b1 and DLMn c-f each below 1 Hz",
-      "G4": "at k*: rewired null gives DVMn below 1 Hz",
-      "G5": "at k*: DVMn in band in at least 4 of 5 draws",
-      "n_draws": 5,
-      "n_cycles": 400,
-      "wingbeat_hz": 202.0,
-      "jitter_ms": 0.8
-    },
-    "registered_at": "2026-09-25T14:22:00",
-    "git_commit": "fae9fdb",
-    "script_uncommitted": false
+    "file": "results/flight_snpp16_graded/registration.json",
+    "version": 2,
+    "git_commit": "4c39a8f",
+    "model_hash": "0a3321bd8bd215e6bb801dbfb4dcfdeff969773c08b1fcdc34900aa77a9bc5f3",
+    "registered_at": "2026-10-11T12:41:20",
+    "matches": true,
+    "problems": []
   },
   "sweep": [
     {
@@ -1463,9 +1455,26 @@
     },
     "summation_ratio": 3.863945578231293
   },
+  "registration_v1": {
+    "criteria": {
+      "hypothesis": "SNpp16 selectively drives the DVM motor neurons",
+      "G1": "mean DVMn 1a-c non-decreasing in k, tolerance 0.5 Hz",
+      "G2": "some k gives mean DVMn in 2.0-12.0 Hz; smallest such k is k*",
+      "G3": "at k*: mean steering, b1 and DLMn c-f each below 1 Hz",
+      "G4": "at k*: rewired null gives DVMn below 1 Hz",
+      "G5": "at k*: DVMn in band in at least 4 of 5 draws",
+      "n_draws": 5,
+      "n_cycles": 400,
+      "wingbeat_hz": 202.0,
+      "jitter_ms": 0.8
+    },
+    "registered_at": "2026-09-25T14:22:00",
+    "git_commit": "fae9fdb",
+    "script_uncommitted": false
+  },
   "provenance": {
-    "written_at": "2026-10-11T17:51:57",
-    "git_commit": "a4eef18",
+    "written_at": "2026-10-11T20:40:44",
+    "git_commit": "b7eba83",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -1490,7 +1499,11 @@
       "n_dropped_unsigned_edges": 160051,
       "n_dropped_unsigned_synapses": 1980492,
       "n_silent_presynaptic": 8020,
-      "edges_nt_used": false
+      "edges_nt_used": false,
+      "glu_vnc": "inhibitory",
+      "n_glu_vnc_flipped": 0,
+      "jon_mode": "electrical",
+      "jon_compound_mv": 3.0
     },
     "data": {
       "dir": "data",

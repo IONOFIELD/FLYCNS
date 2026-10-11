@@ -48,6 +48,33 @@ N_HOPS, CUM = 6, 5
 GROUPS = {"sugar": ["LB3b", "LB3c"], "bitter": ["LB1a", "LB1b", "LB1c", "LB1d"],
           "old_mixed_proxy": list(GUSTATORY_MN9_DRIVING)}
 
+# Version 2 registration (flycns/registry.py): criteria plus the frozen model, written before any data is loaded;
+# it supersedes the version 1 criteria.json below, which is kept and still checked. L1 is graph arithmetic scored
+# on its point value, so its rule is stated in words with its threshold, not as a band.
+from flycns import registry  # noqa: E402
+_v1 = OUT / "criteria.json"
+CRITERIA_V2 = dict(
+    version=2,
+    question=("does unilateral labellar sugar input (LB3b, LB3c) favour the contralateral MN9, as Shiu et al. 2024 "
+              "predicted?"),
+    source=("Shiu et al. 2024 Nature 634:210-219 (prediction); Tastekin et al. 2026 Cell 189:5527-5551 "
+            "(LB3b, LB3c sugar)"),
+    groups=GROUPS, sides="explicit only (somaSide, else _L/_R instance suffix); cells without one are excluded",
+    measure=dict(kind=("input-normalised signed path products from each side's afferents onto the left and the right "
+                       "MN9 cells separately (the model's edge signs)"), hops=N_HOPS, cumulative_hops=CUM),
+    checks=dict(
+        L1_sugar_contralateral_bias=dict(
+            threshold=1.10,
+            rule=("point record: for the left and for the right sugar afferents separately, cumulative signed "
+                  "influence on the contralateral and on the ipsilateral MN9 are both above 0 and contralateral >= "
+                  "1.10 x ipsilateral; PASS only if both sides do")),
+    ),
+    reported="the same unsigned; bitter (LB1a-d); the old mixed proxy; the hop at which each side's bias first appears",
+)
+REG = registry.register("sugar_laterality", CRITERIA_V2, scripts=[__file__],
+                        supersedes=dict(file="criteria.json", git_commit=(
+                            json.loads(_v1.read_text(encoding="utf-8")).get("git_commit") if _v1.exists() else None)))
+
 neurons, edges = load_graph(DATA)
 meta = neurons.set_index("bodyId")
 explicit = meta["somaSide"].where(meta["somaSide"].isin(["L", "R"]))
@@ -156,6 +183,8 @@ report["uncertainty"] = {"L1_sugar_contralateral_bias": stats.point(
     note="graph arithmetic over the fixed connectome (signed path products from explicitly sided afferents), no "
          "simulation and no random draws; estimate is the smaller contra/ipsi ratio of the two sides (needs >= 1.10 "
          f"with both positive): L afferents {_ratios[0]}, R afferents {_ratios[1]}")}
+registry.verify_bands(REG, report["uncertainty"])
+report["registration"] = registry.stamp(REG)
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECK (criterion registered before the run)")
 print(f"  {'PASS' if l1 else 'FAIL'}  L1_sugar_contralateral_bias")

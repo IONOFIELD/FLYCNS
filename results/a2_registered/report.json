@@ -22,33 +22,34 @@
     ]
   },
   "loom_plus_sound": {
-    "k": 64,
-    "p": 0.5333333333333333,
+    "k": 61,
+    "p": 0.5083333333333333,
     "ci": [
-      0.44442629105796966,
-      0.6201723575383018
+      0.420023820848017,
+      0.5961258413010508
     ]
   },
-  "difference": 0.35833333333333334,
+  "difference": 0.3333333333333333,
   "difference_ci95": [
-    0.24021950706448786,
-    0.46253630486715763
+    0.21566862415888308,
+    0.43833222669354754
   ],
   "outcome": "PASS facilitation",
   "auditory_report_ci": [
-    0.24021950706448786,
-    0.46253630486715763
+    0.21566862415888308,
+    0.43833222669354754
   ],
   "checks": {
-    "A2R_facilitation": true
+    "A2R_facilitation": true,
+    "A2R2_beyond_summation": false
   },
-  "wall_s": 4387,
+  "wall_s": 3656,
   "uncertainty": {
     "A2R_facilitation": {
-      "estimate": 0.35833333333333334,
+      "estimate": 0.3333333333333333,
       "ci95": [
-        0.24021950706448786,
-        0.46253630486715763
+        0.21566862415888308,
+        0.43833222669354754
       ],
       "band": [
         0,
@@ -60,11 +61,35 @@
       "n": 120,
       "note": "P(GF|loom+sound) - P(GF|loom) at the calibrated working point; Newcombe 1998 method 10 recomputed from counts (n per arm). Registered outcomes: CI above zero PASS, below zero FAIL, spans zero FAIL (unresolved at this trial count)",
       "registered_outcome": "PASS facilitation"
+    },
+    "A2R2_beyond_summation": {
+      "estimate": -0.4916666666666667,
+      "ci95": [
+        -0.575,
+        -0.3914583333333344
+      ],
+      "band": [
+        0.0,
+        null
+      ],
+      "method": "bootstrap",
+      "verdict": "FAIL",
+      "band_lower_exclusive": true,
+      "note": "observed P(GF|loom+sound) 0.508 minus the 1.000 predicted by adding each giant fiber's measured sound-alone peak depolarisation (0.73, 3.65 mV, JON electrical) to its loom-alone peak per trial (rest to threshold 7.0 mV); percentile bootstrap resampling all three arms; biased low, so a PASS is conservative (auditory.py A2_construction)"
     }
   },
+  "registration": {
+    "file": "results/a2_registered/registration.json",
+    "version": 2,
+    "git_commit": "4c39a8f",
+    "model_hash": "3b242ae75d28883dcd86cda5767ec1ad538e77fbbd5bfe84b3f8e6eb2768cc7e",
+    "registered_at": "2026-10-11T12:41:13",
+    "matches": true,
+    "problems": []
+  },
   "provenance": {
-    "written_at": "2026-10-11T18:46:25",
-    "git_commit": "a4eef18",
+    "written_at": "2026-10-11T20:55:21",
+    "git_commit": "b7eba83",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

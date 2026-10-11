@@ -32,10 +32,12 @@ ROOT = Path(__file__).resolve().parents[1]
 MODEL_INPUTS = ("data/loom_tuning_measured.json",)
 # A registration (results/<test>/criteria.json) is code once committed: editing or deleting it is a change
 # to the test. A new, untracked one is a registration being written and is checked by require_clean.
-REGISTRATIONS = "results/*/criteria.json"
-CODE_PATHSPECS = ["*.py", "*.cmd", "requirements*.txt", "requirements*.lock", *MODEL_INPUTS, REGISTRATIONS]
+REGISTRATIONS = ["results/*/criteria.json", "results/*/registration.json"]
+CODE_PATHSPECS = ["*.py", "*.cmd", "requirements*.txt", "requirements*.lock", *MODEL_INPUTS, *REGISTRATIONS]
 NOT_CODE_PREFIXES = ("results/", "data/", "testdata/")
-CORE_TABLES = ("neurons.parquet", "edges.parquet")   # must be present; derived tables are optional
+# must be present; the transmitter table is optional (only the targeted sign flip reads it). The ROI table
+# is core: without it the SEZ falls back to a name rule and the degree-corrected null loses its neuropil.
+CORE_TABLES = ("neurons.parquet", "edges.parquet", "roi_membership.parquet")
 FINGERPRINT_ALGO = "rowhash-v2"   # v2: dtype-family labels and None for missing text, so pandas 2 and 3 agree
 MANIFEST = "MANIFEST.json"
 CACHE = ".fingerprints.json"      # no longer read or written (2026-10-11); kept so old copies are recognised
@@ -48,7 +50,8 @@ PLUMBING = {"FLYCNS_RUN_TAG", "FLYCNS_AUDITORY_OUT", "FLYCNS_A2_TRIALS",
 # A setting equal to its declared default changes nothing and is not an override.
 DEFAULTS = {"FLYCNS_ALLOW_DIRTY": "0", "FLYCNS_SEED": "0", "FLYCNS_SIGNFLIP": "0", "FLYCNS_SIGNFLIP_TARGETED": "0", "FLYCNS_WSCALE": "0.3",
             "FLYCNS_PEPTIDE": "0", "FLYCNS_NULL": "global", "FLYCNS_MIN_WEIGHT": "5", "FLYCNS_PEAK_HZ": "5.0",
-            "FLYCNS_LOOM_STATE": "stationary", "FLYCNS_BASELINE_DEPOL": "0", "FLYCNS_BASELINE_NOISE": "0"}
+            "FLYCNS_LOOM_STATE": "stationary", "FLYCNS_BASELINE_DEPOL": "0", "FLYCNS_BASELINE_NOISE": "0",
+            "FLYCNS_JON": "electrical", "FLYCNS_JON_MV": "3", "FLYCNS_GLU_VNC": "inhibitory", "FLYCNS_DT_MS": "0.1"}
 
 
 def _git(*args):
@@ -76,7 +79,7 @@ def git_state():
         if " -> " in path:
             path = path.split(" -> ", 1)[1]
         code = line[:2].strip() or "?"
-        registration = path.startswith("results/") and path.endswith("/criteria.json")
+        registration = path.startswith("results/") and path.endswith(("/criteria.json", "/registration.json"))
         if path in MODEL_INPUTS or not path.startswith(NOT_CODE_PREFIXES) or (registration and code != "??"):
             dirty.append(f"{code} {path}")
     return dict(is_repo=True, commit=commit.strip(), dirty_files=dirty, clean=not dirty)
@@ -87,27 +90,30 @@ def allow_dirty():
 
 
 def registration_history(label):
-    """Problems with a registered test's criteria.json in git history: a registration must be committed
-    once and never edited or deleted (a deleted-and-rewritten file would silently re-register).
-    Returns a list of problems; empty when fine or when there is no history to check (shallow clone)."""
-    path = f"results/{label}/criteria.json"
+    """Problems with a registered test's registration files in git history: a registration must be
+    committed once and never edited or deleted (a deleted-and-rewritten file would silently re-register,
+    and a deleted one would register afresh). Checks the version 1 criteria.json and the version 2
+    registration.json (flycns/registry.py). Returns a list of problems; empty when fine or when there is
+    no history to check (shallow clone)."""
     _, shallow = _git("rev-parse", "--is-shallow-repository")
     if shallow.strip() == "true":
         print(f"[integrity] {label}: shallow clone, so the registration history cannot be checked", flush=True)
         return []
-    _, log = _git("log", "--format=%h", "--", path)
-    _, deleted = _git("log", "--format=%h", "--diff-filter=D", "--", path)
     problems = []
-    if not (ROOT / path).exists():
-        # a registration that was committed and then deleted must not quietly register again
+    for name in ("criteria.json", "registration.json"):
+        path = f"results/{label}/{name}"
+        _, log = _git("log", "--format=%h", "--", path)
+        _, deleted = _git("log", "--format=%h", "--diff-filter=D", "--", path)
+        if not (ROOT / path).exists():
+            # a registration that was committed and then deleted must not quietly register again
+            if deleted.split():
+                problems.append(f"{path} was registered and then deleted (in {deleted.split()[0]}); a new design "
+                                f"needs a new registration under a new name")
+            continue
+        if len(log.split()) > 1:
+            problems.append(f"{path} was changed after it was committed ({len(log.split())} commits)")
         if deleted.split():
-            problems.append(f"{path} was registered and then deleted (in {deleted.split()[0]}); a new design "
-                            f"needs a new registration under a new name")
-        return problems
-    if len(log.split()) > 1:
-        problems.append(f"{path} was changed after it was committed ({len(log.split())} commits)")
-    if deleted.split():
-        problems.append(f"{path} was deleted and written again (deleted in {deleted.split()[0]})")
+            problems.append(f"{path} was deleted and written again (deleted in {deleted.split()[0]})")
     return problems
 
 
@@ -116,6 +122,10 @@ def require_clean(label):
     was committed once and never changed."""
     st = git_state()
     history = registration_history(label)
+    _, shallow = _git("rev-parse", "--is-shallow-repository")
+    if shallow.strip() == "true":
+        history = history + ["this is a shallow clone, so the registration's history cannot be checked "
+                             "(clone with full history: git fetch --unshallow)"]
     if history:
         if not allow_dirty():
             raise SystemExit(f"[integrity] {label} refuses to run: " + "; ".join(history)
@@ -315,20 +325,29 @@ def verify_data(data_dir="data", names=None, fresh=True):
 
 
 def require_data(data_dir, label, names=None):
-    """Registered runs: refuse on a manifest mismatch; warn loudly when there is no manifest. Every
-    table is checked from the file itself (its bytes against the pinned sha256, else its content)."""
+    """Registered runs: refuse unless the data match a manifest, and that manifest is the committed pin.
+    Every table is checked from the file itself (its bytes against the pinned sha256, else its content).
+    A data folder with no manifest, or whose manifest differs from data/MANIFEST.json, is refused: a
+    registered result must rest on the pinned data wherever they are stored."""
     v = verify_data(data_dir, names)
-    if v["status"] == "mismatch":
+    problems = list(v["problems"])
+    if v["status"] == "no-manifest":
+        problems.append(f"{data_dir} has no {MANIFEST}: the input data are not pinned")
+    pin = ROOT / "data" / MANIFEST
+    here = Path(data_dir) / MANIFEST
+    if v["status"] != "no-manifest" and pin.exists() and here.resolve() != pin.resolve():
+        a = json.loads(here.read_text(encoding="utf-8")).get("files", {})
+        b = json.loads(pin.read_text(encoding="utf-8")).get("files", {})
+        diff = sorted(n for n in set(a) | set(b) if (a.get(n) or {}).get("digest") != (b.get(n) or {}).get("digest"))
+        if diff:
+            problems.append(f"{data_dir}/{MANIFEST} differs from the committed pin data/{MANIFEST} in: {', '.join(diff)}")
+    if problems:
         if allow_dirty():
-            _box([f"{label}: DATA DIFFER FROM {data_dir}/{MANIFEST} (FLYCNS_ALLOW_DIRTY=1)"] + v["problems"])
+            _box([f"{label}: DATA NOT THE COMMITTED PIN (FLYCNS_ALLOW_DIRTY=1)"] + problems)
             return v
-        raise SystemExit(f"[integrity] {label} refuses to run: {data_dir} differs from its manifest:\n  "
-                         + "\n  ".join(v["problems"])
+        raise SystemExit(f"[integrity] {label} refuses to run on these data:\n  " + "\n  ".join(problems)
                          + "\n  If the data were deliberately refetched, review, then rewrite the fingerprint: "
                            f".venv\\Scripts\\python.exe -m flycns.integrity write {data_dir}")
-    if v["status"] == "no-manifest" and Path(data_dir).resolve() == (ROOT / "data").resolve():
-        _box([f"{label}: no {data_dir}/{MANIFEST}; the input data are not pinned.",
-              "Run setup.cmd once: it records the fingerprint (menu 51 then commits it)."])
     return v
 
 

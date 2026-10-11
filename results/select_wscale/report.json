@@ -1,0 +1,159 @@
+{
+  "benchmark": "select_wscale",
+  "criteria": {
+    "purpose": "re-select the global synaptic scale w_scale blind to every benchmark (audit gap 6)",
+    "drive": "a fixed random 10% (numpy default_rng(0)) of sensory-superclass neurons whose type is not driven by any benchmark (types in LOOM_TUNING, GUSTATORY_MN9_DRIVING, peptide sources, and prefixes JO-, LC, LPLC, SNpp, pC1, DNg02, L1, L2, L3, L5, Pm3, Mi1, Tm2) and whose subclass is not auditory, campaniform sensilla, labellar bristle, pharyngeal sensillum, taste peg, wind_gravity; 20 Hz Poisson for 1000 ms after 200 ms of silence",
+    "measure": "whole-CNS rate (spikes/neuron/s) and fraction of neurons with >= 1 spike, over the driven 1000 ms",
+    "grid": [
+      0.15,
+      0.2,
+      0.25,
+      0.3,
+      0.35,
+      0.4,
+      0.5,
+      0.6,
+      0.75,
+      1.0
+    ],
+    "rule": "the largest grid value with whole-CNS rate < 1 Hz AND fraction active < 0.10",
+    "consequence": "a recommendation; adopting a value other than 0.3 requires recalibrating PEAK_HZ, b_adapt and the A2 working point"
+  },
+  "grid": [
+    {
+      "w_scale": 0.15,
+      "cns_rate_hz": 0.0013657172901091292,
+      "fraction_active": 0.00013464818353188597,
+      "quiet": true,
+      "n_lif": 155962,
+      "n_driven": 1470
+    },
+    {
+      "w_scale": 0.2,
+      "cns_rate_hz": 0.00244931457662764,
+      "fraction_active": 0.00019876636616611738,
+      "quiet": true,
+      "n_lif": 155962,
+      "n_driven": 1470
+    },
+    {
+      "w_scale": 0.25,
+      "cns_rate_hz": 0.004289506418230082,
+      "fraction_active": 0.00039112091406881164,
+      "quiet": true,
+      "n_lif": 155962,
+      "n_driven": 1470
+    },
+    {
+      "w_scale": 0.3,
+      "cns_rate_hz": 0.006841410087072492,
+      "fraction_active": 0.0006155345532886216,
+      "quiet": true,
+      "n_lif": 155962,
+      "n_driven": 1470
+    },
+    {
+      "w_scale": 0.35,
+      "cns_rate_hz": 0.010342262858901528,
+      "fraction_active": 0.0010323027404111258,
+      "quiet": true,
+      "n_lif": 155962,
+      "n_driven": 1470
+    },
+    {
+      "w_scale": 0.4,
+      "cns_rate_hz": 0.015240892012156807,
+      "fraction_active": 0.001577307292802093,
+      "quiet": true,
+      "n_lif": 155962,
+      "n_driven": 1470
+    },
+    {
+      "w_scale": 0.5,
+      "cns_rate_hz": 2.5112335055975175,
+      "fraction_active": 0.037271899565278724,
+      "quiet": false,
+      "n_lif": 155962,
+      "n_driven": 1470
+    },
+    {
+      "w_scale": 0.6,
+      "cns_rate_hz": 3.1557174183454944,
+      "fraction_active": 0.044260781472409944,
+      "quiet": false,
+      "n_lif": 155962,
+      "n_driven": 1470
+    },
+    {
+      "w_scale": 0.75,
+      "cns_rate_hz": 4.259107987843192,
+      "fraction_active": 0.060893038047729574,
+      "quiet": false,
+      "n_lif": 155962,
+      "n_driven": 1470
+    },
+    {
+      "w_scale": 1.0,
+      "cns_rate_hz": 7.0926058911786205,
+      "fraction_active": 0.09801105397468614,
+      "quiet": false,
+      "n_lif": 155962,
+      "n_driven": 1470
+    }
+  ],
+  "selected_w_scale": 0.4,
+  "criterion_binds_inside_grid": true,
+  "declared_w_scale": 0.3,
+  "n_eligible": 15757,
+  "n_driven": 1575,
+  "agrees_with_declared": false,
+  "wall_s": 367.5,
+  "provenance": {
+    "written_at": "2026-10-11T20:28:00",
+    "git_commit": "b7eba83",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "cython",
+    "platform": "win32",
+    "machine": "AMD64",
+    "float_dtype": "float64",
+    "loom_input": {
+      "source": "MEASURED (stationary trials, 13 series): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09)",
+      "state": "stationary",
+      "sha256": "238def4e51bd439f"
+    },
+    "graph": {
+      "data_dir": "data",
+      "min_weight": 5,
+      "n_neurons": 176422,
+      "n_signed_edges": 6127738,
+      "n_signed_synapses": 88316807,
+      "n_dropped_unsigned_edges": 160051,
+      "n_dropped_unsigned_synapses": 1980492,
+      "n_silent_presynaptic": 8020,
+      "edges_nt_used": false,
+      "glu_vnc": "inhibitory",
+      "n_glu_vnc_flipped": 0,
+      "jon_mode": "electrical",
+      "jon_compound_mv": 3.0
+    },
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9",
+        "roi_membership.parquet": "5fce5c5d54e45570"
+      },
+      "manifest": "match"
+    }
+  }
+}

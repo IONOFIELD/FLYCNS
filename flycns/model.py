@@ -38,7 +38,7 @@ class LIFParams:
     tau_adapt_ms: float = 100.0
     gap_delay_ms: float = 0.8        # Tanouye & Wyman 1980
     chem_delay_ms: float = 1.8       # Shiu et al. 2024
-    dt_ms: float = 0.1
+    dt_ms: float = float(os.environ.get("FLYCNS_DT_MS", "0.1"))   # numerics check: FLYCNS_DT_MS=0.05
     seed: int = int(os.environ.get("FLYCNS_SEED", "0"))
     # class-wise gain on top of w_scale, keyed by presynaptic class (graph.pre_class)
     class_gains: dict = field(default_factory=lambda: {"sensory": 1.0, "relay": 1.0, "local": 1.0})

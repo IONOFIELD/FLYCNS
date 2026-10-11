@@ -57,9 +57,12 @@ RUNS = [  # (label, argv relative to the copy, extra env, sentinel substring or 
     ("flight_snpp16", ["benchmarks/flight_snpp16.py", "20", "testdata"], {}, None),
     ("flight_snpp16_graded (registers on toy data)", ["benchmarks/flight_snpp16_graded.py", "20", "testdata"], {}, None),
     ("flight_loop", ["benchmarks/flight_loop.py", "20", "testdata"], {}, None),
+    ("flight_snpp16_robustness (registers on toy data)", ["benchmarks/flight_snpp16_robustness.py", "10", "testdata"], {}, None),
     ("peptide_asta", ["benchmarks/peptide_asta.py", "2", "testdata"], {}, None),
     ("a2_registered", ["benchmarks/a2_registered.py", "4", "testdata"], {}, None),
     ("a2_robustness", ["benchmarks/a2_robustness.py", "2", "testdata"], {}, None),
+    ("a2_contact em", ["benchmarks/a2_contact.py", "em", "4", "testdata"], {}, "C1_em_facilitation"),
+    ("a2_contact em_flip", ["benchmarks/a2_contact.py", "em_flip", "4", "testdata"], {}, "C2_flip_no_facilitation"),
     ("null_strict", ["benchmarks/null_strict.py", "testdata"], {}, None),
     ("null_distribution escape", ["benchmarks/null_distribution.py", "escape", "3", "2", "testdata"], {}, "_wiring_specific"),
     ("null_distribution song", ["benchmarks/null_distribution.py", "song", "3", "2", "testdata"], {}, "_wiring_specific"),
@@ -84,6 +87,10 @@ RUNS = [  # (label, argv relative to the copy, extra env, sentinel substring or 
     ("battery variant: min_weight 10", ["benchmarks/gf_escape.py", "2", "testdata"], {"FLYCNS_MIN_WEIGHT": "10"}, "min_weight 10"),
     ("a threshold below the data's floor is refused", ["benchmarks/gf_escape.py", "2", "testdata"], {"FLYCNS_MIN_WEIGHT": "3"}, "!fail:below this dataset's floor"),
     ("battery variant: superclass null", ["benchmarks/gf_escape.py", "2", "testdata"], {"FLYCNS_NULL": "superclass"}, None),
+    ("battery variant: half time step", ["benchmarks/gf_escape.py", "2", "testdata"], {"FLYCNS_DT_MS": "0.05"}, None),
+    ("battery variant: JON as EM annotates it", ["benchmarks/auditory.py", "2", "testdata"], {"FLYCNS_JON": "em"},
+     "JON -> GF as EM annotates it"),
+    ("blind w_scale selection", ["fit/select_wscale.py", "testdata"], {}, "selected w_scale"),
     ("data manifest write + verify", ["-m", "flycns.integrity", "write", "testdata"], {}, "wrote testdata/MANIFEST.json"),
     ("integrity status", ["-m", "flycns.integrity", "verify", "testdata"], {}, "testdata: match"),
     ("suite summary with roles", ["benchmarks/summarize.py"], {}, "By role:"),
@@ -131,7 +138,7 @@ def _flatten(obj, prefix=""):
 def _reports(work):
     """Report files under results/ with their modification times (stamps and registrations excluded)."""
     return {f: f.stat().st_mtime_ns for f in (work / "results").rglob("*.json")
-            if not f.name.endswith(".stamp.json") and f.name not in ("criteria.json", "progress.json")}
+            if not f.name.endswith(".stamp.json") and f.name not in ("criteria.json", "registration.json", "progress.json")}
 
 
 def _same(a, b):
@@ -193,6 +200,9 @@ def main():
         results.append(("make toy graph", r.returncode == 0, r.stderr.strip()[-200:]))
         for f in (work / "testdata").glob("*.parquet"):
             shutil.copy(f, work / "data" / f.name)          # scripts that read data/ directly
+        # the measured loom input is a model input: without it the toy ran on the built-in tuning, so the
+        # golden file never covered the loom amplitudes the real runs use
+        shutil.copy(ROOT / "data" / "loom_tuning_measured.json", work / "data" / "loom_tuning_measured.json")
         got = {}
         for label, argv, env, sentinel in RUNS:
             before = _reports(work)

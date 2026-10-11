@@ -51,6 +51,32 @@ ELECTRICAL_SYNAPSES = [
 # JO-A/B -> DNp01 "chemical" synapses. When the electrical model is on, these
 # direct edges are removed so the same contact is not counted twice.
 MIXED_IN_EM = [("JO-B1_a", "DNp01"), ("JO-B1_c", "DNp01")]
+
+# How the JON -> GF contact is represented (audit 2026-10-11, gap 1). The declared model is the
+# calibrated electrical coupling; the alternatives exist so the sound-loom summation can be tested
+# against the contact as the connectome annotates it, not only as hand-set:
+#   electrical  declared: shakB coupling calibrated to a compound potential (FLYCNS_JON_MV, 3 mV), and
+#               the 679 EM chemical synapses on the contact removed so it is not counted twice
+#   em          the contact exactly as EM annotates it: chemical, signed by its transmitter, no coupling
+#   em_flip     as em with the contact's sign inverted (a control: the summation should not survive it)
+JON_MODES = ("electrical", "em", "em_flip")
+
+
+def jon_mode():
+    import os
+    m = os.environ.get("FLYCNS_JON", "electrical").strip() or "electrical"
+    if m not in JON_MODES:
+        raise SystemExit(f"[graph] FLYCNS_JON={m!r}; choose from {JON_MODES}")
+    return m
+
+
+def jon_compound_mv():
+    import os
+    return float(os.environ.get("FLYCNS_JON_MV", "3.0") or 3.0)
+
+
+def _is_jon_entry(pre_t, post_t):
+    return any(pre_t == a and post_t == b for a, b in MIXED_IN_EM)
 TAU_M_S = 0.020   # for compound-potential calibration; must match LIFParams.tau_m_ms
 G_GAP_RELAY = 0.2  # ohmic coupling (fraction of leak) for a 1:1 relay pair; population
                    # pairs share this budget so many resting partners cannot shunt the post cell
@@ -243,6 +269,22 @@ def load_graph(data_dir="data", min_weight=None):
         m = rng.random(len(edges)) < flip
         edges.loc[m, "sign"] *= -1
         print(f"[graph] SIGN-FLIP PERTURBATION: {m.sum():,} edges ({flip:.0%}) sign-inverted")
+    # robustness (audit gap 10): glutamate is inhibitory everywhere in the declared model (GluCl). In the
+    # nerve cord that is supported onto motor neurons (larval pharmacology, adult receptor expression)
+    # but untested between interneurons. FLYCNS_GLU_VNC=excitatory makes glutamatergic connections from
+    # nerve-cord neurons onto non-motor targets excitatory.
+    glu_vnc = os.environ.get("FLYCNS_GLU_VNC", "inhibitory").strip() or "inhibitory"
+    n_glu = 0
+    if glu_vnc not in ("inhibitory", "excitatory"):
+        raise SystemExit(f"[graph] FLYCNS_GLU_VNC={glu_vnc!r}; choose inhibitory or excitatory")
+    if glu_vnc == "excitatory":
+        sc = neurons.set_index("bodyId")["superclass"].fillna("").astype(str)
+        m = ((edges["nt"].str.lower() == "glutamate") & edges["pre"].map(sc).str.startswith("vnc")
+             & ~edges["post"].map(sc).str.contains("motor"))
+        edges.loc[m, "sign"] = 1.0
+        n_glu = int(m.sum())
+        print(f"[graph] VNC GLUTAMATE EXCITATORY: {n_glu:,} edges ({edges.loc[m, 'weight'].sum():,} synapses) "
+              f"from nerve-cord neurons onto non-motor targets set to +1")
     print(f"[graph] {len(neurons):,} neurons, {len(edges):,} signed edges "
           f"(dropped {n_unknown:,} unknown-NT pairs and modulatory amines)"
           + (f", min_weight {min_weight}" if min_weight != MIN_WEIGHT_DEFAULT else ""))
@@ -250,7 +292,8 @@ def load_graph(data_dir="data", min_weight=None):
     LOADED.update(data_dir=str(data_dir), min_weight=int(min_weight), n_neurons=int(len(neurons)),
                   n_signed_edges=int(len(edges)), n_signed_synapses=int(edges["weight"].sum()),
                   n_dropped_unsigned_edges=n_unknown, n_dropped_unsigned_synapses=n_unknown_syn,
-                  n_silent_presynaptic=n_silent, edges_nt_used=used_nt)
+                  n_silent_presynaptic=n_silent, edges_nt_used=used_nt, glu_vnc=glu_vnc,
+                  n_glu_vnc_flipped=n_glu, jon_mode=jon_mode(), jon_compound_mv=jon_compound_mv())
     _LAST["neurons"] = neurons
     return neurons, edges
 
@@ -333,7 +376,14 @@ def electrical_pairs(neurons):
     pairs = []
     # pool prefix entries with the same post so calibration counts the whole population
     pooled = {}
+    mode, jon_mv = jon_mode(), jon_compound_mv()
     for pre_t, post_t, ipsi, spk, src in ELECTRICAL_SYNAPSES:
+        if _is_jon_entry(pre_t, post_t):
+            if mode != "electrical":
+                continue                      # the contact is chemical, as EM annotates it
+            if isinstance(spk, dict) and jon_mv != spk["compound_mV"]:
+                spk = {**spk, "compound_mV": jon_mv}
+                src = f"{src}; compound potential set to {jon_mv} mV by FLYCNS_JON_MV"
         key = (post_t, ipsi, str(spk))
         pooled.setdefault(key, []).append((pre_t, spk, src))
     for (post_t, ipsi, _), entries in pooled.items():
@@ -368,8 +418,20 @@ def electrical_pairs(neurons):
 
 
 def drop_mixed_chemical(edges, neurons):
-    """Remove direct chemical edges for pairs declared in MIXED_IN_EM."""
+    """Remove direct chemical edges for pairs declared in MIXED_IN_EM (declared electrical mode). Under
+    FLYCNS_JON=em they are kept as annotated; under em_flip they are kept with their sign inverted."""
     meta = neurons.set_index("bodyId")
+    mode = jon_mode()
+    if mode != "electrical":
+        out = edges.copy()
+        m = pd.Series(False, index=out.index)
+        for pre_t, post_t in MIXED_IN_EM:
+            m |= out["pre"].isin(_match(meta, pre_t).index) & out["post"].isin(_match(meta, post_t).index)
+        if mode == "em_flip":
+            out.loc[m, "sign"] = -out.loc[m, "sign"]
+        print(f"[graph] JON -> GF as EM annotates it ({mode}): {int(out.loc[m, 'weight'].sum()):,} chemical "
+              f"synapses kept{', sign inverted' if mode == 'em_flip' else ''}; no electrical coupling")
+        return out
     keep = pd.Series(True, index=edges.index)
     n_drop = 0
     for pre_t, post_t in MIXED_IN_EM:

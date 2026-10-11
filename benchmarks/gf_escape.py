@@ -19,7 +19,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns.bench import provenance, stamp
 from flycns import load_graph, rewire_null, CNSModel, LIFParams, loom_protocol
-from flycns import stats
+from flycns import registry, stats
 from flycns.protocols import LOOM_TUNING, TUNING_SOURCE, GAIN_SIGMA_DEFAULT, PEAK_HZ_DEFAULT
 from flycns.graph import ELECTRICAL_SYNAPSES, INTRINSIC_OVERRIDES, SIGN_MAP
 from flycns import ascii as A
@@ -27,6 +27,51 @@ from flycns import ascii as A
 OUT = Path("results/gf_escape"); OUT.mkdir(parents=True, exist_ok=True)
 N_TRIALS = int(sys.argv[1]) if len(sys.argv) > 1 else 20
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
+
+# Version 2 registration (flycns/registry.py): the criteria and the frozen model, recorded before any data
+# are loaded. Every band below is the band the uncertainty record of that check is scored with.
+CRITERIA_V2 = dict(
+    version=2,
+    question=("does a loom burst on the loom-sensitive LC types fire the giant fiber (DNp01) with published "
+              "probability, count and latency, drive TTMn one to one through the electrical GF -> TTMn synapse, "
+              "leave the CNS quiet, and fail on a rewired null?"),
+    protocol=dict(
+        trials=40,
+        trials_note="canonical trial count per arm (the script's default argument is 20; a run at fewer is flagged TRIALS by summarize)",
+        arms=["real_electrical", "real_chemical_only", "rewired_null (flycns.graph.rewire_null, electrical pairs kept)"],
+        stimulus=("flycns.protocols.loom_protocol: 60 ms flat-rate burst on the LOOM_TUNING types, 300 ms gaps, "
+                  "per-trial lognormal gain at the declared GAIN_SIGMA_DEFAULT and PEAK_HZ_DEFAULT"),
+        window_ms="burst onset to onset + 60 ms burst + 100 ms",
+        seeds="the declared default seed (LIFParams().seed) for the network and for the per-trial loom gains, the same in every arm",
+    ),
+    checks={
+        "gf_spikes_per_response_1_to_2": dict(
+            band=[1.0, 2.0], rule="PASS if the 95% bootstrap interval of GF spikes per firing GF cell, over responding trials, lies within 1 to 2"),
+        "gf_response_prob_0.5_to_1": dict(
+            band=[0.5, 1.0], rule="PASS if the Wilson 95% interval of the fraction of trials with any GF spike lies within 0.5 to 1"),
+        "gf_latency_10_60ms": dict(
+            band=[10, 60], rule="PASS if the 95% bootstrap interval of first-GF-spike latency after burst onset lies within 10 to 60 ms"),
+        "ttmn_one_to_one": dict(
+            band=[0.8, 1.2], rule="PASS if the 95% bootstrap interval of sum(TTMn spikes per cell) / sum(GF spikes per cell) lies within 0.8 to 1.2"),
+        "ttmn_lag_0.5_1.5ms": dict(
+            band=[0.5, 1.5], rule="PASS if the 95% bootstrap interval of first TTMn spike minus first GF spike lies within 0.5 to 1.5 ms"),
+        "cns_quiet": dict(
+            rule="PASS if the whole-run population rate of the real+electrical arm is below 0.05 Hz per neuron "
+                 "(one number with no trial structure, scored on its point value)"),
+        "electrical_necessary": dict(
+            band=[None, 0], conditional=True,
+            condition="scored when the real+electrical arm fires TTMn spikes; otherwise UNRESOLVED (nothing to abolish)",
+            rule="PASS if the 95% interval of (chemical-only TTMn per cell - 0.1 x real TTMn per cell), the two arms "
+                 "resampled independently, lies at or below 0; FAIL if above 0"),
+        "null_silent": dict(
+            band=[None, 0.1], rule="PASS if the Wilson 95% interval of the fraction of rewired-null trials with any GF spike lies at or below 0.1"),
+    },
+)
+REG = registry.register("gf_escape", CRITERIA_V2, scripts=[__file__])
+# registered now (version 2): committed code and pinned data, as every registered test
+from flycns.integrity import require_clean, require_data  # noqa: E402
+require_clean("gf_escape")
+require_data(DATA, "gf_escape")
 
 
 def _wilson(k, n, z=1.96):
@@ -165,6 +210,10 @@ unc = {
                                     note="trials with any GF spike in the rewired null arm; band < 0.1"),
 }
 report["uncertainty"] = unc
+# a check that could not be scored as designed (stats.unresolved) has no band to compare; only a check
+# registered as conditional may be missing from the comparison
+registry.verify_bands(REG, {k: u for k, u in unc.items() if u.get("method") != "not scorable as designed"})
+report["registration"] = registry.stamp(REG)
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 

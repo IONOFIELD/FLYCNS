@@ -1,0 +1,219 @@
+{
+  "version": 2,
+  "benchmark": "flight_snpp16_robustness",
+  "criteria": {
+    "version": 2,
+    "claim": "SNpp16 selectively drives DVM motor neurons, reliably from k=7",
+    "protocol": {
+      "n_cycles": 400,
+      "wingbeat_hz": 202.0,
+      "jitter_ms": 0.8,
+      "n_draws": 5,
+      "k_test": 7,
+      "band": [
+        2.0,
+        12.0
+      ],
+      "target_type": "SNpp16",
+      "drive": "draw d at k recruits k cells chosen with seed SEED_BASE + 17 k + d, each firing one spike per wingbeat cycle at a uniform random phase with gaussian jitter (an 8 mV kick into each afferent), after 200 ms of settling",
+      "R1": "k=7 on the targeted transmitter-sign inversion (FLYCNS_SIGNFLIP_TARGETED=1: every neuron whose per-T-bar predictions disagree in sign with its aggregate label, data/edges_nt.parquet); cells seed base 1000, phase seed d",
+      "R2_sweep": [
+        [
+          "tau_m_ms",
+          5.0
+        ],
+        [
+          "tau_m_ms",
+          10.0
+        ],
+        [
+          "tau_m_ms",
+          40.0
+        ],
+        [
+          "v_thresh_gap_mV",
+          4.0
+        ],
+        [
+          "v_thresh_gap_mV",
+          10.0
+        ],
+        [
+          "refractory_ms",
+          1.0
+        ],
+        [
+          "refractory_ms",
+          5.0
+        ]
+      ],
+      "R2": "k=7, one parameter at a time for the relay-layer superclasses (read from the data: superclasses of the excitatory relays onto DLMn c-f, sensory excluded); cells seed base 1000, phase seed d",
+      "R3": "k = 1 .. the number of SNpp16 cells with fresh draws: cells seed base 50000, phase seed 50000 + d",
+      "k_star_original": 5,
+      "scoring": "per draw (stats.per_draw): DVMn 1a-c in band needs 4 of 5 draws (need 0.8, FAIL at most 1); steering, b1 and DLMn c-f below 1 Hz need every draw (need 1.0, FAIL if none)"
+    },
+    "checks": {
+      "R1_survives_transmitter_uncertainty": {
+        "bands": [
+          [
+            2.0,
+            12.0
+          ],
+          [
+            null,
+            1.0
+          ]
+        ],
+        "conditional": true,
+        "condition": "scored only if the inversion flips a connection on the path under test (both ends among the driven SNpp16 cells, the readouts and the relay layer); otherwise UNRESOLVED (stats.unresolved, no band)",
+        "rule": "on the flipped graph at k=7: DVMn 1a-c in 2-12 Hz in at least 4 of 5 draws (first band), and steering MN, b1 MN and DLMn c-f each below 1 Hz in every draw (per_draw need 1.0; the check is strict, per_draw's edge is inclusive) (second band)"
+      },
+      "R2_selectivity_holds_across_cord_params": {
+        "bands": [
+          [
+            null,
+            1.0
+          ]
+        ],
+        "conditional": true,
+        "condition": "scored only if a relay superclass is found in the data; otherwise UNRESOLVED (stats.unresolved, no band)",
+        "rule": "at every setting of the sweep, k=7: steering MN, b1 MN and DLMn c-f each below 1 Hz in every draw (per_draw need 1.0; the check is strict, per_draw's edge is inclusive)"
+      },
+      "R3_replicates_with_fresh_draws": {
+        "bands": [
+          [
+            2.0,
+            12.0
+          ]
+        ],
+        "k_star_original": 5,
+        "k_star_tolerance": 1,
+        "rule": "with fresh draws, k* is within 1 of 5 (no k below 4 in band and some k in 4..6 in band, 'in band at k' meaning DVMn 1a-c in 2-12 Hz per draw) and DVMn 1a-c at k=7 is in 2-12 Hz in at least 4 of 5 draws"
+      }
+    }
+  },
+  "model": {
+    "files": {
+      "flycns/__init__.py": "544f1616b7e65d1bf08ed482120ee5718dc0f379a43640f178adb55d9651f31c",
+      "flycns/anatomy.py": "ff00097801baf4cee8c8fe726b5437e3484360f7a262f50c4ecd688926ff605b",
+      "flycns/bench.py": "35022f6ae430c468bf46fa6178cf7cb84c8b6d6f6d0ac99f1fc930c45ab499a1",
+      "flycns/calibration.py": "10ecd309e2ca1e261206289325ed2df362ac6113256bb0ad1eeb7772b8a673b1",
+      "flycns/graph.py": "0d9dbddd1fa2e29adf75de43a632767e3e0de2cf68c302fc610ec642ca949638",
+      "flycns/model.py": "140ef672ee6851cfd747cb05d069dab959d95d30287b566c2b91b3c0f0fe1537",
+      "flycns/protocols.py": "152a1abd79db86885c3473cb43a81a9f994809578d9ad2b4903c5f2cae0a155f",
+      "flycns/stats.py": "9baada5e46202c2f88bfd083fc577d5d80ca03c5274267332ffc1e07a1036e78",
+      "data/loom_tuning_measured.json": "238def4e51bd439f8cb0e8498d334eca9e934bfffc1361e240383b6bee1f6671",
+      "data/MANIFEST.json": "58a922463ade6f55c92194494419f040809e590913a80d2efb2cf27aadde0692",
+      "requirements.lock": "84481267167e01842aae97b321d07d888a3fb38c3213586c13f361118002d275",
+      "benchmarks/flight_snpp16_robustness.py": "8b854e34c4f9d882827f04f3a5112be9b1adf8f73c367658b2d8edaf931c2fbc"
+    },
+    "hash": "a74f3dfff301b75c2cb185735f8f1537dc78ae1cef8b5e5e7a500a5d560bb743"
+  },
+  "values": {
+    "lif": {
+      "v_rest_mV": -52.0,
+      "v_thresh_mV": -45.0,
+      "v_reset_mV": -52.0,
+      "tau_m_ms": 20.0,
+      "tau_syn_ms": 5.0,
+      "refractory_ms": 2.2,
+      "w_syn_mV": 0.275,
+      "w_scale": 0.3,
+      "tau_adapt_ms": 100.0,
+      "gap_delay_ms": 0.8,
+      "chem_delay_ms": 1.8,
+      "dt_ms": 0.1,
+      "seed": 0,
+      "class_gains": {
+        "sensory": 1.0,
+        "relay": 1.0,
+        "local": 1.0
+      },
+      "region_gains": {
+        "SEZ": 1.0,
+        "other": 1.0
+      },
+      "superclass_params": {},
+      "peptide_gain_scale": 0.0,
+      "peptide_exclude": [],
+      "baseline_depol_mV": 0.0,
+      "baseline_noise_mV": 0.0
+    },
+    "electrical": [
+      [
+        "DNp01",
+        "TTMn",
+        true,
+        9.0,
+        "shakB gap junction, 1:1 relay; Tanouye & Wyman 1980; Allen et al. 2006"
+      ],
+      [
+        "DNp01",
+        "PSI",
+        true,
+        9.0,
+        "shakB gap junction, 1:1 relay; Allen et al. 2006; Phelan et al. 2008"
+      ],
+      [
+        "JO-B1_a",
+        "DNp01",
+        true,
+        {
+          "compound_mV": 3.0,
+          "at_hz": 150
+        },
+        "JON->GF mixed synapse modelled as electrical; shakB-dependent (Pezier et al. 2016); mixed (Pezier et al. 2014); 3 mV target untraced; contact set from MaleCNS v1.0"
+      ],
+      [
+        "JO-B1_c",
+        "DNp01",
+        true,
+        {
+          "compound_mV": 3.0,
+          "at_hz": 150
+        },
+        "JON->GF mixed synapse modelled as electrical; shakB-dependent (Pezier et al. 2016); mixed (Pezier et al. 2014); 3 mV target untraced; contact set from MaleCNS v1.0"
+      ]
+    ],
+    "intrinsic": [
+      [
+        "DNp01",
+        "b_adapt_mV",
+        10.0,
+        "all-or-none GF response; von Reyn 2014; Ache 2019. Fitted by pre-stated rule (smallest value giving 1-2 spikes/response, <=2 on the strongest gain quartile, P(response) 0.5-1, TTMn relay intact; benchmarks/fit_gf_adapt.py at >=40 trials). 10 mV under the measured stationary loom input (refit 2026-10-10, 40 trials; the strong-quartile constraint holds at 1.95, close to its limit of 2). Earlier 30 mV was fitted under the all-trials input; a 15 mV value came from an undersampled 20-trial fit. 0 mV gives up to 7 spikes per loom."
+      ],
+      [
+        "superclass:cb_motor",
+        "b_adapt_mV",
+        10.0,
+        "sustained MN rates < 100 Hz; Azevedo 2020; McKellar 2020"
+      ]
+    ],
+    "sign_map": {
+      "acetylcholine": 1,
+      "gaba": -1,
+      "glutamate": -1,
+      "histamine": -1,
+      "dopamine": 0,
+      "octopamine": 0,
+      "serotonin": 0
+    },
+    "min_weight": 5,
+    "peak_hz": 5.0,
+    "gain_sigma": 0.357,
+    "loom_state": "stationary"
+  },
+  "packages": {
+    "brian2": "2.10.1",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scipy": "1.18.1"
+  },
+  "supersedes": {
+    "file": "criteria.json",
+    "git_commit": "77e0cc5"
+  },
+  "git_commit": "4c39a8f",
+  "code_uncommitted": false,
+  "registered_at": "2026-10-11T12:41:21"
+}

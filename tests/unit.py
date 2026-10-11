@@ -8,6 +8,7 @@ needs no connectome and no network. Run by tests/regression.py, or alone:
 """
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -174,7 +175,8 @@ def t_registered_criteria_rerun(tmp):
     changed = criteria_differ(f, {**crit, "k": 8})
     raw = [p.name for p in (ROOT / "benchmarks").glob("*.py")
            if "CRITERIA = dict(" in p.read_text(encoding="utf-8")
-           and "criteria_differ(crit_f, CRITERIA)" not in p.read_text(encoding="utf-8")]
+           and "criteria_differ(crit_f, CRITERIA)" not in p.read_text(encoding="utf-8")
+           and "registry.register(" not in p.read_text(encoding="utf-8")]
     ok = same and changed and not raw
     return ok, "saved criteria match their code; a changed criterion is refused" if ok else f"{same} {changed} {raw}"
 
@@ -548,17 +550,29 @@ def _registered_benchmarks():
 
 
 def t_registered_tests_guard_themselves():
-    """Every pre-registered benchmark checks its code is committed and its data are pinned before it
-    runs, and refuses criteria that differ from its registration."""
+    """Every registered benchmark checks its code is committed and its data are pinned before it runs and
+    refuses criteria that differ from its registration (version 1); every benchmark that scores a check
+    is registered against the frozen model (version 2) and verifies its bands and stamps the report."""
     bad = []
     for f in _registered_benchmarks():
         s = f.read_text(encoding="utf-8")
         miss = [c for c in ("require_clean(", "require_data(", "criteria_differ(") if c not in s]
         if miss:
             bad.append(f"{f.name}: {miss}")
+    v2 = sorted(f for f in (ROOT / "benchmarks").glob("*.py") if "registry.register(" in f.read_text(encoding="utf-8"))
+    for f in v2:
+        s = f.read_text(encoding="utf-8")
+        miss = [c for c in ("require_clean(", "require_data(", "registry.verify_bands(", "registry.stamp(") if c not in s]
+        if miss:
+            bad.append(f"{f.name}: {miss}")
+    scoring = sorted(f.name for f in (ROOT / "benchmarks").glob("*.py")
+                     if re.search(r'["\']checks["\']\s*[:\]]|checks\s*=\s*\{|checks=\{', f.read_text(encoding="utf-8"))
+                     and '"report.json"' in f.read_text(encoding="utf-8")       # writes a scored suite report
+                     and "registry.register(" not in f.read_text(encoding="utf-8"))
     n = len(_registered_benchmarks())
-    return n >= 10 and not bad, (f"{n} registered benchmarks call require_clean, require_data and criteria_differ"
-                                 if not bad else f"missing guards: {bad}")
+    ok = n >= 10 and len(v2) >= 17 and not bad and not scoring
+    return ok, (f"{n} version-1 and {len(v2)} version-2 registered benchmarks carry every guard" if ok else
+                f"missing guards: {bad}; scoring but not registered: {scoring}; v2 {len(v2)}")
 
 
 def t_registrations_never_changed():
@@ -574,8 +588,10 @@ def t_registrations_never_changed():
         return True, "SKIPPED: shallow clone (no history to check)"
     bad, n = [], 0
     # every registration ever added, including any later deleted (a deleted one could register afresh)
-    _, added = git("log", "--diff-filter=A", "--name-only", "--format=", "--", "results/*/criteria.json")
-    ever = sorted({ROOT / x for x in added.split()} | set((ROOT / "results").glob("*/criteria.json")))
+    _, added = git("log", "--diff-filter=A", "--name-only", "--format=", "--", "results/*/criteria.json",
+                   "results/*/registration.json")
+    ever = sorted({ROOT / x for x in added.split()} | set((ROOT / "results").glob("*/criteria.json"))
+                  | set((ROOT / "results").glob("*/registration.json")))
     for f in ever:
         rel = f.relative_to(ROOT).as_posix()
         if not f.exists():
@@ -601,7 +617,7 @@ def t_summary_counts_and_flags(tmp):
     good = dict(written_at="2026-10-11T12:00:00", git_commit="", git_dirty=False, env={},
                 data=dict(dir="data", digests={"neurons.parquet": "a", "edges.parquet": "b"}, manifest="match"))
     reps = {
-        "gf_escape": dict(n_trials=40, provenance=good,
+        "gf_escape": dict(n_trials=40, provenance=good, registration=dict(matches=True, version=2),
                           checks={"gf_spikes_per_response_1_to_2": True, "gf_response_prob_0.5_to_1": False}),
         "auditory": dict(n_trials=10, provenance={**good, "env": {"FLYCNS_WSCALE": "0.5", "FLYCNS_ALLOW_DIRTY": "1"},
                                                   "git_dirty": True, "allow_dirty": True,
@@ -631,16 +647,17 @@ def t_summary_counts_and_flags(tmp):
     n_pass = sum(v[0] == "PASS" for v in rows.values()); n_scored = sum(v[0] in ("PASS", "FAIL", "UNRESOLVED") for v in rows.values())
     head = re.search(r"\*\*(\d+)/(\d+) checks pass", md)
     tallies = re.findall(r"(\w+) (\d+)/(\d+)", md.split("**By role:**")[1].splitlines()[0])
-    want = {"gf_escape": set(), "auditory": {"PERTURBED", "DIRTY", "ALLOW-DIRTY", "DATA-MISMATCH", "TRIALS 10<40"},
-            "pc1_song": {"UNPINNED", "STALE"}, "sugar_laterality": {"UNSTAMPED"}}
+    want = {"gf_escape": set(), "auditory": {"PERTURBED", "DIRTY", "ALLOW-DIRTY", "DATA-MISMATCH", "TRIALS 10<40",
+                                             "UNREGISTERED"},
+            "pc1_song": {"UNPINNED", "STALE", "UNREGISTERED"}, "sugar_laterality": {"UNSTAMPED", "UNREGISTERED"}}
     got = {b: {x.strip() for x in v[2].split(",") if x.strip() not in ("-", "")} for (b, _), v in rows.items()}
     flags_ok = all(got[b] == want[b] for b in want)
     unresolved_ok = rows[("auditory", "A1_jo_alone_mostly_subthreshold")][0] == "UNRESOLVED" and "1 are UNRESOLVED" in md
     ok = (head and (int(head[1]), int(head[2])) == (n_pass, n_scored) == (2, 5)
           and sum(int(t[2]) for t in tallies) == n_scored and sum(int(t[1]) for t in tallies) == n_pass
-          and "NOT all under the declared parameter set" in md and flags_ok and unresolved_ok)
+          and "NOT all as registered under the declared parameter set" in md and flags_ok and unresolved_ok)
     return ok, ("headline 2/5 equals the rows (an in-band point with an interval across the edge is UNRESOLVED, "
-                "not a pass); role tallies sum to it; all eight flags exactly where expected" if ok else
+                "not a pass); role tallies sum to it; all nine flags exactly where expected" if ok else
                 f"head {head and head.group(0)}, rows {n_pass}/{n_scored}, tallies {tallies}, flags {got}, "
                 f"unresolved {unresolved_ok}")
 
@@ -820,6 +837,125 @@ def t_degree_corrected_null(tmp):
     return ok, (f"{len(e):,} connections: every cell keeps its input per sign and size, class and neuropil; "
                 f"{(a.post.values != e.post.values).mean():.0%} of targets moved" if ok else str(a.attrs))
 
+
+def t_jon_contact_modes():
+    """The JON -> GF contact: declared as calibrated coupling (EM chemical synapses removed); as EM
+    annotates it (chemical kept, no coupling); sign-inverted; and the compound potential is settable."""
+    from flycns.graph import drop_mixed_chemical, electrical_pairs
+    rows = [dict(bodyId=1, type="DNp01", somaSide="L"), dict(bodyId=2, type="TTMn", somaSide="L")]
+    rows += [dict(bodyId=10 + i, type="JO-B1_a", somaSide="L") for i in range(4)]
+    n = pd.DataFrame(rows)
+    e = pd.DataFrame(dict(pre=[10, 11, 2], post=[1, 1, 1], weight=[20, 20, 9], sign=[1.0, 1.0, 1.0]))
+    out = {}
+    saved = {k: os.environ.pop(k, None) for k in ("FLYCNS_JON", "FLYCNS_JON_MV")}
+    try:
+        for mode, mv in (("electrical", None), ("em", None), ("em_flip", None), ("electrical", "1.5")):
+            os.environ["FLYCNS_JON"] = mode
+            if mv:
+                os.environ["FLYCNS_JON_MV"] = mv
+            p = electrical_pairs(n)
+            jo = p[p.pre_type == "JO-B1_a"]
+            d = drop_mixed_chemical(e, n)
+            jon = d[d.pre.isin([10, 11])]
+            out[(mode, mv)] = (len(jo), float(jo.spikelet_mV.iloc[0]) if len(jo) else None,
+                               len(jon), float(jon.sign.sum()) if len(jon) else 0.0, len(p[p.pre_type == "DNp01"]))
+            os.environ.pop("FLYCNS_JON_MV", None)
+    finally:
+        for k, v in saved.items():
+            os.environ.pop(k, None)
+            if v is not None:
+                os.environ[k] = v
+    dec, em, flip, low = out[("electrical", None)], out[("em", None)], out[("em_flip", None)], out[("electrical", "1.5")]
+    ok = (dec[0] == 4 and dec[2] == 0 and em[0] == 0 and em[2] == 2 and em[3] == 2.0 and flip[3] == -2.0
+          and all(x[4] == 1 for x in out.values()) and abs(low[1] / dec[1] - 0.5) < 1e-9)
+    return ok, ("declared: coupling, EM synapses removed; em: chemical kept, no coupling; em_flip: sign inverted; "
+                "the GF -> TTMn relay stays in every mode; 1.5 mV halves the spikelet" if ok else str(out))
+
+
+def t_vnc_glutamate_option(tmp):
+    """FLYCNS_GLU_VNC=excitatory makes glutamate from nerve-cord neurons excitatory onto non-motor targets
+    only; the declared model keeps it inhibitory everywhere."""
+    from flycns import graph, integrity
+    d = tmp / "glu"; d.mkdir()
+    n = pd.DataFrame(dict(bodyId=[1, 2, 3, 4], type=["a", "b", "c", "d"], somaSide="L",
+                          superclass=["vnc_intrinsic", "vnc_intrinsic", "vnc_motor", "cb_intrinsic"]))
+    e = pd.DataFrame(dict(pre=[1, 1, 4, 1], post=[2, 3, 2, 4], weight=[5, 10, 10, 10],
+                          nt=["glutamate", "glutamate", "glutamate", "gaba"]))
+    n.to_parquet(d / "neurons.parquet", index=False); e.to_parquet(d / "edges.parquet", index=False)
+    integrity._ANNOUNCED = True
+    _, base = graph.load_graph(str(d))
+    os.environ["FLYCNS_GLU_VNC"] = "excitatory"
+    try:
+        _, alt = graph.load_graph(str(d))
+    finally:
+        del os.environ["FLYCNS_GLU_VNC"]
+    s = alt.set_index(["pre", "post"])["sign"]
+    ok = ((base["sign"] == -1).all() and s[(1, 2)] == 1 and s[(1, 3)] == -1 and s[(4, 2)] == -1 and s[(1, 4)] == -1
+          and integrity.LOADED["n_glu_vnc_flipped"] == 1)
+    return ok, ("only nerve-cord glutamate onto a non-motor target turns excitatory (1 of 4 edges)" if ok
+                else str(alt[["pre", "post", "nt", "sign"]].to_dict("records")))
+
+
+_PROBE = """
+import json, sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from flycns import registry
+THRESH = 0.5
+reg = registry.register("probe", {"checks": {"c": {"band": [THRESH, 1.0]}}}, scripts=[__file__])
+band = json.loads(sys.argv[1]) if len(sys.argv) > 1 else [THRESH, 1.0]
+registry.verify_bands(reg, {"c": {"band": band, "verdict": "PASS"}})
+print("RAN", json.dumps(registry.stamp(reg)))
+"""
+
+
+def t_registry_freezes_model(tmp):
+    """A version 2 registration is written before any result (register-only), then refuses to score
+    when the model code, the benchmark script (where its thresholds live) or a scored band differs."""
+    if not shutil.which("git"):
+        return True, "git not installed; registry not exercised"
+    g = ["git", "-c", "user.name=t", "-c", "user.email=t@t", "-c", "commit.gpgsign=false"]
+    env = {k: v for k, v in os.environ.items() if not k.startswith("FLYCNS_")}
+    r = tmp / "regv2"
+    shutil.copytree(ROOT / "flycns", r / "flycns", ignore=shutil.ignore_patterns("__pycache__"))
+    (r / "probe.py").write_text(_PROBE, encoding="utf-8")
+    subprocess.run(["git", "init", "-q"], cwd=r, check=True)
+    subprocess.run([*g, "add", "-A"], cwd=r, check=True); subprocess.run([*g, "commit", "-qm", "code"], cwd=r, check=True)
+
+    def run(*a, **e):
+        return subprocess.run([sys.executable, "probe.py", *a], cwd=r, capture_output=True, text=True,
+                              encoding="utf-8", errors="replace", env={**env, **e})
+    unregistered = run()                                  # no registration yet: refused, nothing scored
+    reg_only = run(FLYCNS_REGISTER_ONLY="1")
+    wrote = (r / "results/probe/registration.json").exists() and "RAN" not in reg_only.stdout
+    uncommitted = run()                                   # written but not committed: refused
+    subprocess.run([*g, "add", "-A"], cwd=r, check=True); subprocess.run([*g, "commit", "-qm", "register"], cwd=r, check=True)
+    ok_run = run()
+    perturbed = run(FLYCNS_WSCALE="0.45")                 # runs, but is not the registered result
+    bad_band = run("[0.4, 1.0]")
+    with open(r / "flycns/model.py", "a", encoding="utf-8") as f:
+        f.write("\n# a later change\n")
+    subprocess.run([*g, "commit", "-qam", "model change"], cwd=r, check=True)
+    model_changed = run()
+    subprocess.run([*g, "revert", "--no-edit", "HEAD"], cwd=r, check=True, capture_output=True)
+    (r / "probe.py").write_text(_PROBE.replace("THRESH = 0.5", "THRESH = 0.3"), encoding="utf-8")
+    subprocess.run([*g, "commit", "-qam", "threshold edit"], cwd=r, check=True)
+    thresh_changed = run()
+    ok = (unregistered.returncode != 0 and "not registered" in unregistered.stderr
+          and uncommitted.returncode != 0 and "not committed" in uncommitted.stderr
+          and "RAN" in perturbed.stdout and '"matches": false' in perturbed.stdout
+          and wrote and "RAN" in ok_run.stdout and '"matches": true' in ok_run.stdout
+          and bad_band.returncode != 0 and "differ from the registration" in bad_band.stderr
+          and model_changed.returncode != 0 and "flycns/model.py" in model_changed.stderr
+          and thresh_changed.returncode != 0)
+    return ok, ("refuses to score unregistered or with an uncommitted registration; registered before running; "
+                "refuses a changed model file, an edited threshold and a band that differs; a perturbed run is "
+                "marked not registered" if ok else
+                f"unreg {unregistered.returncode} uncommitted {uncommitted.returncode} {uncommitted.stderr[-120:]!r} "
+                f"perturbed {perturbed.stdout[-120:]!r}; "
+                f"wrote {wrote}; ok {ok_run.stdout[-120:]!r} {ok_run.stderr[-160:]!r}; band {bad_band.returncode}; "
+                f"model {model_changed.returncode} {model_changed.stderr[-160:]!r}; thresh {thresh_changed.returncode}")
+
 def run_all():
     out = []
     tmp = Path(tempfile.mkdtemp(prefix="flycns_unit_"))
@@ -859,7 +995,10 @@ def run_all():
                          ("side null and its default table", t_null_side_mode_and_default_table),
                          ("every named script exists", t_every_named_script_exists),
                          ("uncertainty rules", t_stats_rules),
-                         ("degree-corrected null invariants", lambda: t_degree_corrected_null(tmp))]:
+                         ("degree-corrected null invariants", lambda: t_degree_corrected_null(tmp)),
+                         ("JON -> GF contact modes", t_jon_contact_modes),
+                         ("nerve-cord glutamate option", lambda: t_vnc_glutamate_option(tmp)),
+                         ("registration freezes the model", lambda: t_registry_freezes_model(tmp))]:
             try:
                 ok, msg = fn()
             except (Exception, SystemExit) as ex:  # a crashing or exiting check is a failing check

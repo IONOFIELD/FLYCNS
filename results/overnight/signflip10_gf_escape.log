@@ -1,3 +1,7 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! gf_escape: runs, but is NOT the registered result
+! model settings overridden: FLYCNS_SIGNFLIP=0.1
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
 !   FLYCNS_SIGNFLIP=0.1
@@ -31,7 +35,7 @@ loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pa
   cb_intrinsic           ####                                     0.191
   descending_neuron      #                                        0.066
   vnc_motor                                                       0.029
-[real_electrical] GF 0.25/cell hit 0.38 (95% CI 0.24-0.53) lat 41.0 ms | TTMn 0.25/cell lag 0.90 ms | pop 0.0029 Hz | 331.9s
+[real_electrical] GF 0.25/cell hit 0.38 (95% CI 0.24-0.53) lat 41.0 ms | TTMn 0.25/cell lag 0.90 ms | pop 0.0029 Hz | 337.4s
   per trial GF/TTMn spikes: 0/0 0/0 2/0 1/0 0/0 2/0 2/0 1/0 0/0 0/0 0/0 1/0 0/0 0/0 0/0 0/0 1/0 0/0 1/0 1/0 1/0 2/0 1/0 1/0 1/0 0/0 0/0 0/0 1/0 1/0 0/0 1/0 0/0 0/0 1/0 2/0 0/0 1/0 0/0 2/0
   raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
   t0  DNp01  ..............................
@@ -50,7 +54,7 @@ loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pa
   visual_centrifugal     ######################################## 1.581
   cb_intrinsic           ####                                     0.191
   descending_neuron      #                                        0.072
-[real_chemical_only] GF 0.34/cell hit 0.53 (95% CI 0.37-0.67) lat 37.4 ms | TTMn 0.00/cell lag nan ms | pop 0.0029 Hz | 317.2s
+[real_chemical_only] GF 0.34/cell hit 0.53 (95% CI 0.37-0.67) lat 37.4 ms | TTMn 0.00/cell lag nan ms | pop 0.0029 Hz | 314.3s
   per trial GF/TTMn spikes: 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0
   raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
   t0  DNp01  ..............................
@@ -67,7 +71,7 @@ loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pa
 
   region activity (spikes per neuron over 40 stimulus windows):
   cb_intrinsic           ######################################## 0.000
-[rewired_null] GF 0.00/cell hit 0.00 (95% CI -0.00-0.09) lat nan ms | TTMn 0.00/cell lag nan ms | pop 0.0000 Hz | 354.7s
+[rewired_null] GF 0.00/cell hit 0.00 (95% CI -0.00-0.09) lat nan ms | TTMn 0.00/cell lag nan ms | pop 0.0000 Hz | 383.4s
 
 CHECKS
   PASS  gf_spikes_per_response_1_to_2

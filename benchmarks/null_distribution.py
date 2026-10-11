@@ -38,7 +38,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import CNSModel, LIFParams, load_graph, loom_protocol, rewire_null  # noqa: E402
-from flycns import stats  # noqa: E402
+from flycns import registry, stats  # noqa: E402
 from flycns.bench import provenance, pulse_protocol, readout_rates  # noqa: E402
 from flycns.graph import afferents_by_subclass  # noqa: E402
 from flycns.protocols import LOOM_TUNING  # noqa: E402
@@ -53,6 +53,40 @@ N_TRIALS = int(sys.argv[3]) if len(sys.argv) > 3 and sys.argv[3] else DEFAULT_TR
 DATA = sys.argv[4] if len(sys.argv) > 4 else "data"
 ALIVE_FRACTION = 0.1          # a null is active if its median whole-CNS rate is >= 10% of the real one
 OUT = Path(f"results/null_dc_{CIRCUIT}"); OUT.mkdir(parents=True, exist_ok=True)
+CHECK = {"escape": "N1_escape_gf_wiring_specific", "song": "N2_song_pmp2_wiring_specific",
+         "auditory": "N3_jo_gf_chemical_wiring_specific"}[CIRCUIT]
+
+# ---- version 2 registration (flycns/registry.py), per circuit: criteria and the frozen model, before any data.
+# The record is a null percentile with no band, so the rule is registered in words.
+LABEL = f"null_dc_{CIRCUIT}"
+CRITERIA_V2 = dict(
+    version=2,
+    question=f"is the {CIRCUIT} circuit's readout wiring-specific against a degree-corrected null that can fire?",
+    circuit=CIRCUIT,
+    protocol=dict(
+        stimulus={"escape": "loom on the declared loom tuning types (loom_protocol), electrical synapses on",
+                  "song": "pC1_14a at 100 Hz, 200 ms pulses (pulse_protocol), electrical synapses on",
+                  "auditory": ("the auditory JO afferent types at 150 Hz, 60 ms pulses (pulse_protocol); chemical "
+                               "synapses as EM annotates them, no electrical coupling")}[CIRCUIT],
+        readout={"escape": "giant fiber (DNp01) response probability: a spike within 160 ms of loom onset, per trial",
+                 "song": "pMP2 spikes per cell per pulse, 250 ms window, mean over trials",
+                 "auditory": "giant fiber (DNp01) peak depolarisation in mV, 100 ms window, mean over trials"}[CIRCUIT],
+        n_trials=N_TRIALS, draws=DRAWS, null_mode="degree_corrected",
+        null_seeds=[1000 + k for k in range(DRAWS)],
+        null_seed_rule="null draw k = 0..draws-1 rewires with seed 1000 + k (rewire_null, mode degree_corrected)",
+        stimulus_noise="FLYCNS_SEED, the same in every arm, so the arms differ only in wiring",
+        alive_fraction=ALIVE_FRACTION,
+        alive_rule=f"median null whole-CNS rate >= {ALIVE_FRACTION} x real"),
+    checks={CHECK: dict(rule=(
+        "the real readout as a percentile of the null draws (stats.null_percentile): PASS if it exceeds every null "
+        "draw (one-sided p < 1 / (draws + 1)); FAIL if it does not exceed the null median; UNRESOLVED in between, "
+        "or if the null is not active by the alive rule (it cannot test anything), or if there are no null draws"))},
+)
+REG = registry.register(LABEL, CRITERIA_V2, scripts=[__file__], supersedes=None)
+# registered now (version 2): committed code and pinned data, as every registered test
+from flycns.integrity import require_clean, require_data  # noqa: E402
+require_clean(LABEL)
+require_data(DATA, LABEL)
 
 neurons, edges = load_graph(DATA)
 meta = neurons.set_index("bodyId")
@@ -112,15 +146,15 @@ for k in range(DRAWS):
 null_vals = [r["readout"] for r in nulls]
 null_cns = float(np.median([r["cns_hz"] for r in nulls])) if nulls else float("nan")
 alive = bool(nulls) and real["cns_hz"] > 0 and null_cns >= ALIVE_FRACTION * real["cns_hz"]
-name = {"escape": "N1_escape_gf_wiring_specific", "song": "N2_song_pmp2_wiring_specific",
-        "auditory": "N3_jo_gf_chemical_wiring_specific"}[CIRCUIT]
+name = CHECK
 rec = stats.null_percentile(real["readout"], null_vals, null_alive=alive)
+registry.verify_bands(REG, {name: rec})
 report = dict(
     benchmark=f"null_dc_{CIRCUIT}", circuit=CIRCUIT, readout=READOUT, n_trials=N_TRIALS, draws=DRAWS,
     null_mode="degree_corrected", null_seeds=[1000 + k for k in range(DRAWS)], neuropil_source=sorted(sources),
     real=real, null=[{k: v for k, v in r.items() if k != "per_trial"} for r in nulls],
     null_cns_hz_median=null_cns, null_alive=alive, alive_rule=f"median null whole-CNS rate >= {ALIVE_FRACTION} x real",
-    checks={name: bool(rec["verdict"] == "PASS")}, uncertainty={name: rec},
+    checks={name: bool(rec["verdict"] == "PASS")}, uncertainty={name: rec}, registration=registry.stamp(REG),
     wall_s=round(time.time() - t0, 1), provenance=provenance(DATA))
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"\nreal {real['readout']:.4f} vs null median {np.median(null_vals) if null_vals else float('nan'):.4f}, "

@@ -89,7 +89,7 @@
       "MN9_ipsi_L": 0.0,
       "MN9_contra_R": 0.0,
       "pop_rate_hz": 0.006872025456434549,
-      "wall_s": 55.7,
+      "wall_s": 57.2,
       "structural_2hop_L": 25650.0,
       "structural_2hop_R": 350.0,
       "MN9_ipsi_L_per_trial": [
@@ -209,9 +209,20 @@
       "note": "mean rate of the recruited cb_motor cells (sugar at 50 Hz), bootstrap over pulses; a cell counts as recruited if it fires in the resampled pulses, as in the readout"
     }
   },
+  "registration": {
+    "file": "results/feeding/registration.json",
+    "version": 2,
+    "git_commit": "4c39a8f",
+    "model_hash": "9c9cedf1fe8474ba9fdcc36203b2966ae107a14ca741c552c3958309a502fa14",
+    "registered_at": "2026-10-11T12:41:00",
+    "matches": false,
+    "problems": [
+      "model settings overridden: FLYCNS_SEED=1"
+    ]
+  },
   "provenance": {
-    "written_at": "2026-10-11T18:17:23",
-    "git_commit": "a4eef18",
+    "written_at": "2026-10-11T22:22:06",
+    "git_commit": "b7eba83",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -239,7 +250,11 @@
       "n_dropped_unsigned_edges": 160051,
       "n_dropped_unsigned_synapses": 1980492,
       "n_silent_presynaptic": 8020,
-      "edges_nt_used": false
+      "edges_nt_used": false,
+      "glu_vnc": "inhibitory",
+      "n_glu_vnc_flipped": 0,
+      "jon_mode": "electrical",
+      "jon_compound_mv": 3.0
     },
     "data": {
       "dir": "data",

@@ -107,10 +107,10 @@
     },
     "n_trials": 10
   },
-  "wall_s": 1752.9,
+  "wall_s": 1762.9,
   "provenance": {
-    "written_at": "2026-10-11T18:49:21",
-    "git_commit": "a4eef18",
+    "written_at": "2026-10-11T21:43:01",
+    "git_commit": "b7eba83",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -167,5 +167,14 @@
       "n": 10,
       "note": "pMP2 per pulse under pC1_14a at 100 Hz on the superclass null, bootstrap over pulses. The superclass null is nearly silent on the real data (whole-CNS rate here: null 0.0001109 Hz vs real 0.01188 Hz, see the report), so a silent readout on it says little about wiring specificity; the degree-corrected null distribution (benchmarks/null_distribution.py) is the informative version."
     }
+  },
+  "registration": {
+    "file": "results/null_strict/registration.json",
+    "version": 2,
+    "git_commit": "4c39a8f",
+    "model_hash": "f2be9db1f4f29e0cb155e94f11524403d72bdf24c2d1f1f4ff8152f3d2d660d8",
+    "registered_at": "2026-10-11T12:41:11",
+    "matches": true,
+    "problems": []
   }
 }

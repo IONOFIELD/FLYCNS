@@ -33,6 +33,8 @@ env:
       {"name": "gf-adapt",                  "run": "benchmarks/fit_gf_adapt.py 40"},
       {"name": "a2",                        "run": "benchmarks/a2_registered.py 120"},
       {"name": "a2-robustness",             "run": "benchmarks/a2_robustness.py 100"},
+      {"name": "a2-contact-em",             "run": "benchmarks/a2_contact.py em 120"},
+      {"name": "a2-contact-em-flip",        "run": "benchmarks/a2_contact.py em_flip 120"},
       {"name": "dnp31",                     "run": "benchmarks/dnp31_trace.py"},
       {"name": "auditory-wing",             "run": "benchmarks/auditory_wing_trace.py"},
       {"name": "peptide-asta",              "run": "benchmarks/peptide_asta.py 10"},
@@ -48,6 +50,7 @@ env:
       {"name": "sugar-laterality",          "run": "benchmarks/sugar_laterality.py"},
       {"name": "check-modulators",          "run": "fit/check_modulators.py"},
       {"name": "engines-real",              "run": "fit/check_engines.py 10"},
+      {"name": "select-wscale",             "run": "fit/select_wscale.py"},
       {"name": "null-dc-escape",            "run": "benchmarks/null_distribution.py escape 20"},
       {"name": "null-dc-song",              "run": "benchmarks/null_distribution.py song 20"},
       {"name": "null-dc-auditory",          "run": "benchmarks/null_distribution.py auditory 20"},
@@ -77,7 +80,10 @@ env:
       {"name": "battery-signflip_targeted", "run": "scripts/overnight.py signflip_targeted", "nt": true},
       {"name": "battery-minweight10",       "run": "scripts/overnight.py minweight10"},
       {"name": "battery-minweight20",       "run": "scripts/overnight.py minweight20"},
-      {"name": "battery-null_superclass",   "run": "scripts/overnight.py null_superclass"}
+      {"name": "battery-null_superclass",   "run": "scripts/overnight.py null_superclass"},
+      {"name": "battery-glu_vnc_excitatory", "run": "scripts/overnight.py glu_vnc_excitatory"},
+      {"name": "battery-dt005",             "run": "scripts/overnight.py dt005"},
+      {"name": "battery-jon_em",            "run": "scripts/overnight.py jon_em"}
     ]
 
 jobs:
@@ -105,14 +111,14 @@ jobs:
     outputs:
       key: ${{ steps.key.outputs.data }}
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with: { python-version: "3.12", cache: pip, cache-dependency-path: requirements.lock }
       - id: key
         shell: bash
         run: echo "data=male-cns-v1.0-${{ hashFiles('scripts/fetch_malecns.py', 'scripts/fetch_annotations.py', 'scripts/fetch_dimorphism.py', 'fit/roi_membership.py', 'data/MANIFEST.json') }}" >> "$GITHUB_OUTPUT"
       - id: cache
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         with: { path: "data/*.parquet", key: "${{ steps.key.outputs.data }}" }
       - name: neuPrint token present
         if: steps.cache.outputs.cache-hit != 'true'
@@ -128,7 +134,7 @@ jobs:
         env: { NEUPRINT_TOKEN: "${{ secrets.NEUPRINT_TOKEN }}" }
         run: setup.cmd
       - if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v5
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
         with: { path: "data/*.parquet", key: "${{ steps.key.outputs.data }}" }
 
   transmitters:
@@ -141,16 +147,16 @@ jobs:
     outputs:
       key: ${{ steps.key.outputs.nt }}
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with: { python-version: "3.12", cache: pip, cache-dependency-path: requirements.lock }
-      - uses: actions/cache/restore@v5
+      - uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         with: { path: "data/*.parquet", key: "${{ needs.data.outputs.key }}", fail-on-cache-miss: true }
       - id: key
         shell: bash
         run: echo "nt=${{ needs.data.outputs.key }}-nt-${{ hashFiles('fit/synapse_nt.py', 'scripts/fetch_bulk.py') }}" >> "$GITHUB_OUTPUT"
       - id: cache
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         with: { path: "data/edges_nt.parquet\nresults/nt_confidence.json", key: "${{ steps.key.outputs.nt }}" }
       - shell: cmd
         run: setup.cmd
@@ -169,7 +175,7 @@ jobs:
           }
           Get-Content ci-log.txt -Tail 30
       - if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v5
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
         with: { path: "data/edges_nt.parquet\nresults/nt_confidence.json", key: "${{ steps.key.outputs.nt }}" }
       - name: push results to rerun-out/${{ github.run_number }}/transmitters
         if: always()
@@ -194,15 +200,15 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           fetch-depth: 0   # full history: registered tests check that their registration was never changed
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with: { python-version: "3.12", cache: pip, cache-dependency-path: requirements.lock }
-      - uses: actions/cache/restore@v5
+      - uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         with: { path: "data/*.parquet", key: "${{ needs.data.outputs.key }}", fail-on-cache-miss: true }
       - if: matrix.nt
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         with: { path: "data/edges_nt.parquet\nresults/nt_confidence.json", key: "${{ needs.transmitters.outputs.key }}", fail-on-cache-miss: true }
       - shell: cmd
         run: setup.cmd

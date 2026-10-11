@@ -57,6 +57,53 @@ OUT.mkdir(parents=True, exist_ok=True)
 READOUTS = ["pMP2", "DNp13", "pIP10"]
 RATES = [50.0, 100.0]
 
+# Version 2 registration (flycns/registry.py): criteria plus the frozen model, written before any data is loaded;
+# it supersedes the version 1 criteria.json below, which is kept and still checked. pC1_15_16 takes every pC1_16
+# subtype present, which is only known after loading, so that group is stated in words here.
+from flycns import registry  # noqa: E402
+_v1 = OUT / "criteria.json"
+CRITERIA_V2 = dict(
+    version=2,
+    question=("does a signed spiking simulation reproduce the excitatory pC1 song phenotypes that static "
+              "connectivity could not explain?"),
+    source=("Current Biology 36:4697-4716 (2026), Fig. 5 (pC1/pC1x song phenotypes); pMP2 pulse, DNp13 sine, "
+            "pIP10 both"),
+    groups=dict(pC1_14a=["pC1_14a"], pC1_13_14=["pC1_13a", "pC1_14a", "pC1_14b"],
+                pC1_15_16="pC1_15a, pC1_15b, pC1_15c and every pC1_16 subtype present",
+                P1a=["pC1_12b", "pC1_4a", "pC1_4b"], pC1_17=["pC1_17a", "pC1_17b"]),
+    readouts=READOUTS,
+    protocol=dict(n_trials=N_TRIALS, drive_hz=100.0, rates_hz=RATES, pulse_ms=200, gap_ms=300, readout_window_ms=250,
+                  null=("degree-preserving rewired null (flycns/graph.py rewire_null, seed 0; mode FLYCNS_NULL, default "
+                        "global), pC1_14a at 100 Hz"),
+                  model="declared parameter set (LIFParams), electrical synapses on"),
+    checks=dict(
+        P1_pc1_14a_pulse_over_sine=dict(
+            bands=[[0.5, None]], optional_bands=[[0.0, None]],
+            rule=("conjunction, pC1_14a at 100 Hz: (a) pMP2 spikes/cell/pulse, bootstrap over pulses, 95% interval at "
+                  "or above 0.5; (b) pMP2 minus DNp13 paired per pulse, bootstrap over pulses, 95% interval above 0, "
+                  "UNRESOLVED (not scorable) if DNp13 fires in no pulse of any group and rate on the real network; "
+                  "PASS only if both parts pass")),
+        P2_pc1_13_14_pulse_over_sine=dict(
+            bands=[[0.5, None]], optional_bands=[[0.0, None]],
+            rule=("conjunction, pC1_13_14 at 100 Hz: (a) pMP2 spikes/cell/pulse, bootstrap over pulses, 95% interval "
+                  "at or above 0.5; (b) pMP2 minus DNp13 paired per pulse, bootstrap over pulses, 95% interval above "
+                  "0, UNRESOLVED (not scorable) if DNp13 fires in no pulse of any group and rate on the real network; "
+                  "PASS only if both parts pass")),
+        P3_14a_exceeds_15_16_on_pulse=dict(
+            band=[0, None], band_lower_exclusive=True,
+            rule=("pMP2 under pC1_14a minus under pC1_15_16, both at 100 Hz: two separate simulations, each resampled "
+                  "over its own pulses: PASS if the 95% interval lies above 0")),
+        P4_null_silent=dict(
+            band=[None, 0.1],
+            rule=("pMP2 under pC1_14a at 100 Hz on the rewired null, bootstrap over pulses: PASS if the 95% interval "
+                  "lies at or below 0.1 spikes/cell/pulse")),
+    ),
+    limit="suppression phenotypes untestable: no background activity",
+)
+REG = registry.register("pc1_song", CRITERIA_V2, scripts=[__file__],
+                        supersedes=dict(file="criteria.json", git_commit=(
+                            json.loads(_v1.read_text(encoding="utf-8")).get("git_commit") if _v1.exists() else None)))
+
 neurons, edges = load_graph(DATA)
 meta = neurons.set_index("bodyId")
 types = set(meta["type"].dropna())
@@ -203,6 +250,8 @@ report["uncertainty"] = {
     "P4_null_silent": stats.scored(*stats.bootstrap(_p4), high=0.1, n=len(_p4),
                                    note="pMP2 on the rewired null, bootstrap over pulses"),
 }
+registry.verify_bands(REG, report["uncertainty"])
+report["registration"] = registry.stamp(REG)
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECKS (criteria registered before the run)")

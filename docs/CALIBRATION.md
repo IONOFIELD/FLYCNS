@@ -24,7 +24,7 @@ of the model. CI fails if a scored check has no role.
 
 | value | where | how it was chosen | checks it touches |
 |---|---|---|---|
-| **w_scale = 0.3** (global synaptic scale; 0.275 mV × 0.3 = 0.0825 mV per synapse) | `flycns/model.py` | A sweep (`scripts/legacy/sweep.py`, `data/sweep_results.csv`) over 1.0, 0.5 and 0.25, looking for low population rate (under about 1 Hz), few active cells (under 10%), and giant fiber firing far more under loom than under sound. The committed grid does not contain 0.3. `scripts/legacy/gf_physio.py` records the reasoning as roughly a 3× reduction, because the raw value is too strong once the nerve cord is included. No other record of the derivation exists. | escape `cns_quiet`, auditory `A5_cns_quiet` and feeding `F2b_extra_SEZ_quiet` are **calibrated**. The selection also looked at GF/TTMn firing, so the escape circuit is not held out from it. |
+| **w_scale = 0.3** (global synaptic scale; 0.275 mV × 0.3 = 0.0825 mV per synapse) | `flycns/model.py` | A sweep (`scripts/legacy/sweep.py`, `data/sweep_results.csv`) over 1.0, 0.5 and 0.25, looking for low population rate (under about 1 Hz), few active cells (under 10%), and giant fiber firing far more under loom than under sound. The committed grid does not contain 0.3. `scripts/legacy/gf_physio.py` records the reasoning as roughly a 3× reduction, because the raw value is too strong once the nerve cord is included. No other record of the derivation exists. | escape `cns_quiet`, auditory `A5_cns_quiet` and feeding `F2b_extra_SEZ_quiet` are **calibrated**. The selection also looked at GF/TTMn firing, so the escape circuit is not held out from it. **Re-selected blind, 11 October 2026** (`fit/select_wscale.py`, criterion registered before the run): under a random 10% of the sensory neurons no benchmark drives, at 20 Hz, the network stays quiet (rate < 1 Hz, < 10% active) for every w_scale from 0.15 to 0.4 (0.3: 0.007 Hz, 0.06% active) and runs away between 0.4 and 0.5 (2.5 Hz, 3.7% active at 0.5). The registered rule, "the largest quiet value", picks 0.4, at the edge of that transition. 0.3 satisfies the two quietness conditions but is **not** what the registered rule selects. It is kept anyway, because adopting 0.4 would place the model at the edge of a runaway transition and would require refitting the loom rate scale, the GF adaptation and the A2 working point. This departs from the registered rule; it is a decision taken after seeing the result, recorded as such, and gap 6 stays open. The selection's registration and report are committed in `results/select_wscale/`. |
 | **PEAK_HZ = 5.0** (dF/F to spike-rate scale of the loom stimulus) | `flycns/protocols.py` | Anchored so the giant fiber fires 1 to 2 spikes with P(response) ≥ 0.5 (von Reyn et al. 2014). No recording links glomerulus dF/F to spike rate, so this is the stimulus's one free scale. | escape `gf_spikes_per_response_1_to_2` and `gf_response_prob_0.5_to_1` are **calibrated** |
 | **GF adaptation b_adapt = 10 mV** (30 mV before 10 October 2026) | `flycns/graph.py` INTRINSIC_OVERRIDES | `benchmarks/fit_gf_adapt.py`: the smallest value giving 1 to 2 spikes per response, ≤ 2 on the strongest gain quartile, P(response) 0.5 to 1, and an intact TTMn relay | same two escape checks (**calibrated**) |
 | **GF→TTMn, GF→PSI spikelet 9 mV, delay 0.8 ms** | `flycns/graph.py` ELECTRICAL_SYNAPSES, `model.py` | Physiological constraint: a 1:1 relay at about 0.8 ms (Tanouye & Wyman 1980). The spikelet is set just above the 7 mV distance from rest to threshold. | escape `ttmn_one_to_one` and `ttmn_lag_0.5_1.5ms` hold **by construction** |
@@ -32,7 +32,7 @@ of the model. CI fails if a scored check has no role.
 | **G_GAP_RELAY = 0.2** (ohmic coupling, as a fraction of leak) | `flycns/graph.py` | Set by hand for a 1:1 relay pair and shared across population pairs | none scored directly |
 | **cb_motor adaptation 10 mV** | `flycns/graph.py` INTRINSIC_OVERRIDES | Keeps sustained motor rates under 100 Hz (Azevedo et al. 2020, McKellar et al. 2020) | feeding `F2c_motor_rate_physiological` holds **by construction** |
 | **flight afferent load 0.25** | `benchmarks/flight_loop.py` | The smallest load putting mean DVMn 1a-c in 2 to 12 Hz | flight `L1a_DVMn_2_to_12_hz` is **calibrated** |
-| **A2 working point** (loom gain per run; 0.8 in the 11 October 2026 rerun) | `benchmarks/auditory.py` | Pre-registered protocol: the largest loom gain leaving loom-alone GF response ≤ 0.3, with at least 2 mV depolarisation. It sets "near threshold". It does not target facilitation. Note, however, that the earlier gain fits (`benchmarks/fit_gains.py`, `benchmarks/fit_regional.py`) did score an A2 facilitation criterion while selecting gains; the gains chosen were 1.0, so no parameter moved, but the model was evaluated against facilitation during fitting. | none moved; `A2R_facilitation` is kept **independent** on that basis, with this caveat on record. |
+| **A2 working point** (loom gain per run; 0.8 in the 11 October 2026 rerun) | `benchmarks/auditory.py` | Pre-registered protocol: the largest loom gain leaving loom-alone GF response ≤ 0.3, with at least 2 mV depolarisation. It sets "near threshold". It does not target facilitation. The earlier gain fits (`benchmarks/fit_gains.py`, `benchmarks/fit_regional.py`) did score an A2 facilitation criterion while selecting gains; no parameter moved. Since 11 October 2026 (later) the calibration arms draw seeds disjoint from the scored arms (BASE_SEED + 1000 + gain index), and the two scored arms draw different seeds; before, the calibration arm at the chosen gain was bit-identical to the scored loom-alone arm. | `A2R_facilitation` is **construction** (see below). The report now also gives the facilitation that summation alone predicts, and the residual beyond it. |
 | SEZ regional gain | `flycns/graph.py` | Fitted to 2.0 under an earlier region definition, then **disabled (1.0)** on 2026-09-08 | none |
 | peptide modulation, tonic baseline | `flycns/model.py` | **Off** in the declared parameter set | none |
 
@@ -78,18 +78,55 @@ The **held-out tests** are the circuits no value above was fitted to:
 - feeding by modality, the simulated checks (`feeding_by_modality` F3, F4)
 - the flight checks other than L1a
 - the SNpp16 tests
+- **sound-loom facilitation beyond summation** (`a2_registered`, A2R2, registered version 2): it
+  scores only the facilitation that adding the model's own measured sound-alone depolarisation to
+  each loom-alone trial does not predict
+- **sound-loom facilitation with the contact as EM annotates it** (`a2_contact_em`, C1), with one
+  caveat recorded in its registration: the committed reference arm had already shown the EM-annotated
+  contact firing the giant fiber on every sound-alone trial, so C1's "sound alone stays subthreshold"
+  part is not a blind prediction. It is kept so C1 cannot pass on sound firing the giant fiber by itself.
 
 Not counted as tests, though pre-registered:
 - **Sound-loom facilitation** (`a2_registered`, A2R) is **construction**. The working-point rule parks
   the loom-alone giant fiber about 2 mV below threshold, and the sound input is a hand-set, untraced
   3 mV compound potential. In a one-compartment cell, summation of the two crosses threshold unless
   polysynaptic inhibition intervenes. Facilitation was also scored, with no parameter moving, during
-  the gain fits (`fit_gains.py`, `fit_regional.py`). It becomes a test when the JON-to-GF contact is
-  modelled as the connectome annotates it (planned).
+  the gain fits (`fit_gains.py`, `fit_regional.py`). The tests of it are A2R2 and C1 (above).
+- **The sign-inverted contact** (`a2_contact_em_flip`, C2) is a **control**: inhibitory input cannot
+  facilitate in this model, so it is expected to pass by construction.
 - **The signed taste map, sugar laterality and the feeding-by-modality synapse ratio** are
   **structural**: they count over the wiring with no simulation.
 
 Most of these are pre-registered. Their passes and their failures are the model's real record.
+
+## Literature check (11 October 2026)
+
+A search for the measurements that would anchor the hand-set values (sources in REFERENCES.md,
+"Physiology checked against hand-set values") found:
+- **3 mV sound potential: no source.** No paper reports the giant fiber's depolarisation to sound in
+  mV. Lehnert et al. 2013 recorded currents (voltage clamp); Tootoonian et al. 2012 recorded voltage
+  but give no amplitude in the text; the Pézier and Jezzini papers inferred GF spikes from muscle
+  recordings. What the literature does support is qualitative: sound alone is subthreshold and
+  reaches threshold only with other input. The value stays a declared free parameter. The model can
+  now run the contact as EM annotates it (`FLYCNS_JON=em`), sign-inverted (`em_flip`), or at another
+  compound potential (`FLYCNS_JON_MV`), so the A2 result can be tested without it (phase 5 registers
+  these arms).
+- **Loom rate scale (PEAK_HZ): no source.** No electrophysiology of LC4 or LPLC2 spike rates was
+  found; LPLC2 data are calcium imaging (Klapoetke et al. 2017). Ache et al. 2019 model the GF input
+  as angular velocity (LC4) plus a Gaussian of angular size (LPLC2). PEAK_HZ stays the stimulus's
+  one free scale; escape spikes per response and response probability stay calibrated.
+- **Nerve-cord glutamate.** Inhibition onto motor neurons is moderately supported (larval
+  pharmacology, Rohrbough & Broadie 2002, Kohsaka et al. 2014; adult GluClα expression, Lesser et
+  al. 2024). Between nerve-cord interneurons it is an untested inference. A battery variant makes
+  that glutamate excitatory (`FLYCNS_GLU_VNC=excitatory`).
+- **Membrane parameters.** Motor neurons span about 100–700 MΩ input resistance by size class
+  (Azevedo et al. 2020; Herrera-Valdez et al. 2013); the only central τ_m found is about 16 ms
+  (Hafez et al. 2023), close to the model's 20 ms. Too sparse to set per-class values.
+- **Numerics.** A battery variant halves the time step (`FLYCNS_DT_MS=0.05`): the TTMn lag should
+  move from 0.9 to 0.85 ms (0.8 ms delay plus one step), and nothing else should change.
+- **w_scale.** `fit/select_wscale.py` re-selects the global scale on the benchmark-blind criterion
+  below, registered before it runs. Its answer is a recommendation; adopting a different value would
+  move every calibrated value after it.
 
 ## Turning calibrated checks into tests
 

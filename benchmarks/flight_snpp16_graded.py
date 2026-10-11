@@ -43,7 +43,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from brian2 import Synapses, mV
 from flycns import load_graph, CNSModel, LIFParams
-from flycns import stats
+from flycns import registry, stats
 from flycns.bench import provenance, spike_source
 from flycns.graph import rewire_null
 
@@ -66,6 +66,50 @@ CRITERIA = dict(
     G4="at k*: rewired null gives DVMn below 1 Hz",
     G5=f"at k*: DVMn in band in at least 4 of {N_DRAWS} draws",
     n_draws=N_DRAWS, n_cycles=N_CYCLES, wingbeat_hz=WINGBEAT_HZ, jitter_ms=JITTER_MS)
+
+# ---- version 2 registration (flycns/registry.py): criteria, bands and the frozen model, before any data.
+# It supersedes the version 1 registration below (criteria.json), which is kept as it was.
+LABEL = "flight_snpp16_graded"
+_K = "scored only if k* exists (some k puts mean DVMn 1a-c in band, the G2 rule); otherwise UNRESOLVED (stats.unresolved, no band)"
+CRITERIA_V2 = dict(
+    version=2,
+    hypothesis=f"{TARGET} selectively drives the DVM motor neurons",
+    protocol=dict(
+        n_cycles=N_CYCLES, wingbeat_hz=WINGBEAT_HZ, jitter_ms=JITTER_MS, n_draws=N_DRAWS, band=list(BAND),
+        target_type=TARGET, partner_type=PARTNER, k=f"1 .. the number of {TARGET} cells",
+        draws=("draw d = 0..n_draws-1 at k recruits k cells chosen with seed 1000 + 17 k + d, each firing one "
+               "spike per wingbeat cycle at a uniform random phase with gaussian jitter (seed d; an 8 mV kick "
+               "into each afferent), after 200 ms of settling"),
+        k_star_rule="the smallest k with mean DVMn 1a-c over the draws in 2-12 Hz",
+        null="rewire_null(edges, seed=0) at k*, the same cell and phase draws",
+        reported=f"{PARTNER} alone (phase seeds 0-2) and k* plus {PARTNER}; not scored",
+        scoring=("per draw (stats.per_draw, need 0.8): PASS if 4 of the 5 draws are in band, FAIL if at most 1, "
+                 "else UNRESOLVED; G1 on bootstrap intervals of adjacent differences")),
+    checks=dict(
+        G1_graded=dict(
+            bands=[[-0.5, None]],
+            rule=("every adjacent step k -> k+1 of mean DVMn 1a-c is at least -0.5 Hz: the bootstrap 95% interval "
+                  "of the difference (independent draws) lies at or above -0.5; all steps must pass")),
+        G2_in_band_window=dict(
+            bands=[list(BAND)],
+            rule="some k puts DVMn 1a-c in 2-12 Hz, scored per draw at each k (any of the k)"),
+        G3_selective_at_k_star=dict(
+            bands=[[None, 1.0]], conditional=True, condition=_K,
+            rule=("at k*: steering MN, b1 MN and DLMn c-f rates each below 1 Hz, each scored per draw, all three "
+                  "(the check is strict, per_draw's edge is inclusive)")),
+        G4_wiring_specific_at_k_star=dict(
+            band=[None, 1.0], conditional=True,
+            condition=(_K + "; and only if the rewired null fires outside the driven cells in some draw, since a "
+                       "silent null cannot fail; otherwise UNRESOLVED"),
+            rule="at k*: the rewired null gives DVMn 1a-c below 1 Hz, scored per draw"),
+        G5_reliable_at_k_star=dict(
+            band=list(BAND), conditional=True, condition=_K,
+            rule=f"at k*: DVMn 1a-c in 2-12 Hz in at least 4 of the {N_DRAWS} draws"),
+    ),
+)
+_v1 = OUT / "criteria.json"
+REG = registry.register(LABEL, CRITERIA_V2, scripts=[__file__], supersedes=dict(
+    file="criteria.json", git_commit=(json.loads(_v1.read_text(encoding="utf-8")).get("git_commit") or None) if _v1.exists() else None))
 
 # ---- register the criteria before simulating anything
 # Registered test: refuse uncommitted code and data that differ from data/MANIFEST.json, so the
@@ -277,6 +321,11 @@ if partner:
         print(f"{TARGET} k*={kstar['k']} + {PARTNER} | DVMn {comb['dvmn_mean']:.2f} Hz vs sum of parts {s:.2f} "
               f"(ratio {rep['summation_ratio']:.2f})" if rep["summation_ratio"] else "")
 report["reported"] = rep
+# verify_bands skips a conditional check only when its record is absent; a check whose condition was not met
+# carries a stats.unresolved record (no band), so the band check reads the records scored as designed
+registry.verify_bands(REG, {k: u for k, u in report["uncertainty"].items() if u["method"] != "not scorable as designed"})
+report["registration_v1"] = report["registration"]      # the version 1 record (criteria.json), kept
+report["registration"] = registry.stamp(REG)
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECKS (criteria registered before the run)")

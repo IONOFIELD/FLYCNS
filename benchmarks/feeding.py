@@ -51,12 +51,79 @@ from flycns.bench import provenance, stamp
 from flycns.graph import infer_side, gustatory_afferents, GUSTATORY_MN9_DRIVING
 from flycns import ascii as A
 from flycns import stats
+from flycns import registry
 
 OUT = Path("results/feeding"); OUT.mkdir(parents=True, exist_ok=True)
 N_TRIALS = int(sys.argv[1]) if len(sys.argv) > 1 else 6
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
 SUGAR = sys.argv[3].split(",") if len(sys.argv) > 3 else None   # override type names
 BITTER = sys.argv[4].split(",") if len(sys.argv) > 4 else None
+
+# ---------------------------------------------------------------- registration (version 2, flycns/registry.py)
+# written before any data is loaded; the bands are the ones the uncertainty records below are scored with
+CRITERIA_V2 = dict(
+    version=2,
+    question=("does taste drive reach MN9 through the SEZ (Shiu et al. 2024) without spreading beyond the SEZ "
+              "or driving motor neurons at unphysiological rates, and is the pathway wiring-specific?"),
+    protocol=dict(
+        n_trials=N_TRIALS, pulse_ms=200, gap_ms=300, readout_window_ms=250, dose_hz=[10, 25, 50, 100, 200], test_hz=50,
+        drive=("explicit argv types, else annotated sugar GRN types (SUGAR_GRN_PATTERNS, BM_ excluded), else the "
+               "screen-selected MN9-driving gustatory types present (GUSTATORY_MN9_DRIVING), else every gustatory "
+               "afferent type, else the sensory afferents onto MN9's top excitatory inputs"),
+        drive_override=dict(sugar=SUGAR, bitter=BITTER),
+        bitter="BITTER_GRN_PATTERNS matches (or the argv override), driven at 50 Hz together with the sugar drive",
+        second_order=("Fdg, Bract, Roundup, Zorro (Shiu names) each alone at 50 Hz; if absent, MN9's top 4 excitatory "
+                      "input types, which drive it by construction (F4 then not scored)"),
+        F1_drive=("left afferents only (inferred side), at the lowest dose-curve rate giving MN9 >= 2 spikes/cell "
+                  "under bilateral drive, else 100 Hz"),
+        null="degree-preserving rewired null (flycns/graph.py rewire_null defaults), drive at 50 Hz",
+        model="declared parameter set (LIFParams), electrical synapses on"),
+    checks=dict(
+        F2b_extra_SEZ_quiet=dict(
+            band=[None, 0.02],
+            rule=("spikes outside the SEZ per neuron per second of drive (200 ms pulses only), sugar drive at 50 Hz, "
+                  "bootstrap over pulses: PASS if the 95% interval lies at or below 0.02 Hz")),
+        F2c_motor_rate_physiological=dict(
+            band=[0, 100], band_lower_exclusive=True,
+            rule=("mean rate of the recruited cb_motor cells over the time the drive was on, sugar drive at 50 Hz, "
+                  "bootstrap over pulses: PASS if the 95% interval lies above 0 and at or below 100 Hz")),
+        F1_laterality_matches_wiring=dict(
+            band=[0, None], band_lower_exclusive=True, conditional=True,
+            condition=("MN9 responds to the left-only drive (ipsilateral + contralateral > 0) and both the functional "
+                       "and the structural laterality have a direction (neither is a tie); not met while MN9 does "
+                       "not fire under the declared parameters"),
+            rule=("(MN9-R minus MN9-L) per pulse times the sign of the structural prediction (unsigned 2-hop "
+                  "synapse-weighted drive, R minus L), paired in one simulation, bootstrap over pulses: PASS if the "
+                  "95% interval lies above 0")),
+        F3_bitter_suppresses=dict(
+            band=[0, None], band_lower_exclusive=True, conditional=True,
+            condition="a bitter GRN type resolves (BITTER_GRN_PATTERNS or the argv override)",
+            rule=("MN9 under sugar alone minus under sugar + bitter, both at 50 Hz: two separate simulations, each "
+                  "resampled over its own pulses: PASS if the 95% interval lies above 0")),
+        F4_second_order_sufficient=dict(
+            bands=[[0, None]], band_lower_exclusive=True, conditional=True,
+            condition=("Shiu's second-order names resolve (not the fallback to MN9's top excitatory inputs) and at "
+                       "least one of them is tried"),
+            rule=("each second-order type alone at 50 Hz: MN9 spikes/cell per pulse, bootstrap over pulses, 95% "
+                  "interval above 0; PASS only if every type passes")),
+        F5_null_silent=dict(
+            band=[None, 0.1], conditional=True,
+            condition=("the real network responds: MN9 >= 0.5 spikes/cell at 50 Hz (point value); a silent null "
+                       "beside a silent network is not scored"),
+            rule=("MN9 on the rewired null at 50 Hz, bootstrap over pulses: PASS if the 95% interval lies at or "
+                  "below 0.1 spikes/cell")),
+    ),
+    not_scored=dict(
+        F2_dose_response_REPORTED=("monotonic MN9 response over 10-200 Hz: reported only, since MN9 firing from "
+                                   "afferent drive needs a mechanism the model lacks (results/feeding/mechanism.json)"),
+        F1_shiu_contralateral_bias=("Shiu's contralateral prediction concerns labellar sugar GRNs; tested with "
+                                    "LB3b/LB3c in benchmarks/sugar_laterality.py")),
+)
+REG = registry.register("feeding", CRITERIA_V2, scripts=[__file__], supersedes=None)
+# registered now (version 2): committed code and pinned data, as every registered test
+from flycns.integrity import require_clean, require_data  # noqa: E402
+require_clean("feeding")
+require_data(DATA, "feeding")
 
 neurons, edges = load_graph(DATA)
 A.sketch("feeding")
@@ -331,6 +398,8 @@ if ch.get("F5_null_silent") is not None:
         note=f"MN9 on the rewired null at 50 Hz, bootstrap over pulses; scored because the real network responds "
              f"(MN9 {real50:.3g} at 50 Hz >= 0.5, point value)")
 report["uncertainty"] = unc
+registry.verify_bands(REG, report["uncertainty"])
+report["registration"] = registry.stamp(REG)
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 prov = ["# Provenance: feeding (port of Shiu et al. 2024 tests to MaleCNS)", "",

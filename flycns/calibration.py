@@ -43,6 +43,9 @@ CHECK_ROLES = {
                                   "untraced 3 mV compound potential; in a one-compartment cell summation of the two crosses threshold "
                                   "unless polysynaptic inhibition intervenes. Facilitation was also scored (no parameter moved) during "
                                   "the gain fits (fit_gains.py, fit_regional.py). Pre-registered, but not independent"),
+        "A2R2_beyond_summation": (IND, "registered version 2: facilitation beyond what adding the model's own measured "
+                                       "sound-alone depolarisation to each loom-alone trial predicts; the part of A2 that "
+                                       "is not arithmetic"),
     },
     "a2_robustness": {
         "RA2_facilitation_at_every_near_threshold_gain": (ROB, "pre-registered sweep of A2R (itself construction)"),
@@ -109,7 +112,13 @@ CHECK_ROLES = {
         "S1_escape_null_silent_superclass": (CTL, "pre-registered stricter null"),
         "S2_pc1_null_silent_superclass": (CTL, "pre-registered stricter null"),
     },
-    # degree-corrected null distribution (benchmarks/null_distribution.py): not yet registered
+    # the JON -> GF contact as EM annotates it (benchmarks/a2_contact.py), registered version 2
+    "a2_contact_em": {"C1_em_facilitation": (IND, "registered; no hand-set sound potential: the contact as EM annotates it. "
+                                                  "Not blind: the committed reference arm showed this contact firing the "
+                                                  "giant fiber on every sound-alone trial before registration, so its "
+                                                  "subthreshold part was expected to fail; nothing was tuned either way")},
+    "a2_contact_em_flip": {"C2_flip_no_facilitation": (CTL, "registered control: the same contact sign-inverted")},
+    # degree-corrected null distribution (benchmarks/null_distribution.py)
     "null_dc_escape": {"N1_escape_gf_wiring_specific": (CTL, "real readout vs 20 degree-corrected null draws")},
     "null_dc_song": {"N2_song_pmp2_wiring_specific": (CTL, "real readout vs 20 degree-corrected null draws")},
     "null_dc_auditory": {"N3_jo_gf_chemical_wiring_specific": (CTL, "real readout vs 20 degree-corrected null draws")},
