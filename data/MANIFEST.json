@@ -2,7 +2,7 @@
   "algorithm": "rowhash-v2",
   "pandas": "3.0.6",
   "dataset": "male-cns:v1.0 (neuprint.janelia.org)",
-  "written_at": "2026-10-10T22:53:55",
+  "written_at": "2026-10-11T06:15:49",
   "files": {
     "edges.parquet": {
       "digest": "becf568580708ba9d6c6170e2daa407a806a8ac64ffcbb70a29cc8bfdae78d3d",
@@ -52,6 +52,23 @@
         "x": 6882363994.0,
         "y": 4592901473.0,
         "z": 5503515286.0
+      }
+    },
+    "roi_membership.parquet": {
+      "digest": "5fce5c5d54e455704cc91124b0327e6be770447c1304d4d6b49ddbd406677d60",
+      "rows": 174802,
+      "columns": [
+        "bodyId",
+        "dominant_frac",
+        "dominant_roi",
+        "n_syn",
+        "sez_frac"
+      ],
+      "sums": {
+        "bodyId": "2259809907048",
+        "dominant_frac": 132068.894561,
+        "n_syn": "173844672",
+        "sez_frac": 7160.603613
       }
     }
   }
