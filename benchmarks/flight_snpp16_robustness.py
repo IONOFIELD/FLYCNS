@@ -34,7 +34,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from brian2 import Synapses, mV
 from flycns import load_graph, CNSModel, LIFParams
-from flycns import stats
+from flycns import registry, stats
 from flycns.bench import provenance, spike_source
 from flycns.graph import SIGN_MAP
 
@@ -57,6 +57,53 @@ CRITERIA = dict(
     R2=f"relay-layer parameter sweep {R2_SWEEP}, k={K_TEST}: steering, b1, DLMn each < 1 Hz at every setting",
     R3=f"fresh draws (seed base {FRESH_SEED_BASE}): k* within 1 of {K_STAR_ORIG}, and k={K_TEST} in band in >=4/{N_DRAWS}",
     band=BAND, n_draws=N_DRAWS, n_cycles=N_CYCLES)
+
+# ---- version 2 registration (flycns/registry.py): criteria, bands and the frozen model, before any data.
+# It supersedes the version 1 registration below (criteria.json), which is kept as it was.
+LABEL = "flight_snpp16_robustness"
+_SEL = "steering MN, b1 MN and DLMn c-f each below 1 Hz in every draw (per_draw need 1.0; the check is strict, per_draw's edge is inclusive)"
+CRITERIA_V2 = dict(
+    version=2,
+    claim=f"{TARGET} selectively drives DVM motor neurons, reliably from k={K_TEST}",
+    protocol=dict(
+        n_cycles=N_CYCLES, wingbeat_hz=WINGBEAT_HZ, jitter_ms=JITTER_MS, n_draws=N_DRAWS, k_test=K_TEST,
+        band=list(BAND), target_type=TARGET,
+        drive=("draw d at k recruits k cells chosen with seed SEED_BASE + 17 k + d, each firing one spike per wingbeat "
+               "cycle at a uniform random phase with gaussian jitter (an 8 mV kick into each afferent), after 200 ms "
+               "of settling"),
+        R1=(f"k={K_TEST} on the targeted transmitter-sign inversion (FLYCNS_SIGNFLIP_TARGETED=1: every neuron whose "
+            f"per-T-bar predictions disagree in sign with its aggregate label, data/edges_nt.parquet); cells seed "
+            f"base 1000, phase seed d"),
+        R2_sweep=R2_SWEEP,
+        R2=(f"k={K_TEST}, one parameter at a time for the relay-layer superclasses (read from the data: superclasses "
+            f"of the excitatory relays onto DLMn c-f, sensory excluded); cells seed base 1000, phase seed d"),
+        R3=(f"k = 1 .. the number of {TARGET} cells with fresh draws: cells seed base {FRESH_SEED_BASE}, phase seed "
+            f"{FRESH_SEED_BASE} + d"),
+        k_star_original=K_STAR_ORIG,
+        scoring=("per draw (stats.per_draw): DVMn 1a-c in band needs 4 of 5 draws (need 0.8, FAIL at most 1); "
+                 "steering, b1 and DLMn c-f below 1 Hz need every draw (need 1.0, FAIL if none)")),
+    checks=dict(
+        R1_survives_transmitter_uncertainty=dict(
+            bands=[list(BAND), [None, 1.0]], conditional=True,
+            condition=("scored only if the inversion flips a connection on the path under test (both ends among the "
+                       f"driven {TARGET} cells, the readouts and the relay layer); otherwise UNRESOLVED "
+                       "(stats.unresolved, no band)"),
+            rule=(f"on the flipped graph at k={K_TEST}: DVMn 1a-c in 2-12 Hz in at least 4 of {N_DRAWS} draws "
+                  f"(first band), and {_SEL} (second band)")),
+        R2_selectivity_holds_across_cord_params=dict(
+            bands=[[None, 1.0]], conditional=True,
+            condition="scored only if a relay superclass is found in the data; otherwise UNRESOLVED (stats.unresolved, no band)",
+            rule=f"at every setting of the sweep, k={K_TEST}: {_SEL}"),
+        R3_replicates_with_fresh_draws=dict(
+            bands=[list(BAND)], k_star_original=K_STAR_ORIG, k_star_tolerance=1,
+            rule=(f"with fresh draws, k* is within 1 of {K_STAR_ORIG} (no k below {K_STAR_ORIG - 1} in band and some k "
+                  f"in {K_STAR_ORIG - 1}..{K_STAR_ORIG + 1} in band, 'in band at k' meaning DVMn 1a-c in 2-12 Hz per "
+                  f"draw) and DVMn 1a-c at k={K_TEST} is in 2-12 Hz in at least 4 of {N_DRAWS} draws")),
+    ),
+)
+_v1 = OUT / "criteria.json"
+REG = registry.register(LABEL, CRITERIA_V2, scripts=[__file__], supersedes=dict(
+    file="criteria.json", git_commit=(json.loads(_v1.read_text(encoding="utf-8")).get("git_commit") or None) if _v1.exists() else None))
 
 # Registered test: refuse uncommitted code and data that differ from data/MANIFEST.json, so the
 # registered result can be traced to an exact commit and an exact dataset (flycns/integrity.py).
@@ -292,6 +339,10 @@ unc["R3_replicates_with_fresh_draws"] = stats.combine(
     note="replication with fresh cell-identity and phase draws")
 report["uncertainty"] = unc
 
+# verify_bands skips a conditional check only when its record is absent; a check whose condition was not met
+# carries a stats.unresolved record (no band), so the band check reads the records scored as designed
+registry.verify_bands(REG, {k: u for k, u in report["uncertainty"].items() if u["method"] != "not scorable as designed"})
+report["registration"] = registry.stamp(REG)
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"\nCHECKS (criteria registered before the run) | {round(time.time() - t0)}s")

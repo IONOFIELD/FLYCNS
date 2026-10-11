@@ -48,6 +48,37 @@ CRITERIA = dict(
     reported="whole-CNS rate on each null beside the real network",
 )
 
+# Version 2 registration (flycns/registry.py): criteria plus the frozen model (including the two benchmark scripts
+# this one runs), written before anything runs; it supersedes the version 1 criteria.json below, which is kept and
+# still checked.
+from flycns import registry  # noqa: E402
+_v1 = OUT / "criteria.json"
+CRITERIA_V2 = dict(
+    version=2,
+    question=("do the wiring-specificity controls survive a null that keeps the cell class each neuron talks to "
+              "(targets permuted only within the post cell's superclass)?"),
+    null_mode="superclass (flycns/graph.py rewire_null): targets permuted only within the post cell's superclass",
+    protocol=dict(escape=f"benchmarks/gf_escape.py, {ESCAPE_TRIALS} trials, FLYCNS_NULL=superclass",
+                  pc1=("benchmarks/pc1_song.py at its registered trial count (results/pc1_song/criteria.json, else 10), "
+                       "FLYCNS_NULL=superclass"),
+                  escape_trials=ESCAPE_TRIALS, pc1_trials=PC1_TRIALS),
+    checks=dict(
+        S1_escape_null_silent_superclass=dict(
+            band=[None, 0.1],
+            rule=(f"giant fiber hit rate on the superclass null, k of {ESCAPE_TRIALS} trials, Wilson 95% interval: "
+                  "PASS if it lies at or below 0.1 (the threshold of gf_escape's null_silent)")),
+        S2_pc1_null_silent_superclass=dict(
+            band=[None, 0.1],
+            rule=("pMP2 spikes/cell/pulse under pC1_14a at 100 Hz on the superclass null, bootstrap over pulses: PASS "
+                  "if the 95% interval lies at or below 0.1 (the threshold of pc1_song P4)")),
+    ),
+    reported="whole-CNS rate on each null beside the real network",
+)
+REG = registry.register("null_strict", CRITERIA_V2,
+                        scripts=[__file__, Path(__file__).with_name("gf_escape.py"), Path(__file__).with_name("pc1_song.py")],
+                        supersedes=dict(file="criteria.json", git_commit=(
+                            json.loads(_v1.read_text(encoding="utf-8")).get("git_commit") if _v1.exists() else None)))
+
 require_clean(Path(__file__).stem)
 require_data(DATA, Path(__file__).stem)   # every table pinned in the manifest, rehashed
 crit_f = OUT / "criteria.json"
@@ -102,6 +133,8 @@ else:
                       note="the pc1_song report carries no per-pulse values, so the mean over pulses is scored on its "
                            "point value (no trial structure to resample). " + _c2)
 report["uncertainty"] = {"S1_escape_null_silent_superclass": _s1, "S2_pc1_null_silent_superclass": _s2}
+registry.verify_bands(REG, report["uncertainty"])
+report["registration"] = registry.stamp(REG)
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"\nescape: null GF hit {null_e['gf_hit']:.2f} (real {real_e['gf_hit']:.2f}); "
       f"null CNS {null_e['pop_rate_hz']:.4f} Hz vs real {real_e['pop_rate_hz']:.4f} Hz")
