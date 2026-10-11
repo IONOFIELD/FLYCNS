@@ -1,0 +1,19 @@
+criteria registered at commit cc8d759; this run at b7eba83
+gain 0.4  | alone   0/100 = 0.000 | with sound  13/100 = 0.130 | difference +0.130 (95% CI +0.066 to +0.210) | near-threshold  FACILITATION | 2318s
+gain 0.5  | alone   0/100 = 0.000 | with sound  22/100 = 0.220 | difference +0.220 (95% CI +0.141 to +0.311) | near-threshold  FACILITATION | 4368s
+gain 0.6  | alone   0/100 = 0.000 | with sound  31/100 = 0.310 | difference +0.310 (95% CI +0.220 to +0.406) | near-threshold  FACILITATION | 6403s
+gain 0.7  | alone  10/100 = 0.100 | with sound  39/100 = 0.390 | difference +0.290 (95% CI +0.173 to +0.398) | near-threshold  FACILITATION | 8468s
+gain 0.8  | alone  18/100 = 0.180 | with sound  50/100 = 0.500 | difference +0.320 (95% CI +0.191 to +0.435) | near-threshold  FACILITATION | 10521s
+
+5 of 5 gains near threshold; facilitation at 5 of them
+CHECK (criterion registered before the run)
+  PASS  RA2_facilitation_at_every_near_threshold_gain
+UNCERTAINTY (95% interval; PASS only if every part passes)
+  PASS        RA2_facilitation_at_every_near_threshold_gain (all of 6 parts)
+      PASS        near-threshold gains: 5 (need >= 3) (point)
+      PASS        gain 0.4: difference +0.13 [+0.06583, +0.2098] band (0, -) (newcombe (as registered))
+      PASS        gain 0.5: difference +0.22 [+0.1408, +0.3107] band (0, -) (newcombe (as registered))
+      PASS        gain 0.6: difference +0.31 [+0.2199, +0.4063] band (0, -) (newcombe (as registered))
+      PASS        gain 0.7: difference +0.29 [+0.1734, +0.3977] band (0, -) (newcombe (as registered))
+      PASS        gain 0.8: difference +0.32 [+0.1905, +0.435] band (0, -) (newcombe (as registered))
+wrote results\a2_robustness\report.json

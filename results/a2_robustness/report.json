@@ -19,13 +19,13 @@
       "gain": 0.4,
       "n": 100,
       "k_alone": 0,
-      "k_sound": 20,
+      "k_sound": 13,
       "p_alone": 0.0,
-      "p_sound": 0.2,
-      "difference": 0.2,
+      "p_sound": 0.13,
+      "difference": 0.13,
       "ci": [
-        0.12378506670877114,
-        0.28883096192650237
+        0.0658328568414162,
+        0.2098052189480988
       ],
       "near_threshold": true,
       "facilitation": true,
@@ -35,13 +35,13 @@
       "gain": 0.5,
       "n": 100,
       "k_alone": 0,
-      "k_sound": 32,
+      "k_sound": 22,
       "p_alone": 0.0,
-      "p_sound": 0.32,
-      "difference": 0.32,
+      "p_sound": 0.22,
+      "difference": 0.22,
       "ci": [
-        0.2288454397219542,
-        0.4166280225367919
+        0.14083579335953522,
+        0.31070534715000303
       ],
       "near_threshold": true,
       "facilitation": true,
@@ -51,13 +51,13 @@
       "gain": 0.6,
       "n": 100,
       "k_alone": 0,
-      "k_sound": 40,
+      "k_sound": 31,
       "p_alone": 0.0,
-      "p_sound": 0.4,
-      "difference": 0.4,
+      "p_sound": 0.31,
+      "difference": 0.31,
       "ci": [
-        0.3021377407553552,
-        0.4979992153815976
+        0.21985470678741065,
+        0.40626239477955695
       ],
       "near_threshold": true,
       "facilitation": true,
@@ -67,13 +67,13 @@
       "gain": 0.7,
       "n": 100,
       "k_alone": 10,
-      "k_sound": 50,
+      "k_sound": 39,
       "p_alone": 0.1,
-      "p_sound": 0.5,
-      "difference": 0.4,
+      "p_sound": 0.39,
+      "difference": 0.29000000000000004,
       "ci": [
-        0.27843027585819957,
-        0.5060810320231056
+        0.17337914233008106,
+        0.39771687612521495
       ],
       "near_threshold": true,
       "facilitation": true,
@@ -83,13 +83,13 @@
       "gain": 0.8,
       "n": 100,
       "k_alone": 18,
-      "k_sound": 56,
+      "k_sound": 50,
       "p_alone": 0.18,
-      "p_sound": 0.56,
-      "difference": 0.38000000000000006,
+      "p_sound": 0.5,
+      "difference": 0.32,
       "ci": [
-        0.24937857084403653,
-        0.492562176716436
+        0.1905344835792031,
+        0.43496754318666403
       ],
       "near_threshold": true,
       "facilitation": true,
@@ -100,10 +100,124 @@
   "checks": {
     "RA2_facilitation_at_every_near_threshold_gain": true
   },
-  "wall_s": 7013,
+  "wall_s": 10521,
+  "uncertainty": {
+    "RA2_facilitation_at_every_near_threshold_gain": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 6 parts",
+      "parts": [
+        {
+          "estimate": 5.0,
+          "ci95": null,
+          "band": null,
+          "method": "point",
+          "verdict": "PASS",
+          "note": "number of grid gains that qualify as near-threshold (loom-alone GF probability <= 0.3 on the point estimate, the registered definition); at least 3 must qualify. A count under a registered definition, scored on its value, not resampled"
+        },
+        {
+          "estimate": 0.13,
+          "ci95": [
+            0.0658328568414162,
+            0.2098052189480988
+          ],
+          "band": [
+            0,
+            null
+          ],
+          "method": "newcombe (as registered)",
+          "verdict": "PASS",
+          "band_lower_exclusive": true,
+          "n": 100,
+          "note": "gain 0.4: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 recomputed from counts (n per arm)",
+          "gain": 0.4
+        },
+        {
+          "estimate": 0.22,
+          "ci95": [
+            0.14083579335953522,
+            0.31070534715000303
+          ],
+          "band": [
+            0,
+            null
+          ],
+          "method": "newcombe (as registered)",
+          "verdict": "PASS",
+          "band_lower_exclusive": true,
+          "n": 100,
+          "note": "gain 0.5: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 recomputed from counts (n per arm)",
+          "gain": 0.5
+        },
+        {
+          "estimate": 0.31,
+          "ci95": [
+            0.21985470678741065,
+            0.40626239477955695
+          ],
+          "band": [
+            0,
+            null
+          ],
+          "method": "newcombe (as registered)",
+          "verdict": "PASS",
+          "band_lower_exclusive": true,
+          "n": 100,
+          "note": "gain 0.6: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 recomputed from counts (n per arm)",
+          "gain": 0.6
+        },
+        {
+          "estimate": 0.29000000000000004,
+          "ci95": [
+            0.17337914233008106,
+            0.39771687612521495
+          ],
+          "band": [
+            0,
+            null
+          ],
+          "method": "newcombe (as registered)",
+          "verdict": "PASS",
+          "band_lower_exclusive": true,
+          "n": 100,
+          "note": "gain 0.7: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 recomputed from counts (n per arm)",
+          "gain": 0.7
+        },
+        {
+          "estimate": 0.32,
+          "ci95": [
+            0.1905344835792031,
+            0.43496754318666403
+          ],
+          "band": [
+            0,
+            null
+          ],
+          "method": "newcombe (as registered)",
+          "verdict": "PASS",
+          "band_lower_exclusive": true,
+          "n": 100,
+          "note": "gain 0.8: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 recomputed from counts (n per arm)",
+          "gain": 0.8
+        }
+      ],
+      "verdict": "PASS",
+      "note": "RA2 as registered: >= 3 near-threshold gains, and at every one the 95% CI on the difference lies above zero"
+    }
+  },
+  "registration": {
+    "file": "results/a2_robustness/registration.json",
+    "version": 2,
+    "git_commit": "4c39a8f",
+    "model_hash": "b4d8895c47c2f378139ceb9760a73360bf0c8459f1b967c8772c542ac1464e8a",
+    "registered_at": "2026-10-11T12:41:14",
+    "matches": true,
+    "problems": []
+  },
   "provenance": {
-    "written_at": "2026-10-11T15:21:36",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T22:48:03",
+    "git_commit": "b7eba83",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -118,6 +232,7 @@
     "engine": "not used",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "data": {
       "dir": "data",
       "digests": {
