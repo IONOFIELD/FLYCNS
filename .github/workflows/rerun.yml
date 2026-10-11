@@ -33,6 +33,8 @@ env:
       {"name": "gf-adapt",                  "run": "benchmarks/fit_gf_adapt.py 40"},
       {"name": "a2",                        "run": "benchmarks/a2_registered.py 120"},
       {"name": "a2-robustness",             "run": "benchmarks/a2_robustness.py 100"},
+      {"name": "a2-contact-em",             "run": "benchmarks/a2_contact.py em 120"},
+      {"name": "a2-contact-em-flip",        "run": "benchmarks/a2_contact.py em_flip 120"},
       {"name": "dnp31",                     "run": "benchmarks/dnp31_trace.py"},
       {"name": "auditory-wing",             "run": "benchmarks/auditory_wing_trace.py"},
       {"name": "peptide-asta",              "run": "benchmarks/peptide_asta.py 10"},

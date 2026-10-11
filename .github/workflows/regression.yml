@@ -123,7 +123,7 @@ jobs:
           Copy-Item testdata\*.parquet data\
           Must .\.venv\Scripts\python.exe -m flycns.integrity write data | Out-Null
           # registrations made on the real connectome do not fit the toy graph; the toy registers its own
-          Must git rm -q "results/*/criteria.json" | Out-Null
+          Must git rm -q --ignore-unmatch "results/*/criteria.json" "results/*/registration.json" | Out-Null
           Must git add data/MANIFEST.json | Out-Null
           Must git commit -qm "CI: toy data pinned in place of the connectome" | Out-Null
           Must git push -q | Out-Null

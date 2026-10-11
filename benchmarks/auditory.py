@@ -108,6 +108,10 @@ CRITERIA_V2 = dict(
 )
 TOP_LEVEL = os.environ.get("FLYCNS_AUDITORY_OUT") is None and not A2_ONLY
 REG = registry.register("auditory", CRITERIA_V2, scripts=[__file__]) if TOP_LEVEL else None
+# registered now (version 2): committed code and pinned data, as every registered test
+from flycns.integrity import require_clean, require_data  # noqa: E402
+require_clean("auditory")
+require_data(DATA, "auditory")
 
 neurons, edges = load_graph(DATA)
 A.sketch("auditory")

@@ -144,6 +144,8 @@ def verify_bands(reg, uncertainty):
             bad.append(f"{name}: registered but not scored")
             continue
         used = _all_bands(rec)
+        if not used:
+            continue              # scored without any band (unresolved as designed, or a point): nothing to compare
         for w in wants:
             if not any(_same_band(b, w) for b in used):
                 bad.append(f"{name}: registered band {w} not among the bands it was scored with {used}")

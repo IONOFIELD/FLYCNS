@@ -60,6 +60,8 @@ RUNS = [  # (label, argv relative to the copy, extra env, sentinel substring or 
     ("peptide_asta", ["benchmarks/peptide_asta.py", "2", "testdata"], {}, None),
     ("a2_registered", ["benchmarks/a2_registered.py", "4", "testdata"], {}, None),
     ("a2_robustness", ["benchmarks/a2_robustness.py", "2", "testdata"], {}, None),
+    ("a2_contact em", ["benchmarks/a2_contact.py", "em", "4", "testdata"], {}, "C1_em_facilitation"),
+    ("a2_contact em_flip", ["benchmarks/a2_contact.py", "em_flip", "4", "testdata"], {}, "C2_flip_no_facilitation"),
     ("null_strict", ["benchmarks/null_strict.py", "testdata"], {}, None),
     ("null_distribution escape", ["benchmarks/null_distribution.py", "escape", "3", "2", "testdata"], {}, "_wiring_specific"),
     ("null_distribution song", ["benchmarks/null_distribution.py", "song", "3", "2", "testdata"], {}, "_wiring_specific"),
@@ -135,7 +137,7 @@ def _flatten(obj, prefix=""):
 def _reports(work):
     """Report files under results/ with their modification times (stamps and registrations excluded)."""
     return {f: f.stat().st_mtime_ns for f in (work / "results").rglob("*.json")
-            if not f.name.endswith(".stamp.json") and f.name not in ("criteria.json", "progress.json")}
+            if not f.name.endswith(".stamp.json") and f.name not in ("criteria.json", "registration.json", "progress.json")}
 
 
 def _same(a, b):

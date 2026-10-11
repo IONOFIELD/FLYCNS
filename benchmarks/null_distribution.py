@@ -83,6 +83,10 @@ CRITERIA_V2 = dict(
         "or if the null is not active by the alive rule (it cannot test anything), or if there are no null draws"))},
 )
 REG = registry.register(LABEL, CRITERIA_V2, scripts=[__file__], supersedes=None)
+# registered now (version 2): committed code and pinned data, as every registered test
+from flycns.integrity import require_clean, require_data  # noqa: E402
+require_clean(LABEL)
+require_data(DATA, LABEL)
 
 neurons, edges = load_graph(DATA)
 meta = neurons.set_index("bodyId")

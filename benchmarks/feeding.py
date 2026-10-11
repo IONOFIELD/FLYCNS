@@ -120,6 +120,10 @@ CRITERIA_V2 = dict(
                                     "LB3b/LB3c in benchmarks/sugar_laterality.py")),
 )
 REG = registry.register("feeding", CRITERIA_V2, scripts=[__file__], supersedes=None)
+# registered now (version 2): committed code and pinned data, as every registered test
+from flycns.integrity import require_clean, require_data  # noqa: E402
+require_clean("feeding")
+require_data(DATA, "feeding")
 
 neurons, edges = load_graph(DATA)
 A.sketch("feeding")

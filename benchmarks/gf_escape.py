@@ -68,6 +68,10 @@ CRITERIA_V2 = dict(
     },
 )
 REG = registry.register("gf_escape", CRITERIA_V2, scripts=[__file__])
+# registered now (version 2): committed code and pinned data, as every registered test
+from flycns.integrity import require_clean, require_data  # noqa: E402
+require_clean("gf_escape")
+require_data(DATA, "gf_escape")
 
 
 def _wilson(k, n, z=1.96):

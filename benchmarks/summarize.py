@@ -50,7 +50,8 @@ _changed = {}
 CANONICAL_TRIALS = {"gf_escape": 40, "auditory": 40, "feeding": 6, "peptide_asta": 10, "pc1_song": 10,
                     "dnp13_control": 10, "feeding_by_modality": 6, "a2_registered": 120, "a2_robustness": 100,
                     "flight_loop": 400, "flight_snpp16": 400, "flight_snpp16_graded": 400, "flight_snpp16_robustness": 400,
-                    "null_dc_escape": 40, "null_dc_song": 30, "null_dc_auditory": 40}
+                    "null_dc_escape": 40, "null_dc_song": 30, "null_dc_auditory": 40,
+                    "a2_contact_em": 120, "a2_contact_em_flip": 120}
 
 
 def trial_count(r):

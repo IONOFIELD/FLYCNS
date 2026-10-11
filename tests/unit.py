@@ -8,6 +8,7 @@ needs no connectome and no network. Run by tests/regression.py, or alone:
 """
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -174,7 +175,8 @@ def t_registered_criteria_rerun(tmp):
     changed = criteria_differ(f, {**crit, "k": 8})
     raw = [p.name for p in (ROOT / "benchmarks").glob("*.py")
            if "CRITERIA = dict(" in p.read_text(encoding="utf-8")
-           and "criteria_differ(crit_f, CRITERIA)" not in p.read_text(encoding="utf-8")]
+           and "criteria_differ(crit_f, CRITERIA)" not in p.read_text(encoding="utf-8")
+           and "registry.register(" not in p.read_text(encoding="utf-8")]
     ok = same and changed and not raw
     return ok, "saved criteria match their code; a changed criterion is refused" if ok else f"{same} {changed} {raw}"
 
@@ -548,17 +550,29 @@ def _registered_benchmarks():
 
 
 def t_registered_tests_guard_themselves():
-    """Every pre-registered benchmark checks its code is committed and its data are pinned before it
-    runs, and refuses criteria that differ from its registration."""
+    """Every registered benchmark checks its code is committed and its data are pinned before it runs and
+    refuses criteria that differ from its registration (version 1); every benchmark that scores a check
+    is registered against the frozen model (version 2) and verifies its bands and stamps the report."""
     bad = []
     for f in _registered_benchmarks():
         s = f.read_text(encoding="utf-8")
         miss = [c for c in ("require_clean(", "require_data(", "criteria_differ(") if c not in s]
         if miss:
             bad.append(f"{f.name}: {miss}")
+    v2 = sorted(f for f in (ROOT / "benchmarks").glob("*.py") if "registry.register(" in f.read_text(encoding="utf-8"))
+    for f in v2:
+        s = f.read_text(encoding="utf-8")
+        miss = [c for c in ("require_clean(", "require_data(", "registry.verify_bands(", "registry.stamp(") if c not in s]
+        if miss:
+            bad.append(f"{f.name}: {miss}")
+    scoring = sorted(f.name for f in (ROOT / "benchmarks").glob("*.py")
+                     if re.search(r'["\']checks["\']\s*[:\]]|checks\s*=\s*\{|checks=\{', f.read_text(encoding="utf-8"))
+                     and '"report.json"' in f.read_text(encoding="utf-8")       # writes a scored suite report
+                     and "registry.register(" not in f.read_text(encoding="utf-8"))
     n = len(_registered_benchmarks())
-    return n >= 10 and not bad, (f"{n} registered benchmarks call require_clean, require_data and criteria_differ"
-                                 if not bad else f"missing guards: {bad}")
+    ok = n >= 10 and len(v2) >= 17 and not bad and not scoring
+    return ok, (f"{n} version-1 and {len(v2)} version-2 registered benchmarks carry every guard" if ok else
+                f"missing guards: {bad}; scoring but not registered: {scoring}; v2 {len(v2)}")
 
 
 def t_registrations_never_changed():
