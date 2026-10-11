@@ -179,8 +179,8 @@
     "F4_bitter_below_sugar_at_100hz": false
   },
   "provenance": {
-    "written_at": "2026-10-11T06:37:11",
-    "git_commit": "fcff151",
+    "written_at": "2026-10-11T10:15:00",
+    "git_commit": "329488d",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

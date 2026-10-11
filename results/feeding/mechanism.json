@@ -1,30 +1,30 @@
 {
   "M1_MN9_input_balance": {
     "excitatory_synapses": 2966.0,
-    "inhibitory_synapses": 3049.0,
-    "net": -83.0,
-    "net_fraction_of_total": -0.0138
+    "inhibitory_synapses": 3039.0,
+    "net": -73.0,
+    "net_fraction_of_total": -0.0122
   },
   "M2_afferent_targets": {
     "screen_selected_subset": {
       "n_afferents": 140,
       "onto_MN9_excitatory": 1097.0,
-      "onto_MN9_inhibitory": 3333.0,
-      "ratio": 0.329
+      "onto_MN9_inhibitory": 3143.0,
+      "ratio": 0.349
     },
     "all_gustatory_by_subclass": {
       "n_afferents": 310,
       "onto_MN9_excitatory": 1314.0,
-      "onto_MN9_inhibitory": 4659.0,
-      "ratio": 0.282
+      "onto_MN9_inhibitory": 4419.0,
+      "ratio": 0.297
     }
   },
   "M3_signed_path_products": {
-    "hop_1": 0.0,
-    "hop_2": -0.00345,
-    "hop_3": 0.00316,
-    "hop_4": 0.00653,
-    "hop_5": 0.0025
+    "hop_1": NaN,
+    "hop_2": NaN,
+    "hop_3": NaN,
+    "hop_4": NaN,
+    "hop_5": NaN
   },
   "M4_uniform_manipulations_tested": [
     {
@@ -57,5 +57,31 @@
     "dopamine": 0,
     "octopamine": 0,
     "serotonin": 0
+  },
+  "provenance": {
+    "written_at": "2026-10-11T10:21:40",
+    "git_commit": "329488d",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "not used",
+    "platform": "win32",
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9",
+        "roi_membership.parquet": "5fce5c5d54e45570"
+      },
+      "manifest": "match"
+    }
   }
 }

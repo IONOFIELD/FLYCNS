@@ -420,8 +420,8 @@
     }
   },
   "provenance": {
-    "written_at": "2026-10-11T07:56:29",
-    "git_commit": "fcff151",
+    "written_at": "2026-10-11T10:00:59",
+    "git_commit": "329488d",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

@@ -73,7 +73,7 @@
       "MN9_ipsi_L": 0.0,
       "MN9_contra_R": 0.0,
       "pop_rate_hz": 0.0042308579962592385,
-      "wall_s": 29.9,
+      "wall_s": 57.6,
       "structural_2hop_L": 25650.0,
       "structural_2hop_R": 350.0,
       "note": "Shiu 2024 contralateral prediction concerns labellar sugar GRNs; tested separately with LB3b/LB3c in benchmarks/sugar_laterality.py"
@@ -103,8 +103,8 @@
   "pass": true,
   "mechanism": "taste -> MN9 in MaleCNS is disinhibitory; a silent network cannot express that, and no uniform manipulation restores it with specificity. Reproducing feeding needs cell-specific spontaneous activity, i.e. the state-dependent modulation this model omits (cf. Shiu et al. 2024, which reported the same limitation for inhibitory neurons at 0 Hz baseline).",
   "provenance": {
-    "written_at": "2026-10-11T07:09:11",
-    "git_commit": "fcff151",
+    "written_at": "2026-10-11T10:57:33",
+    "git_commit": "329488d",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

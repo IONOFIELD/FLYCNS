@@ -106,21 +106,25 @@ Declared deviations from the raw connectome: see each results/*/provenance.md an
 ## Report provenance
 | benchmark | written | commit | data (neurons / edges) | env overrides |
 |---|---|---|---|---|
-| a2_registered | 2026-10-11T07:40:33 | fcff151 | - | - |
-| a2_robustness | 2026-10-11T07:31:44 | fcff151 | - | - |
-| auditory | 2026-10-11T07:33:01 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| dnp13_control | 2026-10-11T06:32:17 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| feeding | 2026-10-11T07:44:33 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| feeding_by_modality | 2026-10-11T06:37:11 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_loop | 2026-10-11T07:13:29 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_snpp16 | 2026-10-11T06:39:56 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_snpp16_graded | 2026-10-11T07:18:16 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_snpp16_robustness | 2026-10-11T07:56:29 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| gf_escape | 2026-10-11T06:45:05 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| gustatory_signed_map | 2026-10-11T06:45:18 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| null_strict | 2026-10-11T08:13:48 | fcff151 | - | - |
-| pc1_song | 2026-10-11T06:51:27 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| peptide_asta | 2026-10-11T06:41:18 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
-| sugar_laterality | 2026-10-11T06:28:52 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| a2_registered | 2026-10-11T10:54:17 | 329488d | - | - |
+| a2_robustness | 2026-10-11T11:24:34 | 329488d | - | - |
+| auditory | 2026-10-11T10:35:24 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
+| dnp13_control | 2026-10-11T09:33:53 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
+| feeding | 2026-10-11T10:47:05 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
+| feeding_by_modality | 2026-10-11T10:15:00 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_loop | 2026-10-11T10:05:23 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_snpp16 | 2026-10-11T09:45:06 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_snpp16_graded | 2026-10-11T10:35:42 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_snpp16_robustness | 2026-10-11T10:00:59 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
+| gf_escape | 2026-10-11T09:46:33 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
+| gustatory_signed_map | 2026-10-11T09:26:50 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
+| null_strict | 2026-10-11T11:16:41 | 329488d | - | - |
+| pc1_song | 2026-10-11T09:46:03 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
+| peptide_asta | 2026-10-11T09:37:35 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
+| sugar_laterality | 2026-10-11T09:26:53 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
 
 ## Citation check: 48/48 tags resolve in REFERENCES.md
+
+## Stamp inventory
+92 of 92 result files carry a stamp (commits: 329488d x92); 0 flagged, 0 unstamped.
+- exempt: results/turner2022/ (input extraction from 22 GB of Turner et al. 2022 imaging; its output is a model input, hashed into every report's loom_input stamp)

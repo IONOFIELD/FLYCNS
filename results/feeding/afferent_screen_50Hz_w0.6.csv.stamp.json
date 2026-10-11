@@ -1,0 +1,57 @@
+{
+  "file": "afferent_screen_50Hz_w0.6.csv",
+  "script": "benchmarks/screen_afferents.py",
+  "args": [
+    "3",
+    "data",
+    "50",
+    "0.6",
+    "aPhM2a,aPhM5,TPMN1,PhG1c,BM_Taste,claw_tpGRN,JO-FV,BM_Vib"
+  ],
+  "hz": 50.0,
+  "w_scale": 0.6,
+  "n_trials": 3,
+  "only": [
+    "aPhM2a",
+    "aPhM5",
+    "TPMN1",
+    "PhG1c",
+    "BM_Taste",
+    "claw_tpGRN",
+    "JO-FV",
+    "BM_Vib"
+  ],
+  "provenance": {
+    "written_at": "2026-10-11T10:08:08",
+    "git_commit": "329488d",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "cython",
+    "platform": "win32",
+    "graph": {
+      "data_dir": "data",
+      "min_weight": 5,
+      "n_neurons": 176422,
+      "n_signed_edges": 6127738,
+      "n_signed_synapses": 88316807
+    },
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9",
+        "roi_membership.parquet": "5fce5c5d54e45570"
+      },
+      "manifest": "match"
+    }
+  }
+}
