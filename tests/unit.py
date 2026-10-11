@@ -820,6 +820,64 @@ def t_degree_corrected_null(tmp):
     return ok, (f"{len(e):,} connections: every cell keeps its input per sign and size, class and neuropil; "
                 f"{(a.post.values != e.post.values).mean():.0%} of targets moved" if ok else str(a.attrs))
 
+
+def t_jon_contact_modes():
+    """The JON -> GF contact: declared as calibrated coupling (EM chemical synapses removed); as EM
+    annotates it (chemical kept, no coupling); sign-inverted; and the compound potential is settable."""
+    from flycns.graph import drop_mixed_chemical, electrical_pairs
+    rows = [dict(bodyId=1, type="DNp01", somaSide="L"), dict(bodyId=2, type="TTMn", somaSide="L")]
+    rows += [dict(bodyId=10 + i, type="JO-B1_a", somaSide="L") for i in range(4)]
+    n = pd.DataFrame(rows)
+    e = pd.DataFrame(dict(pre=[10, 11, 2], post=[1, 1, 1], weight=[20, 20, 9], sign=[1.0, 1.0, 1.0]))
+    out = {}
+    saved = {k: os.environ.pop(k, None) for k in ("FLYCNS_JON", "FLYCNS_JON_MV")}
+    try:
+        for mode, mv in (("electrical", None), ("em", None), ("em_flip", None), ("electrical", "1.5")):
+            os.environ["FLYCNS_JON"] = mode
+            if mv:
+                os.environ["FLYCNS_JON_MV"] = mv
+            p = electrical_pairs(n)
+            jo = p[p.pre_type == "JO-B1_a"]
+            d = drop_mixed_chemical(e, n)
+            jon = d[d.pre.isin([10, 11])]
+            out[(mode, mv)] = (len(jo), float(jo.spikelet_mV.iloc[0]) if len(jo) else None,
+                               len(jon), float(jon.sign.sum()) if len(jon) else 0.0, len(p[p.pre_type == "DNp01"]))
+            os.environ.pop("FLYCNS_JON_MV", None)
+    finally:
+        for k, v in saved.items():
+            os.environ.pop(k, None)
+            if v is not None:
+                os.environ[k] = v
+    dec, em, flip, low = out[("electrical", None)], out[("em", None)], out[("em_flip", None)], out[("electrical", "1.5")]
+    ok = (dec[0] == 4 and dec[2] == 0 and em[0] == 0 and em[2] == 2 and em[3] == 2.0 and flip[3] == -2.0
+          and all(x[4] == 1 for x in out.values()) and abs(low[1] / dec[1] - 0.5) < 1e-9)
+    return ok, ("declared: coupling, EM synapses removed; em: chemical kept, no coupling; em_flip: sign inverted; "
+                "the GF -> TTMn relay stays in every mode; 1.5 mV halves the spikelet" if ok else str(out))
+
+
+def t_vnc_glutamate_option(tmp):
+    """FLYCNS_GLU_VNC=excitatory makes glutamate from nerve-cord neurons excitatory onto non-motor targets
+    only; the declared model keeps it inhibitory everywhere."""
+    from flycns import graph, integrity
+    d = tmp / "glu"; d.mkdir()
+    n = pd.DataFrame(dict(bodyId=[1, 2, 3, 4], type=["a", "b", "c", "d"], somaSide="L",
+                          superclass=["vnc_intrinsic", "vnc_intrinsic", "vnc_motor", "cb_intrinsic"]))
+    e = pd.DataFrame(dict(pre=[1, 1, 4, 1], post=[2, 3, 2, 4], weight=[5, 10, 10, 10],
+                          nt=["glutamate", "glutamate", "glutamate", "gaba"]))
+    n.to_parquet(d / "neurons.parquet", index=False); e.to_parquet(d / "edges.parquet", index=False)
+    integrity._ANNOUNCED = True
+    _, base = graph.load_graph(str(d))
+    os.environ["FLYCNS_GLU_VNC"] = "excitatory"
+    try:
+        _, alt = graph.load_graph(str(d))
+    finally:
+        del os.environ["FLYCNS_GLU_VNC"]
+    s = alt.set_index(["pre", "post"])["sign"]
+    ok = ((base["sign"] == -1).all() and s[(1, 2)] == 1 and s[(1, 3)] == -1 and s[(4, 2)] == -1 and s[(1, 4)] == -1
+          and integrity.LOADED["n_glu_vnc_flipped"] == 1)
+    return ok, ("only nerve-cord glutamate onto a non-motor target turns excitatory (1 of 4 edges)" if ok
+                else str(alt[["pre", "post", "nt", "sign"]].to_dict("records")))
+
 def run_all():
     out = []
     tmp = Path(tempfile.mkdtemp(prefix="flycns_unit_"))
@@ -859,7 +917,9 @@ def run_all():
                          ("side null and its default table", t_null_side_mode_and_default_table),
                          ("every named script exists", t_every_named_script_exists),
                          ("uncertainty rules", t_stats_rules),
-                         ("degree-corrected null invariants", lambda: t_degree_corrected_null(tmp))]:
+                         ("degree-corrected null invariants", lambda: t_degree_corrected_null(tmp)),
+                         ("JON -> GF contact modes", t_jon_contact_modes),
+                         ("nerve-cord glutamate option", lambda: t_vnc_glutamate_option(tmp))]:
             try:
                 ok, msg = fn()
             except (Exception, SystemExit) as ex:  # a crashing or exiting check is a failing check

@@ -48,6 +48,12 @@ RUNS = [
     ("minweight20", 0, 0, 0.3, {"FLYCNS_MIN_WEIGHT": "20"}),
     # stricter null: shuffle targets only within the same superclass (flycns/graph.py rewire_null)
     ("null_superclass", 0, 0, 0.3, {"FLYCNS_NULL": "superclass"}),
+    # audit 2026-10-11: glutamate from nerve-cord neurons onto non-motor targets made excitatory (gap 10);
+    # half the time step, as a numerics check (the 0.9 ms TTMn lag is 0.8 ms delay + one step);
+    # the JON -> GF contact as EM annotates it, chemical with no calibrated coupling (gap 1)
+    ("glu_vnc_excitatory", 0, 0, 0.3, {"FLYCNS_GLU_VNC": "excitatory"}),
+    ("dt005", 0, 0, 0.3, {"FLYCNS_DT_MS": "0.05"}),
+    ("jon_em", 0, 0, 0.3, {"FLYCNS_JON": "em"}),
 ]
 
 

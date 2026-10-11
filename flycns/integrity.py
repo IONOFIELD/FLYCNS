@@ -48,7 +48,8 @@ PLUMBING = {"FLYCNS_RUN_TAG", "FLYCNS_AUDITORY_OUT", "FLYCNS_A2_TRIALS",
 # A setting equal to its declared default changes nothing and is not an override.
 DEFAULTS = {"FLYCNS_ALLOW_DIRTY": "0", "FLYCNS_SEED": "0", "FLYCNS_SIGNFLIP": "0", "FLYCNS_SIGNFLIP_TARGETED": "0", "FLYCNS_WSCALE": "0.3",
             "FLYCNS_PEPTIDE": "0", "FLYCNS_NULL": "global", "FLYCNS_MIN_WEIGHT": "5", "FLYCNS_PEAK_HZ": "5.0",
-            "FLYCNS_LOOM_STATE": "stationary", "FLYCNS_BASELINE_DEPOL": "0", "FLYCNS_BASELINE_NOISE": "0"}
+            "FLYCNS_LOOM_STATE": "stationary", "FLYCNS_BASELINE_DEPOL": "0", "FLYCNS_BASELINE_NOISE": "0",
+            "FLYCNS_JON": "electrical", "FLYCNS_JON_MV": "3", "FLYCNS_GLU_VNC": "inhibitory", "FLYCNS_DT_MS": "0.1"}
 
 
 def _git(*args):

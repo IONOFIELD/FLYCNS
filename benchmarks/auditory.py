@@ -137,10 +137,20 @@ def _pt(arm, key):
     return np.array([np.nan if x is None else x for x in arm["per_trial"][key]], dtype=float)
 
 
-def run(label, stim_types, electrical=True, edge_df=edges, jo=True, loom=False, n_trials=None):
+# Seeds (audit 2026-10-11, gap 7). Before, every arm ran at the same seed, so the calibration arm at
+# the chosen gain was bit-identical to the scored loom-alone arm: the trials that chose the working
+# point were the trials that scored it. Now the calibration arms draw their own seeds, disjoint from
+# the scored arms, and the two scored A2 arms draw different seeds, so they are independent samples
+# (what the Newcombe interval assumes).
+BASE_SEED = LIFParams().seed
+CAL_SEED = BASE_SEED + 1000          # calibration arms: BASE_SEED + 1000 + index of the gain
+A2_SEEDS = dict(loom_alone=BASE_SEED, loom_plus_jo=BASE_SEED + 1)
+
+
+def run(label, stim_types, electrical=True, edge_df=edges, jo=True, loom=False, n_trials=None, seed=None):
     t0 = time.time()
-    m = CNSModel(neurons, edge_df, stim_types, LIFParams(), electrical=electrical,
-                 monitor_types=("DNp01",))
+    m = CNSModel(neurons, edge_df, stim_types, LIFParams(seed=BASE_SEED if seed is None else seed),
+                 electrical=electrical, monitor_types=("DNp01",))
     N = N_TRIALS if n_trials is None else n_trials
     if loom and jo:
         # loom protocol drives LC types; add JO at fixed rate during each loom burst
@@ -176,10 +186,10 @@ def run(label, stim_types, electrical=True, edge_df=edges, jo=True, loom=False, 
 # ---- calibrate the near-threshold loom working point
 CAL_GAINS = [0.4, 0.6, 0.8, 1.0, 1.3]
 cal = []
-for g in ([] if A2_GAIN_FIXED else CAL_GAINS):
+for i, g in enumerate([] if A2_GAIN_FIXED else CAL_GAINS):
     SUB_LOOM_GAIN = g
     globals()["SUB_LOOM_GAIN"] = g
-    c = run(f"cal_loom_gain_{g}", list(LOOM_TUNING), electrical=True, jo=False, loom=True)
+    c = run(f"cal_loom_gain_{g}", list(LOOM_TUNING), electrical=True, jo=False, loom=True, seed=CAL_SEED + i)
     cal.append((g, c["gf_hit"], c["gf_depol_mV"]))
     print(f"  calibration: loom gain {g} -> GF hit {c['gf_hit']:.2f}, depol {c['gf_depol_mV']:.2f} mV")
 ok = [(g, h, d) for g, h, d in cal if h <= 0.3 and d >= 2.0]
@@ -191,15 +201,41 @@ report["arms"]["A2_calibration"] = dict(gains=[dict(gain=g, hit=h, depol_mV=d) f
                                               "largest gain with GF hit <= 0.3 and depol >= 2 mV"))
 print(f"A2 working point: loom gain {SUB_LOOM_GAIN}")
 
+
+def construction_prediction(lo, a2):
+    """What summation alone predicts for loom + sound (audit gap 1): a loom-alone trial would become a
+    giant fiber response if its peak depolarisation plus the declared compound sound potential reaches
+    the rest-to-threshold gap. The facilitation the model shows beyond this is the part that is not
+    arithmetic (polysynaptic effects, timing); only that residual can be a test."""
+    from flycns.graph import jon_compound_mv, jon_mode
+    p = LIFParams()
+    gap = p.v_thresh_mV - p.v_rest_mV
+    c = jon_compound_mv() if jon_mode() == "electrical" else 0.0
+    hit = np.asarray(lo["per_trial"]["hit"], dtype=float)
+    dep = np.asarray([np.nan if x is None else x for x in lo["per_trial"]["depol_mV"]], dtype=float)
+    pred = np.where(hit > 0, 1.0, np.where(np.isnan(dep), np.nan, (dep + c >= gap).astype(float)))
+    obs = np.asarray(a2["per_trial"]["hit"], dtype=float)
+    est, rlo, rhi = stats.bootstrap_diff(obs, pred)
+    return dict(compound_mV=c, gap_mV=gap, jon_mode=jon_mode(), loom_alone_hit=float(np.nanmean(hit)),
+                predicted_hit_by_summation=float(np.nanmean(pred)), observed_hit=float(np.nanmean(obs)),
+                residual=est, residual_ci95=[rlo, rhi],
+                note=("residual = observed loom+sound response probability minus the probability predicted by adding "
+                      "the declared compound potential to each loom-alone trial's peak depolarisation; arms are "
+                      "independent (different seeds), so the interval resamples each on its own"))
+
 if A2_ONLY:
-    lo = run("subthreshold_loom_alone", list(LOOM_TUNING), electrical=True, jo=False, loom=True, n_trials=A2_TRIALS)
-    a2 = run("A2_loom_plus_jo", list(LOOM_TUNING) + jo_types, electrical=True, jo=True, loom=True, n_trials=A2_TRIALS)
+    lo = run("subthreshold_loom_alone", list(LOOM_TUNING), electrical=True, jo=False, loom=True, n_trials=A2_TRIALS,
+             seed=A2_SEEDS["loom_alone"])
+    a2 = run("A2_loom_plus_jo", list(LOOM_TUNING) + jo_types, electrical=True, jo=True, loom=True, n_trials=A2_TRIALS,
+             seed=A2_SEEDS["loom_plus_jo"])
     k1, n1 = int(round(lo["gf_hit"] * lo["n_trials"])), lo["n_trials"]
     k2, n2 = int(round(a2["gf_hit"] * a2["n_trials"])), a2["n_trials"]
     d, dlo, dhi = two_prop_ci(k1, n1, k2, n2)
     report["arms"]["A2_prediction"] = dict(loom_gain=SUB_LOOM_GAIN, n_trials_per_arm=n1,
         loom_alone_hit=lo["gf_hit"], loom_plus_jo_hit=a2["gf_hit"], difference=d, difference_ci95=[dlo, dhi],
-        loom_alone_depol_mV=lo["gf_depol_mV"], loom_plus_jo_depol_mV=a2["gf_depol_mV"], mode="A2 only")
+        loom_alone_depol_mV=lo["gf_depol_mV"], loom_plus_jo_depol_mV=a2["gf_depol_mV"], mode="A2 only",
+        seeds=A2_SEEDS, calibration_seed_base=CAL_SEED)
+    report["arms"]["A2_construction"] = construction_prediction(lo, a2)
     report["provenance"] = provenance()
     (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
     print(f"A2 only at gain {SUB_LOOM_GAIN}: {lo['gf_hit']:.3f} -> {a2['gf_hit']:.3f}, difference {d:+.3f} "
@@ -210,8 +246,10 @@ a1 = run("A1_jo_alone_electrical", jo_types, electrical=True)
 a3 = run("A3_jo_alone_no_electrical_no_mixed_edges", jo_types, electrical=False,
          edge_df=drop_mixed_chemical(edges, neurons))
 ref = run("ref_jo_alone_chem_only_EM_as_annotated", jo_types, electrical=False)
-lo = run("subthreshold_loom_alone", list(LOOM_TUNING), electrical=True, jo=False, loom=True, n_trials=A2_TRIALS)
-a2 = run("A2_loom_plus_jo", list(LOOM_TUNING) + jo_types, electrical=True, jo=True, loom=True, n_trials=A2_TRIALS)
+lo = run("subthreshold_loom_alone", list(LOOM_TUNING), electrical=True, jo=False, loom=True, n_trials=A2_TRIALS,
+         seed=A2_SEEDS["loom_alone"])
+a2 = run("A2_loom_plus_jo", list(LOOM_TUNING) + jo_types, electrical=True, jo=True, loom=True, n_trials=A2_TRIALS,
+         seed=A2_SEEDS["loom_plus_jo"])
 a4 = run("A4_jo_rewired_null_chem", jo_types, electrical=False,
          edge_df=rewire_null(drop_mixed_chemical(edges, neurons)))
 
@@ -234,7 +272,12 @@ report["arms"]["A2_prediction"] = dict(loom_gain=SUB_LOOM_GAIN, n_trials_per_arm
     loom_alone_depol_mV=lo["gf_depol_mV"], loom_plus_jo_depol_mV=a2["gf_depol_mV"],
     note=("model measurement at a calibrated near-threshold working point; in vivo direction not "
           "established in cited references. With few trials the difference is not resolvable: "
-          "set FLYCNS_A2_TRIALS>=120 for a usable estimate."))
+          "set FLYCNS_A2_TRIALS>=120 for a usable estimate."), seeds=A2_SEEDS, calibration_seed_base=CAL_SEED)
+report["arms"]["A2_construction"] = construction_prediction(lo, a2)
+_c = report["arms"]["A2_construction"]
+print(f"A2 by summation alone: {_c['loom_alone_hit']:.2f} -> predicted {_c['predicted_hit_by_summation']:.2f}, "
+      f"observed {_c['observed_hit']:.2f}; residual {_c['residual']:+.2f} "
+      f"(95% CI {_c['residual_ci95'][0]:+.2f} to {_c['residual_ci95'][1]:+.2f})")
 print(f"A2 (reported, {n1} trials/arm): loom alone {lo['gf_hit']:.2f} -> with JO {a2['gf_hit']:.2f}; "
       f"difference {d:+.2f} (95% CI {dlo:+.2f} to {dhi:+.2f}) -> {direction}")
 report["pass"] = all(v for v in report["checks"].values() if v is not None)
