@@ -36,8 +36,11 @@ at one commit.
 
   Every rerun (runs 2 to 5) fetched them again, and setup refuses data that differ from the pin.
   Every run passed that check.
-- **Code.** Every stamped result was produced at commit `fcff151`, on committed code: every
-  report.json, the two traces and the flight sensitivity summary, 75 files in all.
+- **Code.** Every result file in `results/` (92 files) was produced at commit `329488d` on
+  committed code, by run 6 of `rerun.yml`, and carries its stamp. Results that can't carry a stamp
+  inside them (CSV, HDF5) have it beside them. The only exception is the Turner 2022 extraction,
+  which is a model input hashed into every report. `results/SUITE.md` keeps the inventory. Runs 5
+  and 6 gave identical reports.
 - **Engine.** Every stamped simulation used the compiled engine, on Windows. Wrapper and
   static-analysis scripts record "not used".
 
@@ -141,14 +144,17 @@ neurons):
   previous grid ran with 15 mV adaptation, the all-trials input and the name-based SEZ, so the
   cause is not isolated. The regional gain stays retired at 1.0.
 
-**Not rerun, and unstamped:** the diagnostics outside the suite.
-- `sensitivity_cord` (the "Cord parameters" paragraph below dates from 9 September, under 30 mV
-  adaptation and the all-trials input);
-- `embodiment/gate.json`, `feeding/mechanism.json` and the feeding afferent screens;
-- the baseline and gain fits;
-- the brainsets export and the Turner 2022 extraction.
-
-These scripts write no integrity stamp yet.
+**The diagnostics outside the suite, rerun and stamped (run 6):**
+- **Cord sweep.** The pattern is unchanged under the current calibration: escape holds at every
+  setting except a 10 mV threshold gap, where the relay fails (TTMn/GF 0.23, lag 24.4 ms).
+- **Gain fit.** It now also passes its A2 check (score 7 of 8, against 6). Feeding (F1) still fails
+  at every gain.
+- **Afferent screens.** No taste afferent drives MN9 with a quiet CNS at any weight scale, as
+  before.
+- **Feeding mechanism. A defect:** its signed path products (M3) came out as NaN. The script reads
+  the stale `sign` column stored in the edge table, not the model's signs. The audit of 11 October
+  flagged exactly this. It is fixed in the next change by reading the graph the model uses.
+- **Embodiment gate and baseline fit:** unchanged.
 
 **Fixed along the way:**
 - **Registered tests could not be rerun.** A registered test compared its saved criteria with its
@@ -872,10 +878,9 @@ their aggregate label carry 3.5% of total synaptic weight.
 (5 to 40 ms), threshold gap (4 to 10 mV) and refractory period (1 to 5 ms) across 19,912 nerve-cord
 neurons. Every escape check passes at every setting except one. At a 10 mV threshold gap, the 9 mV
 GF-to-TTMn spikelet is subthreshold, so the one-to-one relay and its lag fail: the TTMn/GF ratio is
-0.31 and the lag 24.6 ms. (Correction, 10 October 2026: this paragraph previously said "every metric
+0.23 and the lag 24.4 ms (rerun 11 October 2026 under 10 mV adaptation; 0.31 and 24.6 ms before). (Correction, 10 October 2026: this paragraph previously said "every metric
 unchanged" and "14,153 neurons", contradicting the committed grid.) The escape result therefore
-depends on the cord threshold staying within about 9 mV of rest. *This sweep dates from 9 September
-(30 mV adaptation, all-trials input) and has not been rerun.*
+depends on the cord threshold staying within about 9 mV of rest.
 
 ---
 

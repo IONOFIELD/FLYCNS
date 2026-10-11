@@ -55,12 +55,26 @@ def readout_rates(model, onsets, types, window_ms, meta):
     return pd.DataFrame(out)
 
 
-def provenance():
+def provenance(data_dir=None):
     """Stamp every report so a stale one can never be mistaken for a current one: commit and
     whether the code matched it, FLYCNS_* overrides, library versions, graph settings and the
-    content fingerprint of the input data (flycns/integrity.py)."""
+    content fingerprint of the input data (flycns/integrity.py). Scripts that read the tables
+    without graph.load_graph pass their data_dir."""
     from .integrity import provenance_record
-    return provenance_record()
+    return provenance_record(data_dir)
+
+
+def stamp(path, data_dir=None, **extra):
+    """The stamp for an output that cannot carry one itself (CSV, HDF5): written beside it as
+    <file>.stamp.json with the script, its arguments and anything in extra. results/SUITE.md
+    lists every result file without a stamp."""
+    import json
+    import sys
+    from pathlib import Path
+    path = Path(path)
+    rec = dict(file=path.name, script=Path(sys.argv[0]).as_posix(), args=sys.argv[1:], **extra,
+               provenance=provenance(data_dir))
+    path.with_name(path.name + ".stamp.json").write_text(json.dumps(rec, indent=2, default=str), encoding="utf-8")
 
 
 def spike_source(n, ids, times_ms, dt_ms=0.1):

@@ -27,6 +27,7 @@ from scipy.sparse import csr_matrix
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns.graph import SIGN_MAP, GUSTATORY_MN9_DRIVING, GUSTATORY_SUBCLASSES
+from flycns.bench import provenance
 
 DATA = sys.argv[1] if len(sys.argv) > 1 else "data"
 OUT = Path("results/feeding"); OUT.mkdir(parents=True, exist_ok=True)
@@ -88,6 +89,6 @@ report = dict(
                 "manipulation restores it with specificity. Reproducing feeding needs cell-specific spontaneous "
                 "activity, i.e. the state-dependent modulation this model omits (cf. Shiu et al. 2024, which "
                 "reported the same limitation for inhibitory neurons at 0 Hz baseline)."),
-    sign_map=SIGN_MAP)
-(OUT / "mechanism.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    sign_map=SIGN_MAP, provenance=provenance(DATA))
+(OUT / "mechanism.json").write_text(json.dumps(report, indent=2, default=str), encoding="utf-8")
 print(json.dumps(report, indent=2))

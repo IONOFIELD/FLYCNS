@@ -11,8 +11,8 @@
         "chordotonal organ | ProLN": 36,
         "chordotonal organ | ProCN": 33,
         "campaniform sensilla | MesoLN": 4,
-        "campaniform sensilla | MetaLN": 4,
         "campaniform sensilla | ProLN": 4,
+        "campaniform sensilla | MetaLN": 4,
         "campaniform sensilla | ": 1
       },
       "types_by_nerve": {
@@ -197,5 +197,38 @@
     "q4_loop_closes": true,
     "buildable": true,
     "next_step": "If buildable: the surrogate needs firing rates for wing and haltere campaniform afferents during flight, from the literature, with the wingbeat phase relationship. Without a cited rate the loop is a guess and should not be built. Fenton/Dickinson haltere campaniform work and Dickerson et al. on wing campaniform fields are the places to look. If not buildable: record which question failed and stop."
+  },
+  "provenance": {
+    "written_at": "2026-10-11T09:26:16",
+    "git_commit": "329488d",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "not used",
+    "platform": "win32",
+    "graph": {
+      "data_dir": "data",
+      "min_weight": 5,
+      "n_neurons": 176422,
+      "n_signed_edges": 6127738,
+      "n_signed_synapses": 88316807
+    },
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9",
+        "roi_membership.parquet": "5fce5c5d54e45570"
+      },
+      "manifest": "match"
+    }
   }
 }

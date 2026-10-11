@@ -41,7 +41,7 @@ from scipy.sparse import csr_matrix
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph
-from flycns.bench import provenance
+from flycns.bench import provenance, stamp
 from flycns.graph import GUSTATORY_SUBCLASSES
 
 DATA = sys.argv[1] if len(sys.argv) > 1 else "data"
@@ -152,6 +152,7 @@ cum = lambda d, ms: float(np.mean([d[m]["cumulative"] for m in ms]))
 tab_s = pd.DataFrame({g: {m: signed[g][m]["cumulative"] for m in mn_types} for g in grn_types}).T
 tab_u = pd.DataFrame({g: {m: unsigned[g][m]["cumulative"] for m in mn_types} for g in grn_types}).T
 tab_s.to_csv(OUT / "signed.csv"); tab_u.to_csv(OUT / "unsigned.csv")
+stamp(OUT / "signed.csv"); stamp(OUT / "unsigned.csv")
 
 app = np.mean([cum(signed[t], PROBOSCIS) for t in APPETITIVE])
 bit = np.mean([cum(signed[t], PROBOSCIS) for t in BITTER])

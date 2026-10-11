@@ -21,7 +21,7 @@
       "gf_hit": 0.0,
       "gf_lat_ms": NaN,
       "pop_rate_hz": 0.000704825351216663,
-      "wall_s": 142.7,
+      "wall_s": 288.4,
       "n_trials": 40,
       "gf_depol_mV": 2.4814605359616477
     },
@@ -30,7 +30,7 @@
       "gf_hit": 0.0,
       "gf_lat_ms": NaN,
       "pop_rate_hz": 0.0014072160725500213,
-      "wall_s": 155.2,
+      "wall_s": 284.6,
       "n_trials": 40,
       "gf_depol_mV": 3.732161876414343
     },
@@ -39,7 +39,7 @@
       "gf_hit": 0.1,
       "gf_lat_ms": 51.29999999999876,
       "pop_rate_hz": 0.002315333019022613,
-      "wall_s": 142.7,
+      "wall_s": 260.8,
       "n_trials": 40,
       "gf_depol_mV": 4.829147906744219
     },
@@ -48,7 +48,7 @@
       "gf_hit": 0.4,
       "gf_lat_ms": 48.4437499999979,
       "pop_rate_hz": 0.0033821066795572167,
-      "wall_s": 149.5,
+      "wall_s": 255.2,
       "n_trials": 40,
       "gf_depol_mV": 5.703050995844338
     },
@@ -57,7 +57,7 @@
       "gf_hit": 0.975,
       "gf_lat_ms": 42.91794871794802,
       "pop_rate_hz": 0.0051760231319054415,
-      "wall_s": 151.8,
+      "wall_s": 257.8,
       "n_trials": 40,
       "gf_depol_mV": 6.740542095608868
     },
@@ -97,7 +97,7 @@
       "gf_hit": 0.025,
       "gf_lat_ms": 37.10000000000309,
       "pop_rate_hz": 0.0033710617864667514,
-      "wall_s": 142.9,
+      "wall_s": 259.0,
       "n_trials": 40,
       "gf_depol_mV": 2.430427832732125
     },
@@ -106,7 +106,7 @@
       "gf_hit": 0.0,
       "gf_lat_ms": NaN,
       "pop_rate_hz": 0.003369461852064062,
-      "wall_s": 136.1,
+      "wall_s": 247.6,
       "n_trials": 40,
       "gf_depol_mV": 0.525660666863698
     },
@@ -115,7 +115,7 @@
       "gf_hit": 1.0,
       "gf_lat_ms": 12.18749999999951,
       "pop_rate_hz": 0.003426659506960211,
-      "wall_s": 136.4,
+      "wall_s": 248.9,
       "n_trials": 40,
       "gf_depol_mV": 3.660233424234071
     },
@@ -124,7 +124,7 @@
       "gf_hit": 0.1,
       "gf_lat_ms": 51.29999999999876,
       "pop_rate_hz": 0.002315333019022613,
-      "wall_s": 142.1,
+      "wall_s": 266.1,
       "n_trials": 40,
       "gf_depol_mV": 4.829147906744219
     },
@@ -133,7 +133,7 @@
       "gf_hit": 0.625,
       "gf_lat_ms": 28.179999999998763,
       "pop_rate_hz": 0.005658614722231926,
-      "wall_s": 140.8,
+      "wall_s": 261.5,
       "n_trials": 40,
       "gf_depol_mV": 4.177446336857157
     },
@@ -142,7 +142,7 @@
       "gf_hit": 0.0,
       "gf_lat_ms": NaN,
       "pop_rate_hz": 0.0002227908655745112,
-      "wall_s": 137.5,
+      "wall_s": 250.2,
       "n_trials": 40,
       "gf_depol_mV": 0.18556732735105416
     },
@@ -180,8 +180,8 @@
   },
   "pass": true,
   "provenance": {
-    "written_at": "2026-10-11T07:04:13",
-    "git_commit": "fcff151",
+    "written_at": "2026-10-11T11:21:26",
+    "git_commit": "329488d",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

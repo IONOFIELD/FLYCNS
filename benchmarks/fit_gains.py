@@ -28,7 +28,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, CNSModel, LIFParams
 from flycns.protocols import LOOM_TUNING, loom_protocol
-from flycns.bench import pulse_protocol, readout_rates, find_types
+from flycns.bench import pulse_protocol, readout_rates, find_types, provenance, stamp
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 6
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
@@ -121,7 +121,9 @@ best = grid.iloc[0]
 print(f"\nbest: sensory {best.sensory} relay {best.relay} local {best.local}  score {int(best.score)}/8   "
       f"({(time.time()-t_all)/60:.0f} min total)")
 print(grid[["sensory", "relay", "local", "score"] + [c for c in grid.columns if c.startswith("chk_")]].head(8).to_string(index=False))
+stamp(OUT / "grid.csv")
 (OUT / "best.json").write_text(json.dumps(dict(class_gains=dict(sensory=float(best.sensory), relay=float(best.relay),
                                                                  local=float(best.local)), score=int(best.score),
-                                               checks={c[4:]: bool(best[c]) for c in grid.columns if c.startswith("chk_")}),
-                                          indent=2), encoding="utf-8")
+                                               checks={c[4:]: bool(best[c]) for c in grid.columns if c.startswith("chk_")},
+                                               n_trials=N, provenance=provenance()),
+                                          indent=2, default=str), encoding="utf-8")

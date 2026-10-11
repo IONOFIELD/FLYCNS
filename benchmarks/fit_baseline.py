@@ -22,7 +22,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, CNSModel, LIFParams, loom_protocol
 from flycns.protocols import LOOM_TUNING
-from flycns.bench import pulse_protocol, readout_rates
+from flycns.bench import pulse_protocol, readout_rates, provenance, stamp
 from flycns.graph import GUSTATORY_MN9_DRIVING
 
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 6
@@ -75,7 +75,9 @@ for depol, noise in GRID:
     pd.DataFrame(rows).to_csv(OUT / "grid.csv", index=False)
 df = pd.DataFrame(rows); ok = df[df.ok]
 print("\nsatisfying F,S,E,Q:", ok[["depol_mV","noise_mV","quiet_rate_hz","mn9_taste"]].to_string(index=False) if len(ok) else "none")
+stamp(OUT / "grid.csv")
 (OUT / "best.json").write_text(json.dumps(dict(
+    provenance=provenance(), n_trials=N,
     baseline_depol_mV=(float(ok.iloc[0].depol_mV) if len(ok) else None),
     baseline_noise_mV=(float(ok.iloc[0].noise_mV) if len(ok) else None),
     rule="smallest tonic rate with taste->MN9 > 0.5, wind control < 0.2, escape intact, spontaneous rate 0.5-5 Hz",

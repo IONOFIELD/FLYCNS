@@ -17,6 +17,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph
+from flycns.bench import stamp
 
 DATA = sys.argv[1] if len(sys.argv) > 1 else "data"
 neurons, edges = load_graph(DATA)
@@ -42,6 +43,7 @@ tab["nt"] = tab.index.map(lambda t: meta.loc[meta.type == t, "consensusNt"].mode
 tab = tab.sort_values("per_neuron", ascending=False)
 out = Path("results/feeding"); out.mkdir(parents=True, exist_ok=True)
 tab.to_csv(out / "afferent_influence.csv")
+stamp(out / "afferent_influence.csv")
 
 pd.set_option("display.width", 160)
 print("\nNET EXCITATORY onto MN9 (sugar-like candidates):")

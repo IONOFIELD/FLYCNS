@@ -42,7 +42,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from brian2 import Synapses, mV
 from flycns import load_graph, CNSModel, LIFParams
-from flycns.bench import provenance, spike_source
+from flycns.bench import provenance, spike_source, stamp
 from flycns.graph import SIGN_MAP
 
 N_CYCLES = int(sys.argv[1]) if len(sys.argv) > 1 else 400
@@ -145,6 +145,7 @@ for param, value in SWEEP:
     for cmd in (False, True):
         rows.append(run(param, value, cmd))
         pd.DataFrame(rows).to_csv(OUT / "grid.csv", index=False)
+        stamp(OUT / "grid.csv")
 
 df = pd.DataFrame(rows)
 woke = df[df.dlmn_cf_hz >= 2.0]

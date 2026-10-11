@@ -269,8 +269,8 @@
     }
   },
   "provenance": {
-    "written_at": "2026-10-11T06:45:18",
-    "git_commit": "fcff151",
+    "written_at": "2026-10-11T09:26:50",
+    "git_commit": "329488d",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

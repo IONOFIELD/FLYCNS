@@ -103,8 +103,8 @@
   "pass": true,
   "mechanism": "taste -> MN9 in MaleCNS is disinhibitory; a silent network cannot express that, and no uniform manipulation restores it with specificity. Reproducing feeding needs cell-specific spontaneous activity, i.e. the state-dependent modulation this model omits (cf. Shiu et al. 2024, which reported the same limitation for inhibitory neurons at 0 Hz baseline).",
   "provenance": {
-    "written_at": "2026-10-11T08:00:29",
-    "git_commit": "fcff151",
+    "written_at": "2026-10-11T11:26:29",
+    "git_commit": "329488d",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

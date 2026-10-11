@@ -50,7 +50,7 @@
       "ttmn_lag_ms": 0.9000000000000606,
       "psi_per_cell": 0.25,
       "ttmn_to_gf_ratio": 1.0,
-      "wall_s": 318.4
+      "wall_s": 326.2
     },
     "real_chemical_only": {
       "arm": "real_chemical_only",
@@ -71,7 +71,7 @@
       "ttmn_lag_ms": NaN,
       "psi_per_cell": 0.0,
       "ttmn_to_gf_ratio": 0.0,
-      "wall_s": 311.2
+      "wall_s": 319.8
     },
     "rewired_null": {
       "arm": "rewired_null",
@@ -92,7 +92,7 @@
       "ttmn_lag_ms": NaN,
       "psi_per_cell": 0.0,
       "ttmn_to_gf_ratio": NaN,
-      "wall_s": 364.2
+      "wall_s": 357.9
     }
   },
   "checks": {
@@ -107,8 +107,8 @@
   },
   "pass": false,
   "provenance": {
-    "written_at": "2026-10-11T06:49:27",
-    "git_commit": "fcff151",
+    "written_at": "2026-10-11T10:02:41",
+    "git_commit": "329488d",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

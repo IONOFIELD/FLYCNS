@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from flycns.bench import provenance
+from flycns.bench import provenance, stamp
 from flycns import load_graph, rewire_null, CNSModel, LIFParams, loom_protocol
 from flycns.protocols import LOOM_TUNING, TUNING_SOURCE, GAIN_SIGMA_DEFAULT, PEAK_HZ_DEFAULT
 from flycns.graph import ELECTRICAL_SYNAPSES, INTRINSIC_OVERRIDES, SIGN_MAP
@@ -74,6 +74,7 @@ def run_arm(name, neurons, edges, electrical):
           f"TTMn {summ['ttmn_per_cell']:.2f}/cell lag {summ['ttmn_lag_ms']:.2f} ms | "
           f"pop {summ['pop_rate_hz']:.4f} Hz | {summ['wall_s']}s")
     df.to_csv(OUT / f"{name}.csv", index=False)
+    stamp(OUT / f"{name}.csv")
     return summ, sp, m
 
 
