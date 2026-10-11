@@ -65,16 +65,15 @@ effective chemical kick per synapse: 0.0825 mV (Shiu 2024 unitary 0.275 mV x Mal
 | gf_escape | electrical_necessary | PASS | control | PERTURBED |
 | gf_escape | null_silent | PASS | control | PERTURBED |
 
-Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = over an hour older than the newest report; UNSTAMPED = written before integrity stamping, rerun to stamp.
+Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); UNSTAMPED = written before integrity stamping, rerun to stamp.
 
 Declared deviations from the raw connectome: see each results/*/provenance.md and flycns/graph.py.
 
 ## Report provenance
 | benchmark | written | commit | data (neurons / edges) | env overrides |
 |---|---|---|---|---|
-| auditory | 2026-10-11T01:51:13 | 45126da | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
-| feeding | 2026-10-11T02:00:56 | 45126da | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
-| gf_escape | 2026-10-11T01:09:52 | 45126da | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
+| auditory | 2026-10-11T07:42:30 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
+| feeding | 2026-10-11T07:51:59 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
+| gf_escape | 2026-10-11T07:01:20 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
 
-## Citation check: 42/50 tags resolve in REFERENCES.md
-Unresolved: Before 2026, Burrows 1998, CORRECTION 2026, Korff & Dickinson 2022, Newcombe 1998, Pezier & Blagburn 2013, Pezier et al. 2014, Pezier et al. 2016
+## Citation check: 48/48 tags resolve in REFERENCES.md
