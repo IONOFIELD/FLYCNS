@@ -4,8 +4,8 @@ into results/SUITE.md with one parameter set declared.
 Every check is shown with its ROLE (flycns/calibration.py): only checks that were not a target of
 any fit count as tests of the model. Reports are flagged when they were produced under settings
 overrides (a robustness perturbation, not the declared parameter set), on uncommitted code, on
-data that do not match data/MANIFEST.json, or more than an hour before the newest report."""
-import json, os, re, sys
+data that do not match data/MANIFEST.json, or by model code that has changed since (STALE)."""
+import json, os, re, subprocess, sys, unicodedata
 from collections import Counter
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -18,9 +18,23 @@ counts, passed_by_role = Counter(), Counter()
 # optional benchmark names restrict the summary (the battery summarises only the suite it reran)
 only = set(sys.argv[1:])
 reports = sorted(p for p in Path("results").glob("*/report.json") if not only or p.parent.name in only)
-# staleness from the time each report was WRITTEN (its provenance stamp), not the file's modification
-# time, which a fresh checkout resets for every file
+# STALE: the code that produced a report has changed since. Reports from one parallel cloud rerun are
+# written hours apart and are not stale; a report whose commit git cannot compare falls back to time
+# (written over an hour before the newest report)
 import datetime as _dt
+MODEL_CODE = ["flycns", "benchmarks", ":(exclude)benchmarks/summarize.py", "data/loom_tuning_measured.json",
+              "requirements.lock"]
+_changed = {}
+
+
+def code_changed_since(commit):
+    """True or False: does the model code differ between this commit and HEAD? None if git cannot tell."""
+    if commit and commit not in _changed:
+        r = subprocess.run(["git", "diff", "--quiet", commit, "HEAD", "--", *MODEL_CODE], capture_output=True)
+        _changed[commit] = {0: False, 1: True}.get(r.returncode)
+    return _changed.get(commit)
+
+
 stamps_written = [json.loads(r.read_text(encoding="utf-8")).get("provenance", {}).get("written_at", "") for r in reports]
 newest_written = max((w for w in stamps_written if w), default="")
 for rep in reports:
@@ -36,8 +50,9 @@ for rep in reports:
     if (prov.get("data") or {}).get("manifest") == "mismatch":
         f.append("DATA-MISMATCH")
     written = prov.get("written_at", "")
-    if written and newest_written and newest_written > written and (
-            _dt.datetime.fromisoformat(newest_written) - _dt.datetime.fromisoformat(written)).total_seconds() > 3600:
+    changed = code_changed_since(prov.get("git_commit", ""))
+    if changed or (changed is None and written and newest_written and newest_written > written and (
+            _dt.datetime.fromisoformat(newest_written) - _dt.datetime.fromisoformat(written)).total_seconds() > 3600):
         f.append("STALE")
     if not prov or "git_dirty" not in prov:
         f.append("UNSTAMPED")   # written before integrity stamping (2026-10-10); rerun to stamp
@@ -70,14 +85,17 @@ md = ["# MaleCNS v1.0 LIF benchmark suite" + (f"  [{tag}]" if tag else ""), "",
       f"(Shiu 2024 unitary {p['w_syn_mV']} mV x MaleCNS rescale {p['w_scale']})", "",
       "## Checks", "| benchmark | check | result | role | flags |", "|---|---|---|---|---|"] + rows + [
       "", "Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; "
-          "DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = over an hour older than the newest report; "
+          "DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); "
           "UNSTAMPED = written before integrity stamping, rerun to stamp.",
       "", "Declared deviations from the raw connectome: see each results/*/provenance.md and flycns/graph.py."]
 # citation integrity: every author-year tag in code must resolve in REFERENCES.md
 refs = Path("REFERENCES.md").read_text(encoding="utf-8") if Path("REFERENCES.md").exists() else ""
 code = "".join(f.read_text(encoding="utf-8") for f in list(Path("flycns").glob("*.py")) + list(Path("benchmarks").glob("*.py")))
-tags = set(re.findall(r"([A-Z][A-Za-zé\-]+(?: et al\.| & [A-Z][A-Za-z]+)?) (19\d\d|20\d\d)", code))
-missing = sorted(f"{a} {y}" for a, y in tags if a.split()[0].rstrip(",") not in refs or y not in refs)
+# a year inside a date (2026-10-10) is not a citation; accents are ignored (Pezier finds Pézier)
+tags = set(re.findall(r"([A-Z][A-Za-zé\-]+(?: et al\.| & [A-Z][A-Za-z]+)?) (19\d\d|20\d\d)(?![-\d])", code))
+fold = lambda t: unicodedata.normalize("NFKD", t).encode("ascii", "ignore").decode()  # noqa: E731
+refs_folded = fold(refs)
+missing = sorted(f"{a} {y}" for a, y in tags if fold(a.split()[0].rstrip(",")) not in refs_folded or y not in refs)
 stale = [b for b, f in flags.items() if "STALE" in f]
 if stale:
     md += ["", f"**WARNING: reports more than an hour older than the newest are included: "
