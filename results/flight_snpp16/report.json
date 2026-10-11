@@ -1,5 +1,6 @@
 {
   "benchmark": "flight_snpp16",
+  "n_cycles": 400,
   "target_type": "SNpp16",
   "n_target": 13,
   "n_others": 400,
@@ -91,6 +92,42 @@
     "N1_snpp16_sufficient_dvmn_in_band": false,
     "N2_snpp16_necessary_dvmn_below_2hz": false
   },
+  "uncertainty": {
+    "N1_snpp16_sufficient_dvmn_in_band": {
+      "estimate": 0.0,
+      "ci95": null,
+      "band": [
+        2.0,
+        12.0
+      ],
+      "method": "per-draw (0 of 3 in band; pass needs 3)",
+      "draws": [
+        33.67,
+        33.41,
+        33.67
+      ],
+      "n": 3,
+      "verdict": "FAIL",
+      "note": "S1 (SNpp16 alone): DVMn 1a-c per phase seed"
+    },
+    "N2_snpp16_necessary_dvmn_below_2hz": {
+      "estimate": 0.0,
+      "ci95": null,
+      "band": [
+        null,
+        2.0
+      ],
+      "method": "per-draw (0 of 3 in band; pass needs 3)",
+      "draws": [
+        14.98,
+        14.81,
+        14.81
+      ],
+      "n": 3,
+      "verdict": "FAIL",
+      "note": "S2 (all but SNpp16): DVMn 1a-c per phase seed; the check is strict (< 2 Hz), per_draw's upper edge is inclusive"
+    }
+  },
   "reported": {
     "specificity": {
       "real": 33.5825,
@@ -98,9 +135,18 @@
     },
     "prediction": "silencing SNpp16 in a flying fly should suppress DVM motor neuron activity; the model's DVMn output under proprioceptive drive is set by this one wing campaniform type"
   },
+  "registration": {
+    "file": "results/flight_snpp16/registration.json",
+    "version": 2,
+    "git_commit": "4c39a8f",
+    "model_hash": "01797b6857ba68df1abb97b5a948c0edcc513c5e016f91d0b2f29716d23528b4",
+    "registered_at": "2026-10-11T12:41:18",
+    "matches": true,
+    "problems": []
+  },
   "provenance": {
-    "written_at": "2026-10-11T13:04:51",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T21:07:32",
+    "git_commit": "b7eba83",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -115,6 +161,7 @@
     "engine": "cython",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "graph": {
       "data_dir": "data",
       "min_weight": 5,
@@ -124,7 +171,11 @@
       "n_dropped_unsigned_edges": 160051,
       "n_dropped_unsigned_synapses": 1980492,
       "n_silent_presynaptic": 8020,
-      "edges_nt_used": false
+      "edges_nt_used": false,
+      "glu_vnc": "inhibitory",
+      "n_glu_vnc_flipped": 0,
+      "jon_mode": "electrical",
+      "jon_compound_mv": 3.0
     },
     "data": {
       "dir": "data",
