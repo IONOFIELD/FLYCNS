@@ -100,10 +100,10 @@
   "checks": {
     "RA2_facilitation_at_every_near_threshold_gain": true
   },
-  "wall_s": 3806,
+  "wall_s": 7081,
   "provenance": {
-    "written_at": "2026-10-11T07:31:44",
-    "git_commit": "fcff151",
+    "written_at": "2026-10-11T11:24:34",
+    "git_commit": "329488d",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

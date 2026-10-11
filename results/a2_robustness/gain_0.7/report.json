@@ -26,7 +26,7 @@
       "gf_hit": 0.1,
       "gf_lat_ms": 43.80000000000284,
       "pop_rate_hz": 0.002089831294679737,
-      "wall_s": 371.0,
+      "wall_s": 725.6,
       "n_trials": 100,
       "gf_depol_mV": 4.651013258938145
     },
@@ -35,7 +35,7 @@
       "gf_hit": 0.5,
       "gf_lat_ms": 31.261999999999315,
       "pop_rate_hz": 0.006188560077001941,
-      "wall_s": 372.7,
+      "wall_s": 677.9,
       "n_trials": 100,
       "gf_depol_mV": 3.9500115198348897
     },
@@ -56,8 +56,8 @@
   },
   "checks": {},
   "provenance": {
-    "written_at": "2026-10-11T07:19:52",
-    "git_commit": "fcff151",
+    "written_at": "2026-10-11T11:01:47",
+    "git_commit": "329488d",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
