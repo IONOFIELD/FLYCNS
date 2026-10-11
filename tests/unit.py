@@ -124,6 +124,45 @@ def t_targeted_flip_needs_its_table(tmp):
         del os.environ["FLYCNS_SIGNFLIP_TARGETED"]
 
 
+
+def t_signs_come_from_one_map(tmp):
+    """Every transmitter label, mixed case and missing labels, signed only by graph.SIGN_MAP; any sign
+    column already in the file is ignored; dropped edges and silent senders are counted; and no other
+    file carries its own transmitter-to-sign table."""
+    import re
+    from flycns import graph, integrity
+    d = tmp / "sg"; d.mkdir()
+    n, e = _tables()
+    labels = ["Acetylcholine", "GABA", "glutamate", "Histamine", "dopamine", "OCTOPAMINE", "serotonin", None]
+    e["nt"] = [labels[i % len(labels)] for i in range(len(e))]
+    e["sign"] = 1.0                                   # a stale on-disk column, as the fetch writes
+    n.to_parquet(d / "neurons.parquet", index=False); e.to_parquet(d / "edges.parquet", index=False)
+    integrity._ANNOUNCED = True
+    _, g = graph.load_graph(str(d))
+    e = e[e.weight >= graph.MIN_WEIGHT_DEFAULT]       # the default connection-size floor applies first
+    want = e["nt"].str.lower().map(graph.SIGN_MAP)
+    kept = e[want.notna() & (want != 0)].reset_index(drop=True)
+    right = ((g["sign"] == g["nt"].str.lower().map(graph.SIGN_MAP)).all()
+             and set(zip(g.pre, g.post)) == set(zip(kept.pre, kept.post)))
+    counted = integrity.LOADED["n_dropped_unsigned_edges"] == len(e) - len(kept)
+    stray = []
+    for f in list((ROOT / "flycns").glob("*.py")) + list((ROOT / "benchmarks").glob("*.py")) + \
+            list((ROOT / "fit").glob("*.py")) + list((ROOT / "viz").glob("*.py")):
+        if f.name != "graph.py" and re.search(r'["\']glutamate["\']\s*:\s*-1', f.read_text(encoding="utf-8")):
+            stray.append(str(f.relative_to(ROOT)))
+    ok = right and counted and not stray
+    return ok, (f"{len(g)} of {len(e)} edges signed by SIGN_MAP (7 labels, mixed case, missing); stale column "
+                f"ignored; {len(e) - len(kept)} dropped and counted" if ok else
+                f"signs right {right}, counted {counted}, other sign tables in {stray}")
+
+
+def t_one_membrane_time_constant():
+    """The compound-potential calibration uses graph.TAU_M_S; it must equal the model's membrane tau."""
+    from flycns.graph import TAU_M_S
+    from flycns.model import LIFParams
+    ok = abs(TAU_M_S * 1000 - LIFParams().tau_m_ms) < 1e-12
+    return ok, f"TAU_M_S {TAU_M_S * 1000} ms == LIFParams.tau_m_ms {LIFParams().tau_m_ms} ms"
+
 def t_registered_criteria_rerun(tmp):
     """A registered test must be rerunnable: criteria saved as JSON match the code (tuples become
     lists), a changed criterion does not, and every registered test uses this comparison."""
@@ -170,6 +209,80 @@ def t_clean_tree_guard(tmp):
           and "RAN" in allowed.stdout and "UNCOMMITTED" in allowed.stderr)
     return ok, "runs when committed, refuses an edited model.py, override is loud" if ok else \
         f"clean={clean.stdout!r} {clean.stderr[-200:]!r} dirty={dirty.returncode} {dirty.stderr[-200:]!r}"
+
+
+def t_registration_guard(tmp):
+    """A committed registration may not be edited, or deleted and written again: either is refused."""
+    if not shutil.which("git"):
+        return True, "git not installed; guard not exercised"
+    g = ["git", "-c", "user.name=t", "-c", "user.email=t@t", "-c", "commit.gpgsign=false"]
+    env = {k: v for k, v in os.environ.items() if k != "FLYCNS_ALLOW_DIRTY"}
+    probe = ["-c", "from flycns.integrity import require_clean; require_clean('probe'); print('RAN')"]
+
+    def repo(name):
+        r = tmp / name
+        shutil.copytree(ROOT / "flycns", r / "flycns", ignore=shutil.ignore_patterns("__pycache__"))
+        (r / "results" / "probe").mkdir(parents=True)
+        (r / "results" / "probe" / "criteria.json").write_text('{"criteria": {"k": 1}}', encoding="utf-8")
+        subprocess.run(["git", "init", "-q"], cwd=r, check=True)
+        subprocess.run([*g, "add", "-A"], cwd=r, check=True)
+        subprocess.run([*g, "commit", "-qm", "register"], cwd=r, check=True)
+        return r
+
+    def run(r):
+        return subprocess.run([sys.executable, *probe], cwd=r, capture_output=True, text=True, encoding="utf-8",
+                              errors="replace", env=env)
+    a = repo("reg_a")
+    first = run(a)
+    (a / "results" / "probe" / "criteria.json").write_text('{"criteria": {"k": 2}}', encoding="utf-8")
+    edited = run(a)
+    subprocess.run([*g, "commit", "-qam", "edit"], cwd=a, check=True)
+    committed_edit = run(a)
+    b = repo("reg_b")
+    subprocess.run([*g, "rm", "-q", "results/probe/criteria.json"], cwd=b, check=True)
+    subprocess.run([*g, "commit", "-qm", "delete"], cwd=b, check=True)
+    (b / "results" / "probe").mkdir(parents=True, exist_ok=True)
+    (b / "results" / "probe" / "criteria.json").write_text('{"criteria": {"k": 3}}', encoding="utf-8")
+    subprocess.run([*g, "add", "-A"], cwd=b, check=True)
+    subprocess.run([*g, "commit", "-qm", "rewrite"], cwd=b, check=True)
+    rewritten = run(b)
+    ok = ("RAN" in first.stdout and edited.returncode != 0 and committed_edit.returncode != 0
+          and "changed after it was committed" in committed_edit.stderr
+          and rewritten.returncode != 0 and "deleted and written again" in rewritten.stderr)
+    return ok, "an edited, re-committed or deleted-and-rewritten registration is refused" if ok else \
+        f"first={first.stdout!r} edited={edited.returncode} committed={committed_edit.stderr[-160:]!r} rewritten={rewritten.stderr[-160:]!r}"
+
+
+def t_fingerprint_cache_cannot_vouch(tmp):
+    """Registered tests rehash from content: a tampered fingerprint cache cannot make data 'match', and a
+    changed file is never served from the cache."""
+    from flycns import integrity
+    d = tmp / "fp"; d.mkdir()
+    n, e = _tables()
+    e.to_parquet(d / "edges.parquet", index=False)
+    true = integrity.fingerprints(d)["edges.parquet"]["digest"]
+    cf = d / integrity.CACHE
+    cache = json.loads(cf.read_text(encoding="utf-8"))
+    cf.write_text(json.dumps({k: {**v, "digest": "0" * 64} for k, v in cache.items()}), encoding="utf-8")
+    trusted = integrity.fingerprints(d)["edges.parquet"]["digest"]
+    fresh = integrity.fingerprints(d, fresh=True)["edges.parquet"]["digest"]
+    e2 = e.copy(); e2.loc[0, "weight"] += 1
+    e2.to_parquet(d / "edges.parquet", index=False)
+    changed = integrity.fingerprints(d)["edges.parquet"]["digest"]
+    ok = trusted == "0" * 64 and fresh == true and changed not in (true, "0" * 64)
+    return ok, "fresh rehash ignores a tampered cache; a changed file is rehashed" if ok else f"{trusted[:8]} {fresh[:8]} {changed[:8]}"
+
+
+def t_refuse_overrides():
+    """Menu 51 refuses a model setting left in the environment, and allows engine plumbing."""
+    code = "from flycns.integrity import refuse_overrides; refuse_overrides('menu 51'); print('RAN')"
+    base = {k: v for k, v in os.environ.items() if not k.startswith("FLYCNS_")}
+    bad = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True, encoding="utf-8",
+                         errors="replace", env={**base, "FLYCNS_WSCALE": "0.5"})
+    fine = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True, encoding="utf-8",
+                          errors="replace", env={**base, "FLYCNS_WSCALE": "0.3", "FLYCNS_CODEGEN": "numpy"})
+    ok = bad.returncode != 0 and "FLYCNS_WSCALE=0.5" in bad.stderr and "RAN" in fine.stdout
+    return ok, "an override is refused; a default value and the engine choice are not" if ok else f"{bad.stderr[-160:]!r} {fine.stdout!r}"
 
 
 def t_every_check_has_a_role():
@@ -331,9 +444,14 @@ def run_all():
                          ("superclass null keeps class structure", t_null_superclass),
                          ("min_weight override + provenance", lambda: t_min_weight_and_provenance(tmp)),
                          ("targeted flip refuses without its table", lambda: t_targeted_flip_needs_its_table(tmp)),
+                         ("signs come from one map", lambda: t_signs_come_from_one_map(tmp)),
+                         ("one membrane time constant", t_one_membrane_time_constant),
                          ("registered tests can be rerun", lambda: t_registered_criteria_rerun(tmp)),
                          ("settings banner", t_settings_banner),
                          ("registered tests refuse dirty code", lambda: t_clean_tree_guard(tmp)),
+                         ("registrations cannot be edited or rewritten", lambda: t_registration_guard(tmp)),
+                         ("fingerprint cache cannot vouch for data", lambda: t_fingerprint_cache_cannot_vouch(tmp)),
+                         ("menu 51 refuses environment overrides", t_refuse_overrides),
                          ("every scored check has a role", t_every_check_has_a_role),
                          ("every file parses on this Python", t_all_sources_parse),
                          ("text I/O is explicitly UTF-8", t_text_io_is_utf8),

@@ -81,6 +81,10 @@ RUNS = [  # (label, argv relative to the copy, extra env, sentinel substring or 
 # run; the override is the documented escape hatch and is stamped into every toy report.
 # (The guard itself is exercised against a real temporary git repository in tests/unit.py.)
 BASE_ENV = {"FLYCNS_ALLOW_DIRTY": "1", "PYTHONUTF8": "1"}
+# The developer's own FLYCNS_* settings never leak into the suite; only the engine choice the CI
+# matrix sets on purpose passes through.
+PASS_THROUGH = {"FLYCNS_CODEGEN", "FLYCNS_EXPECT_ENGINE"}
+CLEAN_ENV = {k: v for k, v in os.environ.items() if not k.startswith("FLYCNS_") or k in PASS_THROUGH}
 STEP_TIMEOUT_S = 2400      # generous: the pure-Python engine on a slow Windows machine
 TEXT = dict(capture_output=True, text=True, encoding="utf-8", errors="replace")   # never cp1252 on Windows
 
@@ -108,7 +112,7 @@ def main():
         shutil.copytree(ROOT, work, ignore=shutil.ignore_patterns(".git", "data", "results", ".venv", "__pycache__", "*.log"))
         (work / "results").mkdir(); (work / "data").mkdir()
         (work / "testdata").mkdir(exist_ok=True)
-        r = subprocess.run([sys.executable, "scripts/make_testdata.py"], cwd=work, **TEXT, env={**os.environ, **BASE_ENV})
+        r = subprocess.run([sys.executable, "scripts/make_testdata.py"], cwd=work, **TEXT, env={**CLEAN_ENV, **BASE_ENV})
         results.append(("make toy graph", r.returncode == 0, r.stderr.strip()[-200:]))
         for f in (work / "testdata").glob("*.parquet"):
             shutil.copy(f, work / "data" / f.name)          # scripts that read data/ directly
@@ -116,7 +120,7 @@ def main():
             t0 = time.time()
             try:
                 r = subprocess.run([sys.executable, *argv], cwd=work, **TEXT,
-                                   timeout=STEP_TIMEOUT_S, env={**os.environ, **BASE_ENV, **env})
+                                   timeout=STEP_TIMEOUT_S, env={**CLEAN_ENV, **BASE_ENV, **env})
                 out = r.stdout + r.stderr
                 # a sentinel "!fail:<text>" marks a run that must be REFUSED, with that text in its message
                 expect_fail = bool(sentinel) and sentinel.startswith("!fail:")
@@ -133,7 +137,7 @@ def main():
             print(f"  {'PASS' if ok else 'FAIL'}  {label:<34} {note}", flush=True)
         t0 = time.time()
         r = subprocess.run([sys.executable, "scripts/export_brainsets.py", "2", "results/brainsets"], cwd=work,
-                           **TEXT, timeout=STEP_TIMEOUT_S, env={**os.environ, **BASE_ENV})
+                           **TEXT, timeout=STEP_TIMEOUT_S, env={**CLEAN_ENV, **BASE_ENV})
         ok = r.returncode == 0 and "validated: reloads with temporaldata" in r.stdout
         results.append(("brainsets export reloads", ok, f"exit {r.returncode}, {round(time.time() - t0)}s"))
     print("\nREGRESSION SUMMARY")

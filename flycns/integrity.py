@@ -30,12 +30,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 # Committed files that shape every result: model inputs inside data/ count as code for the guard
 MODEL_INPUTS = ("data/loom_tuning_measured.json",)
-CODE_PATHSPECS = ["*.py", "*.cmd", "requirements*.txt", "requirements*.lock", *MODEL_INPUTS]
+# A registration (results/<test>/criteria.json) is code once committed: editing or deleting it is a change
+# to the test. A new, untracked one is a registration being written and is checked by require_clean.
+REGISTRATIONS = "results/*/criteria.json"
+CODE_PATHSPECS = ["*.py", "*.cmd", "requirements*.txt", "requirements*.lock", *MODEL_INPUTS, REGISTRATIONS]
 NOT_CODE_PREFIXES = ("results/", "data/", "testdata/")
 CORE_TABLES = ("neurons.parquet", "edges.parquet")   # must be present; derived tables are optional
 FINGERPRINT_ALGO = "rowhash-v2"   # v2: dtype-family labels and None for missing text, so pandas 2 and 3 agree
 MANIFEST = "MANIFEST.json"
-CACHE = ".fingerprints.json"      # per data dir, gitignored; keyed by size and mtime
+CACHE = ".fingerprints.json"      # per data dir, gitignored; keyed by the sha256 of the file's bytes
 
 # Settings that only route output or count trials; announced but not treated as model overrides.
 PLUMBING = {"FLYCNS_RUN_TAG", "FLYCNS_AUDITORY_OUT", "FLYCNS_A2_TRIALS", "FLYCNS_ALLOW_DIRTY",
@@ -70,8 +73,10 @@ def git_state():
         path = line[3:].strip().strip('"')
         if " -> " in path:
             path = path.split(" -> ", 1)[1]
-        if path in MODEL_INPUTS or not path.startswith(NOT_CODE_PREFIXES):
-            dirty.append(f"{line[:2].strip() or '?'} {path}")
+        code = line[:2].strip() or "?"
+        registration = path.startswith("results/") and path.endswith("/criteria.json")
+        if path in MODEL_INPUTS or not path.startswith(NOT_CODE_PREFIXES) or (registration and code != "??"):
+            dirty.append(f"{code} {path}")
     return dict(is_repo=True, commit=commit.strip(), dirty_files=dirty, clean=not dirty)
 
 
@@ -79,9 +84,36 @@ def allow_dirty():
     return os.environ.get("FLYCNS_ALLOW_DIRTY") == "1"
 
 
+def registration_history(label):
+    """Problems with a registered test's criteria.json in git history: a registration must be committed
+    once and never edited or deleted (a deleted-and-rewritten file would silently re-register).
+    Returns a list of problems; empty when fine or when there is no history to check (shallow clone)."""
+    path = f"results/{label}/criteria.json"
+    if not (ROOT / path).exists():
+        return []
+    _, shallow = _git("rev-parse", "--is-shallow-repository")
+    if shallow.strip() == "true":
+        return []
+    _, log = _git("log", "--format=%h", "--", path)
+    _, deleted = _git("log", "--format=%h", "--diff-filter=D", "--", path)
+    problems = []
+    if len(log.split()) > 1:
+        problems.append(f"{path} was changed after it was committed ({len(log.split())} commits)")
+    if deleted.split():
+        problems.append(f"{path} was deleted and written again (deleted in {deleted.split()[0]})")
+    return problems
+
+
 def require_clean(label):
-    """Refuse a registered run unless the code that will produce it is committed."""
+    """Refuse a registered run unless the code that will produce it is committed and its registration
+    was committed once and never changed."""
     st = git_state()
+    history = registration_history(label)
+    if history:
+        if not allow_dirty():
+            raise SystemExit(f"[integrity] {label} refuses to run: " + "; ".join(history)
+                             + ".\n  A changed design needs a new registration, not an edited one.")
+        _box([f"{label}: REGISTRATION HISTORY PROBLEM (FLYCNS_ALLOW_DIRTY=1)"] + history)
     if st["clean"]:
         return st
     why = ("this is not a git checkout, so the result cannot be tied to a commit"
@@ -112,6 +144,16 @@ def overrides():
     """FLYCNS_* settings that differ from the declared defaults (empty values are unset)."""
     return {k: v for k, v in sorted(os.environ.items())
             if k.startswith("FLYCNS_") and v.strip() != "" and not _is_default(k, v)}
+
+
+def refuse_overrides(label):
+    """Canonical runs (menu 51) refuse any FLYCNS_* model setting: a stray $env:FLYCNS_WSCALE in the
+    shell would otherwise perturb the whole suite and be committed as canonical."""
+    model = {k: v for k, v in overrides().items() if k not in PLUMBING}
+    if model:
+        raise SystemExit(f"[integrity] {label} refuses to run: model settings overridden in the environment: "
+                         + ", ".join(f"{k}={v}" for k, v in model.items())
+                         + "\n  Close this window and open a new one, or in PowerShell: Remove-Item Env:" + next(iter(model)))
 
 
 _ANNOUNCED = False
@@ -177,16 +219,26 @@ def table_fingerprint(path):
     return dict(digest=h.hexdigest(), rows=int(len(df)), columns=cols, sums=sums)
 
 
-def _cached_fingerprint(path, cache):
-    st = path.stat()
+def _file_sha256(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 22), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _cached_fingerprint(path, cache, fresh=False):
+    """The content fingerprint, cached under the sha256 of the file's bytes (a few seconds) so the
+    row hash (about a minute for the edge table) is not recomputed for an unchanged file. fresh=True
+    ignores the cache: registered tests never trust a cache file anyone can write."""
     import pandas as pd
-    key = f"{path.name}:{st.st_size}:{st.st_mtime_ns}:{FINGERPRINT_ALGO}:pandas{pd.__version__.split('.')[0]}"
-    if key not in cache:
+    key = f"{path.name}:{_file_sha256(path)}:{FINGERPRINT_ALGO}:pandas{pd.__version__.split('.')[0]}"
+    if fresh or key not in cache:
         cache[key] = table_fingerprint(path)
     return cache[key]
 
 
-def fingerprints(data_dir="data", names=None):
+def fingerprints(data_dir="data", names=None, fresh=False):
     """Fingerprints for the named parquet files (default: every top-level *.parquet)."""
     d = Path(data_dir)
     paths = [d / n for n in names] if names else sorted(d.glob("*.parquet"))
@@ -196,7 +248,7 @@ def fingerprints(data_dir="data", names=None):
         cache = json.loads(cf.read_text(encoding="utf-8")) if cf.exists() else {}
     except Exception:
         cache = {}
-    out = {p.name: _cached_fingerprint(p, cache) for p in paths}
+    out = {p.name: _cached_fingerprint(p, cache, fresh) for p in paths}
     live = {k for k in cache if (d / k.split(":", 1)[0]).exists()}   # keep entries for every table on disk
     try:
         cf.write_text(json.dumps({k: cache[k] for k in live}), encoding="utf-8")
@@ -218,7 +270,7 @@ def write_manifest(data_dir="data"):
     return man
 
 
-def verify_data(data_dir="data", names=None):
+def verify_data(data_dir="data", names=None, fresh=False):
     """Compare data_dir against its manifest. Returns dict(status, problems, ...).
     status: 'match' | 'mismatch' | 'no-manifest' | 'no-data'."""
     d = Path(data_dir)
@@ -228,7 +280,7 @@ def verify_data(data_dir="data", names=None):
     man = json.loads(mf.read_text(encoding="utf-8"))
     want = man.get("files", {})
     check = [n for n in (names or want) if n in want]
-    have = fingerprints(data_dir, check)
+    have = fingerprints(data_dir, check, fresh)
     problems = []
     for n in check:
         if n not in have:
@@ -250,8 +302,9 @@ def verify_data(data_dir="data", names=None):
 
 
 def require_data(data_dir, label, names=None):
-    """Registered runs: refuse on a manifest mismatch; warn loudly when there is no manifest."""
-    v = verify_data(data_dir, names)
+    """Registered runs: refuse on a manifest mismatch; warn loudly when there is no manifest. Every
+    table is rehashed from its content, never taken from the fingerprint cache."""
+    v = verify_data(data_dir, names, fresh=True)
     if v["status"] == "mismatch":
         if allow_dirty():
             _box([f"{label}: DATA DIFFER FROM {data_dir}/{MANIFEST} (FLYCNS_ALLOW_DIRTY=1)"] + v["problems"])
@@ -352,7 +405,8 @@ def provenance_record(data_dir=None):
     if dd:
         # the anatomical SEZ table changes region readouts, so it is stamped too when present
         names = ["neurons.parquet", "edges.parquet"] + \
-            (["roi_membership.parquet"] if (Path(dd) / "roi_membership.parquet").exists() else [])
+            (["roi_membership.parquet"] if (Path(dd) / "roi_membership.parquet").exists() else []) + \
+            (["edges_nt.parquet"] if LOADED.get("edges_nt_used") else [])
         try:
             fps = fingerprints(dd, names)
             rec["data"] = dict(dir=str(dd), digests={k: v["digest"][:16] for k, v in fps.items()},

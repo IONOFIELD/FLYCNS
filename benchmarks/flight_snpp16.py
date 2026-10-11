@@ -15,7 +15,7 @@ Arms:
   S2  every other afferent, SNpp16 withheld  necessity: does DVMn collapse without it?
   S3  all 413 afferents                   reference (full recruitment)
 
-Criteria (DVMn 1a-c in the measured 2-12 Hz band, Harcombe & Wyman 1977; Huerkey et al. 2023):
+Criteria (DVMn 1a-c in the measured 2-12 Hz band, Harcombe & Wyman 1977; Hürkey et al. 2023):
   N1  S1 puts DVMn in band in every seed            (SNpp16 sufficient at physiological rate)
   N2  S2 gives DVMn below 2 Hz in every seed        (SNpp16 necessary)
 Reported: DLMn c-f, steering, b1 in each arm; whether SNpp16 alone is wiring-specific

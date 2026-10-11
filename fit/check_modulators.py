@@ -130,8 +130,9 @@ if len(dop):
 
 # for the top candidates, do they contact MN9's inhibitory relays? (the disinhibitory arm)
 mn9 = meta.index[meta["type"] == "MN9"]
-sign_map = {"acetylcholine": 1, "gaba": -1, "glutamate": -1, "histamine": -1}
-e = edges.assign(sgn=edges["nt"].str.lower().map(sign_map).fillna(0))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from flycns.graph import SIGN_MAP  # noqa: E402  the model's one transmitter-to-sign table (amines 0)
+e = edges.assign(sgn=edges["nt"].str.lower().map(SIGN_MAP).fillna(0))
 inh_relays = set(e[(e.post.isin(mn9)) & (e.sgn < 0)].pre)
 exc_relays = set(e[(e.post.isin(mn9)) & (e.sgn > 0)].pre)
 top = list(strict.index[:40])

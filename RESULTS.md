@@ -9,7 +9,8 @@ measurement, the model is presumed wrong.*
 ## In one paragraph
 
 The complete male Drosophila central nervous system connectome (Janelia FlyEM MaleCNS v1.0,
-166,700 neurons, brain and ventral nerve cord) was simulated as a signed leaky integrate-and-fire
+176,422 neurons in its table, brain and ventral nerve cord; about 170,000 of them have a connection
+of five or more synapses and are simulated) was simulated as a signed leaky integrate-and-fire
 network using the model and parameters of Shiu et al. 2024, with the loom stimulus measured from
 public calcium imaging and split by the fly's behavioural state. Two circuits reproduce published
 physiology under a single declared parameter set: the giant fiber escape pathway and auditory
@@ -463,7 +464,7 @@ connectome-derived prediction, and the surrogate loop below is the test of it.
 > would be the way to score the selectivity claim. That test has now been run.
 >
 > **Graded test, criteria registered before the run** (`benchmarks/flight_snpp16_graded.py`;
-> criteria committed in `11dcc6a` before any result existed; final results in `0eb3416`;
+> criteria registered at `fae9fdb` and committed in `11dcc6a` before any result existed; final results in `0eb3416`;
 > `64d665b` holds an intermediate state). k of the 13 SNpp16 cells were recruited, k = 1 to 13,
 > five draws each randomising which cells fire and their phase. Result: **four of five criteria
 > pass.**
@@ -500,7 +501,7 @@ connectome-derived prediction, and the surrogate loop below is the test of it.
 > **Robustness battery, criteria registered before the run** (`benchmarks/flight_snpp16_robustness.py`;
 > registered at `77e0cc5`, results `1225b21`). Two of three pass, and the failure qualifies the claim:
 >
-> - **R1 transmitter uncertainty: pass.** With 132,680 edges inverted (every neuron whose own
+> - **R1 transmitter uncertainty: pass.** With 132,680 edges inverted (110,462 since the audit judges disagreement by sign; every neuron whose own
 >   synapses disagree with its label), k=7 gives exactly the unperturbed draws (10.3, 7.2, 6.1,
 >   6.7, 6.7 Hz). None of the uncertain calls lie on SNpp16's path to DVMn.
 > - **R3 fresh draws: pass.** k* is 5 again, k=7 is in band in 4 of 5, and the curve is
@@ -526,7 +527,7 @@ Drosophila wingbeat frequency of 202 Hz (Vogel 1967) with 0.8 ms jitter (Fox, Fa
 2010), a recruited fraction set by a scalar load, and uniform phase, since no Drosophila phase
 map exists. The drive is injected into the afferent neurons themselves, so everything downstream
 runs through the connectome's own synapses. Measured targets: DLM and DVM motor neurons at 2 to 12
-Hz (Harcombe & Wyman 1977; Huerkey et al. 2023), b1 at one spike per wingbeat (Fayyazuddin &
+Hz (Harcombe & Wyman 1977; Hürkey et al. 2023), b1 at one spike per wingbeat (Fayyazuddin &
 Dickinson 1996). Afferent parameters are from crane fly, flesh fly and blowfly, stated as such.
 
 What happened:
@@ -586,7 +587,7 @@ direct proprioceptive synapses. In a cord with no background activity the relay 
 subthreshold until the command is very strong, so a two-to-one structural advantage becomes the
 weakest firing in the pool. This is the sixth circuit to point at missing background activity and
 the most precisely localised: the gap is a named relay layer with a measured advantage that the
-dynamics cannot use. The DLM gap junctions described by Huerkey et al. 2023 would pool the five
+dynamics cannot use. The DLM gap junctions described by Hürkey et al. 2023 would pool the five
 DLM motor neurons but add no net drive, so they are not a fix for this.
 
 ### Feeding re-tested with taste afferents split by modality (registered)
@@ -775,6 +776,9 @@ wiring and survives simulation in both directions.
 **A new prediction: activating the pIP5 (pIP-e) neurons should promote sine song.** The rule found
 SIP108m from the wiring; MaleCNS's own sex annotations (`scripts/fetch_dimorphism.py`, properties
 `dimorphism`, `fruDsx`, `synonyms`) then identify it and every other strong excitatory input to DNp13:
+(The literature names come from MaleCNS's `synonyms` annotation. They have not all been checked
+against the papers: pC2l does not appear in Nojima et al. 2021's text, and pIP-e was not found in
+Cachero et al. 2010's full text.)
 
 | type | cells | dimorphism | fru/dsx | literature names |
 |---|---|---|---|---|
@@ -789,7 +793,7 @@ All eight of DNp13's strongest m-suffixed excitatory inputs are male-specific, f
 the same literature class. The sine pathway the model found is therefore built from male-specific
 neurons of an already-named class onto a sexually dimorphic command neuron, a prediction only a male
 connectome could make. The pulse pathway is sex-specific too: pMP2 and pIP10 are male-specific and
-fru-high (pIP10 is P2b in Kimura 2008 and Kohatsu 2010), and pC1_14a is annotated potentially
+fru-high (pIP10 is P2b in Kimura 2008 and Kohatsu 2011), and pC1_14a is annotated potentially
 male-specific. pC1_1b, the input the companion paper links to DNp13 and which drove nothing here, is
 male-specific as well.
 
@@ -845,8 +849,11 @@ the stimulus and is declared as such.
 
 ## 5. Robustness
 
-**Nine-suite battery**, each a full three-circuit suite at 40 trials under measured stationary
-input (`scripts/overnight.py`, `results/overnight/`):
+**Nine-suite battery (September 2026; superseded).** Each run was a full three-circuit suite at 40
+trials. This table predates the October fixes (the input was all-trials, adaptation 30 mV) and is
+kept as history. The current battery is in the 11 October section at the top and in
+`results/overnight/battery_2026-10_cloud.txt`. For example, wscale035 passes everything here but
+fails a calibrated escape check there:
 
 | run | result | failing check |
 |---|---|---|

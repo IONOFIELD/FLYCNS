@@ -26,6 +26,21 @@ MODEL_CODE = ["flycns", "benchmarks", ":(exclude)benchmarks/summarize.py", "fit"
               "data/loom_tuning_measured.json",
               "requirements.lock"]
 _changed = {}
+# the trial counts the committed results are run at (fly.py defaults, scripts/run_all.py, rerun.yml)
+CANONICAL_TRIALS = {"gf_escape": 40, "auditory": 40, "feeding": 6, "peptide_asta": 10, "pc1_song": 10,
+                    "dnp13_control": 10, "feeding_by_modality": 6, "a2_registered": 120, "a2_robustness": 100,
+                    "flight_loop": 400, "flight_snpp16_graded": 400, "flight_snpp16_robustness": 400}
+
+
+def trial_count(r):
+    crit = r.get("criteria") if isinstance(r.get("criteria"), dict) else {}
+    for k in ("n_trials", "n_trials_per_arm", "n_cycles"):
+        if isinstance(r.get(k), (int, float)):
+            return r[k]
+    for k in ("trials_per_arm", "n_trials", "n_cycles"):
+        if isinstance(crit.get(k), (int, float)):
+            return crit[k]
+    return None
 
 
 def code_changed_since(commit):
@@ -57,6 +72,11 @@ for rep in reports:
         f.append("STALE")
     if not prov or "git_dirty" not in prov:
         f.append("UNSTAMPED")   # written before integrity stamping (2026-10-10); rerun to stamp
+    elif not prov.get("data"):
+        f.append("UNPINNED")    # no record of which input tables produced it
+    n_run, n_canon = trial_count(r), CANONICAL_TRIALS.get(name)
+    if n_run is not None and n_canon is not None and n_run < n_canon:
+        f.append(f"TRIALS {n_run}<{n_canon}")
     flags[name] = f
     stamps[name] = dict(written_at=prov.get("written_at", "unstamped"), commit=prov.get("git_commit", ""),
                         env=model_env, data=((prov.get("data") or {}).get("digests") or {}))
@@ -69,31 +89,34 @@ for rep in reports:
         rows.append(f"| {name} | {k} | {res} | {rl} | {', '.join(f) or '-'} |")
 
 total, passed = sum(counts.values()), sum(passed_by_role.values())
-canonical = not any(("PERTURBED" in f or "DIRTY" in f or "DATA-MISMATCH" in f) for f in flags.values())
+canonical = not any(("PERTURBED" in f or "DIRTY" in f or "DATA-MISMATCH" in f or "UNPINNED" in f
+                     or any(x.startswith("TRIALS") for x in f)) for f in flags.values())
 p = LIFParams().__dict__
 tag = os.environ.get("FLYCNS_RUN_TAG", "")
 role_line = " | ".join(f"{rl} {passed_by_role[rl]}/{counts[rl]}" for rl in
-                       ["independent", "control", "robustness", "calibrated", "construction", "unclassified"] if counts[rl])
+                       ["independent", "control", "robustness", "structural", "calibrated", "construction", "unclassified"] if counts[rl])
 md = ["# MaleCNS v1.0 LIF benchmark suite" + (f"  [{tag}]" if tag else ""), "",
       (f"**{passed}/{total} checks pass under ONE parameter set** (same LIFParams for every circuit)."
        if canonical else
        f"**{passed}/{total} checks pass, but NOT all under the declared parameter set:** see the flags column."),
       "", f"**By role:** {role_line}",
       "", "Only *independent* checks test the model; *calibrated* and *construction* checks were made to pass "
-          "by a declared parameter (docs/CALIBRATION.md). *control* checks show the machinery is not trivial.", "",
+          "by a declared parameter (docs/CALIBRATION.md). *control* checks show the machinery is not trivial. "
+          "*structural* checks count over the wiring with no simulation.", "",
       "## Parameters", "```", json.dumps(p, indent=2), "```",
       f"effective chemical kick per synapse: {p['w_syn_mV']*p['w_scale']:.4f} mV "
       f"(Shiu 2024 unitary {p['w_syn_mV']} mV x MaleCNS rescale {p['w_scale']})", "",
       "## Checks", "| benchmark | check | result | role | flags |", "|---|---|---|---|---|"] + rows + [
       "", "Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; "
           "DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); "
-          "UNSTAMPED = written before integrity stamping, rerun to stamp.",
+          "UNSTAMPED = written before integrity stamping, rerun to stamp; UNPINNED = no record of the input tables; "
+          "TRIALS a<b = run at fewer trials than the canonical b.",
       "", "Declared deviations from the raw connectome: see each results/*/provenance.md and flycns/graph.py."]
 # citation integrity: every author-year tag in code must resolve in REFERENCES.md
 refs = Path("REFERENCES.md").read_text(encoding="utf-8") if Path("REFERENCES.md").exists() else ""
 code = "".join(f.read_text(encoding="utf-8") for f in list(Path("flycns").glob("*.py")) + list(Path("benchmarks").glob("*.py")))
 # a year inside a date (2026-10-10) is not a citation; accents are ignored (Pezier finds Pézier)
-tags = set(re.findall(r"([A-Z][A-Za-zé\-]+(?: et al\.| & [A-Z][A-Za-z]+)?) (19\d\d|20\d\d)(?![-\d])", code))
+tags = set(re.findall(r"([A-Z][A-Za-zÀ-ÿ\-]+(?: et al\.| & [A-Z][A-Za-zÀ-ÿ]+)?) (19\d\d|20\d\d)(?![-\d])", code))
 fold = lambda t: unicodedata.normalize("NFKD", t).encode("ascii", "ignore").decode()  # noqa: E731
 refs_folded = fold(refs)
 missing = sorted(f"{a} {y}" for a, y in tags if fold(a.split()[0].rstrip(",")) not in refs_folded or y not in refs)

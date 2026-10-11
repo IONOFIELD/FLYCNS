@@ -103,6 +103,10 @@ edges = pd.concat(chunks, ignore_index=True)
 # Prefer consensusNt, fall back to predictedNt, else unknown.
 nt = neurons.set_index("bodyId")
 nt_col = nt["consensusNt"].fillna(nt["predictedNt"]).str.lower()
+# LEGACY COLUMN. The model never reads this `sign`: flycns/graph.py load_graph re-derives every sign
+# from `nt` with SIGN_MAP (which also signs histamine). Kept unchanged only so a fresh fetch matches the
+# pinned data/MANIFEST.json byte for byte; drop it at the next deliberate data re-pin. Anything that
+# needs signs must go through load_graph (tests/unit.py checks no file carries its own sign table).
 sign_map = {"acetylcholine": 1, "gaba": -1, "glutamate": -1}
 edges["nt"] = edges["pre"].map(nt_col)
 edges["sign"] = edges["nt"].map(sign_map)
