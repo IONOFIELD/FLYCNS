@@ -1,0 +1,35 @@
+  ok       gf_escape / loom (LOOM_TUNING)                13/13  types    2526 cells
+  ok       auditory / JO auditory afferents              14/14  types     244 cells
+  ok       auditory / wind control                       28/28  types     608 cells
+  ok       feeding / MN9-driving gustatory subset         8/8   types     140 cells
+  ok       feeding / MN9 readout                          1/1   types       2 cells
+  ok       peptide_asta / drive (L3, L5)                  2/2   types    3559 cells
+  ok       peptide_asta / AstA source                     1/1   types      69 cells
+  ok       peptide_asta / AstA receptor targets          12/12  types   18046 cells
+  ok       flight_loop / DNg02 command                    7/7   types      29 cells
+  ok       escape readouts                                3/3   types       6 cells
+  ok       flight readouts                                4/4   types      18 cells
+  ok       declared electrical synapses (both ends)       5/5   types      33 cells
+  ok       pc1_song / scored pC1 groups                   8/8   types      30 cells
+  ok       pc1_song, dnp13_control / song readouts        4/4   types       8 cells
+  ok       taste benchmarks / labellar types             11/11  types     128 cells
+  ok       taste benchmarks / feeding motor neurons       4/4   types       9 cells
+  ok       flight_snpp16* / wing campaniform types        2/2   types      25 cells
+
+ALL SETS RESOLVE
+data: match
+=== 00:51 start signflip05_a (seed 0, signflip 0.05, wscale 0.3)
+  13/14 checks pass, but NOT all under the declared parameter set:** see the flags column.
+=== 02:09 done  signflip05_a
+canonical results restored
+
+SUMMARY
+seed1                16/16 checks pass under ONE parameter set** (same LIFParams for every circuit).
+seed2                16/16 checks pass under ONE parameter set** (same LIFParams for every circuit).
+signflip05_a         13/14 checks pass, but NOT all under the declared parameter set:** see the flags column.
+signflip05_b         16/16 checks pass under ONE parameter set** (same LIFParams for every circuit).
+signflip10           15/16 checks pass under ONE parameter set** (same LIFParams for every circuit).
+signflip_targeted    16/16 checks pass under ONE parameter set** (same LIFParams for every circuit).
+wscale025            15/16 checks pass under ONE parameter set** (same LIFParams for every circuit).
+wscale035            16/16 checks pass under ONE parameter set** (same LIFParams for every circuit).
+wscale040            16/17 checks pass under ONE parameter set** (same LIFParams for every circuit).
