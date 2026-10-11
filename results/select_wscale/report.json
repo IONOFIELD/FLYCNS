@@ -107,10 +107,10 @@
   "n_eligible": 15757,
   "n_driven": 1575,
   "agrees_with_declared": false,
-  "wall_s": 211.0,
+  "wall_s": 367.5,
   "provenance": {
-    "written_at": "2026-10-11T17:37:41",
-    "git_commit": "e4e5524",
+    "written_at": "2026-10-11T20:28:00",
+    "git_commit": "b7eba83",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
