@@ -36,7 +36,7 @@ F2 sugar  25 Hz -> MN9 0.00 spikes/cell, CNS 0.0014 Hz
   vnc_motor                                                       0.004
   vnc_intrinsic                                                   0.000
 F2 sugar  50 Hz -> MN9 0.00 spikes/cell, CNS 0.0055 Hz
-  outside-SEZ rate 0.0020 Hz | recruited motor mean 4.3 Hz | 5 of 43 cb_motor types active: ['MN2Db', 'MN2Da', 'MN12D', 'MNx02', 'MNx01']
+  outside-SEZ rate 0.0003 Hz | recruited motor mean 4.3 Hz | 5 of 43 cb_motor types active: ['MN2Db', 'MN2Da', 'MN12D', 'MNx02', 'MNx01']
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
 F2 sugar 100 Hz -> MN9 0.17 spikes/cell, CNS 0.0173 Hz
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
