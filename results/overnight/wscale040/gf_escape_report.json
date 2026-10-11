@@ -50,7 +50,7 @@
       "ttmn_lag_ms": 0.9000000000001002,
       "psi_per_cell": 2.625,
       "ttmn_to_gf_ratio": 1.0,
-      "wall_s": 321.6
+      "wall_s": 194.4
     },
     "real_chemical_only": {
       "arm": "real_chemical_only",
@@ -71,7 +71,7 @@
       "ttmn_lag_ms": NaN,
       "psi_per_cell": 0.0,
       "ttmn_to_gf_ratio": 0.0,
-      "wall_s": 318.4
+      "wall_s": 192.9
     },
     "rewired_null": {
       "arm": "rewired_null",
@@ -92,7 +92,7 @@
       "ttmn_lag_ms": NaN,
       "psi_per_cell": 0.0,
       "ttmn_to_gf_ratio": NaN,
-      "wall_s": 357.5
+      "wall_s": 216.4
     }
   },
   "checks": {
@@ -107,8 +107,8 @@
   },
   "pass": false,
   "provenance": {
-    "written_at": "2026-10-11T09:43:23",
-    "git_commit": "329488d",
+    "written_at": "2026-10-11T13:05:05",
+    "git_commit": "d72fe77",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -125,6 +125,7 @@
     },
     "engine": "cython",
     "platform": "win32",
+    "machine": "AMD64",
     "loom_input": {
       "source": "MEASURED (stationary trials, 13 series): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09)",
       "state": "stationary",
@@ -135,7 +136,11 @@
       "min_weight": 5,
       "n_neurons": 176422,
       "n_signed_edges": 6127738,
-      "n_signed_synapses": 88316807
+      "n_signed_synapses": 88316807,
+      "n_dropped_unsigned_edges": 160051,
+      "n_dropped_unsigned_synapses": 1980492,
+      "n_silent_presynaptic": 8020,
+      "edges_nt_used": false
     },
     "data": {
       "dir": "data",
