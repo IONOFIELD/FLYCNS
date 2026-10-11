@@ -39,6 +39,7 @@ from scipy.sparse import csr_matrix
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, CNSModel, LIFParams
 from flycns.bench import pulse_protocol, readout_rates, provenance
+from flycns import stats
 
 N_TRIALS = int(sys.argv[1]) if len(sys.argv) > 1 else 10
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
@@ -120,11 +121,14 @@ for arm, tl in ARMS.items():
     t0 = time.time()
     m = CNSModel(neurons, edges, tl, LIFParams(), electrical=True)
     on = pulse_protocol(m, {x: HZ for x in tl}, n_trials=N_TRIALS, pulse_ms=200)
-    d = {}
+    d, per_trial = {}, {}
     for r in READOUTS:
         rr = readout_rates(m, on, [r], 250, meta)
         d[r] = float(rr.spikes_per_cell.mean()) if len(rr) else 0.0
+        # the same readout per pulse (mean over sides within a pulse); their mean is d[r]
+        per_trial[r] = [float(x) for x in rr.groupby("trial").spikes_per_cell.mean().sort_index()] if len(rr) else []
     d["cns_hz"] = float(m.population_rate_hz()); d["n_cells"] = int(len(src))
+    d["per_trial"] = per_trial
     dynamic[arm] = d
     print(f"  {arm:<11} {str(tl)[:40]:<40} ({len(src):>3} cells) | " + "  ".join(f"{r} {d[r]:5.2f}" for r in READOUTS)
           + f" | static DNp13 {acc['DNp13']:+.2e} pMP2 {acc['pMP2']:+.2e} | {round(time.time() - t0)}s")
@@ -139,9 +143,52 @@ report = dict(benchmark="dnp13_control", criteria=CRITERIA, dnp13_input_balance=
               top_excitatory_inputs={k: int(v) for k, v in exc_by_type.head(10).items()},
               static=static, dynamic=dynamic, checks={"D1_dnp13_reachable": d1, "D2_pc1_1b_sine_choice": d2},
               verdict=verdict, provenance=provenance())
+
+
+# ---- uncertainty (flycns/stats.py): 95% intervals over pulses, three-way verdicts
+def _pp(d, r):
+    """Per-pulse values of readout r in arm d; a readout with no cells is 0 in every pulse, as d[r] is."""
+    return d["per_trial"][r] or [0.0] * N_TRIALS
+
+
+def _dnp13_floor(d, arm):
+    v = _pp(d, "DNp13"); est, lo, hi = stats.bootstrap(v)
+    return stats.scored(est, lo, hi, low=0.5, n=len(v), note=f"DNp13 spikes/cell/pulse under {arm}, bootstrap over pulses")
+
+
+_diff = np.asarray(_pp(p, "DNp13")) - np.asarray(_pp(p, "pMP2"))
+report["uncertainty"] = {
+    "D1_dnp13_reachable": _dnp13_floor(b, "best_input"),
+    "D2_pc1_1b_sine_choice": stats.combine([
+        _dnp13_floor(p, "pC1_1b"),
+        stats.scored(*stats.bootstrap(_diff), low=0, strict=True, n=len(_diff),
+                     note="DNp13 - pMP2 under pC1_1b, paired per pulse (same simulation and pulses), bootstrap over pulses")]),
+}
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECKS (criteria registered before the run)")
 for k, v in report["checks"].items():
     print(f"  {'PASS' if v else 'FAIL'}  {k}")
+
+
+def _g(x):
+    return "-" if x is None else (f"{x:.3g}" if isinstance(x, float) else str(x))
+
+
+def _desc(u):
+    """One line for an uncertainty record: estimate [95% interval] in band (method); a conjunction lists its parts."""
+    if u.get("parts"):
+        return "; ".join(f"{p['verdict']} {_desc(p)}" for p in u["parts"])
+    s, ci, band = _g(u.get("estimate")), u.get("ci95"), u.get("band")
+    if ci:
+        s += f" [{_g(ci[0])}, {_g(ci[1])}]"
+    if band and any(b is not None for b in band):
+        s += (f" in {'(' if u.get('band_lower_exclusive') else '['}{'-inf' if band[0] is None else _g(band[0])}, "
+              f"{'inf' if band[1] is None else _g(band[1])}]")
+    return s + f" ({u['method']})" + (f": {u['note']}" if u["method"] == "not scorable as designed" else "")
+
+
+print("UNCERTAINTY (95% intervals, flycns/stats.py: PASS only if the whole interval lies in the band)")
+for k, u in report["uncertainty"].items():
+    print(f"  {u['verdict']:<10}  {k}: {_desc(u)}")
 print(f"VERDICT: {verdict}")
 print(f"wrote {OUT / 'report.json'}")

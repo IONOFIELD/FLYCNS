@@ -34,6 +34,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from brian2 import Synapses, mV
 from flycns import load_graph, CNSModel, LIFParams
+from flycns import stats
 from flycns.bench import provenance, spike_source
 from flycns.graph import SIGN_MAP
 
@@ -141,7 +142,8 @@ def at_k(k, seed_base, edge_df=None, params=None, phase_base=0):
     return dict(k=k, **{f"{f}_mean": float(np.mean(v)) for f, v in agg.items()},
                 **{f"{f}_max": float(np.max(v)) for f, v in agg.items() if f != "dvmn"},
                 dvmn_per_draw=[round(x, 2) for x in agg["dvmn"]],
-                dvmn_in_band=int(sum(BAND[0] <= x <= BAND[1] for x in agg["dvmn"])))
+                dvmn_in_band=int(sum(BAND[0] <= x <= BAND[1] for x in agg["dvmn"])),
+                draws={f: [float(x) for x in v] for f, v in agg.items()})   # unrounded, for the uncertainty records
 
 
 def selective(r):
@@ -156,6 +158,25 @@ def line(tag, r):
 
 report = dict(benchmark="flight_snpp16_robustness", criteria=CRITERIA, checks={}, arms={})
 t0 = time.time()
+
+# R1 is a perturbation test only if the flip touches the path under test. The path: the cells the battery
+# drives (every TARGET cell; each draw recruits K_TEST of them) and reads out (DVMn 1a-c, DLMn c-f, steering,
+# b1), plus the relay layer defined above (cells receiving >= 20 synapses from the campaniform afferents).
+# Count the flipped connections among those cells. The flip itself is unchanged.
+_flipped = edges_flipped["sign"].values != edges["sign"].values      # row-aligned: n_flipped > 0 checked above
+_ends = set(target) | set(dvm) | set(dlm) | set(steer) | set(b1)
+_path = _ends | set(relays)
+_on_path = edges.pre.isin(_path).values & edges.post.isin(_path).values
+_direct = edges.pre.isin(_ends).values & edges.post.isin(_ends).values
+report["R1_flipped_edges_on_path"] = int((_flipped & _on_path).sum())
+report["R1_path"] = dict(
+    definition=(f"connections with both ends among the driven {TARGET} cells, the readouts (DVMn 1a-c, DLMn c-f, "
+                "steering MNs, b1 MN) and the relay layer (cells receiving >= 20 synapses from the campaniform afferents)"),
+    n_cells=len(_path), n_connections=int(_on_path.sum()), n_flipped=report["R1_flipped_edges_on_path"],
+    n_flipped_driven_and_readout_cells_only=int((_flipped & _direct).sum()), n_flipped_whole_graph=n_flipped)
+print(f"targeted sign inversion on the path under test: {report['R1_flipped_edges_on_path']} of "
+      f"{report['R1_path']['n_connections']} connections among {len(_path)} cells "
+      f"({report['R1_path']['n_flipped_driven_and_readout_cells_only']} between driven and readout cells directly)")
 
 print("\nR1  targeted transmitter-sign inversion")
 r1 = at_k(K_TEST, 1000, edge_df=edges_flipped); line(f"  k={K_TEST}, flipped", r1)
@@ -192,9 +213,91 @@ report["checks"]["R3_replicates_with_fresh_draws"] = bool(
 print(f"  fresh k* = {kstar_fresh} (original {K_STAR_ORIG}); monotone within 0.5 Hz: "
       f"{report['arms']['R3']['monotone_within_0p5']} (reported, not scored)")
 
+
+# ---- uncertainty (flycns/stats.py): one record per scored check, three-way verdict. Every readout is
+# repeated over N_DRAWS independent draws (cell identity and phase), so each is scored per draw
+# (stats.per_draw), never on the mean. "DVMn in band in >= 4/5 draws" is per_draw at its default need (4 of 5);
+# "steering, b1, DLMn each < 1 Hz" is read on the maximum over draws, i.e. in EVERY draw, so need=1.0 keeps
+# that band (PASS only if all draws are below 1 Hz, FAIL only if none is). per_draw's edge is inclusive where
+# the checks are strict (< 1 Hz); a rate of exactly 1 Hz is the only case that differs.
+def _any(records, note=None):
+    """Disjunction of parts, the counterpart of stats.combine: PASS if any part passes, FAIL if every part
+    fails, else UNRESOLVED. The parts are kept in the record."""
+    vs = [r["verdict"] for r in records]
+    vd = "PASS" if "PASS" in vs else ("FAIL" if all(v == "FAIL" for v in vs) else "UNRESOLVED")
+    rec = dict(estimate=None, ci95=None, band=None, method=f"any of {len(records)} parts", parts=list(records), verdict=vd)
+    if note:
+        rec["note"] = note
+    return rec
+
+
+def _not(rec, note=None):
+    """Negation of a three-way record: PASS and FAIL swap, UNRESOLVED stays."""
+    vd = {"PASS": "FAIL", "FAIL": "PASS"}.get(rec["verdict"], "UNRESOLVED")
+    out = dict(estimate=None, ci95=None, band=None, method="negation of 1 part", parts=[rec], verdict=vd)
+    if note:
+        out["note"] = note
+    return out
+
+
+def _selective(r, where):
+    """Steering, b1 and DLMn c-f below 1 Hz in every draw (the check reads the maximum over draws)."""
+    return [stats.per_draw(r["draws"][f], high=1.0, need=1.0, note=f"{f} {where}, every draw below 1 Hz")
+            for f in ("steer", "b1", "dlmn")]
+
+
+def _rec_text(r):
+    """One console line for an uncertainty record: method, estimate [95% interval] or draws, note."""
+    txt = r["method"]
+    if r.get("ci95") and None not in r["ci95"] and r.get("estimate") is not None:
+        txt += f", est {r['estimate']:.3g} [{r['ci95'][0]:.3g}, {r['ci95'][1]:.3g}]"
+    elif r.get("draws") is not None:
+        txt += f", draws {[round(x, 2) for x in r['draws']]}"
+    return txt + (f" ({r['note']})" if r.get("note") else "")
+
+
+def _print_record(name, u, ind="  ", depth=0):
+    print(f"{ind}{u['verdict']:<10}  {name}{': ' if name else ''}{_rec_text(u)}")
+    if depth < 1:   # one level of parts on the console; the report keeps them all
+        for part in u.get("parts", []):
+            _print_record("", part, ind + "    ", depth + 1)
+
+
+unc = {}
+if report["R1_flipped_edges_on_path"] == 0:
+    unc["R1_survives_transmitter_uncertainty"] = stats.unresolved(
+        "the perturbation touches no connection on the path under test")
+else:
+    unc["R1_survives_transmitter_uncertainty"] = stats.combine(
+        [stats.per_draw(r1["draws"]["dvmn"], *BAND, note=f"DVMn at k={K_TEST}, flipped graph, >= 4 of {N_DRAWS} draws")]
+        + _selective(r1, f"at k={K_TEST}, flipped graph"),
+        note=f"{report['R1_flipped_edges_on_path']} flipped connections on the path under test")
+if RELAY_SC:
+    unc["R2_selectivity_holds_across_cord_params"] = stats.combine(
+        [stats.combine(_selective(r, f"{r['param']}={r['value']}"), note=f"{r['param']}={r['value']}") for r in r2],
+        note=f"selective at every setting; relay superclasses {RELAY_SC}")
+else:
+    unc["R2_selectivity_holds_across_cord_params"] = stats.unresolved(
+        "no relay superclass was found, so the parameter sweep changes no neuron")
+# R3: the smallest in-band k within one step of K_STAR_ORIG means no k below the window is in band and some k
+# in the window is; "in band at k" is scored per draw at each k (three-valued, so the logic keeps UNRESOLVED)
+_inb = {r["k"]: stats.per_draw(r["draws"]["dvmn"], *BAND, note=f"DVMn at k={r['k']}, fresh draws") for r in r3}
+_lo, _hi = K_STAR_ORIG - 1, K_STAR_ORIG + 1
+_kstar_parts = [stats.combine([_not(_inb[k], note=f"k={k} not in band") for k in sorted(_inb) if k < _lo],
+                              note=f"no k below {_lo} in band")] if any(k < _lo for k in _inb) else []
+_kstar_parts.append(_any([_inb[k] for k in sorted(_inb) if _lo <= k <= _hi], note=f"some k in {_lo}..{_hi} in band"))
+unc["R3_replicates_with_fresh_draws"] = stats.combine(
+    [stats.combine(_kstar_parts, note=f"fresh k* within 1 of {K_STAR_ORIG}, with 'in band at k' scored per draw"),
+     stats.per_draw(r3_k7["draws"]["dvmn"], *BAND, note=f"DVMn at k={K_TEST}, fresh draws, >= 4 of {N_DRAWS}")],
+    note="replication with fresh cell-identity and phase draws")
+report["uncertainty"] = unc
+
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"\nCHECKS (criteria registered before the run) | {round(time.time() - t0)}s")
 for kk, v in report["checks"].items():
     print(f"  {'PASS' if v else 'FAIL'}  {kk}")
+print("\nUNCERTAINTY (flycns/stats.py; three-way verdict, scored per draw)")
+for kk, u in report["uncertainty"].items():
+    _print_record(kk, u)
 print(f"\nBATTERY {'PASS' if all(report['checks'].values()) else 'FAIL'}  -> {OUT / 'report.json'}")

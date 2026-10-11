@@ -39,6 +39,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph
 from flycns.bench import provenance
 from flycns.graph import GUSTATORY_MN9_DRIVING
+from flycns import stats
 
 DATA = sys.argv[1] if len(sys.argv) > 1 else "data"
 OUT = Path("results/sugar_laterality")
@@ -148,7 +149,17 @@ l1 = bool(s["signed_L"]["contralateral"] and s["signed_R"]["contralateral"])
 report = dict(benchmark="sugar_laterality", criteria=CRITERIA, sets={g: {k: (len(v) if isinstance(v, list) else v)
                                                                           for k, v in d.items()} for g, d in sets.items()},
               results=res, checks={"L1_sugar_contralateral_bias": l1}, provenance=provenance())
+# ---- uncertainty (flycns/stats.py): graph arithmetic, no sampling, so the check is scored on its point value
+_ratios = [s["signed_L"]["contra_over_ipsi"], s["signed_R"]["contra_over_ipsi"]]
+report["uncertainty"] = {"L1_sugar_contralateral_bias": stats.point(
+    min(_ratios) if None not in _ratios else None, l1,
+    note="graph arithmetic over the fixed connectome (signed path products from explicitly sided afferents), no "
+         "simulation and no random draws; estimate is the smaller contra/ipsi ratio of the two sides (needs >= 1.10 "
+         f"with both positive): L afferents {_ratios[0]}, R afferents {_ratios[1]}")}
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECK (criterion registered before the run)")
 print(f"  {'PASS' if l1 else 'FAIL'}  L1_sugar_contralateral_bias")
+_u = report["uncertainty"]["L1_sugar_contralateral_bias"]
+print(f"UNCERTAINTY (flycns/stats.py): {_u['verdict']}  L1_sugar_contralateral_bias: {_u['estimate']} ({_u['method']}; "
+      "graph arithmetic, no sampling)")
 print(f"wrote {OUT / 'report.json'}")
