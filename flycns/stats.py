@@ -55,6 +55,38 @@ def bootstrap(values, stat=np.mean, n_boot=N_BOOT, seed=0):
     return est, float(lo), float(hi)
 
 
+def bootstrap_diff(a, b, stat=np.mean, n_boot=N_BOOT, seed=0):
+    """Two independent samples (arms run as separate simulations): percentile bootstrap 95% interval of
+    stat(a) - stat(b), resampling each arm on its own. Returns (estimate, lo, hi)."""
+    a = np.asarray(a, dtype=float); a = a[~np.isnan(a)]
+    b = np.asarray(b, dtype=float); b = b[~np.isnan(b)]
+    if len(a) == 0 or len(b) == 0:
+        return float("nan"), float("nan"), float("nan")
+    rng = np.random.default_rng(seed)
+    ia = rng.integers(0, len(a), (n_boot, len(a))); ib = rng.integers(0, len(b), (n_boot, len(b)))
+    boots = np.array([stat(a[i]) - stat(b[j]) for i, j in zip(ia, ib)], dtype=float)
+    lo, hi = np.percentile(boots, [2.5, 97.5])
+    return float(stat(a) - stat(b)), float(lo), float(hi)
+
+
+def combine(records, note=None):
+    """A check that is the conjunction of several parts: FAIL if any part fails, PASS if every part
+    passes, else UNRESOLVED. The parts are kept in the record."""
+    vs = [r["verdict"] for r in records]
+    vd = "FAIL" if "FAIL" in vs else ("PASS" if all(v == "PASS" for v in vs) else "UNRESOLVED")
+    rec = dict(estimate=None, ci95=None, band=None, method=f"all of {len(records)} parts", parts=list(records), verdict=vd)
+    if note:
+        rec["note"] = note
+    return rec
+
+
+def unresolved(why, estimate=None):
+    """A check that cannot be scored as designed (a vacuous comparison, a perturbation that touches
+    nothing on the path under test): UNRESOLVED, with the reason."""
+    return dict(estimate=_num(estimate) if not isinstance(estimate, bool) else estimate, ci95=None, band=None,
+                method="not scorable as designed", verdict="UNRESOLVED", note=why)
+
+
 def ratio_of_sums(rows):
     """For 2-D rows (numerator, denominator) per trial: sum(num) / sum(den)."""
     d = rows[:, 1].sum()
