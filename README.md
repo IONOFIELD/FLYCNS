@@ -61,7 +61,7 @@ modelling the sound pathway as the connectome annotates it; that is planned.
 
 - **Escape reflex.** A looming shadow fires the giant escape neuron, which drives the jump motor neuron one spike for one spike, 0.9 ms later, as in the fly. This circuit was used to set the model's few tuned values, so it shows the model is set up correctly. It is not a prediction.
 - **Sound and sight combined.** The model predicts that a sound makes the escape neuron far more likely to fire for a faint visual threat: 18% becomes 53%. Tootoonian et al. 2012 recorded the same summation with an injected current in place of the visual threat. The test was registered in advance, but it is counted as *construction*, not as an independent test. A rule places the faint threat within about 2 mV of threshold, and sound adds a hand-set 3 mV, so in a one-compartment model summation is close to guaranteed.
-- **Courtship song.** The model reproduces which male-only neurons drive pulse song but not sine song, as experiments showed. It also predicts a new pathway for sine song that a lab could test.
+- **Courtship song.** The model reproduces which male-only neurons drive pulse song but not sine song, as experiments showed. The companion paper's pC1_1b-to-sine link is not reproduced (registered check, fail). One male-specific type, SIP108m (4 cells, pIP5 class), drives the sine command neuron and not the pulse neuron in a rule-chosen control arm: a testable prediction, not yet checked for novelty.
 - **Taste.** It shows which taste neurons push feeding up and which push it down, once each connection's sign (excite or inhibit) is counted.
 - **Traceable.** Every result records the exact code, data and settings that produced it. Failures and corrections stay on the record.
 
@@ -231,7 +231,7 @@ and every retraction are in [`RESULTS.md`](RESULTS.md).
 
 - **No background activity.** Neurons are silent at rest, so circuits that work by *removing* inhibition cannot be represented. Feeding and the visual ON pathway fail for this reason, and the flight relay layer stays silent for a related one. Peptide modulation is represented but unscored: AstA raises Mi1's flash response from near zero to 0.04 spikes per flash, far below the graded change Krieger 2023 reports.
 - **Borrowed single-neuron parameters.** Every neuron uses central-brain values from Shiu et al. 2024. The escape relay survives every tested change to the cord neurons' parameters except one: with a 10 mV gap between rest and threshold it fails (TTMn/GF 0.23, lag 24.4 ms; cord sweep, rerun 11 October 2026). The SNpp16 flight result is sensitive to them.
-- **Transmitters come from a classifier.** It is less reliable for modulatory neurons (Eckstein et al. 2024) and appears to misclassify at least one taste neuron type, LB3d. Its call on LB3d decides whether the model treats aversive salt as promoting or suppressing feeding.
+- **Transmitters come from a classifier.** It is less reliable for modulatory neurons (Eckstein et al. 2024). The companion paper's driver-line data disagree with the classifier on one taste neuron type, LB3d, and the model shows that this call decides whether aversive salt promotes or suppresses feeding.
 - **Spiking only.** Neurons that signal with graded potentials, common in early vision and hearing, are forced to spike.
 - **Some drives are cross-species.** Wing and haltere sensor parameters come from larger flies.
 - **The escape circuit is calibrated, not predicted.** See above and `docs/CALIBRATION.md`. The held-out results are the circuits nothing was fitted to.

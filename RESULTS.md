@@ -32,15 +32,26 @@ pull request):
 - every pinned table is rehashed from its bytes before a registered run;
 - menu 51 refuses settings overrides;
 - the toy suite compares 2,224 numbers with a committed golden file;
-- 15 new unit tests.
+- 18 new unit tests (34 in all).
 
-Two roles changed: A2R facilitation is now *construction*, and three graph-arithmetic checks are
-*structural*. No model equation, parameter, stimulus or criterion changed.
+Roles changed for six checks. A2R facilitation is now *construction*. Five checks that are graph
+arithmetic with no simulation are now *structural*: gustatory S1-S3, sugar laterality L1 and
+feeding-by-modality F2. No model equation, parameter, stimulus or criterion changed.
+
+**Not closed by this change** (found by an independent check before merge; scheduled for phases 3
+and 5):
+- A registered test whose `criteria.json` is deleted in a commit can still register afresh.
+- Pass thresholds still sit in the scoring code, outside the registered text, so editing a
+  threshold is not refused.
+- `FLYCNS_ALLOW_DIRTY` waives the guards and is not flagged in the summary.
+- Cloud runs use a shallow checkout, so the registration-history check is skipped there.
+- Unregistered runs still trust the writable fingerprint cache.
 
 **Run 8.** All 48 cloud jobs reran at commit `d72fe77`, and all 93 result files carry its stamp.
-- **Unchanged.** Every one of the 7,197 numbers and verdicts in the earlier reports is identical
-  to run 6, to the last digit. 36 of 48 checks pass. By role, independent checks pass 9 of 18 and
-  structural 3 of 5. These were 13 of 24 independent before the relabel; no outcome changed.
+- **Unchanged.** The 70 result JSON files hold 5,643 numbers and verdicts. All but 12 are
+  identical to run 6, to the last digit; the 12 are the feeding mechanism, changed as intended.
+  36 of 48 checks pass. By role, independent checks pass 9 of 18 and structural 3 of 5. These were
+  13 of 24 independent before the relabel; no outcome changed.
 - **Changed: the feeding mechanism, as intended.** Its path products are no longer NaN. They now
   come from the graph the model simulates, with histamine signed and the weight floor applied:
 
@@ -49,9 +60,9 @@ Two roles changed: A2R facilitation is now *construction*, and three graph-arith
   | signed taste-to-MN9 influence | -0.0035 | +0.0032 | +0.0065 | +0.0025 |
 
   That is inhibitory at two hops and excitatory at three to five: the disinhibition the note has
-  claimed, now with numbers behind it. MN9's input balance moves slightly to net -83 synapses
-  (-1.4%). The gustatory afferents still contact MN9's inhibitory inputs 3 times more than its
-  excitatory ones (ratio 0.33).
+  claimed. These values, and MN9's input balance (net -83 synapses, -1.4%; afferents onto its
+  inhibitory inputs 3 times more than onto its excitatory ones, ratio 0.33), equal the September
+  file exactly. Only run 6, which read the stale column, had NaN and slightly different balances.
 - **New: both engines on the real connectome.** The compiled and pure-Python engines gave
   identical spikes on 10 looms: 2,547 spikes each, exact equality (`fit/check_engines.py`,
   x86-64 Windows). Until now this had been shown only on the toy and on synthetic networks.
@@ -207,9 +218,8 @@ neurons):
 - **The cloud rerun had no anatomical SEZ.** See "The SEZ trio" above.
 - **Two misleading log lines.** Registered tests printed the current commit as the registration
   commit. Flight runs warned about "no outgoing edges" when they had no stimulus types to warn
-  about. Still open: the SNpp16 graded report's `registration` field also records the run's commit
-  (fcff151). The true registration (fae9fdb, 25 September) is in its `criteria.json`. This is
-  deferred to the next model change, because any edit to a benchmark marks every report stale.
+  about. The SNpp16 graded report's `registration` field also recorded the run's commit (fcff151);
+  since run 6 it records the true registration (fae9fdb, 25 September), as its `criteria.json` does.
 - **The citation check missed three references** (Namiki et al. 2022, Sasaki & Burrows 1998,
   Newcombe 1998). It also raised false alarms on dates and on accents (Pezier, Pézier). It now
   resolves all 48 tags.
@@ -406,8 +416,11 @@ Four independent circuits fail. Three share one cause.
 - **The canonical ON visual pathway.** Mi1's largest input is L1 with 141,873 glutamatergic
   (inhibitory) synapses. The ON response is a double inversion: light depolarises photoreceptors,
   histamine inhibits L1, L1 releases less glutamate, Mi1 is released.
-- **AstA peptidergic modulation.** Pm3 is GABAergic, so activating it in a silent network produces
-  nothing at all, in the model or in principle (`benchmarks/peptide_asta.py`).
+- **AstA peptidergic modulation.** Pm3 is GABAergic, so in a silent network its fast synapses
+  have nothing to suppress. The peptide is represented but unscored: AstA raises Mi1's flash
+  response from near zero (0.0002) to 0.04 spikes per flash (`benchmarks/peptide_asta.py`),
+  far below the graded change Krieger 2023 reports. (Correction, 11 October 2026: this line said
+  the peptide produced "nothing at all, in the model or in principle".)
 
 A network with no spontaneous activity cannot represent any of these, and a uniform tonic baseline
 does not help: it lets MN9 respond but the wind-sensitive control responds just as strongly
@@ -811,7 +824,12 @@ from the graph before any simulation. The interpretation of every outcome was wr
 SIP108m drives the sine neuron and not the pulse neuron. The pulse/sine split is present in the
 wiring and survives simulation in both directions.
 
-**A new prediction: activating the pIP5 (pIP-e) neurons should promote sine song.** The rule found
+**A testable prediction: SIP108m (pIP5 class) should promote sine song.** One male-specific type,
+SIP108m (4 cells), drives the sine command neuron DNp13 and not the pulse neuron pMP2 in a
+rule-chosen control arm. Seven further pIP5-class types are its strongest inputs by wiring but
+were not simulated, and novelty has not been checked against the song literature. (Correction,
+11 October 2026: this heading said "activating the pIP5 (pIP-e) neurons should promote sine song",
+a class-level claim from one simulated type.) The rule found
 SIP108m from the wiring; MaleCNS's own sex annotations (`scripts/fetch_dimorphism.py`, properties
 `dimorphism`, `fruDsx`, `synonyms`) then identify it and every other strong excitatory input to DNp13:
 (The literature names come from MaleCNS's `synonyms` annotation. They have not all been checked
