@@ -266,6 +266,14 @@ def require_data(data_dir, label, names=None):
     return v
 
 
+def criteria_differ(crit_file, criteria):
+    """True if a registered test's committed criteria differ from the ones in its code. Compared in
+    the JSON form they are stored in: a tuple in code and the list it was saved as are the same
+    criterion (compared raw, a registered test with a tuple could never be rerun)."""
+    stored = json.loads(Path(crit_file).read_text(encoding="utf-8")).get("criteria")
+    return stored != json.loads(json.dumps(criteria))
+
+
 # ----------------------------------------------------------------------------- canonical results
 class preserved:
     """Context manager: snapshot result folders and files, and put them back exactly on exit, even

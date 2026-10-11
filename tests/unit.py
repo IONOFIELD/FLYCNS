@@ -124,6 +124,22 @@ def t_targeted_flip_needs_its_table(tmp):
         del os.environ["FLYCNS_SIGNFLIP_TARGETED"]
 
 
+def t_registered_criteria_rerun(tmp):
+    """A registered test must be rerunnable: criteria saved as JSON match the code (tuples become
+    lists), a changed criterion does not, and every registered test uses this comparison."""
+    from flycns.integrity import criteria_differ
+    crit = dict(band=(2.0, 12.0), k=7, R1="text")
+    f = tmp / "criteria.json"
+    f.write_text(json.dumps(dict(criteria=crit)), encoding="utf-8")
+    same = not criteria_differ(f, crit)
+    changed = criteria_differ(f, {**crit, "k": 8})
+    raw = [p.name for p in (ROOT / "benchmarks").glob("*.py")
+           if "CRITERIA = dict(" in p.read_text(encoding="utf-8")
+           and "criteria_differ(crit_f, CRITERIA)" not in p.read_text(encoding="utf-8")]
+    ok = same and changed and not raw
+    return ok, "saved criteria match their code; a changed criterion is refused" if ok else f"{same} {changed} {raw}"
+
+
 def t_settings_banner():
     code = "from flycns.integrity import announce_overrides as a; a(); a()"
     r = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace",
@@ -315,6 +331,7 @@ def run_all():
                          ("superclass null keeps class structure", t_null_superclass),
                          ("min_weight override + provenance", lambda: t_min_weight_and_provenance(tmp)),
                          ("targeted flip refuses without its table", lambda: t_targeted_flip_needs_its_table(tmp)),
+                         ("registered tests can be rerun", lambda: t_registered_criteria_rerun(tmp)),
                          ("settings banner", t_settings_banner),
                          ("registered tests refuse dirty code", lambda: t_clean_tree_guard(tmp)),
                          ("every scored check has a role", t_every_check_has_a_role),

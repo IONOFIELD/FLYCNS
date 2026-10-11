@@ -76,7 +76,7 @@ CRITERIA = dict(
     sides="explicit only (somaSide, else _L/_R instance suffix)", groups=GROUPS)
 # Registered test: refuse uncommitted code and data that differ from data/MANIFEST.json, so the
 # registered result can be traced to an exact commit and an exact dataset (flycns/integrity.py).
-from flycns.integrity import require_clean, require_data  # noqa: E402
+from flycns.integrity import require_clean, require_data, criteria_differ  # noqa: E402
 require_clean(Path(__file__).stem)
 require_data(DATA, Path(__file__).stem, ["neurons.parquet", "edges.parquet"])
 crit_f = OUT / "criteria.json"
@@ -87,7 +87,7 @@ try:
 except Exception:
     commit, dirty = "", True
 if crit_f.exists():
-    if json.loads(crit_f.read_text(encoding="utf-8")).get("criteria") != CRITERIA:
+    if criteria_differ(crit_f, CRITERIA):
         raise SystemExit("criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test.")
 else:
     crit_f.write_text(json.dumps(dict(criteria=CRITERIA, registered_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
