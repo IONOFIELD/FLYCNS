@@ -31,9 +31,11 @@ from .integrity import PLUMBING, ROOT, _box, _git, allow_dirty, git_state, overr
 
 NAME = "registration.json"
 VERSION = 2
-# files that define the model and its inputs; guard, display and platform code is not listed (it does
-# not change a number), and neither is the role table (it does not change a verdict)
-# (the role table is listed: relabelling a failed independent check after the fact is a design change)
+# Files that define the model and its inputs, and the role table (relabelling a failed independent check
+# after the fact is a design change). Not listed, by design: the guard and reporting code (registry.py,
+# integrity.py, benchmarks/summarize.py) and the display and platform code (ascii.py, windows.py). None of
+# them computes a number or a verdict; each report's verdicts come from its benchmark and stats.py, which
+# are frozen, so fixing a guard does not void every registration. (Engine choice is recorded per report.)
 MODEL_FILES = ["flycns/__init__.py", "flycns/anatomy.py", "flycns/bench.py", "flycns/calibration.py",
                "flycns/graph.py", "flycns/model.py", "flycns/protocols.py", "flycns/stats.py",
                "data/loom_tuning_measured.json", "data/MANIFEST.json", "requirements.lock"]
@@ -183,7 +185,8 @@ def verify_bands(reg, uncertainty):
         if not isinstance(spec, dict):
             continue
         wants = ([spec["band"]] if spec.get("band") is not None else []) + list(spec.get("bands") or [])
-        if not wants:
+        optional = list(spec.get("optional_bands") or [])     # parts scored only when they can be
+        if not wants and not optional:
             continue
         rec = uncertainty.get(name)
         if rec is None:
@@ -198,11 +201,11 @@ def verify_bands(reg, uncertainty):
             if not any(_same_band(b, w) for b in used):
                 bad.append(f"{name}: registered band {w} not among the bands it was scored with {used}")
         for b in used:
-            if not any(_same_band(b, w) for w in wants):
+            if not any(_same_band(b, w) for w in wants + optional):
                 bad.append(f"{name}: scored with band {b}, which the registration does not state")
     for name, rec in uncertainty.items():
         spec = specs.get(name)
-        has = isinstance(spec, dict) and (spec.get("band") is not None or spec.get("bands"))
+        has = isinstance(spec, dict) and (spec.get("band") is not None or spec.get("bands") or spec.get("optional_bands"))
         if _all_bands(rec) and not has:
             bad.append(f"{name}: scored with bands {_all_bands(rec)} but registered without any")
     reg["_band_mismatches"] = bad

@@ -80,8 +80,8 @@ CRITERIA_V2 = dict(
             condition=("scored when the auditory report carries A2_construction (the registered auditory.py always "
                        "writes it); otherwise UNRESOLVED"),
             rule=("facilitation beyond summation: PASS if the 95% interval on the observed P(GF | loom + sound) minus "
-                  "the probability predicted by adding the measured sound-alone peak depolarisation (same run) to "
-                  "each loom-alone trial's peak depolarisation of its most depolarised giant fiber lies above 0; "
+                  "the probability predicted by adding each giant fiber's measured sound-alone peak depolarisation "
+                  "(same run) to its loom-alone peak, per trial, lies above 0; the interval resamples all three arms; "
                   "FAIL if at or below 0; UNRESOLVED if it spans 0")),
     },
 )
@@ -169,10 +169,10 @@ if cons and cons.get("residual_ci95") and cons.get("predicted_hit_by_summation")
     rlo, rhi = cons["residual_ci95"]
     unc2 = stats.scored(cons["residual"], rlo, rhi, low=0.0, strict=True, method="bootstrap",
                         note=(f"observed P(GF|loom+sound) {cons['observed_hit']:.3f} minus the {cons['predicted_hit_by_summation']:.3f} "
-                              f"predicted by adding the measured sound-alone peak depolarisation ({cons['sound_potential_mV']:.2f} mV, "
-                              f"JON {cons['jon_mode']}) to each loom-alone trial's peak depolarisation of its most "
-                              f"depolarised giant fiber (rest to threshold {cons['gap_mV']} mV); percentile bootstrap over "
-                              f"trials, the two arms resampled on their own (auditory.py A2_construction)"))
+                              f"predicted by adding each giant fiber's measured sound-alone peak depolarisation "
+                              f"({', '.join(f'{x:.2f}' for x in cons['sound_potential_mV'])} mV, JON {cons['jon_mode']}) to "
+                              f"its loom-alone peak per trial (rest to threshold {cons['gap_mV']} mV); percentile bootstrap "
+                              f"resampling all three arms; biased low, so a PASS is conservative (auditory.py A2_construction)"))
 else:
     unc2 = stats.unresolved("the auditory report carries no A2_construction, so facilitation beyond summation "
                             "cannot be scored")

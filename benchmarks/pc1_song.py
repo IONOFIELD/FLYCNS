@@ -78,13 +78,13 @@ CRITERIA_V2 = dict(
                   model="declared parameter set (LIFParams), electrical synapses on"),
     checks=dict(
         P1_pc1_14a_pulse_over_sine=dict(
-            bands=[[0.5, None]],
+            bands=[[0.5, None]], optional_bands=[[0.0, None]],
             rule=("conjunction, pC1_14a at 100 Hz: (a) pMP2 spikes/cell/pulse, bootstrap over pulses, 95% interval at "
                   "or above 0.5; (b) pMP2 minus DNp13 paired per pulse, bootstrap over pulses, 95% interval above 0, "
                   "UNRESOLVED (not scorable) if DNp13 fires in no pulse of any group and rate on the real network; "
                   "PASS only if both parts pass")),
         P2_pc1_13_14_pulse_over_sine=dict(
-            bands=[[0.5, None]],
+            bands=[[0.5, None]], optional_bands=[[0.0, None]],
             rule=("conjunction, pC1_13_14 at 100 Hz: (a) pMP2 spikes/cell/pulse, bootstrap over pulses, 95% interval "
                   "at or above 0.5; (b) pMP2 minus DNp13 paired per pulse, bootstrap over pulses, 95% interval above "
                   "0, UNRESOLVED (not scorable) if DNp13 fires in no pulse of any group and rate on the real network; "

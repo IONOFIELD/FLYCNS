@@ -79,7 +79,7 @@ def git_state():
         if " -> " in path:
             path = path.split(" -> ", 1)[1]
         code = line[:2].strip() or "?"
-        registration = path.startswith("results/") and path.endswith("/criteria.json")
+        registration = path.startswith("results/") and path.endswith(("/criteria.json", "/registration.json"))
         if path in MODEL_INPUTS or not path.startswith(NOT_CODE_PREFIXES) or (registration and code != "??"):
             dirty.append(f"{code} {path}")
     return dict(is_repo=True, commit=commit.strip(), dirty_files=dirty, clean=not dirty)
@@ -122,6 +122,10 @@ def require_clean(label):
     was committed once and never changed."""
     st = git_state()
     history = registration_history(label)
+    _, shallow = _git("rev-parse", "--is-shallow-repository")
+    if shallow.strip() == "true":
+        history = history + ["this is a shallow clone, so the registration's history cannot be checked "
+                             "(clone with full history: git fetch --unshallow)"]
     if history:
         if not allow_dirty():
             raise SystemExit(f"[integrity] {label} refuses to run: " + "; ".join(history)

@@ -24,7 +24,7 @@ of the model. CI fails if a scored check has no role.
 
 | value | where | how it was chosen | checks it touches |
 |---|---|---|---|
-| **w_scale = 0.3** (global synaptic scale; 0.275 mV × 0.3 = 0.0825 mV per synapse) | `flycns/model.py` | A sweep (`scripts/legacy/sweep.py`, `data/sweep_results.csv`) over 1.0, 0.5 and 0.25, looking for low population rate (under about 1 Hz), few active cells (under 10%), and giant fiber firing far more under loom than under sound. The committed grid does not contain 0.3. `scripts/legacy/gf_physio.py` records the reasoning as roughly a 3× reduction, because the raw value is too strong once the nerve cord is included. No other record of the derivation exists. | escape `cns_quiet`, auditory `A5_cns_quiet` and feeding `F2b_extra_SEZ_quiet` are **calibrated**. The selection also looked at GF/TTMn firing, so the escape circuit is not held out from it. **Re-selected blind, 11 October 2026** (`fit/select_wscale.py`, criterion registered before the run): under a random 10% of the sensory neurons no benchmark drives, at 20 Hz, the network stays quiet (rate < 1 Hz, < 10% active) for every w_scale from 0.15 to 0.4 (0.3: 0.007 Hz, 0.06% active) and runs away between 0.4 and 0.5 (2.5 Hz, 3.7% active at 0.5). The registered rule, "the largest quiet value", picks 0.4, at the edge of that transition. 0.3 meets the same criterion and is kept, because adopting 0.4 would place the model at a phase edge and would require refitting the loom rate scale, the GF adaptation and the A2 working point. This is a decision, recorded as such. |
+| **w_scale = 0.3** (global synaptic scale; 0.275 mV × 0.3 = 0.0825 mV per synapse) | `flycns/model.py` | A sweep (`scripts/legacy/sweep.py`, `data/sweep_results.csv`) over 1.0, 0.5 and 0.25, looking for low population rate (under about 1 Hz), few active cells (under 10%), and giant fiber firing far more under loom than under sound. The committed grid does not contain 0.3. `scripts/legacy/gf_physio.py` records the reasoning as roughly a 3× reduction, because the raw value is too strong once the nerve cord is included. No other record of the derivation exists. | escape `cns_quiet`, auditory `A5_cns_quiet` and feeding `F2b_extra_SEZ_quiet` are **calibrated**. The selection also looked at GF/TTMn firing, so the escape circuit is not held out from it. **Re-selected blind, 11 October 2026** (`fit/select_wscale.py`, criterion registered before the run): under a random 10% of the sensory neurons no benchmark drives, at 20 Hz, the network stays quiet (rate < 1 Hz, < 10% active) for every w_scale from 0.15 to 0.4 (0.3: 0.007 Hz, 0.06% active) and runs away between 0.4 and 0.5 (2.5 Hz, 3.7% active at 0.5). The registered rule, "the largest quiet value", picks 0.4, at the edge of that transition. 0.3 satisfies the two quietness conditions but is **not** what the registered rule selects. It is kept anyway, because adopting 0.4 would place the model at the edge of a runaway transition and would require refitting the loom rate scale, the GF adaptation and the A2 working point. This departs from the registered rule; it is a decision taken after seeing the result, recorded as such, and gap 6 stays open. The selection's registration and report are committed in `results/select_wscale/`. |
 | **PEAK_HZ = 5.0** (dF/F to spike-rate scale of the loom stimulus) | `flycns/protocols.py` | Anchored so the giant fiber fires 1 to 2 spikes with P(response) ≥ 0.5 (von Reyn et al. 2014). No recording links glomerulus dF/F to spike rate, so this is the stimulus's one free scale. | escape `gf_spikes_per_response_1_to_2` and `gf_response_prob_0.5_to_1` are **calibrated** |
 | **GF adaptation b_adapt = 10 mV** (30 mV before 10 October 2026) | `flycns/graph.py` INTRINSIC_OVERRIDES | `benchmarks/fit_gf_adapt.py`: the smallest value giving 1 to 2 spikes per response, ≤ 2 on the strongest gain quartile, P(response) 0.5 to 1, and an intact TTMn relay | same two escape checks (**calibrated**) |
 | **GF→TTMn, GF→PSI spikelet 9 mV, delay 0.8 ms** | `flycns/graph.py` ELECTRICAL_SYNAPSES, `model.py` | Physiological constraint: a 1:1 relay at about 0.8 ms (Tanouye & Wyman 1980). The spikelet is set just above the 7 mV distance from rest to threshold. | escape `ttmn_one_to_one` and `ttmn_lag_0.5_1.5ms` hold **by construction** |
@@ -78,22 +78,22 @@ The **held-out tests** are the circuits no value above was fitted to:
 - feeding by modality, the simulated checks (`feeding_by_modality` F3, F4)
 - the flight checks other than L1a
 - the SNpp16 tests
+- **sound-loom facilitation beyond summation** (`a2_registered`, A2R2, registered version 2): it
+  scores only the facilitation that adding the model's own measured sound-alone depolarisation to
+  each loom-alone trial does not predict
+- **sound-loom facilitation with the contact as EM annotates it** (`a2_contact_em`, C1), with one
+  caveat recorded in its registration: the committed reference arm had already shown the EM-annotated
+  contact firing the giant fiber on every sound-alone trial, so C1's "sound alone stays subthreshold"
+  part is not a blind prediction. It is kept so C1 cannot pass on sound firing the giant fiber by itself.
 
 Not counted as tests, though pre-registered:
-- **Sound-loom facilitation beyond summation** (`a2_registered`, A2R2, registered version 2) is
-  **independent**: it scores only the facilitation that adding the model's own measured sound-alone
-  depolarisation to each loom-alone trial does not predict.
-- **Sound-loom facilitation with the contact as EM annotates it** (`a2_contact_em`, C1) is
-  **independent**, with one caveat recorded in its registration: the committed reference arm already
-  showed that the EM-annotated contact alone fires the giant fiber on every sound-alone trial, so
-  C1's "sound alone stays subthreshold" part is not a blind prediction. It is kept so C1 cannot pass
-  on sound firing the giant fiber by itself.
 - **Sound-loom facilitation** (`a2_registered`, A2R) is **construction**. The working-point rule parks
   the loom-alone giant fiber about 2 mV below threshold, and the sound input is a hand-set, untraced
   3 mV compound potential. In a one-compartment cell, summation of the two crosses threshold unless
   polysynaptic inhibition intervenes. Facilitation was also scored, with no parameter moving, during
-  the gain fits (`fit_gains.py`, `fit_regional.py`). It becomes a test when the JON-to-GF contact is
-  modelled as the connectome annotates it (planned).
+  the gain fits (`fit_gains.py`, `fit_regional.py`). The tests of it are A2R2 and C1 (above).
+- **The sign-inverted contact** (`a2_contact_em_flip`, C2) is a **control**: inhibitory input cannot
+  facilitate in this model, so it is expected to pass by construction.
 - **The signed taste map, sugar laterality and the feeding-by-modality synapse ratio** are
   **structural**: they count over the wiring with no simulation.
 
