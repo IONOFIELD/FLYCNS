@@ -26,8 +26,10 @@ circuit by circuit, including where the wiring alone is not enough.
 - **The male fly.** Circuits that differ between the sexes, such as courtship song, can be simulated.
 - **Scored, not showcased.** Every one of the 53 scored checks was registered against a frozen model,
   and its registration committed, before the run that scored it: the criteria with their numbers,
-  and a hash of every model file. Every check carries a 95% interval and passes only if the whole
-  interval lies inside its band. Failures stay on the record next to the successes: at present 32 of
+  and a hash of every model file. Each check carries a 95% interval, a score per random draw, or a
+  percentile against shuffled wiring; checks that only count over the wiring are scored on their
+  value. A check passes only if its whole interval, or the required share of draws, lies inside its
+  band. Failures stay on the record next to the successes: at present 32 of
   53 checks pass and 8 are unresolved. Of the 19 that count as independent tests of the model,
   6 pass, 9 fail and 4 are unresolved (`results/SUITE.md`). Checks guaranteed by a chosen value, or
   that only count over the wiring, are labelled as such and not counted as tests.
@@ -39,16 +41,18 @@ lead this page does not survive its own registered tests. A sound does make the 
 likely to fire for a faint visual threat (from 18% to 51% of trials). But the facilitation is smaller
 than adding the two inputs predicts, so it shows nothing beyond arithmetic. And with the ear-to-escape
 contact modelled as the connectome annotates it, sound alone fires the escape neuron on every trial,
-which recordings do not show.
+which recordings do not show. (That last outcome could be seen in an earlier reference run before the
+test was registered, so it is not a blind prediction; the same test's facilitation part passes.)
 
 Two results do hold as registered:
-- **Escape needs its specific wiring.** Shuffle the connectome while keeping each cell's class,
-  neuropil and input strength, and the network stays as active as the real one. Yet in 20 such
-  shuffles the escape neuron never responds as often as with the real wiring.
-- **One wing sensor drives the upstroke motor neurons.** SNpp16 drives them selectively and reliably
-  at a pre-registered working point.
-
-  That selectivity does not survive faster nerve-cord membranes.
+- **Escape needs its specific wiring.** This is a control, not a test of a prediction. Shuffle the
+  connectome while keeping each cell's class, neuropil and input strength, and the network stays as
+  active as the real one. Yet in 20 such shuffles the escape neuron never responds as often as with
+  the real wiring.
+- **One wing sensor drives the upstroke motor neurons.** SNpp16 drives them selectively, in 4 of 5
+  random draws, at a working point chosen by a pre-registered rule from the same sweep. Its
+  replication with fresh draws is unresolved. Its selectivity does not survive faster nerve-cord
+  membranes or a smaller threshold gap.
 
 Most independent checks fail or are unresolved (`results/SUITE.md`, RESULTS.md).
 
@@ -70,8 +74,8 @@ Most independent checks fail or are unresolved (`results/SUITE.md`, RESULTS.md).
 ## What it achieves
 
 - **Escape reflex.** A looming shadow fires the giant escape neuron, which drives the jump motor neuron one spike for one spike, 0.9 ms later, as in the fly. This circuit was used to set the model's few tuned values, so it shows the model is set up correctly. It is not a prediction.
-- **Sound and sight combined.** A sound makes the escape neuron far more likely to fire for a faint visual threat: 18% becomes 51%. Tootoonian et al. 2012 recorded the same summation with an injected current in place of the visual threat. This is counted as *construction*: a rule places the faint threat near threshold and sound adds a hand-set potential, so summation is close to guaranteed. The registered tests of it fail. The facilitation is smaller than adding the two potentials predicts, so nothing beyond arithmetic is shown. With the ear-to-escape contact as the connectome annotates it, instead of the hand-set coupling, sound alone fires the escape neuron on every trial, which recordings do not show. The hand-set coupling also turns out to give the two escape neurons unequal sound potentials (3.7 and 0.7 mV, against 3 mV intended): a defect to fix at the next registration.
-- **Courtship song.** The model reproduces which male-only neurons drive pulse song but not sine song, as experiments showed. The companion paper's pC1_1b-to-sine link is not reproduced (registered check, fail). One male-specific type, SIP108m (4 cells, pIP5 class), drives the sine command neuron and not the pulse neuron in a rule-chosen control arm: a testable prediction, not yet checked for novelty.
+- **Sound and sight combined.** A sound makes the escape neuron far more likely to fire for a faint visual threat: 18% becomes 51%. Tootoonian et al. 2012 recorded the same summation with an injected current in place of the visual threat. This is counted as *construction*: a rule places the faint threat near threshold and sound adds a hand-set potential, so summation is close to guaranteed. The registered tests of it fail. The facilitation is smaller than adding the two potentials predicts, so nothing beyond arithmetic is shown. With the ear-to-escape contact as the connectome annotates it, instead of the hand-set coupling, sound alone fires the escape neuron on every trial, which recordings do not show (an outcome visible in an earlier reference run before that test was registered). The hand-set coupling also turns out to give the two escape neurons unequal sound potentials (3.7 and 0.7 mV, against 3 mV intended): a defect to fix at the next registration.
+- **Courtship song.** Activating the male-only pC1_14a neurons drives the pulse-song command neuron, as optogenetics showed, and more than other pC1 groups do. Whether they drive pulse *rather than* sine song cannot be tested here: the sine command neuron fires in no condition at all (unresolved). The companion paper's pC1_1b-to-sine link is not reproduced (registered check, fail). One male-specific type, SIP108m (4 cells, pIP5 class), drives the sine command neuron and not the pulse neuron in a rule-chosen control arm: a testable prediction, not yet checked for novelty.
 - **Taste.** It shows which taste neurons push feeding up and which push it down, once each connection's sign (excite or inhibit) is counted.
 - **Traceable.** Every result records the exact code, data and settings that produced it. Failures and corrections stay on the record.
 
@@ -213,7 +217,7 @@ The house rules are in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 | circuit | outcome |
 |---|---|
 | **Visual escape** (loom to giant fiber to jump muscle) | The **calibration circuit**. The loom's rate scale and the giant fiber's adaptation were set to give 1 to 2 spikes per response, and the relay is 1:1 by construction. On that calibration, the giant fiber fires with probability 0.58 (95% interval 0.42 to 0.72, so the calibrated 0.5 floor is unresolved), and each spike drives the jump motor neuron one-to-one 0.9 ms later. The independent part is the latency (40 ms, inside 10 to 60 ms). The controls: the jump motor neuron does not respond without the electrical synapse, and nothing responds on shuffled wiring, including wiring shuffled within cell class. On a shuffle that keeps each cell's class, neuropil and input per sign and size, the network stays as active as the real one, yet no draw of 20 drives the giant fiber as often (0.30 at most, against 0.575): the response depends on the specific wiring. Holds under other seeds, stricter connection thresholds and inversion of the transmitter calls the classifier is unsure of. Its calibrated response probability falls out of range under random sign flips (2 of 3 runs), and its spike count or response probability under a ±0.05 change in the weight scale. |
-| **Hearing to the giant fiber** | Sound alone stays subthreshold through the documented electrical synapse, which is calibrated. **Pre-registered, counted as construction** (the near-threshold working point and the 3 mV sound input make summation close to guaranteed): sound plus a near-threshold loom raises the giant fiber's response probability from 18% to 51% (+0.33, 95% interval +0.22 to +0.44; 120 trials per arm), and the facilitation holds at every working point tested (pre-registered sweep, five gains). This is the summation Tootoonian et al. 2012 recorded with injected current in place of the loom. Its registered tests fail: the facilitation is smaller than adding the two measured potentials predicts (A2R2), and with the contact as EM annotates it sound alone fires the giant fiber on every trial (C1). The calibration also gives the two giant fibers unequal sound potentials (3.7 and 0.7 mV). |
+| **Hearing to the giant fiber** | Sound alone stays subthreshold through the documented electrical synapse, which is calibrated. **Pre-registered, counted as construction** (the near-threshold working point and the 3 mV sound input make summation close to guaranteed): sound plus a near-threshold loom raises the giant fiber's response probability from 18% to 51% (+0.33, 95% interval +0.22 to +0.44; 120 trials per arm), and the facilitation holds at every working point tested (pre-registered sweep, five gains). This is the summation Tootoonian et al. 2012 recorded with injected current in place of the loom. Its registered tests fail: the facilitation is smaller than adding the two measured potentials predicts (A2R2), and with the contact as EM annotates it sound alone fires the giant fiber on every trial (C1; visible in an earlier reference run before registration, so not blind). The calibration also gives the two giant fibers unequal sound potentials (3.7 and 0.7 mV). |
 | **Feeding** (taste to proboscis) | Does not reproduce feeding. The reason is measured, and the result holds when taste neurons are split by modality. |
 | **Courtship song** (male-specific pC1 neurons to song command neurons) | Pre-registered. Activating pC1_14a drives the pulse-song neuron, as optogenetics showed, and more than the pC1_15/16 groups do (independent, pass). That it drives the pulse neuron *and not the sine neuron* cannot be tested here: the sine neuron fires in no arm at all, so the two checks that compare them are unresolved. Globally shuffled wiring drives nothing; a shuffle that keeps class, neuropil, sign and size leaves the pulse response inside the null's spread, but that null is not active enough to test wiring (unresolved). The companion paper's pC1_1b-to-sine link is not reproduced (registered check, fail). One male-specific type, SIP108m (4 cells, pIP5 class), drives the sine command neuron and not the pulse neuron, in a rule-chosen control arm. Seven further pIP5-class types are its strongest inputs by wiring but were not simulated. This is offered as a testable prediction; its novelty against the song literature has not been checked. |
 | **Taste to feeding motor neurons** (signed map) | Counts over the wiring, not simulations (*structural* role). Appetitive taste neurons push proboscis extension up and bitter pushes it down (pre-registered: 1 of 3 checks pass; per-type sign agreement and LB2's dominance of pumping both fail). Of the 15 strongest unsigned influences on the proboscis motor neuron, 8 reverse to inhibitory once synaptic sign is included. Sugar neurons favour the opposite side's proboscis motor neuron, as Shiu et al. 2024 predicted, and this is visible only with sign. |

@@ -1,6 +1,6 @@
 # flycns: results note
 
-*Status v0.9, 11 October 2026. A working note, not a manuscript. Every number is reproducible
+*Status v0.9, model frozen and every check registered, 11 October 2026. A working note, not a manuscript. Every number is reproducible
 from the scripts named beside it; run `./fly` and use the menu. Where the model disagrees with a
 measurement, the model is presumed wrong.*
 
@@ -12,19 +12,29 @@ The complete male Drosophila central nervous system connectome (Janelia FlyEM Ma
 176,422 neurons in its table, brain and ventral nerve cord; about 170,000 of them have a connection
 of five or more synapses and are simulated) was simulated as a signed leaky integrate-and-fire
 network using the model and parameters of Shiu et al. 2024, with the loom stimulus measured from
-public calcium imaging and split by the fly's behavioural state. Two circuits reproduce published
-physiology under a single declared parameter set: the giant fiber escape pathway and auditory
-input to the giant fiber. (Correction, 10 October 2026: "with no fitted gains" was wrong. One global
-weight scale, the loom rate scale and the giant fiber's adaptation were chosen partly on the escape
-readouts, so escape is the calibration circuit and its spike-count and response-probability checks
-are not tests; see the note below and docs/CALIBRATION.md.) Three further circuits do not, and the reason is
-the same in each case and is measured rather than assumed. A twelve-run robustness battery (rerun
-11 October 2026) shows no scored result depends on a transmitter call the connectome's own classifier
-is uncertain about, and no independent check fails under any of its perturbations.
+public calcium imaging and split by the fly's behavioural state. After an audit on 11 October 2026,
+the model was frozen and every scored check was registered, with its numbers, before one final run
+(run 12, below).
+- **Counts.** 32 of 53 checks pass and 8 are unresolved. Of the 19 independent tests, 6 pass, 9 fail
+  and 4 are unresolved.
+- **Escape.** The giant fiber escape pathway is the calibration circuit: its spike counts and
+  response probability were set, not predicted. Its response depends on the specific wiring: a
+  shuffle that keeps each cell's class, neuropil and input strength never reproduces it (a control).
+- **Hearing.** Sound facilitates the giant fiber, but by no more than adding the two inputs
+  predicts. With the ear-to-escape contact as the connectome annotates it, sound alone fires the
+  giant fiber, which recordings contradict.
+- **Feeding and the visual ON pathway** fail for one measured reason: they work by disinhibition,
+  which a network with no background activity cannot express. The flight relay layer stays silent
+  for a related reason.
+- **The robustness battery** finds no scored result that depends on a transmitter call the
+  connectome's own classifier is uncertain about.
+
+(Earlier summaries that described the auditory result as "reproducing published physiology" are
+superseded by its registered tests.)
 
 ---
 
-## 12 October 2026: the model frozen, every test registered, one run (audit phases 4 and 5, run 12)
+## 11 October 2026, night: the model frozen, every test registered, one run (audit phases 4 and 5, run 12)
 
 **Registered before the run.** The model was frozen at commit `4c39a8f`. All 20 version-2
 registrations were then written (`FLYCNS_REGISTER_ONLY=1`) and committed (`b7eba83`) before any
@@ -52,6 +62,9 @@ refuses to score if:
 | structural | 3 / 5 | 3 / 5 |
 | construction | 4 / 4 | 4 / 4 |
 
+The counts changed because A2R2 and C1 were added (independent), C2 was added (control), and flight L6
+is now reported rather than scored (it was identical to L5 as coded).
+
 **Every number that did not depend on a phase-4 change is identical to run 10.** That covers escape,
 song, taste, flight, the null distributions and the stricter null. The A2 family moved, as intended:
 its calibration and scoring arms now use disjoint seeds.
@@ -67,7 +80,8 @@ its calibration and scoring arms now use disjoint seeds.
     on every trial (1.0). The model responds on 0.508.
   - The residual is −0.49 (−0.58 to −0.39). Summing two peaks that do not coincide in time
     over-predicts summation, so this baseline is generous.
-  - So the model's facilitation is sub-additive. There is no sign of anything beyond arithmetic.
+  - Because that baseline over-predicts, the shortfall does not show that the facilitation is
+    sub-additive. It shows only that there is no evidence of facilitation beyond summation.
 - **The two giant fibers do not receive the same sound potential.**
   - The declared calibration aims at 3 mV per giant fiber. The measured peaks are 3.65 mV on one side
     and 0.73 mV on the other, because the JON afferents are unequally sided and one spikelet value
@@ -91,7 +105,7 @@ its calibration and scoring arms now use disjoint seeds.
 | variant | result |
 |---|---|
 | half time step (0.05 ms) | 13/14, same as canonical. TTMn lag 0.85 ms (0.90 at 0.1 ms; 0.8 ms delay plus one step, as expected); GF response probability identical (0.575); spikes per response 1.57 (1.46); A2 facilitation holds |
-| nerve-cord glutamate excitatory | 13/14, same as canonical: escape does not depend on the sign of glutamate between nerve-cord neurons |
+| nerve-cord glutamate excitatory | 13/14, bit-identical to canonical. None of the 83,382 flipped connections carries activity in these protocols, so the variant does not test them; it shows only that nothing scored here runs through nerve-cord glutamate |
 | JON→GF as EM annotates it | 12/14: sound alone fires the giant fiber (A1 fails), and the declared electrical pairs no longer carry the drive (A3 fails, by definition) |
 
 **w_scale, re-selected blind** (`fit/select_wscale.py`; registered and committed in
