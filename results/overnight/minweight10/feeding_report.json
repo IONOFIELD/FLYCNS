@@ -25,12 +25,28 @@
     "MN8"
   ],
   "arms": {
+    "MN9_sugar_50Hz_per_trial": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
     "F2b_nonSEZ_rate_hz": 0.0002859017340692544,
     "F2c_motor_mean_hz": 3.958333333333333,
     "motor_types_active": {
       "MN2Db": 12,
       "MN2Da": 7
     },
+    "F2b_nonSEZ_rate_hz_per_pulse": [
+      0.00024075935500568794,
+      0.0003009491937571099,
+      0.00024075935500568794,
+      0.0003611390325085319,
+      0.0003009491937571099,
+      0.00027085427438139895
+    ],
     "ALL_gustatory_50Hz": {
       "n_types": 42,
       "MN9_spikes_per_cell": 0.0,
@@ -73,9 +89,25 @@
       "MN9_ipsi_L": 0.0,
       "MN9_contra_R": 0.0,
       "pop_rate_hz": 0.0055739438552832015,
-      "wall_s": 54.5,
+      "wall_s": 52.8,
       "structural_2hop_L": 12915.0,
       "structural_2hop_R": 0.0,
+      "MN9_ipsi_L_per_trial": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "MN9_contra_R_per_trial": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
       "note": "Shiu 2024 contralateral prediction concerns labellar sugar GRNs; tested separately with LB3b/LB3c in benchmarks/sugar_laterality.py"
     },
     "F4_sufficiency": {
@@ -84,10 +116,52 @@
       "GNG117": 0.9166666666666666,
       "GNG108": 1.0
     },
+    "F4_sufficiency_per_trial": {
+      "DNge062": [
+        2.0,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.0
+      ],
+      "GNG120": [
+        1.5,
+        1.5,
+        1.0,
+        1.0,
+        1.0,
+        0.5
+      ],
+      "GNG117": [
+        1.5,
+        1.0,
+        1.0,
+        0.5,
+        1.0,
+        0.5
+      ],
+      "GNG108": [
+        1.5,
+        1.0,
+        1.0,
+        0.5,
+        1.0,
+        1.0
+      ]
+    },
     "F4_mode": "fallback: MN9's top direct excitatory inputs (not scored)",
     "F5_null": {
       "MN9": 0.0,
-      "MN9_real_50Hz": 0.0
+      "MN9_real_50Hz": 0.0,
+      "MN9_per_trial": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
     }
   },
   "checks": {
@@ -102,9 +176,53 @@
   },
   "pass": true,
   "mechanism": "taste -> MN9 in MaleCNS is disinhibitory; a silent network cannot express that, and no uniform manipulation restores it with specificity. Reproducing feeding needs cell-specific spontaneous activity, i.e. the state-dependent modulation this model omits (cf. Shiu et al. 2024, which reported the same limitation for inhibitory neurons at 0 Hz baseline).",
+  "uncertainty": {
+    "F2b_extra_SEZ_quiet": {
+      "estimate": 0.00028590173406925446,
+      "ci95": [
+        0.00025580681469354345,
+        0.00032101247334091727
+      ],
+      "band": [
+        null,
+        0.02
+      ],
+      "method": "bootstrap",
+      "verdict": "PASS",
+      "n": 6,
+      "note": "outside-SEZ spikes per neuron per second of drive in each 200 ms pulse (sugar at 50 Hz), bootstrap over pulses"
+    },
+    "F2c_motor_rate_physiological": {
+      "estimate": 3.9583333333333326,
+      "ci95": [
+        2.708333333333333,
+        5.416666666666666
+      ],
+      "band": [
+        0,
+        100
+      ],
+      "method": "bootstrap",
+      "verdict": "PASS",
+      "band_lower_exclusive": true,
+      "n": 6,
+      "note": "mean rate of the recruited cb_motor cells (sugar at 50 Hz), bootstrap over pulses; a cell counts as recruited if it fires in the resampled pulses, as in the readout"
+    }
+  },
+  "registration": {
+    "file": "results/feeding/registration.json",
+    "version": 2,
+    "git_commit": "4c39a8f",
+    "model_hash": "9c9cedf1fe8474ba9fdcc36203b2966ae107a14ca741c552c3958309a502fa14",
+    "registered_at": "2026-10-11T12:41:00",
+    "matches": false,
+    "problems": [
+      "model settings overridden: FLYCNS_MIN_WEIGHT=10"
+    ]
+  },
   "provenance": {
-    "written_at": "2026-10-11T14:35:31",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T21:54:56",
+    "git_commit": "b7eba83",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -122,6 +240,7 @@
     "engine": "cython",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "graph": {
       "data_dir": "data",
       "min_weight": 10,
@@ -131,7 +250,11 @@
       "n_dropped_unsigned_edges": 57208,
       "n_dropped_unsigned_synapses": 1325731,
       "n_silent_presynaptic": 4901,
-      "edges_nt_used": false
+      "edges_nt_used": false,
+      "glu_vnc": "inhibitory",
+      "n_glu_vnc_flipped": 0,
+      "jon_mode": "electrical",
+      "jon_compound_mv": 3.0
     },
     "data": {
       "dir": "data",

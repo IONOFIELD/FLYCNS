@@ -1,3 +1,7 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! feeding: runs, but is NOT the registered result
+! model settings overridden: FLYCNS_MIN_WEIGHT=10
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
 !   FLYCNS_MIN_WEIGHT=10
@@ -44,7 +48,7 @@ ALL gustatory arm (42 types, every tastant at once) at 50 Hz -> MN9 0.00 spikes/
 sugar drive: 140 neurons, 69 inferred left
 [graph] removed 663 EM chemical synapses on declared mixed pairs (modelled as electrical)
    structural 2-hop drive from left afferents: MN9-L 12,915 vs MN9-R 0; functional contra dominant -> does NOT match wiring
-F1 left sugar 100 Hz: MN9 ipsi 0.00, contra 0.00 spikes/cell  [55s]
+F1 left sugar 100 Hz: MN9 ipsi 0.00, contra 0.00 spikes/cell  [53s]
 F3 skipped: no bitter GRN type resolved
 [graph] removed 663 EM chemical synapses on declared mixed pairs (modelled as electrical)
 F4 DNge062 50 Hz -> MN9 1.50
@@ -67,5 +71,8 @@ CHECKS
   SKIP  F3_bitter_suppresses
   SKIP  F4_second_order_sufficient
   SKIP  F5_null_silent
+UNCERTAINTY (95% intervals, flycns/stats.py: PASS only if the whole interval lies in the band)
+  PASS        F2b_extra_SEZ_quiet: 0.000286 [0.000256, 0.000321] in [-inf, 0.02] (bootstrap)
+  PASS        F2c_motor_rate_physiological: 3.96 [2.71, 5.42] in (0, 100] (bootstrap)
 
 BENCHMARK PASS  -> results\feeding/report.json
