@@ -360,8 +360,8 @@
     "L1_sugar_contralateral_bias": true
   },
   "provenance": {
-    "written_at": "2026-10-11T06:28:52",
-    "git_commit": "fcff151",
+    "written_at": "2026-10-11T09:26:53",
+    "git_commit": "329488d",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
