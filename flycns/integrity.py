@@ -392,6 +392,10 @@ def provenance_record(data_dir=None):
         from .windows import _DONE
         rec["engine"] = _DONE.get("codegen", "not used")
         rec["platform"] = sys.platform
+        import platform as _pf
+        # the architecture: identical spikes across engines are established on x86-64; ARM64 may fuse
+        # multiply-adds and differ in the last bit
+        rec["machine"] = _pf.machine()
     except Exception:
         pass
     proto = sys.modules.get("flycns.protocols")

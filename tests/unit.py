@@ -326,7 +326,7 @@ def t_engines_identical():
         return True, f"pure-Python engine only here ({len(spikes['numpy'])} spikes); the compiled comparison runs in CI"
     a, b = spikes["cython"], spikes["numpy"]
     ok = len(a) > 0 and len(a) == len(b) and (a.bodyId.values == b.bodyId.values).all() \
-        and np.allclose(a.t_ms.values, b.t_ms.values)
+        and np.array_equal(a.t_ms.values, b.t_ms.values)
     return ok, f"compiled and pure-Python engines: {len(a)} identical spikes" if ok else \
         f"engines differ: {len(a)} vs {len(b)} spikes"
 
@@ -377,14 +377,15 @@ def t_peptide_reaches_targets():
     from flycns import CNSModel, LIFParams
     neurons, edges = _toy_graph()
     out = {}
-    for label, stim in (("source simulated", ["L3", "L5"]), ("source stimulated", ["L3", "L5", "Pm3"])):
+    # simulated arm: L2 drives the simulated Pm3 source through its chain; stimulated arm: Pm3 is driven
+    for label, stim in (("source simulated", ["L3", "L5", "L2"]), ("source stimulated", ["L3", "L5", "Pm3"])):
         m = CNSModel(neurons, edges, stim, LIFParams(peptide_gain_scale=1.0), electrical=False)
-        rates = np.where(m.stim["type"].isin(["Pm3", "L3", "L5"]), 100.0, 0.0)
+        rates = np.where(m.stim["type"].isin(["Pm3", "L3", "L5", "L2"]), 100.0, 0.0)
         m.set_stim_rates(rates)
         m.run(300)
         tgt = np.flatnonzero(np.asarray(m.G.pep_gain) > 0)
         out[label] = (len(m.peptides_applied), float(np.asarray(m.G.pep)[tgt].max()) if len(tgt) else 0.0)
-    ok = out["source stimulated"][0] == 1 and out["source stimulated"][1] > 0
+    ok = all(n == 1 and v > 0 for n, v in out.values())
     return ok, "; ".join(f"{k}: {n} peptide wired, peak level {v:.2f}" for k, (n, v) in out.items())
 
 
@@ -434,6 +435,319 @@ def t_token_file_formats(tmp):
     return all(results), "UTF-8, UTF-8 with BOM and PowerShell UTF-16 all read" if all(results) else str(results)
 
 
+# ------------------------------------------------------------------ audit 2026-10-11, section 4
+def t_sign_flips_are_exact(tmp):
+    """The random flip inverts about the requested fraction; the targeted flip inverts exactly the edges
+    whose sender's T-bars mostly disagree with its label (nt_agree < 0.5), no more and no fewer."""
+    from flycns import graph, integrity
+    d = tmp / "fl"; d.mkdir()
+    rng = np.random.default_rng(3)
+    n = pd.DataFrame(dict(bodyId=np.arange(1, 401), type="T", superclass="central", somaSide="L"))
+    pairs = {(int(a), int(b)) for a, b in rng.integers(1, 401, (9000, 2)) if a != b}
+    e = pd.DataFrame(sorted(pairs), columns=["pre", "post"])
+    e["weight"] = rng.integers(5, 30, len(e)); e["nt"] = rng.choice(["acetylcholine", "gaba"], len(e))
+    n.to_parquet(d / "neurons.parquet", index=False); e.to_parquet(d / "edges.parquet", index=False)
+    nt = e[["pre", "post"]].copy(); nt["nt_agree"] = rng.random(len(e))
+    nt.to_parquet(d / "edges_nt.parquet", index=False)
+    integrity._ANNOUNCED = True
+    _, base = graph.load_graph(str(d))
+    os.environ["FLYCNS_SIGNFLIP"] = "0.2"
+    try:
+        _, rnd = graph.load_graph(str(d))
+    finally:
+        del os.environ["FLYCNS_SIGNFLIP"]
+    frac = float((rnd["sign"] != base["sign"]).mean())
+    os.environ["FLYCNS_SIGNFLIP_TARGETED"] = "1"
+    try:
+        _, tgt = graph.load_graph(str(d))
+    finally:
+        del os.environ["FLYCNS_SIGNFLIP_TARGETED"]
+    m = base.merge(nt, on=["pre", "post"]).set_index(["pre", "post"])
+    flipped = (tgt.set_index(["pre", "post"])["sign"] != m["sign"])
+    exact = bool((flipped == (m["nt_agree"] < 0.5)).all())
+    ok = abs(frac - 0.2) < 0.02 and exact
+    return ok, (f"random flip {frac:.3f} of {len(base):,} edges at 0.2; targeted flip = exactly the "
+                f"{int(flipped.sum()):,} edges with nt_agree < 0.5" if ok else f"random {frac:.3f}, exact {exact}")
+
+
+_SEED_RUN = """
+import sys, json, hashlib, numpy as np
+sys.path.insert(0, sys.argv[1])
+from flycns import CNSModel, LIFParams, load_graph
+neurons, edges = load_graph(sys.argv[2])
+m = CNSModel(neurons, edges, ["LC4", "LPLC2"], LIFParams(), electrical=True)
+m.set_stim_rates(np.full(len(m.stim), 40.0))
+m.run(150)
+f = m.spike_frame().sort_values(["t_ms", "bodyId"])
+print(json.dumps(dict(seed=LIFParams().seed, n=len(f),
+                      h=hashlib.sha256(f[["t_ms", "bodyId"]].to_numpy().tobytes()).hexdigest())))
+"""
+
+
+def t_seed_reaches_the_model(tmp):
+    """FLYCNS_SEED set before the run reaches LIFParams and the random input: the same seed in two separate
+    processes gives the same spikes, a different seed gives different ones."""
+    d = tmp / "sd"; d.mkdir()
+    subprocess.run([sys.executable, str(ROOT / "scripts/make_testdata.py")], cwd=d, capture_output=True, check=True)
+    base = {k: v for k, v in os.environ.items() if not k.startswith("FLYCNS_") or k == "FLYCNS_CODEGEN"}
+    out = []
+    for seed in ("0", "0", "7"):
+        r = subprocess.run([sys.executable, "-c", _SEED_RUN, str(ROOT), str(d / "testdata")], cwd=d,
+                           capture_output=True, text=True, encoding="utf-8", errors="replace",
+                           env={**base, "FLYCNS_SEED": seed})
+        if r.returncode != 0:
+            return False, r.stderr.strip()[-200:]
+        out.append(json.loads(r.stdout.strip().splitlines()[-1]))
+    a, b, c = out
+    ok = a["n"] > 0 and a["h"] == b["h"] and a["h"] != c["h"] and (a["seed"], c["seed"]) == (0, 7)
+    return ok, (f"seed 0 twice: {a['n']} identical spikes; seed 7: different ({c['n']} spikes); LIFParams.seed follows"
+                if ok else str(out))
+
+
+DATA_TABLE_NAMES = {"neurons.parquet", "edges.parquet", "roi_membership.parquet", "edges_nt.parquet"}
+RESULT_TABLE_NAMES = {"cascade_links.parquet", "cascade_sites.parquet", "spikes_real.parquet"}   # written under results/
+
+
+def t_manifest_pins_every_input_table():
+    """Every parquet table the code reads is either pinned in data/MANIFEST.json or a result the code
+    itself writes under results/. A new input table must be pinned before any result can rest on it."""
+    import re
+    names = set()
+    for top in ("benchmarks", "fit", "scripts", "flycns", "viz"):
+        for f in (ROOT / top).rglob("*.py"):
+            if "legacy" not in f.parts:
+                names |= set(re.findall(r"([A-Za-z0-9_]+\.parquet)", f.read_text(encoding="utf-8")))
+    names.discard("pyarrow.parquet")
+    unknown = names - DATA_TABLE_NAMES - RESULT_TABLE_NAMES
+    mf = ROOT / "data/MANIFEST.json"
+    pinned = set(json.loads(mf.read_text(encoding="utf-8"))["files"]) if mf.exists() else set()
+    unpinned = sorted(DATA_TABLE_NAMES - pinned)
+    ok = not unknown and not unpinned
+    return ok, (f"all {len(DATA_TABLE_NAMES)} input tables pinned ({', '.join(sorted(DATA_TABLE_NAMES))})" if ok else
+                f"unclassified tables {sorted(unknown)}; not pinned in data/MANIFEST.json: {unpinned}")
+
+
+def _registered_benchmarks():
+    return sorted(f for f in (ROOT / "benchmarks").glob("*.py")
+                  if "CRITERIA" in f.read_text(encoding="utf-8") and "criteria.json" in f.read_text(encoding="utf-8"))
+
+
+def t_registered_tests_guard_themselves():
+    """Every pre-registered benchmark checks its code is committed and its data are pinned before it
+    runs, and refuses criteria that differ from its registration."""
+    bad = []
+    for f in _registered_benchmarks():
+        s = f.read_text(encoding="utf-8")
+        miss = [c for c in ("require_clean(", "require_data(", "criteria_differ(") if c not in s]
+        if miss:
+            bad.append(f"{f.name}: {miss}")
+    n = len(_registered_benchmarks())
+    return n >= 10 and not bad, (f"{n} registered benchmarks call require_clean, require_data and criteria_differ"
+                                 if not bad else f"missing guards: {bad}")
+
+
+def t_registrations_never_changed():
+    """Each committed registration (results/*/criteria.json) was committed once, never changed or deleted,
+    and the file on disk is the committed one. Needs the full git history (skipped in a shallow clone)."""
+    def git(*a):
+        r = subprocess.run(["git", *a], cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace")
+        return r.returncode, r.stdout
+    code, shallow = git("rev-parse", "--is-shallow-repository")
+    if code != 0:
+        return True, "SKIPPED: not a git checkout"
+    if shallow.strip() == "true":
+        return True, "SKIPPED: shallow clone (no history to check)"
+    bad, n = [], 0
+    for f in sorted((ROOT / "results").glob("*/criteria.json")):
+        rel = f.relative_to(ROOT).as_posix()
+        _, log = git("log", "--format=%H", "--", rel)
+        commits = log.split()
+        if not commits:
+            continue                                    # not committed yet: a new registration in progress
+        n += 1
+        _, deleted = git("log", "--format=%h", "--diff-filter=D", "--", rel)
+        _, first = git("show", f"{commits[-1]}:{rel}")
+        if len(commits) != 1 or deleted.split() or first != f.read_text(encoding="utf-8"):
+            bad.append(f"{rel}: {len(commits)} commits, deleted in {deleted.split() or 'none'}, "
+                       f"on disk {'matches' if first == f.read_text(encoding='utf-8') else 'differs from'} the registration")
+    return n > 0 and not bad, f"{n} registrations: one commit each, unchanged on disk" if not bad else "; ".join(bad)
+
+
+def t_summary_counts_and_flags(tmp):
+    """summarize.py on four made-up reports: the headline counts equal the PASS and FAIL rows, the role
+    tallies sum to the headline, and every flag is raised where it should be and nowhere else."""
+    w = tmp / "sm"; (w / "results").mkdir(parents=True)
+    good = dict(written_at="2026-10-11T12:00:00", git_commit="", git_dirty=False, env={},
+                data=dict(dir="data", digests={"neurons.parquet": "a", "edges.parquet": "b"}, manifest="match"))
+    reps = {
+        "gf_escape": dict(n_trials=40, provenance=good,
+                          checks={"gf_spikes_per_response_1_to_2": True, "gf_response_prob_0.5_to_1": False}),
+        "auditory": dict(n_trials=10, provenance={**good, "env": {"FLYCNS_WSCALE": "0.5"}, "git_dirty": True,
+                                                  "data": {**good["data"], "manifest": "mismatch"}},
+                         checks={"A1_jo_alone_mostly_subthreshold": True, "A2_jo_effect_on_near_threshold_loom_REPORTED": None}),
+        "pc1_song": dict(provenance={**good, "written_at": "2026-10-11T09:00:00", "data": None},
+                         checks={"P1_pc1_14a_pulse_over_sine": True}),
+        "sugar_laterality": dict(checks={"L1_sugar_contralateral_bias": False}),
+    }
+    for b, r in reps.items():
+        (w / "results" / b).mkdir()
+        (w / "results" / b / "report.json").write_text(json.dumps({"benchmark": b, **r}), encoding="utf-8")
+    r = subprocess.run([sys.executable, str(ROOT / "benchmarks/summarize.py")], cwd=w, capture_output=True,
+                       text=True, encoding="utf-8", errors="replace",
+                       env={k: v for k, v in os.environ.items() if not k.startswith("FLYCNS_")})
+    if r.returncode != 0:
+        return False, r.stderr.strip()[-200:]
+    md = (w / "results/SUITE.md").read_text(encoding="utf-8")
+    import re
+    checks = md.split("## Checks")[1].split("\n## ")[0]
+    rows = [l.split("|")[1:-1] for l in checks.splitlines() if l.startswith("| ") and l.count("|") == 6
+            and not l.startswith("| benchmark")]
+    rows = {(c[0].strip(), c[1].strip()): (c[2].strip(), c[3].strip(), c[4].strip()) for c in rows}
+    n_pass = sum(v[0] == "PASS" for v in rows.values()); n_scored = sum(v[0] in ("PASS", "FAIL") for v in rows.values())
+    head = re.search(r"\*\*(\d+)/(\d+) checks pass", md)
+    tallies = re.findall(r"(\w+) (\d+)/(\d+)", md.split("**By role:**")[1].splitlines()[0])
+    want = {"gf_escape": set(), "auditory": {"PERTURBED", "DIRTY", "DATA-MISMATCH", "TRIALS 10<40"},
+            "pc1_song": {"UNPINNED", "STALE"}, "sugar_laterality": {"UNSTAMPED"}}
+    got = {b: {x.strip() for x in v[2].split(",") if x.strip() not in ("-", "")} for (b, _), v in rows.items()}
+    flags_ok = all(got[b] == want[b] for b in want)
+    ok = (head and (int(head[1]), int(head[2])) == (n_pass, n_scored) == (3, 5)
+          and sum(int(t[2]) for t in tallies) == n_scored and sum(int(t[1]) for t in tallies) == n_pass
+          and "NOT all under the declared parameter set" in md and flags_ok)
+    return ok, ("headline 3/5 equals the rows; role tallies sum to it; all seven flags exactly where expected" if ok else
+                f"head {head and head.group(0)}, rows {n_pass}/{n_scored}, tallies {tallies}, flags {got}")
+
+
+def t_side_inference_precedence():
+    """somaSide first, then the instance suffix, then soma position against the midline, else unknown."""
+    from flycns.graph import infer_side
+    meta = pd.DataFrame(dict(somaSide=["R", None, None, None, "L", None, "M"],
+                             instance=["x_L", "x_R", None, "x", None, None, None],
+                             x=[0.0, 0.0, -5.0, 5.0, -1.0, np.nan, 9.0]))
+    got = [None if pd.isna(x) else x for x in infer_side(meta)]
+    want = ["R", "R", "L", "R", "L", None, "R"]
+    return got == want, f"{got}" + ("" if got == want else f" (want {want})")
+
+
+def t_electrical_pairs_by_side():
+    """An ipsilateral electrical synapse joins each sided partner to the post cell(s) on its own side only;
+    an unsided partner, or one with no post cell on its side, reaches every post cell. The compound
+    calibration counts the mean population per side."""
+    from flycns.graph import electrical_pairs
+    rows = [dict(bodyId=1, type="DNp01", somaSide="L"), dict(bodyId=2, type="DNp01", somaSide="R")]
+    rows += [dict(bodyId=10 + i, type="JO-B1_a", somaSide="L") for i in range(4)]
+    rows += [dict(bodyId=20 + i, type="JO-B1_c", somaSide="R") for i in range(2)]
+    rows += [dict(bodyId=30, type="JO-B1_a", somaSide=None)]
+    rows += [dict(bodyId=40, type="TTMn", somaSide="L")]                     # no right TTMn
+    rows += [dict(bodyId=3, type="PSI", somaSide="L"), dict(bodyId=4, type="PSI", somaSide="R")]
+    n = pd.DataFrame(rows)
+    p = electrical_pairs(n)
+    jo = p[p.post_type == "DNp01"]
+    by_pre = jo.groupby("pre")["post"].apply(set).to_dict()
+    side_ok = all(by_pre[b] == {1} for b in range(10, 14)) and all(by_pre[b] == {2} for b in (20, 21)) \
+        and by_pre[30] == {1, 2}
+    ttmn = p[p.post_type == "TTMn"].groupby("pre")["post"].apply(set).to_dict()
+    fallback_ok = ttmn == {1: {40}, 2: {40}}
+    # n_conv = mean per side (4 left, 2 right -> 3) + 1 unsided = 4; spikelet = 3 mV*1.2/(4*150 Hz*20 ms)
+    spk = jo.spikelet_mV.iloc[0]
+    calib_ok = abs(spk - 3.0 * 1.2 / (4 * 150 * 0.020)) < 1e-9
+    ok = side_ok and fallback_ok and calib_ok
+    return ok, (f"sided partners stay on their side, unsided reach both, no same-side post falls back to all; "
+                f"spikelet {spk:.3f} mV for n_conv 4" if ok else f"sides {by_pre}, TTMn {ttmn}, spikelet {spk}")
+
+
+def t_compound_potential_hits_its_target():
+    """Ear afferents on one side, all firing at 150 Hz (Poisson), depolarise their giant fiber by the
+    declared 3 mV compound potential, within 10%."""
+    from brian2 import mV
+    from flycns import CNSModel, LIFParams
+    k = 8
+    rows = [dict(bodyId=1, type="DNp01", superclass="descending_neuron", somaSide="L")]
+    rows += [dict(bodyId=10 + i, type="JO-B1_a", superclass="cb_sensory", somaSide="L") for i in range(k)]
+    rows += [dict(bodyId=99, type="dummy", superclass="central", somaSide="L")]
+    neurons = pd.DataFrame(rows)
+    edges = pd.DataFrame(dict(pre=[99], post=[1], weight=[5], nt=["acetylcholine"], sign=[1.0]))
+    m = CNSModel(neurons, edges, ["JO-B1_a"], LIFParams(), electrical=True, monitor_types=("DNp01",))
+    m.set_stim_rates(np.full(len(m.stim), 150.0))
+    m.run(1500)
+    v = np.asarray(m.vmon.v / mV)[0]
+    dep = float(v[len(v) // 3:].mean() - LIFParams().v_rest_mV)
+    ok = abs(dep - 3.0) <= 0.3
+    return ok, f"{k} afferents at 150 Hz: giant fiber {dep:.2f} mV above rest (target 3.0 +/- 0.3)"
+
+
+def t_audit_refuses_missing_partner(tmp):
+    """The stimulus audit fails when a declared electrical partner type is absent from the data."""
+    d = tmp / "au"; d.mkdir()
+    subprocess.run([sys.executable, str(ROOT / "scripts/make_testdata.py")], cwd=d, capture_output=True, check=True)
+    run = lambda: subprocess.run([sys.executable, str(ROOT / "fit/audit_stimuli.py"), str(d / "testdata")],  # noqa: E731
+                                 capture_output=True, text=True, encoding="utf-8", errors="replace")
+    full = run()
+    n = pd.read_parquet(d / "testdata/neurons.parquet")
+    n[n.type != "JO-B1_c"].to_parquet(d / "testdata/neurons.parquet", index=False)
+    cut = run()
+    ok = full.returncode == 0 and cut.returncode != 0 and "MISSING" in cut.stdout
+    return ok, "complete toy passes; without JO-B1_c the audit fails" if ok else \
+        f"full exit {full.returncode}, cut exit {cut.returncode}: {cut.stdout[-200:]}"
+
+
+def t_preserved_restores_exactly(tmp):
+    """Results put under preserved() come back byte for byte after an error and after Ctrl+C, and a path
+    that did not exist before is removed."""
+    from flycns.integrity import preserved
+    d = tmp / "pv"; (d / "res").mkdir(parents=True)
+    (d / "res/a.json").write_text('{"x": 1}', encoding="utf-8"); (d / "one.txt").write_bytes(b"\x00\x01")
+    before = {p.relative_to(d).as_posix(): p.read_bytes() for p in d.rglob("*") if p.is_file()}
+    results = []
+    for exc in (RuntimeError("boom"), KeyboardInterrupt()):
+        try:
+            with preserved(d / "res", d / "one.txt", d / "new"):
+                (d / "res/a.json").write_text('{"x": 2}', encoding="utf-8"); (d / "res/b.json").write_text("{}", encoding="utf-8")
+                (d / "one.txt").unlink(); (d / "new").mkdir(); (d / "new/z").write_text("z", encoding="utf-8")
+                raise exc
+        except (RuntimeError, KeyboardInterrupt):
+            pass
+        after = {p.relative_to(d).as_posix(): p.read_bytes() for p in d.rglob("*") if p.is_file()}
+        results.append(after == before and not (d / "new").exists())
+    return all(results), "restored exactly after an error and after Ctrl+C" if all(results) else str(results)
+
+
+def t_null_side_mode_and_default_table():
+    """The superclass_side null keeps every target's class, side and in-degree; without an explicit neuron
+    table it uses the one the last load_graph read, giving the same result as passing it."""
+    from collections import Counter
+    from flycns import graph
+    from flycns.graph import infer_side, rewire_null
+    n, e = _tables()
+    e = e[e.pre.isin(n.bodyId[:10])].reset_index(drop=True)   # senders never receive: no self-loop can form,
+    a = rewire_null(e, seed=5, mode="superclass_side", neurons=n)   # so rows stay aligned with the input
+    meta = n.set_index("bodyId"); grp = meta["superclass"] + "|" + infer_side(meta).fillna("?")
+    groups_ok = len(a) == len(e) and (grp[e.post].values == grp[a.post].values).all()
+    degree_ok = Counter(e.post) == Counter(a.post) and not a.post.equals(e.post)
+    saved = graph._LAST.get("neurons")
+    try:
+        graph._LAST["neurons"] = n
+        default_ok = rewire_null(e, seed=5, mode="superclass_side").equals(a)
+    finally:
+        graph._LAST["neurons"] = saved
+    ok = groups_ok and degree_ok and default_ok
+    return ok, (f"{len(e)} edges shuffled; every target keeps class, side and in-degree; the default table is the "
+                f"last one loaded" if ok else f"groups {groups_ok}, degree {degree_ok}, default {default_ok}")
+
+
+def t_every_named_script_exists():
+    """Every script the menu, the suite runners and the cloud workflow name exists in the repository."""
+    import re
+    srcs = ["fly.py", "scripts/run_all.py", "scripts/overnight.py", "scripts/canonical_rerun.py",
+            ".github/workflows/rerun.yml", ".github/workflows/regression.yml", "tests/regression.py"]
+    named, missing = set(), []
+    for s in srcs:
+        t = (ROOT / s).read_text(encoding="utf-8").replace("\\\\", "/").replace("\\", "/")
+        for m in re.findall(r"((?:benchmarks|fit|scripts|viz|tests)/[A-Za-z0-9_/]+\.py)", t):
+            named.add(m)
+    missing = sorted(m for m in named if not (ROOT / m).exists())
+    return not missing and len(named) > 20, (f"all {len(named)} named scripts exist" if not missing else f"missing: {missing}")
+
+
 def run_all():
     out = []
     tmp = Path(tempfile.mkdtemp(prefix="flycns_unit_"))
@@ -458,10 +772,23 @@ def run_all():
                          ("token read in every Windows format", lambda: t_token_file_formats(tmp)),
                          ("both engines give identical spikes", t_engines_identical),
                          ("stimulus choice keeps excitability", t_stimulus_choice_keeps_excitability),
-                         ("peptide acts from a stimulated source", t_peptide_reaches_targets)]:
+                         ("peptide acts from a stimulated source", t_peptide_reaches_targets),
+                         ("sign flips invert exactly what they say", lambda: t_sign_flips_are_exact(tmp)),
+                         ("the seed reaches the model", lambda: t_seed_reaches_the_model(tmp)),
+                         ("the manifest pins every input table", t_manifest_pins_every_input_table),
+                         ("registered tests guard themselves", t_registered_tests_guard_themselves),
+                         ("registrations were never changed", t_registrations_never_changed),
+                         ("summary counts and flags", lambda: t_summary_counts_and_flags(tmp)),
+                         ("side inference precedence", t_side_inference_precedence),
+                         ("electrical synapses respect sides", t_electrical_pairs_by_side),
+                         ("compound potential hits its target", t_compound_potential_hits_its_target),
+                         ("audit refuses a missing partner", lambda: t_audit_refuses_missing_partner(tmp)),
+                         ("preserved() restores exactly", lambda: t_preserved_restores_exactly(tmp)),
+                         ("side null and its default table", t_null_side_mode_and_default_table),
+                         ("every named script exists", t_every_named_script_exists)]:
             try:
                 ok, msg = fn()
-            except Exception as ex:  # a crashing check is a failing check
+            except (Exception, SystemExit) as ex:  # a crashing or exiting check is a failing check
                 ok, msg = False, f"{type(ex).__name__}: {ex}"[:300]
             out.append((f"unit: {name}", bool(ok), msg))
     finally:

@@ -21,8 +21,18 @@ The copy is taken from the working tree, so run it on a FRESH CLONE to reproduce
 27 September 2026 it passed locally but failed on GitHub, because a fresh clone has no testdata/
 folder (git keeps no empty folders) and scripts/make_testdata.py did not create one. Both now do.
 
+GOLDEN OUTPUT. "Ran without error" catches crashes, not model bugs: a flipped sign, a doubled synaptic
+scale or broken adaptation all still run. So every number and every pass/fail each step writes to its
+report is compared with tests/toy_expected.json (seed 0, the toy graph). Integers, booleans and missing
+values must match exactly; other numbers to one part in a million. A deliberate model change that moves
+toy numbers must regenerate the file, and the diff of that file shows exactly what moved:
+
+    python tests/regression.py --write-golden     (refuses unless every other check passes)
+
 Run:  python tests/regression.py        (a few minutes; exits non-zero on any failure)
 """
+import json
+import math
 import os
 import shutil
 import subprocess
@@ -53,6 +63,8 @@ RUNS = [  # (label, argv relative to the copy, extra env, sentinel substring or 
     ("null_strict", ["benchmarks/null_strict.py", "testdata"], {}, None),
     # diagnostics outside the suite: each must run and leave its stamp
     ("diagnose_feeding", ["benchmarks/diagnose_feeding.py", "testdata"], {}, None),
+    # its path products were NaN on the real data for a month, unseen: the golden file now holds them
+    ("feeding_mechanism", ["benchmarks/feeding_mechanism.py", "testdata"], {}, None),
     ("screen_afferents", ["benchmarks/screen_afferents.py", "1", "testdata", "50", "0.3"], {}, None),
     ("embodiment_gate", ["benchmarks/embodiment_gate.py", "testdata"], {}, None),
     ("sensitivity_cord", ["benchmarks/sensitivity_cord.py", "1", "testdata"], {}, None),
@@ -89,6 +101,64 @@ STEP_TIMEOUT_S = 2400      # generous: the pure-Python engine on a slow Windows 
 TEXT = dict(capture_output=True, text=True, encoding="utf-8", errors="replace")   # never cp1252 on Windows
 
 
+GOLDEN = ROOT / "tests/toy_expected.json"
+# never compared: run timing, the provenance stamp (commit, host, time) and the registration text
+SKIP_KEYS = {"provenance", "wall_s", "written_at", "criteria", "registration", "registered_at", "elapsed_s"}
+
+
+def _flatten(obj, prefix=""):
+    """Every number, boolean and missing value in a report, keyed by its JSON path."""
+    out = {}
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if k not in SKIP_KEYS:
+                out.update(_flatten(v, f"{prefix}/{k}"))
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            out.update(_flatten(v, f"{prefix}[{i}]"))
+    elif obj is None or isinstance(obj, (bool, int, float)):
+        out[prefix] = obj
+    return out
+
+
+def _reports(work):
+    """Report files under results/ with their modification times (stamps and registrations excluded)."""
+    return {f: f.stat().st_mtime_ns for f in (work / "results").rglob("*.json")
+            if not f.name.endswith(".stamp.json") and f.name not in ("criteria.json", "progress.json")}
+
+
+def _same(a, b):
+    if isinstance(a, bool) or isinstance(b, bool) or a is None or b is None:
+        return a is b or a == b and type(a) is type(b)
+    if isinstance(a, int) and isinstance(b, int):
+        return a == b
+    if isinstance(a, (int, float)) and isinstance(b, (int, float)):
+        if math.isnan(a) or math.isnan(b):
+            return math.isnan(a) and math.isnan(b)
+        return math.isclose(a, b, rel_tol=1e-6, abs_tol=1e-9)
+    return False
+
+
+def compare_golden(got):
+    if not GOLDEN.exists():
+        return False, f"no {GOLDEN.name}; create it with: python tests/regression.py --write-golden"
+    want = json.loads(GOLDEN.read_text(encoding="utf-8"))["steps"]
+    diffs = []
+    for step in sorted(set(want) | set(got)):
+        w, g = want.get(step, {}), got.get(step, {})
+        for f in sorted(set(w) | set(g)):
+            if f not in g or f not in w:
+                diffs.append(f"{step}: {f} {'no longer written' if f in w else 'is new'}")
+                continue
+            for k in sorted(set(w[f]) | set(g[f])):
+                if k not in w[f] or k not in g[f] or not _same(w[f][k], g[f][k]):
+                    diffs.append(f"{step}: {f}{k} expected {w[f].get(k, '(absent)')}, got {g[f].get(k, '(absent)')}")
+    n = sum(len(v) for st in want.values() for v in st.values())
+    if diffs:
+        return False, f"{len(diffs)} of {n} toy values differ; first: " + " || ".join(diffs[:4])
+    return True, f"all {n} toy values match tests/toy_expected.json"
+
+
 def newcombe_unit():
     src = (ROOT / "benchmarks/auditory.py").read_text(encoding="utf-8")
     ns = {"np": np}
@@ -116,7 +186,9 @@ def main():
         results.append(("make toy graph", r.returncode == 0, r.stderr.strip()[-200:]))
         for f in (work / "testdata").glob("*.parquet"):
             shutil.copy(f, work / "data" / f.name)          # scripts that read data/ directly
+        got = {}
         for label, argv, env, sentinel in RUNS:
+            before = _reports(work)
             t0 = time.time()
             try:
                 r = subprocess.run([sys.executable, *argv], cwd=work, **TEXT,
@@ -133,6 +205,10 @@ def main():
                     note += " | " + (out.strip().splitlines() or [""])[-1][:160]
             except subprocess.TimeoutExpired:
                 ok, note = False, "timeout"
+            changed = {f: m for f, m in _reports(work).items() if before.get(f) != m}
+            if changed:
+                got[label] = {f.relative_to(work).as_posix(): _flatten(json.loads(f.read_text(encoding="utf-8")))
+                              for f in sorted(changed)}
             results.append((label, ok, note))
             print(f"  {'PASS' if ok else 'FAIL'}  {label:<34} {note}", flush=True)
         t0 = time.time()
@@ -140,6 +216,18 @@ def main():
                            **TEXT, timeout=STEP_TIMEOUT_S, env={**CLEAN_ENV, **BASE_ENV})
         ok = r.returncode == 0 and "validated: reloads with temporaldata" in r.stdout
         results.append(("brainsets export reloads", ok, f"exit {r.returncode}, {round(time.time() - t0)}s"))
+        if "--write-golden" in sys.argv:
+            bad = [l for l, ok, _ in results if not ok]
+            if bad:
+                print(f"NOT writing {GOLDEN.name}: these failed first: {bad}")
+                sys.exit(1)
+            GOLDEN.write_text(json.dumps(dict(
+                note="Toy-graph outputs at seed 0, compared by tests/regression.py. Regenerate only for a "
+                     "deliberate model change: python tests/regression.py --write-golden",
+                steps=got), indent=1, sort_keys=True) + "\n", encoding="utf-8")
+            print(f"wrote {GOLDEN.relative_to(ROOT)}: {sum(len(v) for st in got.values() for v in st.values())} values")
+        ok, note = compare_golden(got)
+        results.append(("toy outputs match the golden file", ok, note))
     print("\nREGRESSION SUMMARY")
     for label, ok, note in results:
         print(f"  {'PASS' if ok else 'FAIL'}  {label:<44} {note}")

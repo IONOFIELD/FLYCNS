@@ -47,6 +47,7 @@ env:
       {"name": "gustatory-map",             "run": "benchmarks/gustatory_signed_map.py"},
       {"name": "sugar-laterality",          "run": "benchmarks/sugar_laterality.py"},
       {"name": "check-modulators",          "run": "fit/check_modulators.py"},
+      {"name": "engines-real",              "run": "fit/check_engines.py 10"},
       {"name": "fit-regional",              "run": "benchmarks/fit_regional.py 6"},
       {"name": "fit-baseline",              "run": "benchmarks/fit_baseline.py 6"},
       {"name": "fit-gains",                 "run": "benchmarks/fit_gains.py 6"},
