@@ -51,14 +51,14 @@
     "S3_all_afferents": {
       "arm": "S3 all afferents",
       "n_driven": 413,
-      "dvmn_mean": 83.46527777777779,
+      "dvmn_mean": 83.49333333333333,
       "dlmn_mean": 0.0,
-      "steer_mean": 65.52976190476191,
-      "b1_mean": 261.4216666666666,
-      "cns_mean": 0.6246940859485489,
+      "steer_mean": 65.55982142857142,
+      "b1_mean": 261.59,
+      "cns_mean": 0.624571000245024,
       "dvmn_per_seed": [
         83.41,
-        83.58,
+        83.66,
         83.41
       ],
       "dlmn_per_seed": [
@@ -99,8 +99,35 @@
     "prediction": "silencing SNpp16 in a flying fly should suppress DVM motor neuron activity; the model's DVMn output under proprioceptive drive is set by this one wing campaniform type"
   },
   "provenance": {
-    "written_at": "2026-09-25T13:57:00",
-    "git_commit": "b1e9e41",
-    "env": {}
+    "written_at": "2026-10-11T03:10:35",
+    "git_commit": "b33610d",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "cython",
+    "platform": "win32",
+    "graph": {
+      "data_dir": "data",
+      "min_weight": 5,
+      "n_neurons": 176422,
+      "n_signed_edges": 6127738,
+      "n_signed_synapses": 88316807
+    },
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9"
+      },
+      "manifest": "match"
+    }
   }
 }
