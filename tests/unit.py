@@ -574,8 +574,10 @@ def t_registrations_never_changed():
         return True, "SKIPPED: shallow clone (no history to check)"
     bad, n = [], 0
     # every registration ever added, including any later deleted (a deleted one could register afresh)
-    _, added = git("log", "--diff-filter=A", "--name-only", "--format=", "--", "results/*/criteria.json")
-    ever = sorted({ROOT / x for x in added.split()} | set((ROOT / "results").glob("*/criteria.json")))
+    _, added = git("log", "--diff-filter=A", "--name-only", "--format=", "--", "results/*/criteria.json",
+                   "results/*/registration.json")
+    ever = sorted({ROOT / x for x in added.split()} | set((ROOT / "results").glob("*/criteria.json"))
+                  | set((ROOT / "results").glob("*/registration.json")))
     for f in ever:
         rel = f.relative_to(ROOT).as_posix()
         if not f.exists():
@@ -601,7 +603,7 @@ def t_summary_counts_and_flags(tmp):
     good = dict(written_at="2026-10-11T12:00:00", git_commit="", git_dirty=False, env={},
                 data=dict(dir="data", digests={"neurons.parquet": "a", "edges.parquet": "b"}, manifest="match"))
     reps = {
-        "gf_escape": dict(n_trials=40, provenance=good,
+        "gf_escape": dict(n_trials=40, provenance=good, registration=dict(matches=True, version=2),
                           checks={"gf_spikes_per_response_1_to_2": True, "gf_response_prob_0.5_to_1": False}),
         "auditory": dict(n_trials=10, provenance={**good, "env": {"FLYCNS_WSCALE": "0.5", "FLYCNS_ALLOW_DIRTY": "1"},
                                                   "git_dirty": True, "allow_dirty": True,
@@ -631,8 +633,9 @@ def t_summary_counts_and_flags(tmp):
     n_pass = sum(v[0] == "PASS" for v in rows.values()); n_scored = sum(v[0] in ("PASS", "FAIL", "UNRESOLVED") for v in rows.values())
     head = re.search(r"\*\*(\d+)/(\d+) checks pass", md)
     tallies = re.findall(r"(\w+) (\d+)/(\d+)", md.split("**By role:**")[1].splitlines()[0])
-    want = {"gf_escape": set(), "auditory": {"PERTURBED", "DIRTY", "ALLOW-DIRTY", "DATA-MISMATCH", "TRIALS 10<40"},
-            "pc1_song": {"UNPINNED", "STALE"}, "sugar_laterality": {"UNSTAMPED"}}
+    want = {"gf_escape": set(), "auditory": {"PERTURBED", "DIRTY", "ALLOW-DIRTY", "DATA-MISMATCH", "TRIALS 10<40",
+                                             "UNREGISTERED"},
+            "pc1_song": {"UNPINNED", "STALE", "UNREGISTERED"}, "sugar_laterality": {"UNSTAMPED", "UNREGISTERED"}}
     got = {b: {x.strip() for x in v[2].split(",") if x.strip() not in ("-", "")} for (b, _), v in rows.items()}
     flags_ok = all(got[b] == want[b] for b in want)
     unresolved_ok = rows[("auditory", "A1_jo_alone_mostly_subthreshold")][0] == "UNRESOLVED" and "1 are UNRESOLVED" in md
@@ -640,7 +643,7 @@ def t_summary_counts_and_flags(tmp):
           and sum(int(t[2]) for t in tallies) == n_scored and sum(int(t[1]) for t in tallies) == n_pass
           and "NOT all under the declared parameter set" in md and flags_ok and unresolved_ok)
     return ok, ("headline 2/5 equals the rows (an in-band point with an interval across the edge is UNRESOLVED, "
-                "not a pass); role tallies sum to it; all eight flags exactly where expected" if ok else
+                "not a pass); role tallies sum to it; all nine flags exactly where expected" if ok else
                 f"head {head and head.group(0)}, rows {n_pass}/{n_scored}, tallies {tallies}, flags {got}, "
                 f"unresolved {unresolved_ok}")
 
@@ -878,6 +881,58 @@ def t_vnc_glutamate_option(tmp):
     return ok, ("only nerve-cord glutamate onto a non-motor target turns excitatory (1 of 4 edges)" if ok
                 else str(alt[["pre", "post", "nt", "sign"]].to_dict("records")))
 
+
+_PROBE = """
+import json, sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from flycns import registry
+THRESH = 0.5
+reg = registry.register("probe", {"checks": {"c": {"band": [THRESH, 1.0]}}}, scripts=[__file__])
+band = json.loads(sys.argv[1]) if len(sys.argv) > 1 else [THRESH, 1.0]
+registry.verify_bands(reg, {"c": {"band": band, "verdict": "PASS"}})
+print("RAN", json.dumps(registry.stamp(reg)))
+"""
+
+
+def t_registry_freezes_model(tmp):
+    """A version 2 registration is written before any result (register-only), then refuses to score
+    when the model code, the benchmark script (where its thresholds live) or a scored band differs."""
+    if not shutil.which("git"):
+        return True, "git not installed; registry not exercised"
+    g = ["git", "-c", "user.name=t", "-c", "user.email=t@t", "-c", "commit.gpgsign=false"]
+    env = {k: v for k, v in os.environ.items() if not k.startswith("FLYCNS_")}
+    r = tmp / "regv2"
+    shutil.copytree(ROOT / "flycns", r / "flycns", ignore=shutil.ignore_patterns("__pycache__"))
+    (r / "probe.py").write_text(_PROBE, encoding="utf-8")
+    subprocess.run(["git", "init", "-q"], cwd=r, check=True)
+    subprocess.run([*g, "add", "-A"], cwd=r, check=True); subprocess.run([*g, "commit", "-qm", "code"], cwd=r, check=True)
+
+    def run(*a, **e):
+        return subprocess.run([sys.executable, "probe.py", *a], cwd=r, capture_output=True, text=True,
+                              encoding="utf-8", errors="replace", env={**env, **e})
+    reg_only = run(FLYCNS_REGISTER_ONLY="1")
+    wrote = (r / "results/probe/registration.json").exists() and "RAN" not in reg_only.stdout
+    subprocess.run([*g, "add", "-A"], cwd=r, check=True); subprocess.run([*g, "commit", "-qm", "register"], cwd=r, check=True)
+    ok_run = run()
+    bad_band = run("[0.4, 1.0]")
+    with open(r / "flycns/model.py", "a", encoding="utf-8") as f:
+        f.write("\n# a later change\n")
+    subprocess.run([*g, "commit", "-qam", "model change"], cwd=r, check=True)
+    model_changed = run()
+    subprocess.run([*g, "revert", "--no-edit", "HEAD"], cwd=r, check=True, capture_output=True)
+    (r / "probe.py").write_text(_PROBE.replace("THRESH = 0.5", "THRESH = 0.3"), encoding="utf-8")
+    subprocess.run([*g, "commit", "-qam", "threshold edit"], cwd=r, check=True)
+    thresh_changed = run()
+    ok = (wrote and "RAN" in ok_run.stdout and '"matches": true' in ok_run.stdout
+          and bad_band.returncode != 0 and "differ from the registration" in bad_band.stderr
+          and model_changed.returncode != 0 and "flycns/model.py" in model_changed.stderr
+          and thresh_changed.returncode != 0)
+    return ok, ("registered before running; refuses a changed model file, an edited threshold and a band that "
+                "differs from the registration" if ok else
+                f"wrote {wrote}; ok {ok_run.stdout[-120:]!r} {ok_run.stderr[-160:]!r}; band {bad_band.returncode}; "
+                f"model {model_changed.returncode} {model_changed.stderr[-160:]!r}; thresh {thresh_changed.returncode}")
+
 def run_all():
     out = []
     tmp = Path(tempfile.mkdtemp(prefix="flycns_unit_"))
@@ -919,7 +974,8 @@ def run_all():
                          ("uncertainty rules", t_stats_rules),
                          ("degree-corrected null invariants", lambda: t_degree_corrected_null(tmp)),
                          ("JON -> GF contact modes", t_jon_contact_modes),
-                         ("nerve-cord glutamate option", lambda: t_vnc_glutamate_option(tmp))]:
+                         ("nerve-cord glutamate option", lambda: t_vnc_glutamate_option(tmp)),
+                         ("registration freezes the model", lambda: t_registry_freezes_model(tmp))]:
             try:
                 ok, msg = fn()
             except (Exception, SystemExit) as ex:  # a crashing or exiting check is a failing check

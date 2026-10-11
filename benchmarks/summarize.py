@@ -97,6 +97,9 @@ for rep in reports:
         f.append("UNSTAMPED")   # written before integrity stamping (2026-10-10); rerun to stamp
     elif not prov.get("data"):
         f.append("UNPINNED")    # no record of which input tables produced it
+    scored_here = any(v is not None for v in (r.get("checks") or {}).values())
+    if scored_here and not (r.get("registration") or {}).get("matches"):
+        f.append("UNREGISTERED")   # not scored under a matching version 2 registration (flycns/registry.py)
     n_run, n_canon = trial_count(r), CANONICAL_TRIALS.get(name)
     if n_run is not None and n_canon is not None and n_run < n_canon:
         f.append(f"TRIALS {n_run}<{n_canon}")
@@ -145,6 +148,7 @@ md = ["# MaleCNS v1.0 LIF benchmark suite" + (f"  [{tag}]" if tag else ""), "",
           "DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); "
           "UNSTAMPED = written before integrity stamping, rerun to stamp; UNPINNED = no record of the input tables; "
           "ALLOW-DIRTY = run with FLYCNS_ALLOW_DIRTY=1, which waives the integrity guards; "
+          "UNREGISTERED = not scored under a matching registration of the frozen model (flycns/registry.py); "
           "TRIALS a<b = run at fewer trials than the canonical b.",
       "", "Declared deviations from the raw connectome: see each results/*/provenance.md and flycns/graph.py."]
 # citation integrity: every author-year tag in code must resolve in REFERENCES.md

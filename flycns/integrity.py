@@ -88,27 +88,30 @@ def allow_dirty():
 
 
 def registration_history(label):
-    """Problems with a registered test's criteria.json in git history: a registration must be committed
-    once and never edited or deleted (a deleted-and-rewritten file would silently re-register).
-    Returns a list of problems; empty when fine or when there is no history to check (shallow clone)."""
-    path = f"results/{label}/criteria.json"
+    """Problems with a registered test's registration files in git history: a registration must be
+    committed once and never edited or deleted (a deleted-and-rewritten file would silently re-register,
+    and a deleted one would register afresh). Checks the version 1 criteria.json and the version 2
+    registration.json (flycns/registry.py). Returns a list of problems; empty when fine or when there is
+    no history to check (shallow clone)."""
     _, shallow = _git("rev-parse", "--is-shallow-repository")
     if shallow.strip() == "true":
         print(f"[integrity] {label}: shallow clone, so the registration history cannot be checked", flush=True)
         return []
-    _, log = _git("log", "--format=%h", "--", path)
-    _, deleted = _git("log", "--format=%h", "--diff-filter=D", "--", path)
     problems = []
-    if not (ROOT / path).exists():
-        # a registration that was committed and then deleted must not quietly register again
+    for name in ("criteria.json", "registration.json"):
+        path = f"results/{label}/{name}"
+        _, log = _git("log", "--format=%h", "--", path)
+        _, deleted = _git("log", "--format=%h", "--diff-filter=D", "--", path)
+        if not (ROOT / path).exists():
+            # a registration that was committed and then deleted must not quietly register again
+            if deleted.split():
+                problems.append(f"{path} was registered and then deleted (in {deleted.split()[0]}); a new design "
+                                f"needs a new registration under a new name")
+            continue
+        if len(log.split()) > 1:
+            problems.append(f"{path} was changed after it was committed ({len(log.split())} commits)")
         if deleted.split():
-            problems.append(f"{path} was registered and then deleted (in {deleted.split()[0]}); a new design "
-                            f"needs a new registration under a new name")
-        return problems
-    if len(log.split()) > 1:
-        problems.append(f"{path} was changed after it was committed ({len(log.split())} commits)")
-    if deleted.split():
-        problems.append(f"{path} was deleted and written again (deleted in {deleted.split()[0]})")
+            problems.append(f"{path} was deleted and written again (deleted in {deleted.split()[0]})")
     return problems
 
 
