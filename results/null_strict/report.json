@@ -1,0 +1,52 @@
+{
+  "benchmark": "null_strict",
+  "criteria": {
+    "null_mode": "superclass (flycns/graph.py rewire_null): targets permuted only within the post cell's superclass",
+    "S1": "gf_escape, 40 trials: rewired-null GF hit rate < 0.1 (threshold of null_silent)",
+    "S2": "pc1_song at its registered trial count: pMP2 under pC1_14a at 100 Hz on the null < 0.1 spikes/cell/pulse (threshold of P4)",
+    "reported": "whole-CNS rate on each null beside the real network"
+  },
+  "checks": {
+    "S1_escape_null_silent_superclass": true,
+    "S2_pc1_null_silent_superclass": true
+  },
+  "escape": {
+    "null_gf_hit": 0.0,
+    "null_pop_rate_hz": 2.0288582360871126e-06,
+    "real_gf_hit": 0.575,
+    "real_pop_rate_hz": 0.0038280497198491643
+  },
+  "pc1": {
+    "null": {
+      "pMP2": 0.0,
+      "DNp13": 0.0,
+      "pIP10": 0.0,
+      "cns_hz": 0.00011087756599793082
+    },
+    "real": {
+      "pMP2": 8.15,
+      "DNp13": 0.0,
+      "pIP10": 5.7,
+      "cns_hz": 0.011883857523658224
+    },
+    "n_trials": 10
+  },
+  "wall_s": 1781.0,
+  "provenance": {
+    "written_at": "2026-10-11T00:57:55",
+    "git_commit": "9a16d52",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "not used",
+    "platform": "win32"
+  }
+}

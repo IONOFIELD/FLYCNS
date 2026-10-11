@@ -12,5 +12,5 @@ motor present: ['MN9', 'MN6', 'MN8']
 - F1_laterality_matches_wiring: SKIP
 - F1_shiu_contralateral_bias: SKIP
 - F3_bitter_suppresses: SKIP
-- F4_second_order_sufficient: PASS
-- F5_null_silent: PASS
+- F4_second_order_sufficient: SKIP
+- F5_null_silent: SKIP
