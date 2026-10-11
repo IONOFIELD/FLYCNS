@@ -40,7 +40,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import load_graph, rewire_null, CNSModel, LIFParams
-from flycns import stats
+from flycns import registry, stats
 from flycns.graph import drop_mixed_chemical
 from flycns.protocols import LOOM_TUNING
 from flycns.bench import find_types, pulse_protocol
@@ -63,6 +63,51 @@ A2_TRIALS = int(os.environ.get("FLYCNS_A2_TRIALS", str(N_TRIALS)))
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
 JO_HZ = 150
 SUB_LOOM_GAIN = None    # calibrated per run: largest gain with hit rate <= 0.3 and GF depolarised
+
+# Version 2 registration (flycns/registry.py), recorded before any data are loaded. Only the top-level run
+# (FLYCNS_AUDITORY_OUT and FLYCNS_A2_ONLY unset) is the "auditory" benchmark: as a child of a2_contact or
+# a2_robustness it neither registers nor verifies under this label (its parent registers its own checks).
+# Every band below is the band the uncertainty record of that check is scored with.
+CRITERIA_V2 = dict(
+    version=2,
+    question=("does Johnston's organ drive reach the giant fiber through the declared JON -> GF pairs, leaving GF "
+              "mostly subthreshold on its own, with no drive through a rewired chemical-only null and the CNS quiet?"),
+    protocol=dict(
+        trials=40,
+        trials_note="canonical trial count per arm for A1, A3, A4 and the reference arm (a run at fewer is flagged TRIALS by summarize)",
+        jo_drive=(f"the JO types MaleCNS annotates as auditory ('unclear' types excluded) at {JO_HZ} Hz in 60 ms pulses, "
+                  "300 ms gaps (flycns.bench.pulse_protocol)"),
+        arms=["A1_jo_alone_electrical", "A3_jo_alone_no_electrical_no_mixed_edges",
+              "ref_jo_alone_chem_only_EM_as_annotated (reported)", "A4_jo_rewired_null_chem",
+              "subthreshold_loom_alone and A2_loom_plus_jo (A2, reported)"],
+        readouts="GF spikes in 160 ms after onset; GF peak depolarisation above rest in 100 ms after onset",
+        seeds=("the declared default seed (LIFParams().seed) = BASE for A1, A3, A4 and the reference arm; A2 calibration "
+               "arms BASE + 1000 + gain index; A2 loom alone BASE, loom + sound BASE + 1"),
+        a2_working_point=("calibrated per run over loom gains [0.4, 0.6, 0.8, 1.0, 1.3]: the largest with GF hit <= 0.3 "
+                          "and mean depolarisation >= 2 mV (A2 is reported here, scored by a2_registered)"),
+    ),
+    checks={
+        "A1_jo_alone_mostly_subthreshold": dict(
+            band=[None, 0.3], rule="PASS if the Wilson 95% interval of the fraction of A1 trials (JO drive alone, electrical) "
+                                   "with any GF spike lies at or below 0.3"),
+        "A2_jo_effect_on_near_threshold_loom_REPORTED": dict(
+            scored=False, rule="reported, not scored (benchmarks/a2_registered.py scores it)"),
+        "A3_declared_pairs_carry_jo_drive": dict(
+            bands=[[0.5, None], [None, 0]],
+            rule=("PASS if both parts pass: the bootstrap 95% interval of A1 GF peak depolarisation lies above 0.5 mV "
+                  "(exclusive), and the interval of (A3 depolarisation - 0.5 x A1 depolarisation), arms resampled "
+                  "independently, lies at or below 0")),
+        "A4_null_silent": dict(
+            bands=[[None, 0.1], [None, 0.5]],
+            rule=("PASS if both parts pass: the Wilson 95% interval of the fraction of rewired-null trials with any GF "
+                  "spike lies at or below 0.1, and the bootstrap interval of null GF peak depolarisation at or below 0.5 mV")),
+        "A5_cns_quiet": dict(
+            rule="PASS if the larger of the A1 and A2 whole-run population rates is below 0.05 Hz per neuron "
+                 "(readouts with no trial structure, scored on the point value)"),
+    },
+)
+TOP_LEVEL = os.environ.get("FLYCNS_AUDITORY_OUT") is None and not A2_ONLY
+REG = registry.register("auditory", CRITERIA_V2, scripts=[__file__]) if TOP_LEVEL else None
 
 neurons, edges = load_graph(DATA)
 A.sketch("auditory")
@@ -310,6 +355,9 @@ unc = {
              "whole run): readouts with no trial structure, scored on the point value; band < 0.05 Hz"),
 }
 report["uncertainty"] = unc
+if REG is not None:
+    registry.verify_bands(REG, unc)
+    report["registration"] = registry.stamp(REG)
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 prov = ["# Provenance: auditory (JON -> GF)", "", f"JO types: {jo_types} at {JO_HZ} Hz",

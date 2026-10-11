@@ -40,6 +40,38 @@ CRITERIA = dict(
     RA2="at every qualifying gain the 95% CI on the difference lies above zero, and >= 3 gains qualify",
     ci_method="Newcombe 1998 method 10, recomputed from counts")
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+# Version 2 registration (flycns/registry.py): the criteria with every band the scoring uses, and the frozen
+# model, recorded before any data are loaded. It supersedes the version 1 criteria.json, which stays as is.
+from flycns import registry  # noqa: E402
+CRITERIA_V2 = dict(
+    version=2,
+    question=("is sound's facilitation of the giant fiber's response to a near-threshold loom robust across a fixed "
+              "grid of loom gains, not only at the one working point the A2 calibration chooses?"),
+    protocol=dict(
+        trials_per_arm=TRIALS, gains=GAINS, near_threshold=NEAR,
+        near_threshold_rule="a grid gain qualifies if its loom-alone GF response probability (point estimate) is <= near_threshold",
+        child=("benchmarks/auditory.py <trials_per_arm> <data_dir> per gain with FLYCNS_A2_ONLY=1, FLYCNS_A2_GAIN = the gain, "
+               "FLYCNS_A2_TRIALS = trials_per_arm, FLYCNS_AUDITORY_OUT = results/a2_robustness/gain_<g>"),
+        arms=("loom alone on seed BASE, loom + sound on seed BASE + 1 (BASE = LIFParams().seed); sound = the auditory "
+              "JO types at 150 Hz during each 60 ms loom burst"),
+        statistic="P(GF | loom + sound) - P(GF | loom), Newcombe 1998 method 10 95% interval, recomputed from counts",
+    ),
+    checks={
+        "RA2_facilitation_at_every_near_threshold_gain": dict(
+            bands=[[0.0, None]], band_lower_exclusive=True, min_qualifying_gains=3,
+            conditional=True,
+            condition=("the per-gain band is compared when at least one grid gain qualifies; with none, RA2 fails on "
+                       "the count part alone, which is a point and carries no band"),
+            rule=("PASS if at least 3 grid gains qualify as near-threshold (a count, scored on its value) AND at every "
+                  "qualifying gain the 95% interval on the difference lies above 0 (lower edge exclusive); FAIL if "
+                  "fewer than 3 qualify or any qualifying gain's interval lies at or below 0; else UNRESOLVED")),
+    },
+)
+_v1 = OUT / "criteria.json"
+REG = registry.register(
+    "a2_robustness", CRITERIA_V2, scripts=[__file__, Path(__file__).with_name("auditory.py")],
+    supersedes=dict(file="criteria.json",
+                    git_commit=json.loads(_v1.read_text(encoding="utf-8")).get("git_commit") if _v1.exists() else None))
 # Registered test: refuse uncommitted code and data that differ from data/MANIFEST.json, so the
 # registered result can be traced to an exact commit and an exact dataset (flycns/integrity.py).
 from flycns.integrity import require_clean, require_data, criteria_differ  # noqa: E402
@@ -119,6 +151,10 @@ unc = stats.combine(
     + [_gain_part(r) for r in qual],
     note="RA2 as registered: >= 3 near-threshold gains, and at every one the 95% CI on the difference lies above zero")
 report["uncertainty"] = {"RA2_facilitation_at_every_near_threshold_gain": unc}
+# the per-gain band [0, -) is among RA2's parts whenever a gain qualifies; with none, RA2 fails on the count
+# part alone (a point, no band), so there is no band to compare and RA2 is left out (registered conditional)
+registry.verify_bands(REG, report["uncertainty"] if qual else {})
+report["registration"] = registry.stamp(REG)
 from flycns.bench import provenance  # noqa: E402
 report["provenance"] = provenance(DATA)
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
