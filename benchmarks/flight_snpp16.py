@@ -37,7 +37,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from brian2 import Synapses, mV
 from flycns import load_graph, CNSModel, LIFParams
-from flycns import stats
+from flycns import registry, stats
 from flycns.bench import provenance, spike_source
 from flycns.graph import rewire_null
 
@@ -50,6 +50,34 @@ SEEDS = [0, 1, 2]
 import os
 TARGET = os.environ.get("FLYCNS_TARGET_TYPE", "SNpp16")   # override only for smoke tests on the toy graph
 STEER = r"^(b[123] MN|hg[1-4] MN|i[12] MN|iii[13] MN|tp[12] MN|ps1 MN)"
+
+# ---- version 2 registration (flycns/registry.py): criteria, bands and the frozen model, before any data
+LABEL = "flight_snpp16"
+CRITERIA_V2 = dict(
+    version=2,
+    question=f"is DVMn 1a-c's proprioceptive drive carried by one named wing campaniform type ({TARGET})?",
+    protocol=dict(
+        n_cycles=N_CYCLES, wingbeat_hz=WINGBEAT_HZ, jitter_ms=JITTER_MS, phase_seeds=SEEDS, target_type=TARGET,
+        drive=("every cell of the driven set recruited, one spike per wingbeat cycle at a uniform random phase "
+               "with gaussian jitter (an 8 mV kick into each afferent), after 200 ms of settling; only phase "
+               "and jitter vary with the seed"),
+        arms=dict(S1=f"{TARGET} alone",
+                  S2=f"every other wing and haltere campaniform afferent (ADMN, DMetaN), {TARGET} withheld",
+                  S3="all wing and haltere campaniform afferents",
+                  null=f"{TARGET} alone on rewire_null(edges, seed=0) (reported, not scored)"),
+        scoring=("per draw (stats.per_draw, need 0.8): each phase seed is one draw, its DVMn 1a-c rate rounded "
+                 "to 0.01 Hz; PASS if ceil(0.8 n) of the n seeds are in band, FAIL if at most floor(0.2 n), "
+                 "else UNRESOLVED")),
+    checks=dict(
+        N1_snpp16_sufficient_dvmn_in_band=dict(
+            band=[2.0, 12.0],
+            rule=f"S1 ({TARGET} alone) puts DVMn 1a-c in 2-12 Hz, scored per phase seed"),
+        N2_snpp16_necessary_dvmn_below_2hz=dict(
+            band=[None, 2.0],
+            rule=(f"S2 (all but {TARGET}) gives DVMn 1a-c below 2 Hz, scored per phase seed (the point check is "
+                  f"strict, per_draw's upper edge is inclusive)"))),
+)
+REG = registry.register(LABEL, CRITERIA_V2, scripts=[__file__], supersedes=None)
 
 neurons, edges = load_graph(DATA)
 meta = neurons.set_index("bodyId")
@@ -140,6 +168,8 @@ report["reported"] = dict(
     specificity=dict(real=s1["dvmn_mean"], rewired_null=report["arms"]["null_snpp16_alone"]["dvmn_mean"]),
     prediction=(f"silencing {TARGET} in a flying fly should suppress DVM motor neuron activity; the "
                 f"model's DVMn output under proprioceptive drive is set by this one wing campaniform type"))
+registry.verify_bands(REG, report["uncertainty"])
+report["registration"] = registry.stamp(REG)
 report["provenance"] = provenance()
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print("\nCHECKS")
