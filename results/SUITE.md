@@ -2,9 +2,9 @@
 
 **36/48 checks pass under ONE parameter set** (same LIFParams for every circuit).
 
-**By role:** independent 13/24 | control 10/10 | robustness 3/4 | calibrated 7/7 | construction 3/3
+**By role:** independent 9/18 | control 10/10 | robustness 3/4 | structural 3/5 | calibrated 7/7 | construction 4/4
 
-Only *independent* checks test the model; *calibrated* and *construction* checks were made to pass by a declared parameter (docs/CALIBRATION.md). *control* checks show the machinery is not trivial.
+Only *independent* checks test the model; *calibrated* and *construction* checks were made to pass by a declared parameter (docs/CALIBRATION.md). *control* checks show the machinery is not trivial. *structural* checks count over the wiring with no simulation.
 
 ## Parameters
 ```
@@ -43,7 +43,7 @@ effective chemical kick per synapse: 0.0825 mV (Shiu 2024 unitary 0.275 mV x Mal
 ## Checks
 | benchmark | check | result | role | flags |
 |---|---|---|---|---|
-| a2_registered | A2R_facilitation | PASS | independent | - |
+| a2_registered | A2R_facilitation | PASS | construction | - |
 | a2_robustness | RA2_facilitation_at_every_near_threshold_gain | PASS | robustness | - |
 | auditory | A1_jo_alone_mostly_subthreshold | PASS | calibrated | - |
 | auditory | A2_jo_effect_on_near_threshold_loom_REPORTED | SKIP | reported | - |
@@ -60,7 +60,7 @@ effective chemical kick per synapse: 0.0825 mV (Shiu 2024 unitary 0.275 mV x Mal
 | feeding | F3_bitter_suppresses | SKIP | reported | - |
 | feeding | F4_second_order_sufficient | SKIP | reported | - |
 | feeding | F5_null_silent | SKIP | reported | - |
-| feeding_by_modality | F2_sugar_ratio_exceeds_bitter | PASS | independent | - |
+| feeding_by_modality | F2_sugar_ratio_exceeds_bitter | PASS | structural | - |
 | feeding_by_modality | F3_sugar_drives_mn9_at_100hz | FAIL | independent | - |
 | feeding_by_modality | F4_bitter_below_sugar_at_100hz | FAIL | independent | - |
 | flight_loop | L1a_DVMn_2_to_12_hz | PASS | calibrated | - |
@@ -88,43 +88,43 @@ effective chemical kick per synapse: 0.0825 mV (Shiu 2024 unitary 0.275 mV x Mal
 | gf_escape | cns_quiet | PASS | calibrated | - |
 | gf_escape | electrical_necessary | PASS | control | - |
 | gf_escape | null_silent | PASS | control | - |
-| gustatory_signed_map | S1_valence_signed_on_proboscis | PASS | independent | - |
-| gustatory_signed_map | S2_per_type_sign_agreement | FAIL | independent | - |
-| gustatory_signed_map | S3_LB2_dominates_pharyngeal_pumping | FAIL | independent | - |
+| gustatory_signed_map | S1_valence_signed_on_proboscis | PASS | structural | - |
+| gustatory_signed_map | S2_per_type_sign_agreement | FAIL | structural | - |
+| gustatory_signed_map | S3_LB2_dominates_pharyngeal_pumping | FAIL | structural | - |
 | null_strict | S1_escape_null_silent_superclass | PASS | control | - |
 | null_strict | S2_pc1_null_silent_superclass | PASS | control | - |
 | pc1_song | P1_pc1_14a_pulse_over_sine | PASS | independent | - |
 | pc1_song | P2_pc1_13_14_pulse_over_sine | PASS | independent | - |
 | pc1_song | P3_14a_exceeds_15_16_on_pulse | PASS | independent | - |
 | pc1_song | P4_null_silent | PASS | control | - |
-| sugar_laterality | L1_sugar_contralateral_bias | PASS | independent | - |
+| sugar_laterality | L1_sugar_contralateral_bias | PASS | structural | - |
 
-Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); UNSTAMPED = written before integrity stamping, rerun to stamp.
+Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); UNSTAMPED = written before integrity stamping, rerun to stamp; UNPINNED = no record of the input tables; TRIALS a<b = run at fewer trials than the canonical b.
 
 Declared deviations from the raw connectome: see each results/*/provenance.md and flycns/graph.py.
 
 ## Report provenance
 | benchmark | written | commit | data (neurons / edges) | env overrides |
 |---|---|---|---|---|
-| a2_registered | 2026-10-11T10:54:17 | 329488d | - | - |
-| a2_robustness | 2026-10-11T11:24:34 | 329488d | - | - |
-| auditory | 2026-10-11T10:35:24 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| dnp13_control | 2026-10-11T09:33:53 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| feeding | 2026-10-11T10:47:05 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| feeding_by_modality | 2026-10-11T10:15:00 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_loop | 2026-10-11T10:05:23 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_snpp16 | 2026-10-11T09:45:06 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_snpp16_graded | 2026-10-11T10:35:42 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_snpp16_robustness | 2026-10-11T10:00:59 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| gf_escape | 2026-10-11T09:46:33 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| gustatory_signed_map | 2026-10-11T09:26:50 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| null_strict | 2026-10-11T11:16:41 | 329488d | - | - |
-| pc1_song | 2026-10-11T09:46:03 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| peptide_asta | 2026-10-11T09:37:35 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| sugar_laterality | 2026-10-11T09:26:53 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | - |
+| a2_registered | 2026-10-11T14:39:08 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| a2_robustness | 2026-10-11T15:21:36 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| auditory | 2026-10-11T14:00:50 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| dnp13_control | 2026-10-11T13:02:29 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| feeding | 2026-10-11T14:12:20 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| feeding_by_modality | 2026-10-11T13:05:49 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_loop | 2026-10-11T13:58:53 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_snpp16 | 2026-10-11T13:04:51 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_snpp16_graded | 2026-10-11T13:21:06 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_snpp16_robustness | 2026-10-11T14:29:09 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| gf_escape | 2026-10-11T13:12:31 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| gustatory_signed_map | 2026-10-11T13:41:45 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| null_strict | 2026-10-11T14:41:38 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| pc1_song | 2026-10-11T13:32:02 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| peptide_asta | 2026-10-11T13:32:02 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| sugar_laterality | 2026-10-11T13:11:08 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | - |
 
 ## Citation check: 48/48 tags resolve in REFERENCES.md
 
 ## Stamp inventory
-92 of 92 result files carry a stamp (commits: 329488d x92); 0 flagged, 0 unstamped.
+93 of 93 result files carry a stamp (commits: d72fe77 x93); 0 flagged, 0 unstamped.
 - exempt: results/turner2022/ (input extraction from 22 GB of Turner et al. 2022 imaging; its output is a model input, hashed into every report's loom_input stamp)

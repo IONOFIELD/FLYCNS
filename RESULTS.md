@@ -24,6 +24,43 @@ is uncertain about, and no independent check fails under any of its perturbation
 
 ---
 
+## 11 October 2026, later: audit phases 1 and 2 (run 8)
+
+**What changed.** The guards and tests the audit asked for (README, "Integrity"; full list in the
+pull request):
+- registrations are guarded;
+- every pinned table is rehashed from its bytes before a registered run;
+- menu 51 refuses settings overrides;
+- the toy suite compares 2,224 numbers with a committed golden file;
+- 15 new unit tests.
+
+Two roles changed: A2R facilitation is now *construction*, and three graph-arithmetic checks are
+*structural*. No model equation, parameter, stimulus or criterion changed.
+
+**Run 8.** All 48 cloud jobs reran at commit `d72fe77`, and all 93 result files carry its stamp.
+- **Unchanged.** Every one of the 7,197 numbers and verdicts in the earlier reports is identical
+  to run 6, to the last digit. 36 of 48 checks pass. By role, independent checks pass 9 of 18 and
+  structural 3 of 5. These were 13 of 24 independent before the relabel; no outcome changed.
+- **Changed: the feeding mechanism, as intended.** Its path products are no longer NaN. They now
+  come from the graph the model simulates, with histamine signed and the weight floor applied:
+
+  | hop | 2 | 3 | 4 | 5 |
+  |---|---|---|---|---|
+  | signed taste-to-MN9 influence | -0.0035 | +0.0032 | +0.0065 | +0.0025 |
+
+  That is inhibitory at two hops and excitatory at three to five: the disinhibition the note has
+  claimed, now with numbers behind it. MN9's input balance moves slightly to net -83 synapses
+  (-1.4%). The gustatory afferents still contact MN9's inhibitory inputs 3 times more than its
+  excitatory ones (ratio 0.33).
+- **New: both engines on the real connectome.** The compiled and pure-Python engines gave
+  identical spikes on 10 looms: 2,547 spikes each, exact equality (`fit/check_engines.py`,
+  x86-64 Windows). Until now this had been shown only on the toy and on synthetic networks.
+- **Pinned: the transmitter table.** `edges_nt.parquet` (6,287,789 rows, read by the registered
+  flight robustness check R1) is now in `data/MANIFEST.json`. The other three tables re-fetched
+  byte-identical.
+
+---
+
 ## 11 October 2026: every pending result rerun on the real connectome
 
 **How.** The audit marked a list of results "rerun pending". Every one of them was rerun on
@@ -31,23 +68,24 @@ GitHub's Windows machines (`.github/workflows/rerun.yml`), one machine per run. 
 benchmarks never rerun under integrity stamping: pc1 song, DNp13 control, feeding by modality,
 gustatory map, sugar laterality, SNpp16 and SNpp16 graded. The final run (run 5) reran everything
 at one commit.
-- **Data.** Three files are pinned in `data/MANIFEST.json`:
+- **Data.** Four files are pinned in `data/MANIFEST.json`:
   - the connectome from neuPrint: neurons (176,422) and edges (6,287,789);
-  - each neuron's neuropil membership, which defines the anatomical SEZ: 174,802 neurons.
+  - each neuron's neuropil membership, which defines the anatomical SEZ: 174,802 neurons;
+  - since run 8, the per-synapse transmitter table (`edges_nt.parquet`) used by the targeted sign flip.
 
   Every rerun (runs 2 to 5) fetched them again, and setup refuses data that differ from the pin.
   Every run passed that check.
-- **Code.** Every result file in `results/` (92 files) was produced at commit `329488d` on
-  committed code, by run 6 of `rerun.yml`, and carries its stamp. Results that can't carry a stamp
+- **Code.** Every result file in `results/` (93 files) was produced at commit `d72fe77` on
+  committed code, by run 8 of `rerun.yml`, and carries its stamp. Results that can't carry a stamp
   inside them (CSV, HDF5) have it beside them. The only exception is the Turner 2022 extraction,
-  which is a model input hashed into every report. `results/SUITE.md` keeps the inventory. Runs 5
-  and 6 gave identical reports.
+  which is a model input hashed into every report. `results/SUITE.md` keeps the inventory. Runs 5,
+  6 and 8 gave identical reports (run 8 differs only in the corrected feeding mechanism).
 - **Engine.** Every stamped simulation used the compiled engine, on Windows. Wrapper and
   static-analysis scripts record "not used".
 
 **Result: every report in `results/SUITE.md` now carries a clean stamp. None is stale, unstamped,
 dirty or perturbed.** 36 of 48 scored checks pass under one parameter set; the independent checks
-pass 13 of 24.
+pass 13 of 24 (9 of 18 after the relabel of run 8, above).
 
 The reruns are deterministic. Run 5 reproduced the earlier runs to the last digit in every
 benchmark: run 2, and run 3 for the seven benchmarks below. The only exceptions are the readouts
@@ -154,7 +192,7 @@ neurons):
   before.
 - **Feeding mechanism. A defect:** its signed path products (M3) came out as NaN. The script reads
   the stale `sign` column stored in the edge table, not the model's signs. The audit of 11 October
-  flagged exactly this. It is fixed in the next change by reading the graph the model uses.
+  flagged exactly this. Fixed in run 8 (above): the script now reads the graph the model uses.
 - **Embodiment gate and baseline fit:** unchanged.
 
 **Fixed along the way:**

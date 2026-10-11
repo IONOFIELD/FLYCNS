@@ -145,15 +145,15 @@
   "conclusion": "The ear-to-flight route in MaleCNS v1.0 is four hops (auditory JO afferents -> SAD/WED relays -> DNp02/DNp06/DNp11/DNg108 -> VNC premotor interneurons -> wing motor neurons) and runs through descending neurons shared with the visual escape system rather than a dedicated auditory channel: all four are loom-dominated by 3x to 32x in two-hop signed input. The giant fiber does not participate (6 synapses onto the premotor pool), consistent with its role in the jump rather than steering. The model cannot test the pathway because none of those descending neurons, and no wing motor neuron, fires under measured loom drive.",
   "citations": [
     "Kamikouchi A, Inagaki HK, Effertz T, Hendrich O, Fiala A, Goepfert MC, Ito K (2009). The neural basis of Drosophila gravity-sensing and hearing. Nature 458:165-171. JO subgroup organisation and AMMC projection zones.",
-    "Tootoonian S, Coen P, Kawadler JM, Murthy M (2012). Neural representations of courtship song in the Drosophila brain. J Neurosci 32:787-798. AMMC-A1/B1/B2 graded non-spiking sound responses; GF spikes to current injection and sound summates with subthreshold injection (Fig. 2D); AMMC-B1 cholinergic, B2 GABAergic.",
+    "Tootoonian S, Coen P, Kawai R, Murthy M (2012). Neural representations of courtship song in the Drosophila brain. J Neurosci 32:787-798. AMMC-A1/B1/B2 graded non-spiking sound responses; GF spikes to current injection and sound summates with subthreshold injection (Fig. 2D); AMMC-B1 cholinergic, B2 GABAergic.",
     "Vaughan AG, Zhou C, Manoli DS, Baker BS (2014). Neural pathways for the detection and discrimination of conspecific song in Drosophila melanogaster. Curr Biol 24:1039-1049. aPN1 (= AMMC-B1) necessary for behavioural song responses; AMMC-to-wedge projection.",
     "Tanouye MA, Wyman RJ (1980). Motor outputs of giant nerve fiber in Drosophila. J Neurophysiol 44:405-421. GF drives TTM and, via PSI, DLM.",
     "von Reyn CR, Breads P, Peek MY, et al. (2014). A spike-timing mechanism for action selection. Nat Neurosci 17:962-970. GF escape behaviour and its visual drive.",
     "Turner MH, Krieger A, Pang MM, Clandinin TR (2022). Visual and motor signatures of locomotion dynamically shape a population code for feature detection in Drosophila. eLife 11:e82587. Source of the measured loom amplitudes used for the drive here."
   ],
   "provenance": {
-    "written_at": "2026-10-11T09:27:58",
-    "git_commit": "329488d",
+    "written_at": "2026-10-11T13:17:07",
+    "git_commit": "d72fe77",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -167,6 +167,7 @@
     },
     "engine": "cython",
     "platform": "win32",
+    "machine": "AMD64",
     "loom_input": {
       "source": "MEASURED (stationary trials, 13 series): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09)",
       "state": "stationary",
@@ -177,7 +178,11 @@
       "min_weight": 5,
       "n_neurons": 176422,
       "n_signed_edges": 6127738,
-      "n_signed_synapses": 88316807
+      "n_signed_synapses": 88316807,
+      "n_dropped_unsigned_edges": 160051,
+      "n_dropped_unsigned_synapses": 1980492,
+      "n_silent_presynaptic": 8020,
+      "edges_nt_used": false
     },
     "data": {
       "dir": "data",

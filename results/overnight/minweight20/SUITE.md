@@ -4,7 +4,7 @@
 
 **By role:** independent 1/1 | control 4/4 | calibrated 6/6 | construction 3/3
 
-Only *independent* checks test the model; *calibrated* and *construction* checks were made to pass by a declared parameter (docs/CALIBRATION.md). *control* checks show the machinery is not trivial.
+Only *independent* checks test the model; *calibrated* and *construction* checks were made to pass by a declared parameter (docs/CALIBRATION.md). *control* checks show the machinery is not trivial. *structural* checks count over the wiring with no simulation.
 
 ## Parameters
 ```
@@ -65,15 +65,15 @@ effective chemical kick per synapse: 0.0825 mV (Shiu 2024 unitary 0.275 mV x Mal
 | gf_escape | electrical_necessary | PASS | control | PERTURBED |
 | gf_escape | null_silent | PASS | control | PERTURBED |
 
-Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); UNSTAMPED = written before integrity stamping, rerun to stamp.
+Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); UNSTAMPED = written before integrity stamping, rerun to stamp; UNPINNED = no record of the input tables; TRIALS a<b = run at fewer trials than the canonical b.
 
 Declared deviations from the raw connectome: see each results/*/provenance.md and flycns/graph.py.
 
 ## Report provenance
 | benchmark | written | commit | data (neurons / edges) | env overrides |
 |---|---|---|---|---|
-| auditory | 2026-10-11T10:12:54 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
-| feeding | 2026-10-11T10:20:33 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
-| gf_escape | 2026-10-11T09:38:41 | 329488d | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
+| auditory | 2026-10-11T14:29:32 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
+| feeding | 2026-10-11T14:38:52 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
+| gf_escape | 2026-10-11T13:49:17 | d72fe77 | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_MIN_WEIGHT': '20'} |
 
 ## Citation check: 48/48 tags resolve in REFERENCES.md
