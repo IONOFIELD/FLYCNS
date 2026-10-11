@@ -1,0 +1,15 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+depol  0.0 mV noise  0.0 mV | spont  0.000 Hz | MN9 taste   0.00 ctrl  0.00 | GF 1.25/resp hit 0.67 | [S E]  244s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+depol  3.0 mV noise  1.0 mV | spont  0.019 Hz | MN9 taste   1.17 ctrl  1.25 | GF 0.00/resp hit 0.00 | [F]  859s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+depol  4.0 mV noise  1.5 mV | spont  5.129 Hz | MN9 taste   1.83 ctrl  1.50 | GF 0.00/resp hit 0.00 | [F]  772s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+depol  5.0 mV noise  1.5 mV | spont  8.638 Hz | MN9 taste   2.67 ctrl  1.33 | GF 0.00/resp hit 0.00 | [F]  765s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+depol  5.0 mV noise  2.5 mV | spont 14.835 Hz | MN9 taste   2.83 ctrl  4.67 | GF 0.00/resp hit 0.00 | [F]  783s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+depol  6.0 mV noise  2.0 mV | spont 16.249 Hz | MN9 taste   2.67 ctrl  1.17 | GF 0.00/resp hit 0.00 | [F]  780s
+
+satisfying F,S,E,Q: none
