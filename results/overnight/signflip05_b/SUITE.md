@@ -56,27 +56,24 @@ effective chemical kick per synapse: 0.0825 mV (Shiu 2024 unitary 0.275 mV x Mal
 | feeding | F3_bitter_suppresses | SKIP | reported | PERTURBED |
 | feeding | F4_second_order_sufficient | SKIP | reported | PERTURBED |
 | feeding | F5_null_silent | SKIP | reported | PERTURBED |
-| gf_escape | gf_spikes_per_response_1_to_2 | PASS | calibrated | PERTURBED, STALE |
-| gf_escape | gf_response_prob_0.5_to_1 | PASS | calibrated | PERTURBED, STALE |
-| gf_escape | gf_latency_10_60ms | PASS | independent | PERTURBED, STALE |
-| gf_escape | ttmn_one_to_one | PASS | construction | PERTURBED, STALE |
-| gf_escape | ttmn_lag_0.5_1.5ms | PASS | construction | PERTURBED, STALE |
-| gf_escape | cns_quiet | PASS | calibrated | PERTURBED, STALE |
-| gf_escape | electrical_necessary | PASS | control | PERTURBED, STALE |
-| gf_escape | null_silent | PASS | control | PERTURBED, STALE |
+| gf_escape | gf_spikes_per_response_1_to_2 | PASS | calibrated | PERTURBED |
+| gf_escape | gf_response_prob_0.5_to_1 | PASS | calibrated | PERTURBED |
+| gf_escape | gf_latency_10_60ms | PASS | independent | PERTURBED |
+| gf_escape | ttmn_one_to_one | PASS | construction | PERTURBED |
+| gf_escape | ttmn_lag_0.5_1.5ms | PASS | construction | PERTURBED |
+| gf_escape | cns_quiet | PASS | calibrated | PERTURBED |
+| gf_escape | electrical_necessary | PASS | control | PERTURBED |
+| gf_escape | null_silent | PASS | control | PERTURBED |
 
-Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = over an hour older than the newest report; UNSTAMPED = written before integrity stamping, rerun to stamp.
+Flags: PERTURBED = run under FLYCNS_* overrides (robustness variant); DIRTY = uncommitted code; DATA-MISMATCH = data differ from data/MANIFEST.json; STALE = the model code has changed since this report (unstamped: over an hour older than the newest); UNSTAMPED = written before integrity stamping, rerun to stamp.
 
 Declared deviations from the raw connectome: see each results/*/provenance.md and flycns/graph.py.
-
-**WARNING: reports more than an hour older than the newest are included: gf_escape. Rerun the suite (menu 4, `scripts/run_all.py`) before quoting this table.**
 
 ## Report provenance
 | benchmark | written | commit | data (neurons / edges) | env overrides |
 |---|---|---|---|---|
-| auditory | 2026-10-11T01:56:41 | 45126da | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_SEED': '1', 'FLYCNS_SIGNFLIP': '0.05'} |
-| feeding | 2026-10-11T02:08:11 | 45126da | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_SEED': '1', 'FLYCNS_SIGNFLIP': '0.05'} |
-| gf_escape | 2026-10-11T01:07:43 | 45126da | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_SEED': '1', 'FLYCNS_SIGNFLIP': '0.05'} |
+| auditory | 2026-10-11T07:04:13 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_SEED': '1', 'FLYCNS_SIGNFLIP': '0.05'} |
+| feeding | 2026-10-11T07:10:24 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_SEED': '1', 'FLYCNS_SIGNFLIP': '0.05'} |
+| gf_escape | 2026-10-11T06:37:50 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_SEED': '1', 'FLYCNS_SIGNFLIP': '0.05'} |
 
-## Citation check: 42/50 tags resolve in REFERENCES.md
-Unresolved: Before 2026, Burrows 1998, CORRECTION 2026, Korff & Dickinson 2022, Newcombe 1998, Pezier & Blagburn 2013, Pezier et al. 2014, Pezier et al. 2016
+## Citation check: 48/48 tags resolve in REFERENCES.md

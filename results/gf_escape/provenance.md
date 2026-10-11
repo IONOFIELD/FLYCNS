@@ -14,7 +14,7 @@
 - superclass:cb_motor.b_adapt_mV = 10.0: sustained MN rates < 100 Hz; Azevedo 2020; McKellar 2020
 
 ## Regional gain: SEZ x1.0 (fitted, benchmarks/fit_regional.py), other x1
-   SEZ definition: type-name prefix fallback
+   SEZ definition: anatomical (roiInfo, 4,606 SEZ-intrinsic neurons)
 
 ## Loom tuning: MEASURED (stationary trials, 13 series): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09); trial gain sigma 0.357; peak rate 5.0 Hz (free dF/F->rate scale)
 {'LC4': 0.52, 'LC6': 0.4008, 'LC9': 0.316, 'LC11': 0.2725, 'LC12': 1.0, 'LC15': 0.59, 'LC16': 0.4908, 'LC17': 0.7778, 'LC18': 0.3764, 'LC21': 0.3853, 'LC26': 0.6906, 'LPLC1': 0.4905, 'LPLC2': 0.8282}

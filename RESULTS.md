@@ -25,15 +25,18 @@ is uncertain about, and no independent check fails under any of its perturbation
 
 ## 11 October 2026: every pending result rerun on the real connectome
 
-**How.** The audit marked a list of results "rerun pending". All of them except the SEZ-membership
-trio were rerun on GitHub's Windows machines (`.github/workflows/rerun.yml`), one machine per run.
-So were the seven benchmarks never rerun under integrity stamping: pc1 song, DNp13 control, feeding
-by modality, gustatory map, sugar laterality, SNpp16 and SNpp16 graded.
-- **Data.** The connectome was fetched from neuPrint and pinned in `data/MANIFEST.json`: 176,422
-  neurons and 6,287,789 edges. Each later rerun fetched it again; setup refuses data that differ
-  from the pin, and both later fetches matched.
-- **Code.** Every report was produced on committed code, at `45126da` or `b33610d`. The two
-  commits differ only in the summary script, the workflow and the references.
+**How.** The audit marked a list of results "rerun pending". Every one of them was rerun on
+GitHub's Windows machines (`.github/workflows/rerun.yml`), one machine per run. So were the seven
+benchmarks never rerun under integrity stamping: pc1 song, DNp13 control, feeding by modality,
+gustatory map, sugar laterality, SNpp16 and SNpp16 graded. The final run (run 5) reran everything
+at one commit.
+- **Data.** Two tables are pinned in `data/MANIFEST.json`:
+  - the connectome from neuPrint: 176,422 neurons and 6,287,789 edges;
+  - each neuron's neuropil membership, which defines the anatomical SEZ: 174,802 neurons.
+
+  Every rerun fetches both again, and setup refuses data that differ from the pin. All four
+  fetches matched.
+- **Code.** Every report in `results/` was produced at commit `fcff151`, on committed code.
 - **Engine.** Every simulation used the compiled engine, on Windows. Wrapper and static-analysis
   scripts record "not used".
 
@@ -41,9 +44,9 @@ by modality, gustatory map, sugar laterality, SNpp16 and SNpp16 graded.
 dirty or perturbed.** 36 of 48 scored checks pass under one parameter set; the independent checks
 pass 13 of 24.
 
-The reruns are deterministic. The giant fiber adaptation fit, run twice at two commits, gave the
-same grid to the last digit. The seven benchmarks rerun for stamping reproduced their earlier
-pass and fail pattern exactly:
+The reruns are deterministic. Run 5 reproduced run 2 to the last digit in every benchmark. The
+only exceptions are the readouts that use the SEZ, which changed as intended (below). The seven
+benchmarks rerun for stamping reproduced their earlier pass and fail pattern exactly:
 - pc1 song: 4 of 4;
 - DNp13: 1 of 2;
 - feeding by modality: 1 of 3;
@@ -120,10 +123,19 @@ in the battery. Two things changed from the September battery (16/16 almost ever
 - The superclass-preserving shuffle leaves enough ear-to-giant-fiber chemical structure for a
   0.56 mV depolarisation. A4 is the weakest control.
 
-**Not rerun:** `roi_membership`, `check_modulators` and `fit_regional`. These need the ROI volumes
-(menu 25), which the cloud machines do not have. One consequence: in the cloud, feeding
-F2b's SEZ readout (calibrated) fell back to the type-name rule instead of the anatomical SEZ. It
-passes either way (0.0025 against a 0.02 Hz limit), but the anatomical readout needs menu 25.
+**The SEZ trio** (`roi_membership`, `check_modulators`, `fit_regional`). Membership needs no
+volume download: it is one neuPrint query. Only the 3D meshes need the volumes. Run 2 had no
+membership table, so feeding F2b silently fell back to the type-name SEZ. Setup now fetches the
+table and the manifest pins it. With the anatomical SEZ (primary ROIs only, 4,606 SEZ-intrinsic
+neurons):
+- **Feeding F2b (calibrated).** The rate outside the SEZ is 0.00035 Hz against a 0.02 Hz limit:
+  pass. Under the name rule it was 0.0025 Hz.
+- **check_modulators.** There is still no aminergic modulator in the SEZ. None of the 900
+  output-dominated midline SEZ bodies is predicted dopaminergic (862 bodies before the nested-ROI
+  fix).
+- **fit_regional** (the retired SEZ gain). No SEZ gain from 1.5 to 2.5 lets taste drive MN9, as
+  before. With adaptation at 10 mV, the fit's quick escape check (GF hit at least 0.8) now fails
+  at every gain (0.67). The regional gain stays retired at 1.0.
 
 **Fixed along the way:**
 - **Registered tests could not be rerun.** A registered test compared its saved criteria with its
@@ -134,6 +146,10 @@ passes either way (0.0025 against a 0.02 Hz limit), but the anatomical readout n
 - **The battery summary mixed in other benchmarks.** It counted every benchmark in `results/`,
   not just the three it reran.
 - **STALE misfired on parallel runs.** It now means the model code changed since a report.
+- **The cloud rerun had no anatomical SEZ.** See "The SEZ trio" above.
+- **Two misleading log lines.** Registered tests printed the current commit as the registration
+  commit. Flight runs warned about "no outgoing edges" when they had no stimulus types to warn
+  about.
 - **The citation check missed four references.** It now resolves all 48 tags.
 
 ---
@@ -177,7 +193,7 @@ Each finding below was confirmed against the code, the committed reports, or a t
 The fixes change no registered criterion. Several change what a rerun will measure, so the
 affected committed results are marked **rerun pending** and must not be quoted until they are rerun.
 
-**Update, 11 October 2026:** all of them except the SEZ-membership trio have been rerun; see the section above.
+**Update, 11 October 2026:** all of them have been rerun; see the section above.
 
 **Affecting committed results**
 - **Loom input was all-trials, not stationary.** The committed data file had no per-state split, so every loom-driven result used all-trials amplitudes. The documentation said stationary. Missing states are now an error, and the file now has the split. **Rerun pending:**
@@ -241,7 +257,7 @@ affected committed results are marked **rerun pending** and must not be quoted u
 **Loom escape** (`benchmarks/gf_escape.py`, 8 scored checks). Driving the nine loom-sensitive
 lobula columnar populations at measured amplitudes fires the giant fiber 1.46 times per responding
 cell with a response probability of 0.575 (95% CI 0.42 to 0.71, 40 trials) and a latency of 39.7 ms
-(rerun 11 October 2026 at `45126da`, adaptation 10 mV; earlier 1.06, 0.68 and 37 ms).
+(rerun 11 October 2026 at `fcff151`, adaptation 10 mV; earlier 1.06, 0.68 and 37 ms).
 Each GF spike drives exactly one TTMn spike 0.9 ms later through a modelled gap junction. Without
 the electrical model TTMn is silent. On a degree-preserving rewired connectome neither the giant
 fiber nor TTMn fires (population rate 4e-7 Hz). This is a sensory-to-motor cascade across the neck connective at physiological latency.
@@ -256,7 +272,7 @@ criterion registered at `cbc0cc5`, committed to GitHub before any result in `4b3
 `c097e41`). Tootoonian et al. 2012 (J Neurosci 32:787-798, Fig. 2D) showed that sound together with an
 input subthreshold on its own produces a full GF spike. At a working point calibrated per run (the
 largest loom gain leaving GF hit rate at or below 0.3 with at least 2 mV depolarisation), with 120
-trials per arm. The rerun of 11 October 2026 (`45126da`; stationary input, adaptation 10 mV, the
+trials per arm. The rerun of 11 October 2026 (`fcff151`; stationary input, adaptation 10 mV, the
 ear afferents' load on the giant fiber kept in both arms) chose gain 0.8:
 
 | condition | GF responses | probability (95% CI) |
@@ -279,7 +295,7 @@ run does not show how the effect varies across working points. That caveat was t
 
 **Facilitation is robust across working points** (`benchmarks/a2_robustness.py`; registered at
 `cc8d759`). The same protocol at five fixed loom gains, 100 trials per arm, with "near threshold"
-defined in advance as loom-alone response at most 0.3. Rerun 11 October 2026 (`45126da`):
+defined in advance as loom-alone response at most 0.3. Rerun 11 October 2026 (`fcff151`):
 
 | loom gain | loom alone | loom + sound | difference (95% CI) | regime |
 |---|---|---|---|---|

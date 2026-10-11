@@ -21,7 +21,7 @@
       "gf_hit": 0.0,
       "gf_lat_ms": NaN,
       "pop_rate_hz": 0.001029442668990601,
-      "wall_s": 218.5,
+      "wall_s": 293.4,
       "n_trials": 40,
       "gf_depol_mV": 3.296320256865061
     },
@@ -30,7 +30,7 @@
       "gf_hit": 0.05,
       "gf_lat_ms": 41.94999999999891,
       "pop_rate_hz": 0.0019521673947630197,
-      "wall_s": 238.3,
+      "wall_s": 292.8,
       "n_trials": 40,
       "gf_depol_mV": 4.5307962463914455
     },
@@ -39,7 +39,7 @@
       "gf_hit": 0.4,
       "gf_lat_ms": 42.11249999999873,
       "pop_rate_hz": 0.003060329763313801,
-      "wall_s": 221.3,
+      "wall_s": 267.0,
       "n_trials": 40,
       "gf_depol_mV": 5.652953696786641
     },
@@ -48,7 +48,7 @@
       "gf_hit": 0.95,
       "gf_lat_ms": 43.626315789473416,
       "pop_rate_hz": 0.0044111435769006,
-      "wall_s": 222.3,
+      "wall_s": 262.4,
       "n_trials": 40,
       "gf_depol_mV": 6.655089723915138
     },
@@ -57,7 +57,7 @@
       "gf_hit": 1.0,
       "gf_lat_ms": 34.31749999999939,
       "pop_rate_hz": 0.007253979737305862,
-      "wall_s": 241.4,
+      "wall_s": 273.8,
       "n_trials": 40,
       "gf_depol_mV": 6.970951477176676
     },
@@ -97,7 +97,7 @@
       "gf_hit": 0.05,
       "gf_lat_ms": 28.150000000002933,
       "pop_rate_hz": 0.005068192204119627,
-      "wall_s": 238.4,
+      "wall_s": 275.7,
       "n_trials": 40,
       "gf_depol_mV": 2.0597771984756434
     },
@@ -106,7 +106,7 @@
       "gf_hit": 0.0,
       "gf_lat_ms": NaN,
       "pop_rate_hz": 0.005065392318914919,
-      "wall_s": 210.0,
+      "wall_s": 254.4,
       "n_trials": 40,
       "gf_depol_mV": 0.3463693476715082
     },
@@ -115,7 +115,7 @@
       "gf_hit": 1.0,
       "gf_lat_ms": 10.872499999999482,
       "pop_rate_hz": 0.005135389449032584,
-      "wall_s": 205.2,
+      "wall_s": 262.9,
       "n_trials": 40,
       "gf_depol_mV": 3.657858181414035
     },
@@ -124,7 +124,7 @@
       "gf_hit": 0.05,
       "gf_lat_ms": 41.94999999999891,
       "pop_rate_hz": 0.0019521673947630197,
-      "wall_s": 216.0,
+      "wall_s": 268.2,
       "n_trials": 40,
       "gf_depol_mV": 4.5307962463914455
     },
@@ -133,7 +133,7 @@
       "gf_hit": 0.375,
       "gf_lat_ms": 25.879999999998873,
       "pop_rate_hz": 0.00724288067947875,
-      "wall_s": 225.0,
+      "wall_s": 267.6,
       "n_trials": 40,
       "gf_depol_mV": 3.664636700990667
     },
@@ -142,7 +142,7 @@
       "gf_hit": 0.0,
       "gf_lat_ms": NaN,
       "pop_rate_hz": 0.0004531814195617975,
-      "wall_s": 208.7,
+      "wall_s": 255.8,
       "n_trials": 40,
       "gf_depol_mV": 0.0
     },
@@ -180,8 +180,8 @@
   },
   "pass": true,
   "provenance": {
-    "written_at": "2026-10-11T01:49:19",
-    "git_commit": "45126da",
+    "written_at": "2026-10-11T07:42:42",
+    "git_commit": "fcff151",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -214,7 +214,8 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9"
+        "edges.parquet": "becf568580708ba9",
+        "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"
     }

@@ -106,21 +106,21 @@ Declared deviations from the raw connectome: see each results/*/provenance.md an
 ## Report provenance
 | benchmark | written | commit | data (neurons / edges) | env overrides |
 |---|---|---|---|---|
-| a2_registered | 2026-10-11T02:02:23 | 45126da | - | - |
-| a2_robustness | 2026-10-11T02:48:05 | 45126da | - | - |
-| auditory | 2026-10-11T02:00:14 | 45126da | 06ea0afb48c414ad / becf568580708ba9 | - |
-| dnp13_control | 2026-10-11T03:08:16 | b33610d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| feeding | 2026-10-11T02:11:31 | 45126da | 06ea0afb48c414ad / becf568580708ba9 | - |
-| feeding_by_modality | 2026-10-11T03:07:39 | b33610d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_loop | 2026-10-11T01:36:21 | 45126da | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_snpp16 | 2026-10-11T03:10:35 | b33610d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_snpp16_graded | 2026-10-11T03:51:10 | b33610d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_snpp16_robustness | 2026-10-11T01:58:49 | 45126da | 06ea0afb48c414ad / becf568580708ba9 | - |
-| gf_escape | 2026-10-11T01:11:58 | 45126da | 06ea0afb48c414ad / becf568580708ba9 | - |
-| gustatory_signed_map | 2026-10-11T03:01:18 | b33610d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| null_strict | 2026-10-11T02:41:06 | 45126da | - | - |
-| pc1_song | 2026-10-11T03:20:57 | b33610d | 06ea0afb48c414ad / becf568580708ba9 | - |
-| peptide_asta | 2026-10-11T01:00:36 | 45126da | 06ea0afb48c414ad / becf568580708ba9 | - |
-| sugar_laterality | 2026-10-11T03:01:10 | b33610d | 06ea0afb48c414ad / becf568580708ba9 | - |
+| a2_registered | 2026-10-11T07:40:33 | fcff151 | - | - |
+| a2_robustness | 2026-10-11T07:31:44 | fcff151 | - | - |
+| auditory | 2026-10-11T07:33:01 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| dnp13_control | 2026-10-11T06:32:17 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| feeding | 2026-10-11T07:44:33 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| feeding_by_modality | 2026-10-11T06:37:11 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_loop | 2026-10-11T07:13:29 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_snpp16 | 2026-10-11T06:39:56 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_snpp16_graded | 2026-10-11T07:18:16 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| flight_snpp16_robustness | 2026-10-11T07:56:29 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| gf_escape | 2026-10-11T06:45:05 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| gustatory_signed_map | 2026-10-11T06:45:18 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| null_strict | 2026-10-11T08:13:48 | fcff151 | - | - |
+| pc1_song | 2026-10-11T06:51:27 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| peptide_asta | 2026-10-11T06:41:18 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
+| sugar_laterality | 2026-10-11T06:28:52 | fcff151 | 06ea0afb48c414ad / becf568580708ba9 | - |
 
 ## Citation check: 48/48 tags resolve in REFERENCES.md

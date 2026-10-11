@@ -40,7 +40,7 @@ stationary-trial amplitudes. In fact the committed data file had no per-state sp
 silently used all trials (LC4 0.595 instead of 0.52, sigma 0.369 instead of 0.357). The file now
 carries the split and a missing state is an error. Every value chosen on loom-driven readouts was
 therefore re-checked under the stationary input, on 10 October 2026, on GitHub's Windows machines
-(`.github/workflows/rerun.yml` runs 1 and 2, identical; `results/fit_gf_adapt/`):
+(`.github/workflows/rerun.yml`; the fit gave the same grid in every run; `results/fit_gf_adapt/`):
 - **GF adaptation: refit to 10 mV** (was 30). By the fit's rule, 10 mV is now the smallest value
   that meets all four constraints. It gives 1.46 spikes per response, 1.95 on the strongest gain
   quartile (limit 2, so close), P(response) 0.575 and a 1:1 TTMn relay. At 5 mV the strong
