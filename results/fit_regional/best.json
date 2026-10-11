@@ -3,9 +3,9 @@
     "SEZ": 1.5,
     "other": 1.0
   },
-  "score": 6,
+  "score": 5,
   "checks": {
-    "E1": true,
+    "E1": false,
     "E2": true,
     "E3": true,
     "A1": true,

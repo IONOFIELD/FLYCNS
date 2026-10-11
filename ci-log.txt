@@ -1,0 +1,81 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+gustatory afferent types (subclass): 42
+taste drive ['LB1a', 'LB1b', 'LB1c', 'LB1d', 'LB1e', 'LB2a', 'LB2b', 'LB2c', 'LB2d', 'LB3', 'LB3a', 'LB3b', 'LB3c', 'LB3d', 'LB4a', 'LB4b', 'PhG10', 'PhG11', 'PhG12', 'PhG13', 'PhG14', 'PhG15', 'PhG16', 'PhG1a', 'PhG1b', 'PhG1c', 'PhG2', 'PhG3', 'PhG4', 'PhG5', 'PhG6', 'PhG7', 'PhG8', 'PhG9', 'aPhM1', 'aPhM2a', 'aPhM2b', 'aPhM3', 'aPhM4', 'aPhM5', 'claw_tpGRN', 'dorsal_tpGRN']; control ['JO-FV']; 11 JO types
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+SEZ definition: anatomical (roiInfo, 4,606 SEZ-intrinsic neurons)
+  cb_motor types firing (spikes / n cells): MN2Db:3/2, MN2Da:1/2   [2 of 43 motor types active]
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    .5555555555555554555555554.....   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 6 stimulus windows):
+  ascending_neuron       ######################################## 0.208
+  cb_intrinsic           ################################         0.168
+  descending_neuron      ##################                       0.095
+  cb_motor               #######                                  0.038
+  vnc_intrinsic                                                   0.000
+SEZ gain 1.5  score 5/8  [E2 E3 A1 F2 S1          ]  GF hit 0.67 per 1.12 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.011 (outside SEZ 0.0011) | 354s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  cb_motor types firing (spikes / n cells): MN2Da:4/2, MN2Db:4/2   [2 of 43 motor types active]
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    .5555455555555554555555553.....   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 6 stimulus windows):
+  ascending_neuron       ######################################## 0.191
+  cb_intrinsic           ##################################       0.163
+  descending_neuron      ####################                     0.096
+  cb_motor               ###############                          0.075
+  vnc_intrinsic                                                   0.000
+SEZ gain 1.75 score 5/8  [E2 E3 A1 F2 S1          ]  GF hit 0.67 per 1.12 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.010 (outside SEZ 0.0010) | 364s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  cb_motor types firing (spikes / n cells): MN2Da:5/2, MN2Db:5/2   [2 of 43 motor types active]
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    .55554555555555554555555521....   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 6 stimulus windows):
+  ascending_neuron       ######################################## 0.179
+  cb_intrinsic           ###################################      0.157
+  descending_neuron      #####################                    0.095
+  cb_motor               #####################                    0.094
+  vnc_intrinsic                                                   0.001
+SEZ gain 2.0  score 5/8  [E2 E3 A1 F2 S1          ]  GF hit 0.67 per 1.12 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.17 pop 0.010 (outside SEZ 0.0010) | 290s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  cb_motor types firing (spikes / n cells): MN2Da:7/2, MN2Db:5/2   [2 of 43 motor types active]
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    .5555555555455555555545553.....   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 6 stimulus windows):
+  ascending_neuron       ######################################## 0.172
+  cb_intrinsic           ####################################     0.157
+  cb_motor               ##########################               0.113
+  descending_neuron      ####################                     0.088
+  cb_endocrine           ##########                               0.046
+  vnc_motor                                                       0.004
+  vnc_intrinsic                                                   0.001
+SEZ gain 2.25 score 5/8  [E2 E3 A1 F2 S1          ]  GF hit 0.67 per 1.12 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.17 pop 0.010 (outside SEZ 0.0010) | 305s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  cb_motor types firing (spikes / n cells): MN2Da:6/2, MN2Db:5/2, GNG641:4/2, CvN7:2/2, PS348:2/2, GNG314:2/2, GNG276:1/2, GNG653:1/2   [8 of 43 motor types active]
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    .55555555455555545555555541....   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 6 stimulus windows):
+  cb_motor               ######################################## 0.264
+  ascending_neuron       #########################                0.170
+  cb_intrinsic           ########################                 0.160
+  descending_neuron      ###################                      0.132
+  cb_endocrine           ###########                              0.077
+  vnc_motor              #########                                0.060
+  vnc_intrinsic          #                                        0.011
+SEZ gain 2.5  score 5/8  [E2 E3 A1 F2 S1          ]  GF hit 0.67 per 1.12 | JO hit 0.17 | MN9 taste 0.00 ctrl 0.17 pop 0.011 (outside SEZ 0.0015) | 289s
+
+best: SEZ gain 1.5  score 5/8   (27 min total)
+ sensory  relay  local  score  chk_E1  chk_E2  chk_E3  chk_A1  chk_A2  chk_F1  chk_F2  chk_S1
+     1.0    1.0   1.50      5   False    True    True    True   False   False    True    True
+     1.0    1.0   1.75      5   False    True    True    True   False   False    True    True
+     1.0    1.0   2.00      5   False    True    True    True   False   False    True    True
+     1.0    1.0   2.25      5   False    True    True    True   False   False    True    True
+     1.0    1.0   2.50      5   False    True    True    True   False   False    True    True
