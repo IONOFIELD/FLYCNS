@@ -26,7 +26,7 @@
       "gf_hit": 0.0,
       "gf_lat_ms": NaN,
       "pop_rate_hz": 0.0016698274584475146,
-      "wall_s": 673.6,
+      "wall_s": 347.7,
       "n_trials": 100,
       "gf_depol_mV": 4.128959270555259
     },
@@ -35,7 +35,7 @@
       "gf_hit": 0.4,
       "gf_lat_ms": 30.497499999999896,
       "pop_rate_hz": 0.005719802012772485,
-      "wall_s": 683.1,
+      "wall_s": 371.3,
       "n_trials": 100,
       "gf_depol_mV": 3.7468714418811437
     },
@@ -56,8 +56,8 @@
   },
   "checks": {},
   "provenance": {
-    "written_at": "2026-10-11T02:03:00",
-    "git_commit": "45126da",
+    "written_at": "2026-10-11T07:07:25",
+    "git_commit": "fcff151",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -92,7 +92,8 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9"
+        "edges.parquet": "becf568580708ba9",
+        "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"
     }
