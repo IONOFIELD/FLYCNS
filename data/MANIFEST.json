@@ -1,0 +1,58 @@
+{
+  "algorithm": "rowhash-v2",
+  "pandas": "3.0.6",
+  "dataset": "male-cns:v1.0 (neuprint.janelia.org)",
+  "written_at": "2026-10-10T22:53:55",
+  "files": {
+    "edges.parquet": {
+      "digest": "becf568580708ba9d6c6170e2daa407a806a8ac64ffcbb70a29cc8bfdae78d3d",
+      "rows": 6287789,
+      "columns": [
+        "nt",
+        "post",
+        "pre",
+        "sign",
+        "weight"
+      ],
+      "sums": {
+        "post": "11517611213871",
+        "pre": "18683378936444",
+        "sign": 1499819.0,
+        "weight": "90297299"
+      }
+    },
+    "neurons.parquet": {
+      "digest": "06ea0afb48c414adecc6419b51a3fd8357ecbc0067ab9f55cc8cb7f06da3cb93",
+      "rows": 176422,
+      "columns": [
+        "bodyId",
+        "consensusNt",
+        "dimorphism",
+        "entryNerve",
+        "exitNerve",
+        "fruDsx",
+        "instance",
+        "post",
+        "pre",
+        "predictedNt",
+        "somaSide",
+        "status",
+        "subclass",
+        "superclass",
+        "synonyms",
+        "type",
+        "x",
+        "y",
+        "z"
+      ],
+      "sums": {
+        "bodyId": "2570954121010",
+        "post": "130889681",
+        "pre": "42957584",
+        "x": 6882363994.0,
+        "y": 4592901473.0,
+        "z": 5503515286.0
+      }
+    }
+  }
+}
