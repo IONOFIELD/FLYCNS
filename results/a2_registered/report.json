@@ -42,10 +42,10 @@
   "checks": {
     "A2R_facilitation": true
   },
-  "wall_s": 4600,
+  "wall_s": 4257,
   "provenance": {
-    "written_at": "2026-10-11T10:54:17",
-    "git_commit": "329488d",
+    "written_at": "2026-10-11T14:39:08",
+    "git_commit": "d72fe77",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -58,6 +58,16 @@
       "pandas": "3.0.6"
     },
     "engine": "not used",
-    "platform": "win32"
+    "platform": "win32",
+    "machine": "AMD64",
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9",
+        "roi_membership.parquet": "5fce5c5d54e45570"
+      },
+      "manifest": "match"
+    }
   }
 }

@@ -1,0 +1,9 @@
+criteria registered at commit cbc0cc5; this run at d72fe77
+working point: loom gain 0.8, 120 trials per arm
+loom alone      21/120 = 0.175  (95% CI 0.117 to 0.253)
+loom + sound    64/120 = 0.533  (95% CI 0.444 to 0.620)
+difference      +0.358  (95% CI +0.240 to +0.463)
+
+CHECK (criterion registered before the run)
+  PASS  A2R_facilitation  -> PASS facilitation
+wrote results\a2_registered\report.json  (4257s)
