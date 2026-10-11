@@ -20,7 +20,18 @@ add("filler", 300, "cb_intrinsic")
 # types the chains below use; their own generator keeps every other random draw unchanged
 _g2 = np.random.default_rng(1)
 add("L1", 20, "ol_intrinsic", gen=_g2); add("L2", 20, "ol_intrinsic", gen=_g2); add("Fdg", 2, "cb_intrinsic", gen=_g2)
+# Realism the real data has and the toy lacked (audit 2026-10-11, gap 11); a third generator, so every
+# draw above is unchanged: the second JON->GF electrical partner, with fewer cells than JO-B1_a as in
+# MaleCNS (6 vs 13), so the per-side compound calibration sees unequal populations.
+_g3 = np.random.default_rng(2)
+add("JO-B1_c", 6, "cb_sensory", gen=_g3)
 n = pd.DataFrame(rows)
+# Every transmitter label the model must handle, as the connectome spells them (mixed case) and
+# missing, on the filler population: ACh, GABA and glutamate are signed; histamine is inhibitory;
+# the amines are modulatory (unsigned); a missing label is unknown. Their outputs are dropped.
+NT_LABELS = ["Acetylcholine", "GABA", "Glutamate", "histamine", "Dopamine", "octopamine", "Serotonin", None]
+_fill = n.index[n.type == "filler"]
+n.loc[_fill, "consensusNt"] = [NT_LABELS[i % len(NT_LABELS)] for i in range(len(_fill))]
 n["subclass"] = None
 n.loc[n.type.str.startswith("JO-A")|n.type.str.startswith("JO-B"), "subclass"] = "auditory"
 n.loc[n.type=="JO-FV", "subclass"] = "wind_gravity"
@@ -45,10 +56,30 @@ for a in n[n.type=="Gr66a_bitter_GRN"].bodyId:
     for b in n[n.type=="Fdg"].bodyId: e.append(dict(pre=a, post=b, weight=40, nt="gaba"))
 for a in n[n.type=="JO-B1_a"].bodyId[:5]:
     for g in gf: e.append(dict(pre=a, post=g, weight=100, nt="acetylcholine"))
+for a in n[n.type=="JO-B1_c"].bodyId[:2]:
+    for g in gf: e.append(dict(pre=a, post=g, weight=30, nt="acetylcholine"))
+_nt = n.set_index("bodyId")["consensusNt"]
+_fill_ids = set(n.bodyId[n.type == "filler"])
 for i in range(3000):
     a, b = rng.choice(n.bodyId.values, 2, replace=False)
-    e.append(dict(pre=a, post=b, weight=int(rng.integers(5,10)), nt=rng.choice(["acetylcholine","gaba"])))
+    w, t = int(rng.integers(5,10)), rng.choice(["acetylcholine","gaba"])
+    if a in _fill_ids:                          # the fetch labels every edge with its sender's transmitter
+        t = _nt[a].lower() if isinstance(_nt[a], str) else None
+    e.append(dict(pre=a, post=b, weight=w, nt=t))
+e = pd.DataFrame(e)
+# the fetch also writes a legacy `sign` column the model must ignore (scripts/fetch_malecns.py)
+e["sign"] = e["nt"].map({"acetylcholine": 1, "gaba": -1, "glutamate": -1})
+# SEZ membership by anatomy, as fit/roi_membership.py writes it, so the anatomical SEZ path runs on the
+# toy (without it every SEZ-dependent step silently took the name-prefix fallback)
+sez = set(n.bodyId[n.type.isin(["GNG001", "Bract", "MN9", "Fdg"])]) | \
+      set(_g3.choice(n.bodyId[n.type == "filler"].values, 30, replace=False))
+roi = pd.DataFrame(dict(bodyId=n.bodyId.values))
+roi["sez_frac"] = [0.9 if b in sez else float(_g3.uniform(0, 0.4)) for b in roi.bodyId]
+roi["dominant_roi"] = np.where(roi.sez_frac > 0.5, "GNG", "SMP(R)")
+roi["dominant_frac"] = np.maximum(roi.sez_frac, 1 - roi.sez_frac)
+roi["n_syn"] = 100
 import os
 os.makedirs("testdata", exist_ok=True)   # git does not keep empty folders, so a fresh clone has none
-pd.DataFrame(e).to_parquet("testdata/edges.parquet", index=False); n.to_parquet("testdata/neurons.parquet", index=False)
-print(len(n), "neurons", len(e), "edges")
+e.to_parquet("testdata/edges.parquet", index=False); n.to_parquet("testdata/neurons.parquet", index=False)
+roi[["bodyId", "dominant_roi", "dominant_frac", "sez_frac", "n_syn"]].to_parquet("testdata/roi_membership.parquet", index=False)
+print(len(n), "neurons", len(e), "edges", f"({e.nt.isna().sum()} unlabelled)", len(sez), "SEZ by anatomy")

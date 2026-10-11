@@ -15,7 +15,7 @@ randomise WHICH k cells fire as well as their phase, so the result cannot rest o
 Scored criteria:
   G1  graded: mean DVMn 1a-c rate is non-decreasing in k (tolerance 0.5 Hz)
   G2  an in-band window exists: some k gives mean DVMn in 2-12 Hz (Harcombe & Wyman 1977;
-      Huerkey et al. 2023). The smallest such k is k*, chosen by this rule.
+      Hürkey et al. 2023). The smallest such k is k*, chosen by this rule.
   G3  selective at k*: mean steering motor neuron rate, b1 and DLMn c-f each below 1 Hz
   G4  wiring-specific at k*: the same spikes into a degree-preserving rewired null give DVMn
       below 1 Hz
@@ -71,7 +71,7 @@ CRITERIA = dict(
 # registered result can be traced to an exact commit and an exact dataset (flycns/integrity.py).
 from flycns.integrity import require_clean, require_data, criteria_differ  # noqa: E402
 require_clean(Path(__file__).stem)
-require_data(DATA, Path(__file__).stem, ["neurons.parquet", "edges.parquet"])
+require_data(DATA, Path(__file__).stem)   # every table pinned in the manifest, rehashed
 crit_f = OUT / "criteria.json"
 try:
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True,

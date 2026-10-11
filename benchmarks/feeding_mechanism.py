@@ -26,14 +26,17 @@ import pandas as pd
 from scipy.sparse import csr_matrix
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from flycns.graph import SIGN_MAP, GUSTATORY_MN9_DRIVING, GUSTATORY_SUBCLASSES
+from flycns.graph import SIGN_MAP, GUSTATORY_MN9_DRIVING, GUSTATORY_SUBCLASSES, load_graph
 from flycns.bench import provenance
 
 DATA = sys.argv[1] if len(sys.argv) > 1 else "data"
 OUT = Path("results/feeding"); OUT.mkdir(parents=True, exist_ok=True)
-n = pd.read_parquet(f"{DATA}/neurons.parquet").set_index("bodyId")
-e = pd.read_parquet(f"{DATA}/edges.parquet")
-e["sgn"] = e["sign"]   # the signs the dynamic model uses, including any FLYCNS_SIGNFLIP perturbation
+# the graph exactly as the dynamic model loads it: signed edges only, same weight floor, any
+# FLYCNS_SIGNFLIP perturbation applied. (Reading edges.parquet directly picked up a stale sign column
+# with unsigned pairs as NaN, which made every path product below NaN.)
+neurons, e = load_graph(DATA)
+n = neurons.set_index("bodyId")
+e["sgn"] = e["sign"]
 mn9 = n.index[n.type == "MN9"]
 
 # M1 input balance at MN9
@@ -56,6 +59,7 @@ for label, aff in sets.items():
 
 # M3 signed path products, normalised by input weight
 ei = e[e.sgn != 0]
+assert ei.sgn.notna().all(), "unsigned edges reached the path product"
 ids = pd.Index(sorted(set(ei.pre) | set(ei.post))); idx = pd.Series(np.arange(len(ids)), index=ids)
 W = csr_matrix((ei.weight.values * ei.sgn.values, (idx[ei.pre].values, idx[ei.post].values)),
                shape=(len(ids), len(ids)))

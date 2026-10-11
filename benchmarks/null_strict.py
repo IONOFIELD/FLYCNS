@@ -48,7 +48,7 @@ CRITERIA = dict(
 )
 
 require_clean(Path(__file__).stem)
-require_data(DATA, Path(__file__).stem, ["neurons.parquet", "edges.parquet"])
+require_data(DATA, Path(__file__).stem)   # every table pinned in the manifest, rehashed
 crit_f = OUT / "criteria.json"
 if crit_f.exists():
     if criteria_differ(crit_f, CRITERIA):
@@ -81,7 +81,7 @@ report = dict(benchmark="null_strict", criteria=CRITERIA, checks=checks,
               escape=dict(null_gf_hit=null_e["gf_hit"], null_pop_rate_hz=null_e["pop_rate_hz"],
                           real_gf_hit=real_e["gf_hit"], real_pop_rate_hz=real_e["pop_rate_hz"]),
               pc1=dict(null=null_p, real=real_p, n_trials=PC1_TRIALS),
-              wall_s=round(time.time() - t0, 1), provenance=provenance())
+              wall_s=round(time.time() - t0, 1), provenance=provenance(DATA))
 (OUT / "report.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
 print(f"\nescape: null GF hit {null_e['gf_hit']:.2f} (real {real_e['gf_hit']:.2f}); "
       f"null CNS {null_e['pop_rate_hz']:.4f} Hz vs real {real_e['pop_rate_hz']:.4f} Hz")

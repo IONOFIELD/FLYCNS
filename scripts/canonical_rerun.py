@@ -54,7 +54,12 @@ def commit(message, *paths):
     return True
 
 
+CANONICAL_REPORTS = ["gf_escape", "auditory", "feeding", "null_strict"]
+
+
 def main():
+    from flycns.integrity import refuse_overrides
+    refuse_overrides("menu 51")     # before an hour of simulation, not after
     if not os.environ.get(UPDATED):
         print("[1/5] update code")
         if git("rev-parse", "--is-inside-work-tree", quiet=True).returncode != 0:
@@ -96,6 +101,8 @@ def main():
         print("  uncommitted code: " + ", ".join(st["dirty_files"][:10]))
         stop("code differs from the last commit; registered tests would refuse to run.")
 
+    import time
+    started = time.strftime("%Y-%m-%dT%H:%M:%S")
     print("[3/5] core suite, canonical (about 40 min)")
     if py("scripts/run_all.py", "40", "data") != 0:
         stop("the core suite did not finish.")
@@ -105,6 +112,14 @@ def main():
         stop("the stricter null did not finish.")
 
     print("[5/5] commit and push")
+    refuse_overrides("menu 51")
+    # every canonical report must come from this run: a benchmark that failed leaves its old report behind
+    import json
+    old = [b for b in CANONICAL_REPORTS
+           if json.loads((ROOT / "results" / b / "report.json").read_text(encoding="utf-8"))
+           .get("provenance", {}).get("written_at", "") < started]
+    if old:
+        stop(f"these reports were not rewritten by this run: {', '.join(old)} (see the messages above).")
     if py("benchmarks/summarize.py") != 0:
         stop("the suite summary failed.")
     if not commit("canonical rerun of the core suite and the registered stricter null, under integrity stamping",

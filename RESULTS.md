@@ -9,7 +9,8 @@ measurement, the model is presumed wrong.*
 ## In one paragraph
 
 The complete male Drosophila central nervous system connectome (Janelia FlyEM MaleCNS v1.0,
-166,700 neurons, brain and ventral nerve cord) was simulated as a signed leaky integrate-and-fire
+176,422 neurons in its table, brain and ventral nerve cord; about 170,000 of them have a connection
+of five or more synapses and are simulated) was simulated as a signed leaky integrate-and-fire
 network using the model and parameters of Shiu et al. 2024, with the loom stimulus measured from
 public calcium imaging and split by the fly's behavioural state. Two circuits reproduce published
 physiology under a single declared parameter set: the giant fiber escape pathway and auditory
@@ -23,6 +24,54 @@ is uncertain about, and no independent check fails under any of its perturbation
 
 ---
 
+## 11 October 2026, later: audit phases 1 and 2 (run 8)
+
+**What changed.** The guards and tests the audit asked for (README, "Integrity"; full list in the
+pull request):
+- registrations are guarded;
+- every pinned table is rehashed from its bytes before a registered run;
+- menu 51 refuses settings overrides;
+- the toy suite compares 2,224 numbers with a committed golden file;
+- 18 new unit tests (34 in all).
+
+Roles changed for six checks. A2R facilitation is now *construction*. Five checks that are graph
+arithmetic with no simulation are now *structural*: gustatory S1-S3, sugar laterality L1 and
+feeding-by-modality F2. No model equation, parameter, stimulus or criterion changed.
+
+**Not closed by this change** (found by an independent check before merge; scheduled for phases 3
+and 5):
+- A registered test whose `criteria.json` is deleted in a commit can still register afresh.
+- Pass thresholds still sit in the scoring code, outside the registered text, so editing a
+  threshold is not refused.
+- `FLYCNS_ALLOW_DIRTY` waives the guards and is not flagged in the summary.
+- Cloud runs use a shallow checkout, so the registration-history check is skipped there.
+- Unregistered runs still trust the writable fingerprint cache.
+
+**Run 8.** All 48 cloud jobs reran at commit `d72fe77`, and all 93 result files carry its stamp.
+- **Unchanged.** The 70 result JSON files hold 5,643 numbers and verdicts. All but 12 are
+  identical to run 6, to the last digit; the 12 are the feeding mechanism, changed as intended.
+  36 of 48 checks pass. By role, independent checks pass 9 of 18 and structural 3 of 5. These were
+  13 of 24 independent before the relabel; no outcome changed.
+- **Changed: the feeding mechanism, as intended.** Its path products are no longer NaN. They now
+  come from the graph the model simulates, with histamine signed and the weight floor applied:
+
+  | hop | 2 | 3 | 4 | 5 |
+  |---|---|---|---|---|
+  | signed taste-to-MN9 influence | -0.0035 | +0.0032 | +0.0065 | +0.0025 |
+
+  That is inhibitory at two hops and excitatory at three to five: the disinhibition the note has
+  claimed. These values, and MN9's input balance (net -83 synapses, -1.4%; afferents onto its
+  inhibitory inputs 3 times more than onto its excitatory ones, ratio 0.33), equal the September
+  file exactly. Only run 6, which read the stale column, had NaN and slightly different balances.
+- **New: both engines on the real connectome.** The compiled and pure-Python engines gave
+  identical spikes on 10 looms: 2,547 spikes each, exact equality (`fit/check_engines.py`,
+  x86-64 Windows). Until now this had been shown only on the toy and on synthetic networks.
+- **Pinned: the transmitter table.** `edges_nt.parquet` (6,287,789 rows, read by the registered
+  flight robustness check R1) is now in `data/MANIFEST.json`. The other three tables re-fetched
+  byte-identical.
+
+---
+
 ## 11 October 2026: every pending result rerun on the real connectome
 
 **How.** The audit marked a list of results "rerun pending". Every one of them was rerun on
@@ -30,23 +79,24 @@ GitHub's Windows machines (`.github/workflows/rerun.yml`), one machine per run. 
 benchmarks never rerun under integrity stamping: pc1 song, DNp13 control, feeding by modality,
 gustatory map, sugar laterality, SNpp16 and SNpp16 graded. The final run (run 5) reran everything
 at one commit.
-- **Data.** Three files are pinned in `data/MANIFEST.json`:
+- **Data.** Four files are pinned in `data/MANIFEST.json`:
   - the connectome from neuPrint: neurons (176,422) and edges (6,287,789);
-  - each neuron's neuropil membership, which defines the anatomical SEZ: 174,802 neurons.
+  - each neuron's neuropil membership, which defines the anatomical SEZ: 174,802 neurons;
+  - since run 8, the per-synapse transmitter table (`edges_nt.parquet`) used by the targeted sign flip.
 
   Every rerun (runs 2 to 5) fetched them again, and setup refuses data that differ from the pin.
   Every run passed that check.
-- **Code.** Every result file in `results/` (92 files) was produced at commit `329488d` on
-  committed code, by run 6 of `rerun.yml`, and carries its stamp. Results that can't carry a stamp
+- **Code.** Every result file in `results/` (93 files) was produced at commit `d72fe77` on
+  committed code, by run 8 of `rerun.yml`, and carries its stamp. Results that can't carry a stamp
   inside them (CSV, HDF5) have it beside them. The only exception is the Turner 2022 extraction,
-  which is a model input hashed into every report. `results/SUITE.md` keeps the inventory. Runs 5
-  and 6 gave identical reports.
+  which is a model input hashed into every report. `results/SUITE.md` keeps the inventory. Runs 5,
+  6 and 8 gave identical reports (run 8 differs only in the corrected feeding mechanism).
 - **Engine.** Every stamped simulation used the compiled engine, on Windows. Wrapper and
   static-analysis scripts record "not used".
 
 **Result: every report in `results/SUITE.md` now carries a clean stamp. None is stale, unstamped,
 dirty or perturbed.** 36 of 48 scored checks pass under one parameter set; the independent checks
-pass 13 of 24.
+pass 13 of 24 (9 of 18 after the relabel of run 8, above).
 
 The reruns are deterministic. Run 5 reproduced the earlier runs to the last digit in every
 benchmark: run 2, and run 3 for the seven benchmarks below. The only exceptions are the readouts
@@ -153,7 +203,7 @@ neurons):
   before.
 - **Feeding mechanism. A defect:** its signed path products (M3) came out as NaN. The script reads
   the stale `sign` column stored in the edge table, not the model's signs. The audit of 11 October
-  flagged exactly this. It is fixed in the next change by reading the graph the model uses.
+  flagged exactly this. Fixed in run 8 (above): the script now reads the graph the model uses.
 - **Embodiment gate and baseline fit:** unchanged.
 
 **Fixed along the way:**
@@ -168,9 +218,8 @@ neurons):
 - **The cloud rerun had no anatomical SEZ.** See "The SEZ trio" above.
 - **Two misleading log lines.** Registered tests printed the current commit as the registration
   commit. Flight runs warned about "no outgoing edges" when they had no stimulus types to warn
-  about. Still open: the SNpp16 graded report's `registration` field also records the run's commit
-  (fcff151). The true registration (fae9fdb, 25 September) is in its `criteria.json`. This is
-  deferred to the next model change, because any edit to a benchmark marks every report stale.
+  about. The SNpp16 graded report's `registration` field also recorded the run's commit (fcff151);
+  since run 6 it records the true registration (fae9fdb, 25 September), as its `criteria.json` does.
 - **The citation check missed three references** (Namiki et al. 2022, Sasaki & Burrows 1998,
   Newcombe 1998). It also raised false alarms on dates and on accents (Pezier, Pézier). It now
   resolves all 48 tags.
@@ -367,8 +416,11 @@ Four independent circuits fail. Three share one cause.
 - **The canonical ON visual pathway.** Mi1's largest input is L1 with 141,873 glutamatergic
   (inhibitory) synapses. The ON response is a double inversion: light depolarises photoreceptors,
   histamine inhibits L1, L1 releases less glutamate, Mi1 is released.
-- **AstA peptidergic modulation.** Pm3 is GABAergic, so activating it in a silent network produces
-  nothing at all, in the model or in principle (`benchmarks/peptide_asta.py`).
+- **AstA peptidergic modulation.** Pm3 is GABAergic, so in a silent network its fast synapses
+  have nothing to suppress. The peptide is represented but unscored: AstA raises Mi1's flash
+  response from near zero (0.0002) to 0.04 spikes per flash (`benchmarks/peptide_asta.py`),
+  far below the graded change Krieger 2023 reports. (Correction, 11 October 2026: this line said
+  the peptide produced "nothing at all, in the model or in principle".)
 
 A network with no spontaneous activity cannot represent any of these, and a uniform tonic baseline
 does not help: it lets MN9 respond but the wind-sensitive control responds just as strongly
@@ -463,7 +515,7 @@ connectome-derived prediction, and the surrogate loop below is the test of it.
 > would be the way to score the selectivity claim. That test has now been run.
 >
 > **Graded test, criteria registered before the run** (`benchmarks/flight_snpp16_graded.py`;
-> criteria committed in `11dcc6a` before any result existed; final results in `0eb3416`;
+> criteria registered at `fae9fdb` and committed in `11dcc6a` before any result existed; final results in `0eb3416`;
 > `64d665b` holds an intermediate state). k of the 13 SNpp16 cells were recruited, k = 1 to 13,
 > five draws each randomising which cells fire and their phase. Result: **four of five criteria
 > pass.**
@@ -500,7 +552,7 @@ connectome-derived prediction, and the surrogate loop below is the test of it.
 > **Robustness battery, criteria registered before the run** (`benchmarks/flight_snpp16_robustness.py`;
 > registered at `77e0cc5`, results `1225b21`). Two of three pass, and the failure qualifies the claim:
 >
-> - **R1 transmitter uncertainty: pass.** With 132,680 edges inverted (every neuron whose own
+> - **R1 transmitter uncertainty: pass.** With 132,680 edges inverted (110,462 since the audit judges disagreement by sign; every neuron whose own
 >   synapses disagree with its label), k=7 gives exactly the unperturbed draws (10.3, 7.2, 6.1,
 >   6.7, 6.7 Hz). None of the uncertain calls lie on SNpp16's path to DVMn.
 > - **R3 fresh draws: pass.** k* is 5 again, k=7 is in band in 4 of 5, and the curve is
@@ -526,7 +578,7 @@ Drosophila wingbeat frequency of 202 Hz (Vogel 1967) with 0.8 ms jitter (Fox, Fa
 2010), a recruited fraction set by a scalar load, and uniform phase, since no Drosophila phase
 map exists. The drive is injected into the afferent neurons themselves, so everything downstream
 runs through the connectome's own synapses. Measured targets: DLM and DVM motor neurons at 2 to 12
-Hz (Harcombe & Wyman 1977; Huerkey et al. 2023), b1 at one spike per wingbeat (Fayyazuddin &
+Hz (Harcombe & Wyman 1977; Hürkey et al. 2023), b1 at one spike per wingbeat (Fayyazuddin &
 Dickinson 1996). Afferent parameters are from crane fly, flesh fly and blowfly, stated as such.
 
 What happened:
@@ -586,7 +638,7 @@ direct proprioceptive synapses. In a cord with no background activity the relay 
 subthreshold until the command is very strong, so a two-to-one structural advantage becomes the
 weakest firing in the pool. This is the sixth circuit to point at missing background activity and
 the most precisely localised: the gap is a named relay layer with a measured advantage that the
-dynamics cannot use. The DLM gap junctions described by Huerkey et al. 2023 would pool the five
+dynamics cannot use. The DLM gap junctions described by Hürkey et al. 2023 would pool the five
 DLM motor neurons but add no net drive, so they are not a fix for this.
 
 ### Feeding re-tested with taste afferents split by modality (registered)
@@ -772,9 +824,17 @@ from the graph before any simulation. The interpretation of every outcome was wr
 SIP108m drives the sine neuron and not the pulse neuron. The pulse/sine split is present in the
 wiring and survives simulation in both directions.
 
-**A new prediction: activating the pIP5 (pIP-e) neurons should promote sine song.** The rule found
+**A testable prediction: SIP108m (pIP5 class) should promote sine song.** One male-specific type,
+SIP108m (4 cells), drives the sine command neuron DNp13 and not the pulse neuron pMP2 in a
+rule-chosen control arm. Seven further pIP5-class types are its strongest inputs by wiring but
+were not simulated, and novelty has not been checked against the song literature. (Correction,
+11 October 2026: this heading said "activating the pIP5 (pIP-e) neurons should promote sine song",
+a class-level claim from one simulated type.) The rule found
 SIP108m from the wiring; MaleCNS's own sex annotations (`scripts/fetch_dimorphism.py`, properties
 `dimorphism`, `fruDsx`, `synonyms`) then identify it and every other strong excitatory input to DNp13:
+(The literature names come from MaleCNS's `synonyms` annotation. They have not all been checked
+against the papers: pC2l does not appear in Nojima et al. 2021's text, and pIP-e was not found in
+Cachero et al. 2010's full text.)
 
 | type | cells | dimorphism | fru/dsx | literature names |
 |---|---|---|---|---|
@@ -789,7 +849,7 @@ All eight of DNp13's strongest m-suffixed excitatory inputs are male-specific, f
 the same literature class. The sine pathway the model found is therefore built from male-specific
 neurons of an already-named class onto a sexually dimorphic command neuron, a prediction only a male
 connectome could make. The pulse pathway is sex-specific too: pMP2 and pIP10 are male-specific and
-fru-high (pIP10 is P2b in Kimura 2008 and Kohatsu 2010), and pC1_14a is annotated potentially
+fru-high (pIP10 is P2b in Kimura 2008 and Kohatsu 2011), and pC1_14a is annotated potentially
 male-specific. pC1_1b, the input the companion paper links to DNp13 and which drove nothing here, is
 male-specific as well.
 
@@ -845,8 +905,11 @@ the stimulus and is declared as such.
 
 ## 5. Robustness
 
-**Nine-suite battery**, each a full three-circuit suite at 40 trials under measured stationary
-input (`scripts/overnight.py`, `results/overnight/`):
+**Nine-suite battery (September 2026; superseded).** Each run was a full three-circuit suite at 40
+trials. This table predates the October fixes (the input was all-trials, adaptation 30 mV) and is
+kept as history. The current battery is in the 11 October section at the top and in
+`results/overnight/battery_2026-10_cloud.txt`. For example, wscale035 passes everything here but
+fails a calibrated escape check there:
 
 | run | result | failing check |
 |---|---|---|

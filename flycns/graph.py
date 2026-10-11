@@ -212,14 +212,19 @@ def load_graph(data_dir="data", min_weight=None):
                          f"(scripts/fetch_malecns.py keeps only connections >= {floor}); use {floor} or more")
     edges = edges[edges["weight"] >= min_weight].copy()
     edges["sign"] = edges["nt"].str.lower().map(SIGN_MAP)
-    n_unknown = int((edges["sign"].isna() | (edges["sign"] == 0)).sum())
-    edges = edges[edges["sign"].notna() & (edges["sign"] != 0)].reset_index(drop=True)
+    unsigned = edges["sign"].isna() | (edges["sign"] == 0)
+    n_unknown, n_unknown_syn = int(unsigned.sum()), int(edges.loc[unsigned, "weight"].sum())
+    # their presynaptic neurons keep their inputs but lose every output: count the silent sinks
+    signed_pre = set(edges.loc[~unsigned, "pre"])
+    n_silent = int(len(set(edges.loc[unsigned, "pre"]) - signed_pre))
+    edges = edges[~unsigned].reset_index(drop=True)
     edges["sign"] = edges["sign"].astype(float)
     # robustness, targeted: flip the sign of neurons whose per-T-bar predictions mostly
     # disagree with the aggregate label used for signing (data/edges_nt.parquet from
     # fit/synapse_nt.py). This tests the model against the classifier's own uncertainty
     # rather than a random fraction. FLYCNS_SIGNFLIP_TARGETED=1
-    if os.environ.get("FLYCNS_SIGNFLIP_TARGETED") == "1":
+    used_nt = os.environ.get("FLYCNS_SIGNFLIP_TARGETED") == "1"
+    if used_nt:
         f = Path(data_dir) / "edges_nt.parquet"
         if f.exists():
             nt = pd.read_parquet(f)[["pre", "post", "nt_agree"]]
@@ -243,7 +248,9 @@ def load_graph(data_dir="data", min_weight=None):
           + (f", min_weight {min_weight}" if min_weight != MIN_WEIGHT_DEFAULT else ""))
     LOADED.clear()
     LOADED.update(data_dir=str(data_dir), min_weight=int(min_weight), n_neurons=int(len(neurons)),
-                  n_signed_edges=int(len(edges)), n_signed_synapses=int(edges["weight"].sum()))
+                  n_signed_edges=int(len(edges)), n_signed_synapses=int(edges["weight"].sum()),
+                  n_dropped_unsigned_edges=n_unknown, n_dropped_unsigned_synapses=n_unknown_syn,
+                  n_silent_presynaptic=n_silent, edges_nt_used=used_nt)
     _LAST["neurons"] = neurons
     return neurons, edges
 

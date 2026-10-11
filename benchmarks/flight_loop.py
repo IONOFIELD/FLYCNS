@@ -34,7 +34,7 @@ The null and the closed loop run at that anchor.
 TARGETS (measured, the benchmark criteria), scored PER TYPE because averaging across the
 power pool hid a silent DLM behind an active DVM in the first run:
   L1a DVMn 1a-c fire 2-12 Hz             Harcombe & Wyman 1977; Koenig & Ikeda 1983;
-  L1b DLMn c-f fire 2-12 Hz              Huerkey et al. 2023 (Nature): 2-12 Hz, splay state
+  L1b DLMn c-f fire 2-12 Hz              Hürkey et al. 2023 (Nature): 2-12 Hz, splay state
   L2  b1 fires 0.5-1.2 spikes per wingbeat   Fayyazuddin & Dickinson 1996, Calliphora
   L3  leg motor neurons are not entrained by the wingbeat
   L4  specificity vs rewired null at the anchor load: real steering (b1 + others) rate at

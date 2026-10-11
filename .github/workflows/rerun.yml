@@ -5,8 +5,8 @@ name: real-data rerun
 #   rerun/<label>--a+b        only the named ones, e.g. rerun/2026-10-11--flight-robustness+core
 #
 #   data          setup.cmd as a user runs it: environment, connectome from neuPrint (about 6 minutes),
-#                 checked against data/MANIFEST.json. Cached for the run's other jobs (GitHub keeps a
-#                 cache per branch, so each rerun branch fetches once).
+#                 checked against the committed data/MANIFEST.json. The tables (never the manifest)
+#                 are cached for the run's other jobs; GitHub keeps a cache per branch.
 #   transmitters  menu 24: per-T-bar transmitter table (2.7 GB from Google Storage), cached likewise.
 #   run           one machine per rerun, all at once. Each pushes its results (and its console log,
 #                 ci-log.txt) to the branch rerun-out/<run number>/<name>. Nothing reaches main until
@@ -16,7 +16,11 @@ on:
     branches: ["rerun/**"]
 
 permissions:
-  contents: write      # each job pushes its own rerun-out branch
+  contents: read       # jobs that push their own rerun-out branch ask for write themselves
+
+concurrency:
+  group: rerun-${{ github.ref }}
+  cancel-in-progress: false   # a long rerun is never cancelled by a later push
 
 env:
   PYTHONUTF8: "1"
@@ -43,6 +47,7 @@ env:
       {"name": "gustatory-map",             "run": "benchmarks/gustatory_signed_map.py"},
       {"name": "sugar-laterality",          "run": "benchmarks/sugar_laterality.py"},
       {"name": "check-modulators",          "run": "fit/check_modulators.py"},
+      {"name": "engines-real",              "run": "fit/check_engines.py 10"},
       {"name": "fit-regional",              "run": "benchmarks/fit_regional.py 6"},
       {"name": "fit-baseline",              "run": "benchmarks/fit_baseline.py 6"},
       {"name": "fit-gains",                 "run": "benchmarks/fit_gains.py 6"},
@@ -57,7 +62,7 @@ env:
       {"name": "screen-w075",               "run": "benchmarks/screen_afferents.py 3 data 50 0.75 aPhM2a,aPhM5,TPMN1,PhG1c,BM_Taste,claw_tpGRN,JO-FV,BM_Vib"},
       {"name": "screen-w1",                 "run": "benchmarks/screen_afferents.py 3 data 50 1.0"},
       {"name": "export-brainsets",          "run": "scripts/export_brainsets.py 40"},
-      {"name": "pin-data",                  "run": "-m flycns.integrity write data", "manual": true},
+      {"name": "pin-data",                  "run": "-m flycns.integrity write data", "nt": true, "manual": true},
       {"name": "battery-seed1",             "run": "scripts/overnight.py seed1"},
       {"name": "battery-seed2",             "run": "scripts/overnight.py seed2"},
       {"name": "battery-signflip05_a",      "run": "scripts/overnight.py signflip05_a"},
@@ -102,10 +107,10 @@ jobs:
         with: { python-version: "3.12", cache: pip, cache-dependency-path: requirements.lock }
       - id: key
         shell: bash
-        run: echo "data=male-cns-v1.0-${{ hashFiles('scripts/fetch_malecns.py', 'scripts/fetch_annotations.py', 'scripts/fetch_dimorphism.py', 'fit/roi_membership.py') }}" >> "$GITHUB_OUTPUT"
+        run: echo "data=male-cns-v1.0-${{ hashFiles('scripts/fetch_malecns.py', 'scripts/fetch_annotations.py', 'scripts/fetch_dimorphism.py', 'fit/roi_membership.py', 'data/MANIFEST.json') }}" >> "$GITHUB_OUTPUT"
       - id: cache
         uses: actions/cache/restore@v5
-        with: { path: "data/*.parquet\ndata/MANIFEST.json", key: "${{ steps.key.outputs.data }}" }
+        with: { path: "data/*.parquet", key: "${{ steps.key.outputs.data }}" }
       - name: neuPrint token present
         if: steps.cache.outputs.cache-hit != 'true'
         shell: pwsh
@@ -121,11 +126,13 @@ jobs:
         run: setup.cmd
       - if: steps.cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v5
-        with: { path: "data/*.parquet\ndata/MANIFEST.json", key: "${{ steps.key.outputs.data }}" }
+        with: { path: "data/*.parquet", key: "${{ steps.key.outputs.data }}" }
 
   transmitters:
     needs: [plan, data]
     if: needs.plan.outputs.nt == 'true'
+    permissions:
+      contents: write
     runs-on: windows-latest
     timeout-minutes: 120
     outputs:
@@ -135,7 +142,7 @@ jobs:
       - uses: actions/setup-python@v6
         with: { python-version: "3.12", cache: pip, cache-dependency-path: requirements.lock }
       - uses: actions/cache/restore@v5
-        with: { path: "data/*.parquet\ndata/MANIFEST.json", key: "${{ needs.data.outputs.key }}", fail-on-cache-miss: true }
+        with: { path: "data/*.parquet", key: "${{ needs.data.outputs.key }}", fail-on-cache-miss: true }
       - id: key
         shell: bash
         run: echo "nt=${{ needs.data.outputs.key }}-nt-${{ hashFiles('fit/synapse_nt.py', 'scripts/fetch_bulk.py') }}" >> "$GITHUB_OUTPUT"
@@ -176,6 +183,8 @@ jobs:
     # a skipped or failed transmitter table only stops the runs that need it (they refuse without it)
     if: ${{ !cancelled() && needs.plan.result == 'success' && needs.data.result == 'success' }}
     name: ${{ matrix.name }}
+    permissions:
+      contents: write
     runs-on: windows-latest
     timeout-minutes: 345
     strategy:
@@ -186,7 +195,7 @@ jobs:
       - uses: actions/setup-python@v6
         with: { python-version: "3.12", cache: pip, cache-dependency-path: requirements.lock }
       - uses: actions/cache/restore@v5
-        with: { path: "data/*.parquet\ndata/MANIFEST.json", key: "${{ needs.data.outputs.key }}", fail-on-cache-miss: true }
+        with: { path: "data/*.parquet", key: "${{ needs.data.outputs.key }}", fail-on-cache-miss: true }
       - if: matrix.nt
         uses: actions/cache/restore@v5
         with: { path: "data/edges_nt.parquet\nresults/nt_confidence.json", key: "${{ needs.transmitters.outputs.key }}", fail-on-cache-miss: true }

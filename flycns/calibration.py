@@ -2,7 +2,7 @@
 What each scored check is evidence of.
 
 A check that a parameter was tuned to pass is not evidence that the model is right; it only shows
-the tuning worked. This table records, for every scored check, which of five roles it plays.
+the tuning worked. This table records, for every scored check, which of six roles it plays.
 benchmarks/summarize.py prints the role beside every result and counts only INDEPENDENT checks as
 tests of the model. The parameters behind the CALIBRATED and CONSTRUCTION entries, and the rule
 each was set by, are listed in docs/CALIBRATION.md.
@@ -11,12 +11,14 @@ each was set by, are listed in docs/CALIBRATION.md.
   construction  guaranteed by a parameter entered from the same measurement the check cites
   independent   not a target of any fit; a genuine test (pre-registered where marked)
   control       a null model, ablation or positive control: shows the machinery is not trivial
-  robustness    re-tests an independent result under perturbation
+  robustness    re-tests a result under perturbation
+  structural    a count over the wiring graph with no simulation: evidence about the connectome's
+                structure, not about the model's dynamics, so it is not counted as a test of the model
 
 A check missing from this table is reported as UNCLASSIFIED and counted as not independent.
 """
 
-CAL, CON, IND, CTL, ROB = "calibrated", "construction", "independent", "control", "robustness"
+CAL, CON, IND, CTL, ROB, STR = "calibrated", "construction", "independent", "control", "robustness", "structural"
 
 CHECK_ROLES = {
     "gf_escape": {
@@ -37,10 +39,13 @@ CHECK_ROLES = {
         "A5_cns_quiet": (CAL, "w_scale was chosen partly on population rate under auditory drive"),
     },
     "a2_registered": {
-        "A2R_facilitation": (IND, "pre-registered; facilitation was never a fit target (the working point only sets loom-alone near threshold)"),
+        "A2R_facilitation": (CON, "the working-point rule parks loom-alone GF within ~2 mV of threshold and sound adds a hand-set, "
+                                  "untraced 3 mV compound potential; in a one-compartment cell summation of the two crosses threshold "
+                                  "unless polysynaptic inhibition intervenes. Facilitation was also scored (no parameter moved) during "
+                                  "the gain fits (fit_gains.py, fit_regional.py). Pre-registered, but not independent"),
     },
     "a2_robustness": {
-        "RA2_facilitation_at_every_near_threshold_gain": (ROB, "pre-registered sweep of A2R"),
+        "RA2_facilitation_at_every_near_threshold_gain": (ROB, "pre-registered sweep of A2R (itself construction)"),
     },
     "feeding": {
         "F1_laterality_matches_wiring": (IND, "not a fit target; scored only when MN9 responds to one-sided drive"),
@@ -53,17 +58,17 @@ CHECK_ROLES = {
         "F5_null_silent": (CTL, "rewired null; scored only when the real network responds (MN9 >= 0.5 at 50 Hz)"),
     },
     "feeding_by_modality": {
-        "F2_sugar_ratio_exceeds_bitter": (IND, "pre-registered"),
+        "F2_sugar_ratio_exceeds_bitter": (STR, "pre-registered; a ratio of synapse counts, no simulation"),
         "F3_sugar_drives_mn9_at_100hz": (IND, "pre-registered"),
         "F4_bitter_below_sugar_at_100hz": (IND, "pre-registered"),
     },
     "gustatory_signed_map": {
-        "S1_valence_signed_on_proboscis": (IND, "pre-registered"),
-        "S2_per_type_sign_agreement": (IND, "pre-registered"),
-        "S3_LB2_dominates_pharyngeal_pumping": (IND, "pre-registered"),
+        "S1_valence_signed_on_proboscis": (STR, "pre-registered; signed path products, no simulation"),
+        "S2_per_type_sign_agreement": (STR, "pre-registered; signed path products, no simulation"),
+        "S3_LB2_dominates_pharyngeal_pumping": (STR, "pre-registered; signed path products, no simulation"),
     },
     "sugar_laterality": {
-        "L1_sugar_contralateral_bias": (IND, "pre-registered; prediction from Shiu et al. 2024"),
+        "L1_sugar_contralateral_bias": (STR, "pre-registered prediction from Shiu et al. 2024; signed path products, no simulation"),
     },
     "pc1_song": {
         "P1_pc1_14a_pulse_over_sine": (IND, "pre-registered"),

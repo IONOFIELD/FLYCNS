@@ -420,8 +420,8 @@
     }
   },
   "provenance": {
-    "written_at": "2026-10-11T10:00:59",
-    "git_commit": "329488d",
+    "written_at": "2026-10-11T14:29:09",
+    "git_commit": "d72fe77",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -435,19 +435,25 @@
     },
     "engine": "cython",
     "platform": "win32",
+    "machine": "AMD64",
     "graph": {
       "data_dir": "data",
       "min_weight": 5,
       "n_neurons": 176422,
       "n_signed_edges": 6127738,
-      "n_signed_synapses": 88316807
+      "n_signed_synapses": 88316807,
+      "n_dropped_unsigned_edges": 160051,
+      "n_dropped_unsigned_synapses": 1980492,
+      "n_silent_presynaptic": 8020,
+      "edges_nt_used": true
     },
     "data": {
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
         "edges.parquet": "becf568580708ba9",
-        "roi_membership.parquet": "5fce5c5d54e45570"
+        "roi_membership.parquet": "5fce5c5d54e45570",
+        "edges_nt.parquet": "4bcc6084a7fde88b"
       },
       "manifest": "match"
     }

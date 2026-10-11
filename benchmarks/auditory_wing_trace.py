@@ -138,7 +138,7 @@ report["citations"] = [
     "Kamikouchi A, Inagaki HK, Effertz T, Hendrich O, Fiala A, Goepfert MC, Ito K (2009). The neural "
     "basis of Drosophila gravity-sensing and hearing. Nature 458:165-171. JO subgroup organisation and "
     "AMMC projection zones.",
-    "Tootoonian S, Coen P, Kawadler JM, Murthy M (2012). Neural representations of courtship song in the "
+    "Tootoonian S, Coen P, Kawai R, Murthy M (2012). Neural representations of courtship song in the "
     "Drosophila brain. J Neurosci 32:787-798. AMMC-A1/B1/B2 graded non-spiking sound responses; GF spikes "
     "to current injection and sound summates with subthreshold injection (Fig. 2D); AMMC-B1 cholinergic, "
     "B2 GABAergic.",

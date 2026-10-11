@@ -7,6 +7,13 @@ on:
     - cron: "17 9 * * 1"   # weekly: catches breakage from the outside world (runners, package indexes) early
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: regression-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 # flycns runs on Windows only, so every job runs on Windows. No job sets PYTHONUTF8 for the test
 # runner itself; flycns sets it for the processes it starts, and one step below runs a script
 # directly, as a user might, to prove the code is correct under Windows' default text encoding.
@@ -40,6 +47,8 @@ jobs:
           - { python: "3.12", deps: requirements.lock, engine: pure-Python, codegen: numpy, expect: numpy }
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0   # full history: staleness and registration-history checks need it
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}

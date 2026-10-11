@@ -15,7 +15,8 @@ of the model. CI fails if a scored check has no role.
 | construction | guaranteed by a parameter entered from the same measurement the check cites |
 | independent | not a target of any fit; a genuine test (pre-registered where marked) |
 | control | a null model, ablation or positive control; shows the machinery is not trivial |
-| robustness | re-tests an independent result under perturbation |
+| robustness | re-tests a result under perturbation |
+| structural | a count over the wiring graph with no simulation; evidence about the connectome, not the dynamics |
 
 ---
 
@@ -73,13 +74,20 @@ The escape result shows that one declared parameter set can be calibrated to rep
 escape relay with sensible latency and no runaway activity. It is not an out-of-sample prediction.
 
 The **held-out tests** are the circuits no value above was fitted to:
-- sound-loom facilitation at the giant fiber (`a2_registered`)
-- the pC1 song phenotypes (`pc1_song`)
-- the signed taste map (`gustatory_signed_map`)
-- sugar laterality (`sugar_laterality`)
-- feeding by modality (`feeding_by_modality`)
+- the pC1 song phenotypes (`pc1_song`) and the DNp13 control (`dnp13_control`)
+- feeding by modality, the simulated checks (`feeding_by_modality` F3, F4)
 - the flight checks other than L1a
 - the SNpp16 tests
+
+Not counted as tests, though pre-registered:
+- **Sound-loom facilitation** (`a2_registered`, A2R) is **construction**. The working-point rule parks
+  the loom-alone giant fiber about 2 mV below threshold, and the sound input is a hand-set, untraced
+  3 mV compound potential. In a one-compartment cell, summation of the two crosses threshold unless
+  polysynaptic inhibition intervenes. Facilitation was also scored, with no parameter moving, during
+  the gain fits (`fit_gains.py`, `fit_regional.py`). It becomes a test when the JON-to-GF contact is
+  modelled as the connectome annotates it (planned).
+- **The signed taste map, sugar laterality and the feeding-by-modality synapse ratio** are
+  **structural**: they count over the wiring with no simulation.
 
 Most of these are pre-registered. Their passes and their failures are the model's real record.
 

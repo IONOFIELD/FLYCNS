@@ -26,8 +26,9 @@ circuit by circuit, including where the wiring alone is not enough.
 - **The male fly.** Circuits that differ between the sexes, such as courtship song, can be simulated.
 - **Scored, not showcased.** For 25 of the 48 scored checks, the pass/fail criteria were committed
   to git before the test ran. Failures stay on the record next to the successes: at present 36 of
-  48 checks pass, and of the 24 that count as tests of the model, 13 pass and 11 fail
-  (`results/SUITE.md`).
+  48 checks pass, and of the 18 that count as independent tests of the model, 9 pass and 9 fail
+  (`results/SUITE.md`). Checks guaranteed by a chosen value, or that only count over the wiring, are
+  labelled as such and not counted as tests.
 - **Built to be used and to last.** Every result is traceable to its code, data and settings, and
   automated checks run on every change.
 
@@ -35,13 +36,15 @@ circuit by circuit, including where the wiring alone is not enough.
 to fire for a faint visual threat: from 18% to 53% of trials, with the criteria committed before
 the test ran. Tootoonian et al. 2012 showed the same summation in real flies with an injected
 current in place of the visual threat; sound plus a faint loom has not been recorded, so the 18%
-and 53% are predictions a lab could test. Two caveats are on the record: the sound-to-escape-neuron
-connection strength is a calibrated value, and an earlier fitting step did score facilitation
-(see `docs/CALIBRATION.md`).
+and 53% are predictions a lab could test. The main caveat: the result is counted as *construction*,
+not as an independent test. A rule parks the faint threat about 2 mV below threshold, and sound adds
+a hand-set, untraced 3 mV, so in this model class summation is close to guaranteed. An earlier
+fitting step also scored facilitation (see `docs/CALIBRATION.md`). Making this a real test means
+modelling the sound pathway as the connectome annotates it; that is planned.
 
 ## What it is
 
-- A computer model of every neuron in the male fruit fly's brain and nerve cord, about 176,000 of them, wired exactly as the Janelia MaleCNS connectome (2026) maps them.
+- A computer model of the male fruit fly's brain and nerve cord, built from the Janelia MaleCNS connectome (2026). Of the 176,422 neurons in the MaleCNS table, the roughly 170,000 with at least one connection of five or more synapses are simulated, wired as the connectome maps them. The exceptions (connections under five synapses dropped, modulatory amine outputs removed, one mixed synapse modelled as electrical) are listed in RESULTS.md.
 - Each neuron is a simple spiking unit. The connections come straight from the wiring diagram, including whether each one excites or inhibits.
 - A test suite that scores each circuit against published measurements from real flies. The pass/fail criteria are written down before the test runs.
 
@@ -50,15 +53,15 @@ connection strength is a calibrated value, and an earlier fitting step did score
 - **Stimulate a sense and watch the response.** Choose sight, sound, taste or the wing's motion sensors, and see which neurons fire and in what order, all the way to the motor neurons. You can watch it in the terminal or in 3D.
 - **Test what the wiring alone can explain**, and show exactly where that explanation stops.
 - **Make predictions a lab can test.** Each one names cell types and pathways and gives a specific expected result.
-- **Check the connectome itself.** It has already flagged a likely mislabelled transmitter.
+- **Show what a connectome uncertainty changes.** The companion paper's driver-line data disagree with the transmitter classifier on one taste neuron type, LB3d; the model shows that call decides whether salt promotes or suppresses feeding.
 - **Score other fly models.** The same tests, run on another model, give a comparable score.
 - **Export simulated recordings** in the format that brain-decoding machine-learning tools read.
 
 ## What it achieves
 
 - **Escape reflex.** A looming shadow fires the giant escape neuron, which drives the jump motor neuron one spike for one spike, 0.9 ms later, as in the fly. This circuit was used to set the model's few tuned values, so it shows the model is set up correctly. It is not a prediction.
-- **Sound and sight combined.** Without being tuned for it, the model predicts that a sound makes the escape neuron far more likely to fire for a faint visual threat: 18% becomes 53%. Tootoonian et al. 2012 recorded the same summation with an injected current in place of the visual threat; the test was registered in advance. An October 2026 audit found and removed a model difference between the two test arms; re-measured without it, the effect holds.
-- **Courtship song.** The model reproduces which male-only neurons drive pulse song but not sine song, as experiments showed. It also predicts a new pathway for sine song that a lab could test.
+- **Sound and sight combined.** The model predicts that a sound makes the escape neuron far more likely to fire for a faint visual threat: 18% becomes 53%. Tootoonian et al. 2012 recorded the same summation with an injected current in place of the visual threat. The test was registered in advance, but it is counted as *construction*, not as an independent test. A rule places the faint threat within about 2 mV of threshold, and sound adds a hand-set 3 mV, so in a one-compartment model summation is close to guaranteed.
+- **Courtship song.** The model reproduces which male-only neurons drive pulse song but not sine song, as experiments showed. The companion paper's pC1_1b-to-sine link is not reproduced (registered check, fail). One male-specific type, SIP108m (4 cells, pIP5 class), drives the sine command neuron and not the pulse neuron in a rule-chosen control arm: a testable prediction, not yet checked for novelty.
 - **Taste.** It shows which taste neurons push feeding up and which push it down, once each connection's sign (excite or inhibit) is counted.
 - **Traceable.** Every result records the exact code, data and settings that produced it. Failures and corrections stay on the record.
 
@@ -120,13 +123,29 @@ connection strength is a calibrated value, and an earlier fitting step did score
 | Shiu et al. 2024, *Nature* | LIF model of the female adult brain (FlyWire, no nerve cord), with predictions tested by optogenetics | Source of the single-neuron parameters and synaptic weight |
 | Lappalainen et al. 2024, *Nature* | Connectome-constrained network of the visual system, trained on a task, predicting responses across many cell types | Shows what fitting to a task adds; this repository fits nothing to its targets except where listed |
 | NeuroMechFly v2 (Wang-Chen et al. 2024, *Nature Methods*) | Physics-simulated adult fly body for closed-loop control | The natural body for this model. The nerve cord is already here, so motor neurons could drive it directly |
-| Eon Systems, 2026 (announced) | A FlyWire-based whole-brain emulation driving NeuroMechFly | Whole-fly emulation; female, brain-based |
+| Eon Systems, 2026 (announced) | A FlyWire-based whole-brain emulation in a simulated body (company writeup, no peer-reviewed description) | Whole-fly emulation; female, brain-based |
 | Jin et al. 2026, arXiv 2602.17997 | The fly connectome as a graph controller, trained by reinforcement learning for locomotion | Connectome as architecture rather than as a fixed circuit |
 
 What this repository adds:
 - the **male** central nervous system, **brain and nerve cord**, including sexually dimorphic circuits;
 - every result **scored** against criteria written in advance, with null models, ablations and a stated role for each check;
-- failures and retractions kept on the record.
+- failures and retractions kept on the record (below).
+
+**Corrections on the record** (details in RESULTS.md):
+- An ipsilateral feeding bias (8 September) was an unsigned count; with sign it is contralateral.
+- A regional SEZ gain of 2.0 was an artefact of naming the SEZ by cell type; the gain is retired.
+- "Sound suppresses the escape response" was withdrawn; at 120 trials per arm sound facilitates it.
+- The brainsets export could not be read by the real loader; it is now built and reloaded with it.
+- GF adaptation of 15 mV was an undersampled fit (the current value is 10 mV, refit in October 2026).
+- Escape is the calibration circuit, not a test. The escape and feeding reports committed in
+  September came from a perturbed run.
+- The loom input was all-trials, not stationary as documented. Every loom result was rerun.
+- The two A2 arms differed in more than sound; with the difference removed the effect holds.
+- "Mi1 stays silent under AstA": the peptide never acted. With it acting, Mi1 responds weakly.
+- Flight robustness R1 never touched the circuit, R2 varied the stimulus, and R3 reused its draws.
+  The fixed R2 now fails informatively.
+- Tootoonian et al. 2012 used injected current, not a loom, and A2 was scored during two gain fits.
+  A2 is now counted as construction, and five graph-count checks (three passes) as structural.
 
 ---
 
@@ -151,11 +170,11 @@ Every result has to answer four questions: which code, which data, which setting
 | Every file | Every result file carries the stamp of the run that wrote it, in the file or beside it (`<file>.stamp.json`). `results/SUITE.md` lists any file without a stamp, and flags any stamp whose model code has changed since (STALE). | `flycns/bench.py`, `benchmarks/summarize.py` |
 | Data | The fetched tables are fingerprinted by content, so the fingerprint ignores row order and file format. The fingerprint is committed in `data/MANIFEST.json`. The suite and registered tests refuse to run on data that differ, and every report records the fingerprint it ran on. | `flycns/integrity.py`, `scripts/setup.py` |
 | Settings | Any `FLYCNS_*` override prints a banner, is stamped into the report, and is flagged PERTURBED in `results/SUITE.md`. The robustness battery restores the canonical results when it finishes. | `flycns/integrity.py`, `scripts/overnight.py` |
-| Evidence | Each check has a role: independent, control, robustness, calibrated or construction. Only independent checks count as tests. CI fails if a check is unclassified. | `flycns/calibration.py`, `docs/CALIBRATION.md` |
+| Evidence | Each check has a role: independent, control, robustness, structural, calibrated or construction. Only independent checks count as tests; structural checks count over the wiring without simulating it. CI fails if a check is unclassified. | `flycns/calibration.py`, `docs/CALIBRATION.md` |
 | Stimuli | Every stimulus list is checked against the dataset before a long run, so a renamed cell type cannot silently drop an input. | `fit/audit_stimuli.py` |
 | Registration | Pre-registered tests refuse to run against changed criteria. | each registered script |
 | Environment | Python 3.12 with every package pinned (`requirements.lock`). The engine is compiled when the Microsoft C++ Build Tools are present and pure Python otherwise. Both give identical spikes, and every report records which engine ran. | `requirements.lock`, `flycns/windows.py` |
-| Verification | On every push, CI runs on Windows: the unit checks and the whole toy suite in an isolated copy, on Python 3.12 and 3.13 with the pinned packages, on the oldest supported Python, and on the pure-Python engine. It also runs `setup.cmd` and `fly.cmd` exactly as a user would. A weekly run catches outside breakage. | `tests/`, `.github/workflows/` |
+| Verification | On every push, CI runs on Windows: the unit checks and the whole toy suite in an isolated copy, on Python 3.12 and 3.13 with the pinned packages, on the oldest supported Python, and on the pure-Python engine. Every number the toy suite writes must equal a committed golden file (`tests/toy_expected.json`), so a model change that moves results cannot pass unnoticed; the toy carries every transmitter label, both ear partner types and an anatomical SEZ table. It also runs `setup.cmd` and `fly.cmd` exactly as a user would. A weekly run catches outside breakage. On the real connectome, the cloud rerun checks that both engines give identical spikes (`fit/check_engines.py`). | `tests/`, `.github/workflows/` |
 
 `python -m flycns.integrity status` (menu **49**) shows all three run states at once: code, settings and data.
 The house rules are in [`CONTRIBUTING.md`](CONTRIBUTING.md).
@@ -183,11 +202,11 @@ The house rules are in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 | circuit | outcome |
 |---|---|
 | **Visual escape** (loom to giant fiber to jump muscle) | The **calibration circuit**. The loom's rate scale and the giant fiber's adaptation were set to give 1 to 2 spikes per response, and the relay is 1:1 by construction. On that calibration, the giant fiber fires with probability 0.58, and each spike drives the jump motor neuron one-to-one 0.9 ms later. The independent part is the latency (40 ms, inside 10 to 60 ms). The controls: the jump motor neuron does not respond without the electrical synapse, and nothing responds on shuffled wiring, including wiring shuffled within cell class. Holds under other seeds, stricter connection thresholds and inversion of the transmitter calls the classifier is unsure of. Its calibrated response probability falls out of range under random sign flips (2 of 3 runs), and its spike count or response probability under a ±0.05 change in the weight scale. |
-| **Hearing to the giant fiber** | Sound alone stays subthreshold through the documented electrical synapse, which is calibrated. **Independent and pre-registered:** sound plus a near-threshold loom raises the giant fiber's response probability from 18% to 53% (re-measured October 2026 after the audit). This is the summation Tootoonian et al. 2012 recorded with injected current in place of the loom (the model's test: 120 trials per arm), and it holds at every working point tested (pre-registered sweep, five gains). |
+| **Hearing to the giant fiber** | Sound alone stays subthreshold through the documented electrical synapse, which is calibrated. **Pre-registered, counted as construction** (the near-threshold working point and the 3 mV sound input make summation close to guaranteed): sound plus a near-threshold loom raises the giant fiber's response probability from 18% to 53% (re-measured October 2026 after the audit). This is the summation Tootoonian et al. 2012 recorded with injected current in place of the loom (the model's test: 120 trials per arm), and it holds at every working point tested (pre-registered sweep, five gains). |
 | **Feeding** (taste to proboscis) | Does not reproduce feeding. The reason is measured, and the result holds when taste neurons are split by modality. |
-| **Courtship song** (male-specific pC1 neurons to song command neurons) | Pre-registered, 3 of 3 independent checks pass, and the null control passes. Activating pC1_14a drives the pulse-song neuron and not the sine-song neuron, as optogenetics showed; shuffled wiring drives nothing. A separate pathway of male-specific pIP5 neurons drives the sine neuron and not the pulse neuron, which is a new prediction. Signed paths also predict the song suppression the model cannot simulate. |
-| **Taste to feeding motor neurons** (signed map) | Appetitive taste neurons push proboscis extension up and bitter pushes it down (pre-registered pass). Of the 15 strongest unsigned influences on the proboscis motor neuron, 8 reverse to inhibitory once synaptic sign is included. Sugar neurons favour the opposite side's proboscis motor neuron, as Shiu et al. 2024 predicted, and this is visible only with sign. |
-| **Flight** (wing sensors and command to flight muscles) | The afferent load was set so the upstroke muscles respond. The downstroke muscles, reached mainly through relay neurons, stay silent, which is an independent failure. One wing sensor type, SNpp16, drives the upstroke muscles selectively under the declared parameters (pre-registered). That selectivity replicates with fresh random draws but fails with faster cord membranes or a smaller threshold gap (registered robustness test). No classifier-uncertain neuron lies on its path. |
+| **Courtship song** (male-specific pC1 neurons to song command neurons) | Pre-registered, 3 of 3 independent checks pass, and the null control passes. Activating pC1_14a drives the pulse-song neuron and not the sine-song neuron, as optogenetics showed; shuffled wiring drives nothing. The companion paper's pC1_1b-to-sine link is not reproduced (registered check, fail). One male-specific type, SIP108m (4 cells, pIP5 class), drives the sine command neuron and not the pulse neuron, in a rule-chosen control arm. Seven further pIP5-class types are its strongest inputs by wiring but were not simulated. This is offered as a testable prediction; its novelty against the song literature has not been checked. |
+| **Taste to feeding motor neurons** (signed map) | Counts over the wiring, not simulations (*structural* role). Appetitive taste neurons push proboscis extension up and bitter pushes it down (pre-registered: 1 of 3 checks pass; per-type sign agreement and LB2's dominance of pumping both fail). Of the 15 strongest unsigned influences on the proboscis motor neuron, 8 reverse to inhibitory once synaptic sign is included. Sugar neurons favour the opposite side's proboscis motor neuron, as Shiu et al. 2024 predicted, and this is visible only with sign. |
+| **Flight** (wing sensors and command to flight motor neurons) | The afferent load was set so the upstroke motor neurons respond. The downstroke motor neurons, reached mainly through relay neurons, stay silent, which is an independent failure. One wing sensor type, SNpp16, drives the upstroke motor neurons selectively under the declared parameters (pre-registered). That selectivity replicates with fresh random draws but fails with faster cord membranes or a smaller threshold gap (registered robustness test). No classifier-uncertain neuron lies on its path. |
 
 `results/SUITE.md` lists every check with its result, role and flags. Full numbers, every failure
 and every retraction are in [`RESULTS.md`](RESULTS.md).
@@ -206,13 +225,13 @@ and every retraction are in [`RESULTS.md`](RESULTS.md).
   - the connection-strength scale;
   - the connection-size threshold (5, 10 and 20 synapses; the data contain nothing below 5);
   - a stricter null that shuffles wiring only within cell class.
-- **Measured input.** The visual stimulus uses amplitudes extracted from 1,510 recorded trials across 21 flies (Turner et al. 2022). Only the trials in which the fly was not walking are used, to match a simulation with no locomotion.
+- **Measured input.** The visual stimulus uses amplitudes from the Turner et al. 2022 dataset (21 flies, 1,510 loom trials in all). The model uses the stationary-fly subset (13 of 23 imaging series), to match a simulation with no locomotion.
 
 ### Limitations
 
-- **No background activity.** Neurons are silent at rest, so circuits that work by *removing* inhibition cannot be represented. Feeding, the visual ON pathway and peptide modulation fail for this reason, and the flight relay layer stays silent for a related one.
-- **Borrowed single-neuron parameters.** Every neuron uses central-brain values from Shiu et al. 2024. The escape result is insensitive to them; the SNpp16 flight result is not.
-- **Transmitters come from a classifier.** It is less reliable for modulatory neurons (Eckstein et al. 2024) and appears to misclassify at least one taste neuron type, LB3d. Its call on LB3d decides whether the model treats aversive salt as promoting or suppressing feeding.
+- **No background activity.** Neurons are silent at rest, so circuits that work by *removing* inhibition cannot be represented. Feeding and the visual ON pathway fail for this reason, and the flight relay layer stays silent for a related one. Peptide modulation is represented but unscored: AstA raises Mi1's flash response from near zero to 0.04 spikes per flash, far below the graded change Krieger 2023 reports.
+- **Borrowed single-neuron parameters.** Every neuron uses central-brain values from Shiu et al. 2024. The escape relay survives every tested change to the cord neurons' parameters except one: with a 10 mV gap between rest and threshold it fails (TTMn/GF 0.23, lag 24.4 ms; cord sweep, rerun 11 October 2026). The SNpp16 flight result is sensitive to them.
+- **Transmitters come from a classifier.** It is less reliable for modulatory neurons (Eckstein et al. 2024). The companion paper's driver-line data disagree with the classifier on one taste neuron type, LB3d, and the model shows that this call decides whether aversive salt promotes or suppresses feeding.
 - **Spiking only.** Neurons that signal with graded potentials, common in early vision and hearing, are forced to spike.
 - **Some drives are cross-species.** Wing and haltere sensor parameters come from larger flies.
 - **The escape circuit is calibrated, not predicted.** See above and `docs/CALIBRATION.md`. The held-out results are the circuits nothing was fitted to.
@@ -227,7 +246,7 @@ Code: BSD 3-Clause ([`LICENSE`](LICENSE)). GitHub's "Cite this repository" butto
 
 The connectome, and the paper that assigns taste modality to it:
 
-- FlyEM Project Team et al. 2026. Sexual dimorphism in the complete connectome of the *Drosophila* male central nervous system. *Cell*. doi:10.1016/j.cell.2026.08.015
+- Berg S, et al., Jefferis GSXE. 2026. Sexual dimorphism in the complete *Drosophila* male central nervous system connectome. *Cell* 189:5504-5526. doi:10.1016/j.cell.2026.08.015
 - Tastekin I, de Haan Vicente I, et al. 2026. The complete gustatory connectome of adult *Drosophila* reveals how taste guides feeding, foraging, and social behavior. *Cell* 189:5527-5551. doi:10.1016/j.cell.2026.08.016
 
 The model and the principal physiology it is scored against:

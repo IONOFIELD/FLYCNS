@@ -7,7 +7,8 @@ subtypes, so a name that looks right can match nothing and a run proceeds withou
 raises on a set that matches nothing and warns on a partial one; this script checks all the
 sets up front, in a few seconds, so a long run never starts on a bad list.
 
-Run:  python fit/audit_stimuli.py [data_dir]      exits non-zero if any set is empty
+Run:  python fit/audit_stimuli.py [data_dir]      exits non-zero if any set is empty, or if a
+                                                  declared electrical partner or escape readout is missing
 """
 import os
 import sys
@@ -44,6 +45,9 @@ SETS = {
     "flight_snpp16* / wing campaniform types": [os.environ.get("FLYCNS_TARGET_TYPE", "SNpp16"),
                                                 os.environ.get("FLYCNS_PARTNER_TYPE", "SNpp07")],
 }
+# sets where a missing member is as bad as a missing set: a declared electrical synapse whose partner
+# type is absent silently loses its coupling (and the compound calibration counts the wrong population)
+STRICT = {"declared electrical synapses (both ends)", "escape readouts"}
 bad = 0
 for name, members in SETS.items():
     lst = [x for x in dict.fromkeys(members) if x and not str(x).endswith("*")]
@@ -52,11 +56,13 @@ for name, members in SETS.items():
     cells = int(sum(count.get(x, 0) for x in hit))
     if not hit:
         status, bad = "EMPTY", bad + 1
+    elif miss and name in STRICT:
+        status, bad = "MISSING", bad + 1
     elif miss:
         status = "PARTIAL"
     else:
         status = "ok"
     print(f"  {status:<8} {name:<44} {len(hit):>3}/{len(lst):<3} types  {cells:>6} cells"
           + (f"   missing: {miss[:6]}" if miss else ""))
-print(f"\n{'ALL SETS RESOLVE' if not bad else f'{bad} EMPTY SET(S): a benchmark using them would run without its input'}")
+print(f"\n{'ALL SETS RESOLVE' if not bad else f'{bad} EMPTY OR INCOMPLETE SET(S): a benchmark using them would run without its input'}")
 sys.exit(1 if bad else 0)
