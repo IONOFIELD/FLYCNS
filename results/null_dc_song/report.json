@@ -1,0 +1,236 @@
+{
+  "benchmark": "null_dc_song",
+  "circuit": "song",
+  "readout": "pMP2 spikes per cell per pulse",
+  "n_trials": 30,
+  "draws": 20,
+  "null_mode": "degree_corrected",
+  "null_seeds": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1004,
+    1005,
+    1006,
+    1007,
+    1008,
+    1009,
+    1010,
+    1011,
+    1012,
+    1013,
+    1014,
+    1015,
+    1016,
+    1017,
+    1018,
+    1019
+  ],
+  "neuropil_source": [
+    "roi_membership.parquet"
+  ],
+  "real": {
+    "readout": 7.733333333333333,
+    "per_trial": [
+      10.0,
+      7.0,
+      7.5,
+      6.5,
+      8.0,
+      8.0,
+      8.5,
+      7.5,
+      10.0,
+      8.5,
+      7.5,
+      7.0,
+      8.5,
+      6.0,
+      8.0,
+      7.0,
+      8.0,
+      8.0,
+      10.0,
+      5.5,
+      9.0,
+      7.0,
+      7.0,
+      9.0,
+      9.0,
+      7.5,
+      5.5,
+      5.0,
+      8.5,
+      7.5
+    ],
+    "cns_hz": 0.011792966907138875
+  },
+  "null": [
+    {
+      "readout": 7.783333333333333,
+      "cns_hz": 0.0010712149786350417
+    },
+    {
+      "readout": 1.15,
+      "cns_hz": 0.00047588216512327596
+    },
+    {
+      "readout": 6.5,
+      "cns_hz": 0.000669461350936134
+    },
+    {
+      "readout": 2.85,
+      "cns_hz": 0.0007793098571712081
+    },
+    {
+      "readout": 4.266666666666667,
+      "cns_hz": 0.0011741499425196567
+    },
+    {
+      "readout": 5.583333333333333,
+      "cns_hz": 0.0009002968483042444
+    },
+    {
+      "readout": 2.2333333333333334,
+      "cns_hz": 0.0007735485718791588
+    },
+    {
+      "readout": 0.6333333333333333,
+      "cns_hz": 0.0005546197307812836
+    },
+    {
+      "readout": 7.733333333333333,
+      "cns_hz": 0.0012091017399580891
+    },
+    {
+      "readout": 1.85,
+      "cns_hz": 0.0004801071076707788
+    },
+    {
+      "readout": 0.0,
+      "cns_hz": 0.0023794108256163797
+    },
+    {
+      "readout": 6.0,
+      "cns_hz": 0.000671381779366817
+    },
+    {
+      "readout": 2.2333333333333334,
+      "cns_hz": 0.0006652364083886311
+    },
+    {
+      "readout": 7.016666666666667,
+      "cns_hz": 0.0008265523965660128
+    },
+    {
+      "readout": 7.5,
+      "cns_hz": 0.000757032887375284
+    },
+    {
+      "readout": 3.95,
+      "cns_hz": 0.0008288569106828325
+    },
+    {
+      "readout": 0.0,
+      "cns_hz": 0.000753960201886191
+    },
+    {
+      "readout": 3.65,
+      "cns_hz": 0.0005761285292049345
+    },
+    {
+      "readout": 11.1,
+      "cns_hz": 0.0012882233913022335
+    },
+    {
+      "readout": 0.43333333333333335,
+      "cns_hz": 0.0005630696158762894
+    }
+  ],
+  "null_cns_hz_median": 0.0007652907296272213,
+  "null_alive": false,
+  "alive_rule": "median null whole-CNS rate >= 0.1 x real",
+  "checks": {
+    "N2_song_pmp2_wiring_specific": false
+  },
+  "uncertainty": {
+    "N2_song_pmp2_wiring_specific": {
+      "estimate": 7.733333333333333,
+      "ci95": null,
+      "band": null,
+      "method": "null percentile over 20 draws",
+      "percentile": 0.875,
+      "null_draws": [
+        7.783333333333333,
+        1.15,
+        6.5,
+        2.85,
+        4.266666666666667,
+        5.583333333333333,
+        2.2333333333333334,
+        0.6333333333333333,
+        7.733333333333333,
+        1.85,
+        0.0,
+        6.0,
+        2.2333333333333334,
+        7.016666666666667,
+        7.5,
+        3.95,
+        0.0,
+        3.65,
+        11.1,
+        0.43333333333333335
+      ],
+      "null_alive": false,
+      "verdict": "UNRESOLVED",
+      "note": "the null network is silent, so it cannot test wiring specificity"
+    }
+  },
+  "wall_s": 6051.8,
+  "provenance": {
+    "written_at": "2026-10-11T18:54:04",
+    "git_commit": "a4eef18",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "cython",
+    "platform": "win32",
+    "machine": "AMD64",
+    "float_dtype": "float64",
+    "loom_input": {
+      "source": "MEASURED (stationary trials, 13 series): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09)",
+      "state": "stationary",
+      "sha256": "238def4e51bd439f"
+    },
+    "graph": {
+      "data_dir": "data",
+      "min_weight": 5,
+      "n_neurons": 176422,
+      "n_signed_edges": 6127738,
+      "n_signed_synapses": 88316807,
+      "n_dropped_unsigned_edges": 160051,
+      "n_dropped_unsigned_synapses": 1980492,
+      "n_silent_presynaptic": 8020,
+      "edges_nt_used": false
+    },
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9",
+        "roi_membership.parquet": "5fce5c5d54e45570"
+      },
+      "manifest": "match"
+    }
+  }
+}

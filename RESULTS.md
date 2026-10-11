@@ -24,6 +24,77 @@ is uncertain about, and no independent check fails under any of its perturbation
 
 ---
 
+## 11 October 2026, evening: audit phase 3, uncertainty on every check (run 10)
+
+**What changed.** Every scored check now carries a 95% interval, a per-draw score over seeds, or a
+null percentile (`flycns/stats.py`). It has three outcomes:
+- **PASS:** the whole interval lies inside the band.
+- **FAIL:** the interval lies wholly outside.
+- **UNRESOLVED:** the interval crosses an edge. UNRESOLVED does not count as a pass.
+
+Seed replicates are scored draw by draw, never on their mean. Checks that cannot fail as designed
+are UNRESOLVED, with the reason stated. A new null, *degree-corrected*, permutes connection targets
+only within the target's class, neuropil, the connection's sign and its size. It keeps convergence,
+so it can fire; each null circuit is compared with 20 draws of it.
+
+**Run 10** (51 jobs at `a4eef18`). Every number the earlier reports held is identical to run 8. Only
+the verdicts changed.
+
+**Headline: 31 of 51 checks pass, 8 unresolved** (36 of 48 before, with three null checks added).
+
+| role | run 8 | run 10 |
+|---|---|---|
+| independent | 9 / 18 | **6 / 18** (4 unresolved) |
+| calibrated | 7 / 7 | 5 / 7 (1 unresolved) |
+| robustness | 3 / 4 | 2 / 4 (1 unresolved) |
+| control | 10 / 10 | 11 / 13 (2 unresolved) |
+| structural | 3 / 5 | 3 / 5 |
+| construction | 4 / 4 | 4 / 4 |
+
+**Six earlier passes no longer pass:**
+- **Escape response probability** (calibrated) is UNRESOLVED. The point is 0.575, but its interval,
+  0.42 to 0.72, crosses the 0.5 floor.
+- **Flight L1a** (calibrated) FAILS. DVMn is in the 2–12 Hz band in only 1 of the 5 recruitment
+  seeds; the mean of the five sat in the band.
+- **Flight L2** (independent) is UNRESOLVED: b1 is in band in 3 of 5 seeds; 4 are needed.
+- **Song P1 and P2** (independent) are UNRESOLVED. pMP2 passes its band, but "pMP2 above DNp13"
+  cannot fail: DNp13 fires in no pulse of any arm.
+- **SNpp16 R3** (robustness) is UNRESOLVED: k = 5 and k = 6 are each in band in 3 of 5 draws.
+
+**A null that can fire.** The degree-corrected null keeps the network active (whole-CNS rate within a
+factor of about 1 of the real network for escape), unlike the global null (2e-6 Hz).
+
+| circuit | real | null median (max of 20) | percentile | null active | verdict |
+|---|---|---|---|---|---|
+| escape: GF response probability | 0.575 | 0.05 (0.30) | 1.00 | yes, 0.0043 vs 0.0039 Hz | **PASS** |
+| song: pMP2 spikes per pulse | 7.73 | 3.80 (11.1) | 0.88 | no, 0.0008 vs 0.0118 Hz | UNRESOLVED |
+| JON → GF chemical: GF depolarisation, mV | 3.64 | 2.08 (3.96) | 0.95 | yes, 0.0012 vs 0.0039 Hz | UNRESOLVED |
+
+- **Escape: wiring-specific.** With the whole network as active as the real one, no null draw drives
+  the giant fiber as often as the real wiring.
+- **Song: not tested.** The real pMP2 response lies inside the null spread. That null is not active,
+  so the check cannot test wiring.
+- **JON → GF: unresolved.** One null draw exceeds the real depolarisation.
+
+**Robustness battery under the new verdicts** (12 perturbations of escape, auditory and feeding; 14
+checks each):
+- **Independent check:** the one independent check the battery scores (giant fiber latency) passes
+  under all 12 perturbations.
+- **Calibrated checks:** 1 or 2 of the 6 are unresolved under most perturbations (response
+  probability, as in the canonical run). Under the ±0.05 weight-scale changes, one calibrated check
+  fails outright.
+- **Superclass null:** auditory A4 fails, as before.
+
+**Also corrected by the audit, not by this run.**
+- **R1 is not vacuous.** The audit said the targeted sign flip touches no connection on the SNpp16 path.
+  On the path as the robustness script defines it (driven cells, readouts and the campaniform relay
+  layer: 2,120 cells, 50,286 connections), it flips 87 connections; 16 of them lie among the driven
+  and readout cells alone. R1 passes.
+- **The global null's "silent" checks stay as registered**, but their records note that the global
+  and superclass nulls are almost silent, so the degree-corrected comparison is the informative one.
+
+---
+
 ## 11 October 2026, later: audit phases 1 and 2 (run 8)
 
 **What changed.** The guards and tests the audit asked for (README, "Integrity"; full list in the

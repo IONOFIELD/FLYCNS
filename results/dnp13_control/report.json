@@ -53,21 +53,135 @@
       "pMP2": 0.0,
       "pIP10": 0.0,
       "cns_hz": 0.0008326807341294767,
-      "n_cells": 4
+      "n_cells": 4,
+      "per_trial": {
+        "DNp13": [
+          16.0,
+          13.5,
+          13.5,
+          11.0,
+          14.5,
+          16.0,
+          17.0,
+          14.0,
+          12.0,
+          15.5
+        ],
+        "pMP2": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pIP10": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
     },
     "pC1_1b": {
       "DNp13": 0.0,
       "pMP2": 0.0,
       "pIP10": 0.0,
       "cns_hz": 1.1087495976624898e-06,
-      "n_cells": 2
+      "n_cells": 2,
+      "per_trial": {
+        "DNp13": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pMP2": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pIP10": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
     },
     "LC10a": {
       "DNp13": 0.0,
       "pMP2": 0.0,
       "pIP10": 0.0,
       "cns_hz": 0.051316534698546315,
-      "n_cells": 275
+      "n_cells": 275,
+      "per_trial": {
+        "DNp13": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pMP2": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pIP10": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
     }
   },
   "checks": {
@@ -76,8 +190,8 @@
   },
   "verdict": "DNp13 reachable, so pC1_14a's pulse-over-sine is genuine selectivity; pC1_1b -> sine not reproduced",
   "provenance": {
-    "written_at": "2026-10-11T13:02:29",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T18:46:57",
+    "git_commit": "a4eef18",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -92,6 +206,7 @@
     "engine": "cython",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "graph": {
       "data_dir": "data",
       "min_weight": 5,
@@ -111,6 +226,63 @@
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"
+    }
+  },
+  "uncertainty": {
+    "D1_dnp13_reachable": {
+      "estimate": 14.3,
+      "ci95": [
+        13.2,
+        15.4
+      ],
+      "band": [
+        0.5,
+        null
+      ],
+      "method": "bootstrap",
+      "verdict": "PASS",
+      "n": 10,
+      "note": "DNp13 spikes/cell/pulse under best_input, bootstrap over pulses"
+    },
+    "D2_pc1_1b_sine_choice": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 2 parts",
+      "parts": [
+        {
+          "estimate": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "band": [
+            0.5,
+            null
+          ],
+          "method": "bootstrap",
+          "verdict": "FAIL",
+          "n": 10,
+          "note": "DNp13 spikes/cell/pulse under pC1_1b, bootstrap over pulses"
+        },
+        {
+          "estimate": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "band": [
+            0,
+            null
+          ],
+          "method": "bootstrap",
+          "verdict": "FAIL",
+          "band_lower_exclusive": true,
+          "n": 10,
+          "note": "DNp13 - pMP2 under pC1_1b, paired per pulse (same simulation and pulses), bootstrap over pulses"
+        }
+      ],
+      "verdict": "FAIL"
     }
   }
 }

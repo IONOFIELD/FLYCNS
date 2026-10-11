@@ -49,7 +49,7 @@
       },
       "pop_rate_hz": 0.11169621980176314,
       "peptide_applied": [],
-      "wall_s": 170
+      "wall_s": 161
     },
     "flash_plus_Pm3_synaptic": {
       "arm": "flash_plus_Pm3_synaptic",
@@ -69,7 +69,7 @@
       },
       "pop_rate_hz": 0.11155103704082171,
       "peptide_applied": [],
-      "wall_s": 154
+      "wall_s": 149
     },
     "flash_plus_Pm3_AstA": {
       "arm": "flash_plus_Pm3_AstA",
@@ -115,7 +115,7 @@
           "citation": "Krieger 2023, PhD thesis (Stanford), Ch. 2 Figs 1-4; AstA-R2 additionally in L2"
         }
       ],
-      "wall_s": 122
+      "wall_s": 120
     },
     "AstA_minus_Mi1": {
       "arm": "AstA_minus_Mi1",
@@ -164,7 +164,7 @@
           "citation": "Krieger 2023, PhD thesis (Stanford), Ch. 2 Figs 1-4; AstA-R2 additionally in L2"
         }
       ],
-      "wall_s": 106
+      "wall_s": 108
     }
   },
   "comparison": {
@@ -178,8 +178,8 @@
     "note": "published effect is an increase in the peak-to-trough dynamic range of a graded biphasic calcium response, blocked by AstA-R1 knockdown in Mi1; this is a spike-count analogue in a model with no graded compartment, reported and never scored"
   },
   "provenance": {
-    "written_at": "2026-10-11T13:32:02",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T18:11:19",
+    "git_commit": "a4eef18",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -194,6 +194,7 @@
     "engine": "cython",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "graph": {
       "data_dir": "data",
       "min_weight": 5,
