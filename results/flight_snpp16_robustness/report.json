@@ -34,7 +34,37 @@
         6.65,
         6.73
       ],
-      "dvmn_in_band": 5
+      "dvmn_in_band": 5,
+      "draws": {
+        "dvmn": [
+          10.268333333333333,
+          7.238333333333333,
+          6.0600000000000005,
+          6.649166666666666,
+          6.733333333333333
+        ],
+        "dlmn": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "steer": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b1": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
     },
     "R2": [
       {
@@ -54,6 +84,36 @@
           31.73
         ],
         "dvmn_in_band": 0,
+        "draws": {
+          "dvmn": [
+            37.95916666666667,
+            36.6125,
+            33.91916666666667,
+            34.67666666666667,
+            31.730833333333337
+          ],
+          "dlmn": [
+            10.163125,
+            20.4525,
+            10.920625,
+            18.05375,
+            12.056875
+          ],
+          "steer": [
+            1.9298214285714286,
+            1.947857142857143,
+            3.535,
+            1.947857142857143,
+            3.011964285714286
+          ],
+          "b1": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
         "param": "tau_m_ms",
         "value": 5.0
       },
@@ -74,6 +134,36 @@
           6.65
         ],
         "dvmn_in_band": 5,
+        "draws": {
+          "dvmn": [
+            9.595,
+            7.07,
+            6.2283333333333335,
+            6.480833333333334,
+            6.649166666666666
+          ],
+          "dlmn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "steer": [
+            1.6051785714285713,
+            1.965892857142857,
+            2.380714285714286,
+            1.5510714285714287,
+            2.6873214285714284
+          ],
+          "b1": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
         "param": "tau_m_ms",
         "value": 10.0
       },
@@ -94,6 +184,36 @@
           6.65
         ],
         "dvmn_in_band": 5,
+        "draws": {
+          "dvmn": [
+            9.931666666666667,
+            7.154166666666667,
+            5.975833333333334,
+            6.565,
+            6.649166666666666
+          ],
+          "dlmn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "steer": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "b1": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
         "param": "tau_m_ms",
         "value": 40.0
       },
@@ -114,6 +234,36 @@
           9.85
         ],
         "dvmn_in_band": 4,
+        "draws": {
+          "dvmn": [
+            14.560833333333333,
+            9.679166666666667,
+            9.931666666666667,
+            9.174166666666668,
+            9.8475
+          ],
+          "dlmn": [
+            0.0,
+            0.0,
+            0.0,
+            0.063125,
+            0.063125
+          ],
+          "steer": [
+            1.5510714285714287,
+            1.8396428571428571,
+            2.1823214285714285,
+            1.965892857142857,
+            3.3185714285714285
+          ],
+          "b1": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
         "param": "v_thresh_gap_mV",
         "value": 4.0
       },
@@ -134,6 +284,36 @@
           6.65
         ],
         "dvmn_in_band": 5,
+        "draws": {
+          "dvmn": [
+            9.8475,
+            7.154166666666667,
+            5.8075,
+            6.480833333333334,
+            6.649166666666666
+          ],
+          "dlmn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "steer": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "b1": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
         "param": "v_thresh_gap_mV",
         "value": 10.0
       },
@@ -154,6 +334,36 @@
           6.73
         ],
         "dvmn_in_band": 5,
+        "draws": {
+          "dvmn": [
+            10.268333333333333,
+            7.3225,
+            6.0600000000000005,
+            6.649166666666666,
+            6.733333333333333
+          ],
+          "dlmn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "steer": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "b1": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
         "param": "refractory_ms",
         "value": 1.0
       },
@@ -174,6 +384,36 @@
           6.65
         ],
         "dvmn_in_band": 5,
+        "draws": {
+          "dvmn": [
+            10.268333333333333,
+            7.238333333333333,
+            6.144166666666666,
+            6.565,
+            6.649166666666666
+          ],
+          "dlmn": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "steer": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "b1": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
         "param": "refractory_ms",
         "value": 5.0
       }
@@ -196,7 +436,37 @@
             0.0,
             0.0
           ],
-          "dvmn_in_band": 0
+          "dvmn_in_band": 0,
+          "draws": {
+            "dvmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "dlmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "steer": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b1": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
         },
         {
           "k": 2,
@@ -214,7 +484,37 @@
             0.0,
             0.0
           ],
-          "dvmn_in_band": 0
+          "dvmn_in_band": 0,
+          "draws": {
+            "dvmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "dlmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "steer": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b1": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
         },
         {
           "k": 3,
@@ -232,7 +532,37 @@
             0.0,
             0.0
           ],
-          "dvmn_in_band": 0
+          "dvmn_in_band": 0,
+          "draws": {
+            "dvmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "dlmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "steer": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b1": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
         },
         {
           "k": 4,
@@ -250,7 +580,37 @@
             0.0,
             0.0
           ],
-          "dvmn_in_band": 1
+          "dvmn_in_band": 1,
+          "draws": {
+            "dvmn": [
+              0.0,
+              0.0,
+              2.02,
+              0.0,
+              0.0
+            ],
+            "dlmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "steer": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b1": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
         },
         {
           "k": 5,
@@ -268,7 +628,37 @@
             0.0,
             6.65
           ],
-          "dvmn_in_band": 3
+          "dvmn_in_band": 3,
+          "draws": {
+            "dvmn": [
+              4.460833333333333,
+              0.0,
+              3.1983333333333333,
+              0.0,
+              6.649166666666666
+            ],
+            "dlmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "steer": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b1": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
         },
         {
           "k": 6,
@@ -286,7 +676,37 @@
             4.29,
             5.13
           ],
-          "dvmn_in_band": 3
+          "dvmn_in_band": 3,
+          "draws": {
+            "dvmn": [
+              5.639166666666666,
+              0.0,
+              0.0,
+              4.2925,
+              5.134166666666666
+            ],
+            "dlmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "steer": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b1": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
         },
         {
           "k": 7,
@@ -304,7 +724,37 @@
             10.18,
             4.63
           ],
-          "dvmn_in_band": 4
+          "dvmn_in_band": 4,
+          "draws": {
+            "dvmn": [
+              5.555,
+              12.204166666666667,
+              10.268333333333333,
+              10.184166666666668,
+              4.629166666666666
+            ],
+            "dlmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "steer": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b1": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
         },
         {
           "k": 8,
@@ -322,7 +772,37 @@
             11.87,
             9.17
           ],
-          "dvmn_in_band": 4
+          "dvmn_in_band": 4,
+          "draws": {
+            "dvmn": [
+              11.025833333333333,
+              10.268333333333333,
+              12.3725,
+              11.8675,
+              9.174166666666668
+            ],
+            "dlmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "steer": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b1": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
         },
         {
           "k": 9,
@@ -340,7 +820,37 @@
             16.41,
             14.73
           ],
-          "dvmn_in_band": 0
+          "dvmn_in_band": 0,
+          "draws": {
+            "dvmn": [
+              16.496666666666666,
+              16.16,
+              17.085833333333333,
+              16.4125,
+              14.729166666666668
+            ],
+            "dlmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "steer": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b1": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
         },
         {
           "k": 10,
@@ -358,7 +868,37 @@
             19.61,
             18.68
           ],
-          "dvmn_in_band": 0
+          "dvmn_in_band": 0,
+          "draws": {
+            "dvmn": [
+              14.813333333333333,
+              14.476666666666667,
+              18.9375,
+              19.610833333333336,
+              18.685
+            ],
+            "dlmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "steer": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b1": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
         },
         {
           "k": 11,
@@ -376,7 +916,37 @@
             19.44,
             21.63
           ],
-          "dvmn_in_band": 0
+          "dvmn_in_band": 0,
+          "draws": {
+            "dvmn": [
+              25.334166666666665,
+              19.779166666666665,
+              18.348333333333336,
+              19.4425,
+              21.630833333333335
+            ],
+            "dlmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "steer": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b1": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
         },
         {
           "k": 12,
@@ -394,7 +964,37 @@
             27.69,
             30.8
           ],
-          "dvmn_in_band": 0
+          "dvmn_in_band": 0,
+          "draws": {
+            "dvmn": [
+              29.205833333333334,
+              27.354166666666664,
+              30.720833333333335,
+              27.690833333333334,
+              30.805
+            ],
+            "dlmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "steer": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b1": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
         },
         {
           "k": 13,
@@ -412,16 +1012,825 @@
             33.25,
             33.75
           ],
-          "dvmn_in_band": 0
+          "dvmn_in_band": 0,
+          "draws": {
+            "dvmn": [
+              33.91916666666667,
+              33.835,
+              33.49833333333333,
+              33.24583333333333,
+              33.75083333333333
+            ],
+            "dlmn": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "steer": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "b1": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
         }
       ],
       "k_star": 5,
       "monotone_within_0p5": true
     }
   },
+  "R1_flipped_edges_on_path": 87,
+  "R1_path": {
+    "definition": "connections with both ends among the driven SNpp16 cells, the readouts (DVMn 1a-c, DLMn c-f, steering MNs, b1 MN) and the relay layer (cells receiving >= 20 synapses from the campaniform afferents)",
+    "n_cells": 2120,
+    "n_connections": 50286,
+    "n_flipped": 87,
+    "n_flipped_driven_and_readout_cells_only": 16,
+    "n_flipped_whole_graph": 110462
+  },
+  "uncertainty": {
+    "R1_survives_transmitter_uncertainty": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 4 parts",
+      "parts": [
+        {
+          "estimate": 1.0,
+          "ci95": null,
+          "band": [
+            2.0,
+            12.0
+          ],
+          "method": "per-draw (5 of 5 in band; pass needs 4)",
+          "draws": [
+            10.268333333333333,
+            7.238333333333333,
+            6.0600000000000005,
+            6.649166666666666,
+            6.733333333333333
+          ],
+          "n": 5,
+          "verdict": "PASS",
+          "note": "DVMn at k=7, flipped graph, >= 4 of 5 draws"
+        },
+        {
+          "estimate": 1.0,
+          "ci95": null,
+          "band": [
+            null,
+            1.0
+          ],
+          "method": "per-draw (5 of 5 in band; pass needs 5)",
+          "draws": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "n": 5,
+          "verdict": "PASS",
+          "note": "steer at k=7, flipped graph, every draw below 1 Hz"
+        },
+        {
+          "estimate": 1.0,
+          "ci95": null,
+          "band": [
+            null,
+            1.0
+          ],
+          "method": "per-draw (5 of 5 in band; pass needs 5)",
+          "draws": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "n": 5,
+          "verdict": "PASS",
+          "note": "b1 at k=7, flipped graph, every draw below 1 Hz"
+        },
+        {
+          "estimate": 1.0,
+          "ci95": null,
+          "band": [
+            null,
+            1.0
+          ],
+          "method": "per-draw (5 of 5 in band; pass needs 5)",
+          "draws": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "n": 5,
+          "verdict": "PASS",
+          "note": "dlmn at k=7, flipped graph, every draw below 1 Hz"
+        }
+      ],
+      "verdict": "PASS",
+      "note": "87 flipped connections on the path under test"
+    },
+    "R2_selectivity_holds_across_cord_params": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 7 parts",
+      "parts": [
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 3 parts",
+          "parts": [
+            {
+              "estimate": 0.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (0 of 5 in band; pass needs 5)",
+              "draws": [
+                1.9298214285714286,
+                1.947857142857143,
+                3.535,
+                1.947857142857143,
+                3.011964285714286
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "steer tau_m_ms=5.0, every draw below 1 Hz"
+            },
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "b1 tau_m_ms=5.0, every draw below 1 Hz"
+            },
+            {
+              "estimate": 0.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (0 of 5 in band; pass needs 5)",
+              "draws": [
+                10.163125,
+                20.4525,
+                10.920625,
+                18.05375,
+                12.056875
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "dlmn tau_m_ms=5.0, every draw below 1 Hz"
+            }
+          ],
+          "verdict": "FAIL",
+          "note": "tau_m_ms=5.0"
+        },
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 3 parts",
+          "parts": [
+            {
+              "estimate": 0.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (0 of 5 in band; pass needs 5)",
+              "draws": [
+                1.6051785714285713,
+                1.965892857142857,
+                2.380714285714286,
+                1.5510714285714287,
+                2.6873214285714284
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "steer tau_m_ms=10.0, every draw below 1 Hz"
+            },
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "b1 tau_m_ms=10.0, every draw below 1 Hz"
+            },
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "dlmn tau_m_ms=10.0, every draw below 1 Hz"
+            }
+          ],
+          "verdict": "FAIL",
+          "note": "tau_m_ms=10.0"
+        },
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 3 parts",
+          "parts": [
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "steer tau_m_ms=40.0, every draw below 1 Hz"
+            },
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "b1 tau_m_ms=40.0, every draw below 1 Hz"
+            },
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "dlmn tau_m_ms=40.0, every draw below 1 Hz"
+            }
+          ],
+          "verdict": "PASS",
+          "note": "tau_m_ms=40.0"
+        },
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 3 parts",
+          "parts": [
+            {
+              "estimate": 0.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (0 of 5 in band; pass needs 5)",
+              "draws": [
+                1.5510714285714287,
+                1.8396428571428571,
+                2.1823214285714285,
+                1.965892857142857,
+                3.3185714285714285
+              ],
+              "n": 5,
+              "verdict": "FAIL",
+              "note": "steer v_thresh_gap_mV=4.0, every draw below 1 Hz"
+            },
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "b1 v_thresh_gap_mV=4.0, every draw below 1 Hz"
+            },
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.063125,
+                0.063125
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "dlmn v_thresh_gap_mV=4.0, every draw below 1 Hz"
+            }
+          ],
+          "verdict": "FAIL",
+          "note": "v_thresh_gap_mV=4.0"
+        },
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 3 parts",
+          "parts": [
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "steer v_thresh_gap_mV=10.0, every draw below 1 Hz"
+            },
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "b1 v_thresh_gap_mV=10.0, every draw below 1 Hz"
+            },
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "dlmn v_thresh_gap_mV=10.0, every draw below 1 Hz"
+            }
+          ],
+          "verdict": "PASS",
+          "note": "v_thresh_gap_mV=10.0"
+        },
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 3 parts",
+          "parts": [
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "steer refractory_ms=1.0, every draw below 1 Hz"
+            },
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "b1 refractory_ms=1.0, every draw below 1 Hz"
+            },
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "dlmn refractory_ms=1.0, every draw below 1 Hz"
+            }
+          ],
+          "verdict": "PASS",
+          "note": "refractory_ms=1.0"
+        },
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 3 parts",
+          "parts": [
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "steer refractory_ms=5.0, every draw below 1 Hz"
+            },
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "b1 refractory_ms=5.0, every draw below 1 Hz"
+            },
+            {
+              "estimate": 1.0,
+              "ci95": null,
+              "band": [
+                null,
+                1.0
+              ],
+              "method": "per-draw (5 of 5 in band; pass needs 5)",
+              "draws": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "n": 5,
+              "verdict": "PASS",
+              "note": "dlmn refractory_ms=5.0, every draw below 1 Hz"
+            }
+          ],
+          "verdict": "PASS",
+          "note": "refractory_ms=5.0"
+        }
+      ],
+      "verdict": "FAIL",
+      "note": "selective at every setting; relay superclasses ['ascending_neuron', 'descending_neuron', 'vnc_intrinsic']"
+    },
+    "R3_replicates_with_fresh_draws": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 2 parts",
+      "parts": [
+        {
+          "estimate": null,
+          "ci95": null,
+          "band": null,
+          "method": "all of 2 parts",
+          "parts": [
+            {
+              "estimate": null,
+              "ci95": null,
+              "band": null,
+              "method": "all of 3 parts",
+              "parts": [
+                {
+                  "estimate": null,
+                  "ci95": null,
+                  "band": null,
+                  "method": "negation of 1 part",
+                  "parts": [
+                    {
+                      "estimate": 0.0,
+                      "ci95": null,
+                      "band": [
+                        2.0,
+                        12.0
+                      ],
+                      "method": "per-draw (0 of 5 in band; pass needs 4)",
+                      "draws": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "n": 5,
+                      "verdict": "FAIL",
+                      "note": "DVMn at k=1, fresh draws"
+                    }
+                  ],
+                  "verdict": "PASS",
+                  "note": "k=1 not in band"
+                },
+                {
+                  "estimate": null,
+                  "ci95": null,
+                  "band": null,
+                  "method": "negation of 1 part",
+                  "parts": [
+                    {
+                      "estimate": 0.0,
+                      "ci95": null,
+                      "band": [
+                        2.0,
+                        12.0
+                      ],
+                      "method": "per-draw (0 of 5 in band; pass needs 4)",
+                      "draws": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "n": 5,
+                      "verdict": "FAIL",
+                      "note": "DVMn at k=2, fresh draws"
+                    }
+                  ],
+                  "verdict": "PASS",
+                  "note": "k=2 not in band"
+                },
+                {
+                  "estimate": null,
+                  "ci95": null,
+                  "band": null,
+                  "method": "negation of 1 part",
+                  "parts": [
+                    {
+                      "estimate": 0.0,
+                      "ci95": null,
+                      "band": [
+                        2.0,
+                        12.0
+                      ],
+                      "method": "per-draw (0 of 5 in band; pass needs 4)",
+                      "draws": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "n": 5,
+                      "verdict": "FAIL",
+                      "note": "DVMn at k=3, fresh draws"
+                    }
+                  ],
+                  "verdict": "PASS",
+                  "note": "k=3 not in band"
+                }
+              ],
+              "verdict": "PASS",
+              "note": "no k below 4 in band"
+            },
+            {
+              "estimate": null,
+              "ci95": null,
+              "band": null,
+              "method": "any of 3 parts",
+              "parts": [
+                {
+                  "estimate": 0.2,
+                  "ci95": null,
+                  "band": [
+                    2.0,
+                    12.0
+                  ],
+                  "method": "per-draw (1 of 5 in band; pass needs 4)",
+                  "draws": [
+                    0.0,
+                    0.0,
+                    2.02,
+                    0.0,
+                    0.0
+                  ],
+                  "n": 5,
+                  "verdict": "FAIL",
+                  "note": "DVMn at k=4, fresh draws"
+                },
+                {
+                  "estimate": 0.6,
+                  "ci95": null,
+                  "band": [
+                    2.0,
+                    12.0
+                  ],
+                  "method": "per-draw (3 of 5 in band; pass needs 4)",
+                  "draws": [
+                    4.460833333333333,
+                    0.0,
+                    3.1983333333333333,
+                    0.0,
+                    6.649166666666666
+                  ],
+                  "n": 5,
+                  "verdict": "UNRESOLVED",
+                  "note": "DVMn at k=5, fresh draws"
+                },
+                {
+                  "estimate": 0.6,
+                  "ci95": null,
+                  "band": [
+                    2.0,
+                    12.0
+                  ],
+                  "method": "per-draw (3 of 5 in band; pass needs 4)",
+                  "draws": [
+                    5.639166666666666,
+                    0.0,
+                    0.0,
+                    4.2925,
+                    5.134166666666666
+                  ],
+                  "n": 5,
+                  "verdict": "UNRESOLVED",
+                  "note": "DVMn at k=6, fresh draws"
+                }
+              ],
+              "verdict": "UNRESOLVED",
+              "note": "some k in 4..6 in band"
+            }
+          ],
+          "verdict": "UNRESOLVED",
+          "note": "fresh k* within 1 of 5, with 'in band at k' scored per draw"
+        },
+        {
+          "estimate": 0.8,
+          "ci95": null,
+          "band": [
+            2.0,
+            12.0
+          ],
+          "method": "per-draw (4 of 5 in band; pass needs 4)",
+          "draws": [
+            5.555,
+            12.204166666666667,
+            10.268333333333333,
+            10.184166666666668,
+            4.629166666666666
+          ],
+          "n": 5,
+          "verdict": "PASS",
+          "note": "DVMn at k=7, fresh draws, >= 4 of 5"
+        }
+      ],
+      "verdict": "UNRESOLVED",
+      "note": "replication with fresh cell-identity and phase draws"
+    }
+  },
   "provenance": {
-    "written_at": "2026-10-11T14:29:09",
-    "git_commit": "d72fe77",
+    "written_at": "2026-10-11T19:26:25",
+    "git_commit": "a4eef18",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -436,6 +1845,7 @@
     "engine": "cython",
     "platform": "win32",
     "machine": "AMD64",
+    "float_dtype": "float64",
     "graph": {
       "data_dir": "data",
       "min_weight": 5,
