@@ -4082,6 +4082,7 @@
     "/arms/null_snpp16_alone/steer_mean": 33.666666666666664,
     "/checks/N1_snpp16_sufficient_dvmn_in_band": false,
     "/checks/N2_snpp16_necessary_dvmn_below_2hz": true,
+    "/n_cycles": 20,
     "/n_others": 20,
     "/n_target": 30,
     "/reported/specificity/real": 0.0,
