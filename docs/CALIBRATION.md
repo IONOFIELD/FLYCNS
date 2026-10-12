@@ -109,9 +109,13 @@ the generation-3 freeze:
   the phase-1 control (`fit/shiu2024_phase1.py`: A1, the ladder, M1). Every default code path builds the
   same Brian2 objects with the same equations as generation 4.
 - **Proof of identity:** the identity check (`scripts/fingerprint.py`): every job of the cloud rerun,
-  reduced to a few trials, fingerprinted on the generation-4 code (cloud run 19) and on this code; the
-  wired network, every neuron's state after every run step and every spike must match. The full rerun
-  under generation 5 runs alongside as the record.
+  reduced to a few trials, fingerprinted on the generation-4 model (cloud run 20, `caf6c85`) and on the
+  generation-5 model (cloud run 21, `2cae86d`); the wired network, every neuron's state after every run
+  step, every spike and every exit code must match. **Result: 55 of 55 jobs identical, 7,591
+  fingerprints** (6 structural jobs simulate nothing). Outputs: branches `fingerprint-out/20/*` and
+  `fingerprint-out/21/*`. Run 19 used a first version of the tool that let six jobs stop before
+  simulating; it is superseded by run 20. The toy regression on the same model also passes, with all
+  13,892 golden toy values unchanged. The full rerun under generation 5 runs alongside as the record.
 - **Phase-1 deviations, registered before any A1 or M1 code existed**
   (`results/shiu2024_phase1_addendum/`): A1 uses exact integration (the approved plan's eighth setting,
   omitted from the registered A1 settings), with Euler as an extra ladder step; M1 runs at a connection

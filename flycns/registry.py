@@ -43,8 +43,9 @@ VERSION = 5
 NAME = "registration.json" if VERSION == 2 else f"registration_v{VERSION}.json"
 GENERATION_NOTE = ("Shiu-compatible simulator options (Gen 5 phase 1), off by default: flycns.model.SimOptions and "
                    "load_graph(amines=...), used only by the phase-1 positive control (fit/shiu2024_phase1.py). Every "
-                   "default simulation is identical to generation 4's (scripts/fingerprint.py identity check against "
-                   "cloud run 19). Criteria unchanged; every number is expected to equal generation 4's.")
+                   "default simulation is identical to generation 4's (scripts/fingerprint.py identity check: cloud "
+                   "runs 20 and 21, 55 of 55 jobs, 7,591 fingerprints equal). Criteria unchanged; every number is "
+                   "expected to equal generation 4's.")
 # Generation 4 (hygiene refreeze, Gen 4 phase 0): no model parameter changed; flycns/integrity.py joined the hashed
 # files; the input data were re-pinned without the legacy `sign` column; two frozen code comments corrected.
 # Files that define the model and its inputs, and the role table (relabelling a failed independent check
