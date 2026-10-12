@@ -267,18 +267,18 @@
     }
   },
   "registration": {
-    "file": "results/feeding_by_modality/registration_v4.json",
-    "version": 4,
-    "supersedes": "results/feeding_by_modality/registration_v3.json",
-    "git_commit": "7851c7c",
-    "model_hash": "288546214fafc3dfbfe91c2c39f9efaad2b4bb846f9fdd8c4a54f9939b7aafc9",
-    "registered_at": "2026-10-12T03:48:23",
+    "file": "results/feeding_by_modality/registration_v5.json",
+    "version": 5,
+    "supersedes": "results/feeding_by_modality/registration_v4.json",
+    "git_commit": "24ea400",
+    "model_hash": "e3213a08707e53721d3fed8ccc7b177d8c4a926adcf869e2eece28ea9a5df05d",
+    "registered_at": "2026-10-12T10:43:36",
     "matches": true,
     "problems": []
   },
   "provenance": {
-    "written_at": "2026-10-12T11:06:29",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T18:24:13",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
