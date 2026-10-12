@@ -70,6 +70,7 @@ env:
       {"name": "screen-w1",                 "run": "benchmarks/screen_afferents.py 3 data 50 1.0"},
       {"name": "export-brainsets",          "run": "scripts/export_brainsets.py 40"},
       {"name": "pin-data",                  "run": "-m flycns.integrity write data", "nt": true, "manual": true},
+      {"name": "repin-check",               "run": "scripts/repin_check.py", "nt": true, "manual": true},
       {"name": "battery-seed1",             "run": "scripts/overnight.py seed1"},
       {"name": "battery-seed2",             "run": "scripts/overnight.py seed2"},
       {"name": "battery-signflip05_a",      "run": "scripts/overnight.py signflip05_a"},
