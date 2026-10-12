@@ -1,0 +1,23 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+screening 8 afferent types at 50.0 Hz, w_scale 0.6, 3 trials each
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 1/8] aPhM2a             n=5    MN9   0.00  CNS 0.0594 Hz  (65s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 2/8] aPhM5              n=4    MN9   0.00  CNS 0.0004 Hz  (119s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 3/8] TPMN1              n=48   MN9   0.33  CNS 0.0125 Hz  (137s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 4/8] PhG1c              n=4    MN9   0.00  CNS 0.0007 Hz  (156s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 5/8] BM_Taste           n=40   MN9   0.00  CNS 0.0100 Hz  (177s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 6/8] claw_tpGRN         n=50   MN9   0.00  CNS 0.0032 Hz  (195s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 7/8] JO-FV              n=70   MN9   0.50  CNS 0.0218 Hz  (213s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 8/8] BM_Vib             n=22   MN9   0.17  CNS 0.0387 Hz  (231s)
+
+DRIVERS (MN9 > 0.5 spikes/cell, CNS quiet):
+Empty DataFrame
+Columns: [type, n, mn9, mn9_L, mn9_R, cns]
+Index: []
