@@ -1,0 +1,19 @@
+[fingerprint] export-brainsets: scripts/export_brainsets.py 2
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+[loom] 2526 stimulated, recording 3000 downstream neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  wrote results\brainsets\flycns_sim_loom.h5: 14 spikes, 3000 units, 2 trials, 1.0 s (validated: reloads with temporaldata 0.1.6)
+[sound] 101 stimulated, recording 3000 downstream neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  wrote results\brainsets\flycns_sim_sound.h5: 41 spikes, 3000 units, 2 trials, 1.3 s (validated: reloads with temporaldata 0.1.6)
+[taste] 140 stimulated, recording 3000 downstream neurons
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  wrote results\brainsets\flycns_sim_taste.h5: 526 spikes, 3000 units, 2 trials, 1.3 s (validated: reloads with temporaldata 0.1.6)
+
+every file was reloaded with temporaldata.Data.from_hdf5 and compared to what was written
+[fingerprint] export-brainsets: 15 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\export-brainsets.jsonl
