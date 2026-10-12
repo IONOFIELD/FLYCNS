@@ -1,0 +1,5 @@
+>>> Experiment:     A0_sugarR_100Hz
+    Output file:    D:\a\_temp\a0out\A0_sugarR_100Hz.parquet
+    Excited neurons: 21
+    Elapsed time:   935 s
+A0 done in 937.4 s: D:\a\_temp\a0out\A0_sugarR_100Hz.parquet
