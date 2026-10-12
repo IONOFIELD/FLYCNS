@@ -1,0 +1,9 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+sound alone: 11 JO types at 150 Hz, 60 ms pulses, 40 trials; target 3.0 mV steady state, 2.76 mV expected over the plateau window (charging factor 0.920)
+  [electrical only] GF 10001 (R): plateau 2.78 mV, peak 3.58 mV, fired on 0/40 trials
+  [electrical only] GF 10010 (L): plateau 2.72 mV, peak 3.18 mV, fired on 0/40 trials
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  [network] GF 10001 (R): plateau -20.83 mV, peak 1.51 mV, fired on 0/40 trials
+  [network] GF 10010 (L): plateau -9.57 mV, peak 2.46 mV, fired on 1/40 trials
+
+PASS: GF 10001 (R) 6 afferents, plateau 2.78 mV (want 2.76); GF 10010 (L) 21 afferents, plateau 2.72 mV (want 2.76)
