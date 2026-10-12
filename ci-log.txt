@@ -1,0 +1,27 @@
+[fingerprint] a2-robustness: benchmarks/a2_robustness.py 2
+[registry] a2_robustness: registered (version 5, model c7c27a9c9ae4, commit 2cae86d)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! a2_robustness: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! results\a2_robustness\registration_v5.json is not committed (or differs from the commit): a registration must be committed before the run it governs
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! a2_robustness: RUNNING ON UNCOMMITTED CODE (FLYCNS_ALLOW_DIRTY=1)
+! 11 code file(s) differ from commit 2cae86d: D results/a2_registered/criteria.json, D results/a2_robustness/criteria.json, D results/dnp13_control/criteria.json, D results/feeding_by_modality/criteria.json, D results/flight_snpp16_graded/criteria.json, D results/flight_snpp16_robustness/criteria.json, D results/gustatory_signed_map/criteria.json, D results/null_strict/criteria.json ...
+! The report is stamped dirty and must not be quoted as a registered result.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+criteria registered at commit 2cae86d; this run at 2cae86d
+gain 0.4  | alone   0/2 = 0.000 | with sound   1/2 = 0.500 | difference +0.500 (95% CI -0.273 to +0.905) | near-threshold | 167s
+gain 0.5  | alone   1/2 = 0.500 | with sound   1/2 = 0.500 | difference +0.000 (95% CI -0.573 to +0.573) | above threshold | 231s
+gain 0.6  | alone   1/2 = 0.500 | with sound   1/2 = 0.500 | difference +0.000 (95% CI -0.573 to +0.573) | above threshold | 295s
+gain 0.7  | alone   1/2 = 0.500 | with sound   1/2 = 0.500 | difference +0.000 (95% CI -0.573 to +0.573) | above threshold | 361s
+gain 0.8  | alone   1/2 = 0.500 | with sound   1/2 = 0.500 | difference +0.000 (95% CI -0.573 to +0.573) | above threshold | 428s
+
+1 of 5 gains near threshold; facilitation at 0 of them
+CHECK (criterion registered before the run)
+  FAIL  RA2_facilitation_at_every_near_threshold_gain
+UNCERTAINTY (95% interval; PASS only if every part passes)
+  FAIL        RA2_facilitation_at_every_near_threshold_gain (all of 2 parts)
+      FAIL        near-threshold gains: 1 (need >= 3) (point)
+      UNRESOLVED  gain 0.4: difference +0.5 [-0.2726, +0.9055] band (0, -) (newcombe (as registered))
+wrote results\a2_robustness\report.json
+[fingerprint] a2-robustness: 75 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\a2-robustness.jsonl
