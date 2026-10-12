@@ -4,6 +4,9 @@ name: reference model
 #   a0   Shiu et al. 2024's own code (github.com/philshiu/Drosophila_brain_model, pinned commit) on its own
 #        FlyWire v630 data, in its authors' package versions; scored by fit/shiu2024_reference.py against
 #        the registration in results/shiu2024_a0/
+#   s6   (branch reference/<label>--s6) the same authors' code runs the 100 weight shuffles of phase 1's S6
+#        (scripts/shiu2024_run_shuffles.py); registered in fit/shiu2024_phase1.py, run only if A1's S6 fails.
+#        Output: reference-out/<run>/s6, reference-runs/shiu2024_s6/s6.json
 on:
   push:
     branches: ["reference/**"]
@@ -23,6 +26,7 @@ env:
 jobs:
   a0:
     name: A0 Shiu 2024 own code, sugar 100 Hz
+    if: ${{ !endsWith(github.ref_name, '--s6') }}
     runs-on: windows-latest
     timeout-minutes: 345
     permissions:
@@ -105,3 +109,74 @@ jobs:
           git diff --cached --quiet
           if ($LASTEXITCODE) { git commit -qm "reference A0 (Actions run ${{ github.run_id }})" }
           git push -q -f origin "HEAD:refs/heads/reference-out/${{ github.run_number }}/a0"
+
+  s6:
+    name: S6 reference shuffles, Shiu 2024 own code
+    if: ${{ endsWith(github.ref_name, '--s6') }}
+    runs-on: windows-latest
+    timeout-minutes: 345
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          fetch-depth: 0   # full history: the registration must have been committed once and never changed
+      - id: py310
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with: { python-version: "3.10" }
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: requirements.lock }
+      - name: reference repository at the registered commit (no line-ending conversion, so the hashes hold)
+        shell: pwsh
+        run: |
+          $ref = Join-Path $env:RUNNER_TEMP "shiu"
+          git -c core.autocrlf=false clone -q https://github.com/philshiu/Drosophila_brain_model $ref
+          if ($LASTEXITCODE) { exit 1 }
+          git -c core.autocrlf=false -C $ref checkout -q $env:SHIU_COMMIT
+          if ($LASTEXITCODE) { exit 1 }
+          "SHIU_REPO=$ref" >> $env:GITHUB_ENV
+          "A0_OUT=$(Join-Path $env:RUNNER_TEMP 'a0out')" >> $env:GITHUB_ENV
+      - name: flycns environment (scores the run against the registration)
+        shell: pwsh
+        run: |
+          python -m venv .venv
+          .venv\Scripts\python.exe -m pip install -q --upgrade pip
+          .venv\Scripts\python.exe -m pip install -q --only-binary=:all: --no-binary=asciitree -r requirements.lock
+          if ($LASTEXITCODE) { exit 1 }
+          git config user.name "flycns reference"; git config user.email "flycns-reference@users.noreply.github.com"
+      - name: the authors' environment (environment_full.yml versions, from PyPI)
+        shell: pwsh
+        run: |
+          $venv = Join-Path $env:RUNNER_TEMP "shiu-venv"
+          & "${{ steps.py310.outputs.python-path }}" -m venv $venv
+          $py = Join-Path $venv "Scripts\python.exe"
+          & $py -m pip install -q --upgrade "pip<25"
+          & $py -m pip install -q "setuptools==67.8.0" wheel "numpy==1.22.3" "Cython==0.29.33"
+          if ($LASTEXITCODE) { exit 1 }
+          & $py -m pip install -q --no-build-isolation "brian2==2.5.1" "pandas==1.4.3" "pyarrow==11.0.0" "scipy==1.8.1" `
+              "joblib==1.2.0" "sympy==1.12" "Jinja2==2.11.3" "MarkupSafe==2.0.1" "py-cpuinfo==9.0.0"
+          if ($LASTEXITCODE) { exit 1 }
+          & $py -m pip freeze
+          "SHIU_PY=$py" >> $env:GITHUB_ENV
+      - name: run their code on the 100 shuffles
+        shell: pwsh
+        run: |
+          $env:PYTHONPATH = $env:SHIU_REPO
+          & $env:SHIU_PY scripts/shiu2024_run_shuffles.py $env:SHIU_REPO $env:A0_OUT *> s6-run-log.txt
+          $code = $LASTEXITCODE
+          Get-Content s6-run-log.txt -Tail 20
+          exit $code
+      - name: push results to reference-out/${{ github.run_number }}/s6
+        if: always()
+        shell: pwsh
+        run: |
+          git checkout -q -B "reference-out/${{ github.run_number }}/s6"
+          if ($env:A0_OUT -and (Test-Path (Join-Path $env:A0_OUT "s6.json"))) {
+            New-Item -ItemType Directory -Force reference-runs/shiu2024_s6 | Out-Null
+            Copy-Item (Join-Path $env:A0_OUT "s6.json") reference-runs/shiu2024_s6/
+            git add -f -- reference-runs/shiu2024_s6
+          }
+          if (Test-Path s6-run-log.txt) { git add -f -- s6-run-log.txt }
+          git diff --cached --quiet
+          if ($LASTEXITCODE) { git commit -qm "reference S6 shuffles (Actions run ${{ github.run_id }})" }
+          git push -q -f origin "HEAD:refs/heads/reference-out/${{ github.run_number }}/s6"

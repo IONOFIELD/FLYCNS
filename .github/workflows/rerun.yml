@@ -4,6 +4,8 @@ name: real-data rerun
 #   rerun/<label>             every rerun listed in RERUNS below
 #   rerun/<label>--a+b        only the named ones, e.g. rerun/2026-10-11--flight-robustness+core
 #   p1-*          phase 1 (fit/shiu2024_phase1.py): manual, so name them, e.g. rerun/gen5p1--p1-dose-a+p1-m1;
+#                 p1-ext-a..d run the registered one-time extension, only when results/shiu2024_phase1/
+#                 extension.json (written by its scoring) is committed;
 #                 they clone Shiu et al.'s repository at SHIU_COMMIT (verified against the registration)
 #   fingerprint/<label>[--a+b]  the identity check (scripts/fingerprint.py): every rerun with a few trials,
 #                 recording a fingerprint of every simulation; each job pushes fingerprints/<job>.jsonl to
@@ -105,7 +107,11 @@ env:
       {"name": "p1-ladder-b",               "run": "fit/shiu2024_phase1.py part p1-ladder-b", "manual": true, "shiu": true},
       {"name": "p1-ladder-c",               "run": "fit/shiu2024_phase1.py part p1-ladder-c", "manual": true, "shiu": true},
       {"name": "p1-ladder-d",               "run": "fit/shiu2024_phase1.py part p1-ladder-d", "manual": true, "shiu": true},
-      {"name": "p1-m1",                     "run": "fit/shiu2024_phase1.py part p1-m1", "manual": true, "shiu": true}
+      {"name": "p1-m1",                     "run": "fit/shiu2024_phase1.py part p1-m1", "manual": true, "shiu": true},
+      {"name": "p1-ext-a",                  "run": "fit/shiu2024_phase1.py extension 0 4", "manual": true, "shiu": true},
+      {"name": "p1-ext-b",                  "run": "fit/shiu2024_phase1.py extension 1 4", "manual": true, "shiu": true},
+      {"name": "p1-ext-c",                  "run": "fit/shiu2024_phase1.py extension 2 4", "manual": true, "shiu": true},
+      {"name": "p1-ext-d",                  "run": "fit/shiu2024_phase1.py extension 3 4", "manual": true, "shiu": true}
     ]
 
 jobs:

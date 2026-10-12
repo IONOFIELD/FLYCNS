@@ -17,6 +17,7 @@ This file adds only what those leave to the implementation (arms, seeds, readout
     python fit/shiu2024_phase1.py part <part> [shiu_repo]     run one job's arms, in parallel processes
     python fit/shiu2024_phase1.py arm <arm> [shiu_repo]       run one arm (results/shiu2024_phase1/arms/<arm>.json)
     python fit/shiu2024_phase1.py score [shiu_repo]           score every check from the arms; write phase1.json
+    python fit/shiu2024_phase1.py extension <k> <n> [repo]    share k of n of the registered one-time extension
 Its report is results/shiu2024_phase1/phase1.json, not report.json: a diagnostic of the simulator against a
 reference model, kept out of the model's own scoreboard (benchmarks/summarize.py reads */report.json), as A0's
 a0.json is.
@@ -111,6 +112,24 @@ def arm_of(sugar, bitter):
     return f"a1_sugar{sugar}" if not bitter else f"a1_sugar{sugar}_bitter{bitter}"
 
 
+# The single extension (A1 definition): 30 more trials of an arm, with its own seed, only when needed.
+EXT = {f"{a}_ext": dict(ARMS[a], seed=100 + ARMS[a]["seed"], extension_of=a)
+       for a in ARMS if ARMS[a].get("kind") != "shuffle"}
+ALL_ARMS = {**ARMS, **EXT}
+COUNTED = ["S1_sugar_mn9_magnitude", "S2_reliability", "S3_laterality", "S4b_dose_curve_matches_published",
+           "S5_bitter_suppression", "S5b_bitter_curve_matches_published", "S6_wiring_control"]
+FEEDS = {"S1_sugar_mn9_magnitude": ["a1_sugar100"], "S3_laterality": ["a1_sugar100"],
+         "S4b_dose_curve_matches_published": [arm_of(s, 0) for s in S4_RATES],
+         "S5_bitter_suppression": [arm_of(100, b) for b in S5_RATES],
+         "S5b_bitter_curve_matches_published": [arm_of(100, b) for b in S5B_RATES], "M1_male_mn9": ["m1_male"]}
+# for a check made of parts, the arms feeding each part, in the order the parts are scored
+PART_FEEDS = {"S3_laterality": [["a1_sugar100"], ["a1_sugar100"]],
+              "S4b_dose_curve_matches_published": [[arm_of(s, 0)] for s in S4_RATES],
+              "S5_bitter_suppression": [[arm_of(100, 0), arm_of(100, 100)], [arm_of(100, b) for b in S5_RATES]],
+              "S5b_bitter_curve_matches_published": [[arm_of(100, b)] for b in S5B_RATES]}
+REF_S6 = ROOT / "reference-runs" / "shiu2024_s6" / "s6.json"
+
+
 CRITERIA = dict(
     question=("does the flycns simulator, set to Shiu et al. 2024's choices, reproduce their model's outputs on "
               "their own FlyWire v630 data (A1); and does the male CNS drive MN9 under the same choices (M1)?"),
@@ -160,8 +179,30 @@ CRITERIA = dict(
         "M1_male_mn9": dict(band=[0.5, None], arm="m1_male",
                             scored_as="PASS = responds (interval above 0.5 Hz, lower edge exclusive); FAIL = does not"),
     },
-    a1_passes=("S1, S2, S3, S4b, S5, S5b and S6 all PASS. S4 is scored and reported but does not count: the "
-               "authors' own output scores UNRESOLVED on it, which is why S4b was registered"),
+    a1_definition=dict(
+        counted=COUNTED,
+        principle=("reference-calibrated: a check counts towards A1 only if the reference model (Shiu et al.'s own "
+                   "code, or its released output) passes it under the same procedure. A check the reference itself "
+                   "cannot pass cannot tell the two simulators apart"),
+        reference=dict(
+            S1_S2_S3="A0 passed all three (reference run 1, results/shiu2024_a0/a0.json)",
+            S4=("the reference's own Fig 1 output scores 0.705, 95% interval 0.686-0.724: UNRESOLVED, so S4 does "
+                "not count; it is scored and reported"),
+            S4b_S5b="the reference's released output is the comparison itself",
+            S5=("the reference's released output passes on the rates it has (bitter 0, 100, 200 Hz; 50 and 150 Hz "
+                "were not released): suppression 63.0 Hz (61.2 to 64.8), minus rho 0.946 (0.925 to 0.962)"),
+            S6=("no released shuffle output. If A1's S6 FAILs, the reference's own code runs the same 100 "
+                "shuffles (scripts/shiu2024_run_shuffles.py: the same permutation of the same weight array, in "
+                "file order, one 1 s trial each, sugar 100 Hz, its own run settings); S6 then counts only if the "
+                "reference passes it")),
+        outcome="PASSES if every counted check PASSes; FAILS if any counted check FAILs; UNRESOLVED otherwise",
+        extension=("once only, if A1 or M1 is UNRESOLVED: every arm feeding an UNRESOLVED counted check (for a "
+                   "check made of parts, the arms feeding its UNRESOLVED parts), and M1's arm if M1 is UNRESOLVED, "
+                   "runs 30 more trials as <arm>_ext (seed 100 + the arm's seed); the trials are pooled, every "
+                   "check is scored once more on the pooled arms, and that outcome stands. No further extension; "
+                   "an outcome still UNRESOLVED means the decision rule does not decide, and the phase stops for "
+                   "review. Only if A1 FAILS is M1 not extended (the rule then says: bisect first)"),
+        feeds=FEEDS, part_feeds=PART_FEEDS),
     ladder="reported, not scored: each rung's contralateral MN9 at sugar 100 Hz, and its difference from A1's",
     decision_rule=PRE["decision_rule"],
 )
@@ -231,7 +272,7 @@ def flywire(repo, floor):
 def run_arm(name, repo):
     from flycns.bench import provenance
     from flycns.model import CNSModel, LIFParams, SimOptions
-    spec = ARMS[name]
+    spec = ALL_ARMS[name]
     st = spec["settings"]
     opt = SimOptions(reset=st["reset"], stimulation=st["stimulation"], integration=st["integration"],
                      adaptation=st["adaptation"])
@@ -335,109 +376,211 @@ def _boot_multi(arms, stat, n_boot=stats.N_BOOT, seed=0):
     return float(stat(arms)), float(lo), float(hi)
 
 
-def score(repo):
+def _load_arm(name):
+    f = OUT / "arms" / f"{name}.json"
+    if not f.exists():
+        raise SystemExit(f"[phase1] arm {name} has no result ({f.relative_to(ROOT)})")
+    rec = json.loads(f.read_text(encoding="utf-8"))
+    st = rec["registration"]
+    if st.get("model_hash") != REG["model"]["hash"] or not st.get("matches"):
+        raise SystemExit(f"[phase1] arm {name} was not run under this registration ({st})")
+    if json.loads(json.dumps(rec["spec"])) != json.loads(json.dumps(ALL_ARMS[name])):
+        raise SystemExit(f"[phase1] arm {name} was run with another specification than the registered one")
+    return rec
+
+
+def _checks(col, pub):
+    """Every scored check from per-trial arrays (col(arm, key)); n is the number of trials actually used."""
     from scipy.stats import spearmanr
-    from flycns.bench import provenance
-    arms = {}
-    for name in ARMS:
-        f = OUT / "arms" / f"{name}.json"
-        if not f.exists():
-            raise SystemExit(f"[phase1] arm {name} has no result ({f}); every arm is needed before scoring")
-        arms[name] = json.loads(f.read_text(encoding="utf-8"))
-        st = arms[name]["registration"]
-        if st.get("model_hash") != REG["model"]["hash"] or not st.get("matches"):
-            raise SystemExit(f"[phase1] arm {name} was not run under this registration ({st})")
-    col = lambda a, k: np.array([t[k] for t in arms[a]["trials"]], dtype=float)  # noqa: E731
-    pub = _published(repo)
-    s100c, s100i = col("a1_sugar100", "mn9_contra_hz"), col("a1_sugar100", "mn9_ipsi_hz")
     U = {}
+    s100c, s100i = col("a1_sugar100", "mn9_contra_hz"), col("a1_sugar100", "mn9_ipsi_hz")
+    two = lambda a: f"bootstrap, two samples ({len(a)} and 30 trials)"  # noqa: E731
     e, lo, hi = stats.bootstrap_diff(s100c, pub["contra"])
-    U["S1_sugar_mn9_magnitude"] = stats.scored(e, lo, hi, -BAND_CONTRA, BAND_CONTRA, n=TRIALS,
-                                               method="bootstrap, two samples of 30 trials",
+    U["S1_sugar_mn9_magnitude"] = stats.scored(e, lo, hi, -BAND_CONTRA, BAND_CONTRA, n=len(s100c), method=two(s100c),
                                                note="our contralateral MN9 mean minus the published one, Hz")
-    k = int((s100c > 0).sum())
-    U["S2_reliability"] = stats.point(k, k >= 29, method="count: trials with a contralateral MN9 spike, of 30")
+    k = int((s100c[:TRIALS] > 0).sum())
+    U["S2_reliability"] = stats.point(k, k >= 29, method="count: of the arm's first 30 trials, those with a "
+                                                         "contralateral MN9 spike; at least 29 required")
     e1, lo1, hi1 = stats.bootstrap(s100c - s100i)
     e2, lo2, hi2 = stats.bootstrap_diff(s100i, pub["ipsi"])
     U["S3_laterality"] = stats.combine([
-        stats.scored(e1, lo1, hi1, low=0.0, strict=True, n=TRIALS, note="contralateral minus ipsilateral, paired, Hz"),
-        stats.scored(e2, lo2, hi2, -BAND_IPSI, BAND_IPSI, n=TRIALS, method="bootstrap, two samples of 30 trials",
+        stats.scored(e1, lo1, hi1, low=0.0, strict=True, n=len(s100c), note="contralateral minus ipsilateral, paired, Hz"),
+        stats.scored(e2, lo2, hi2, -BAND_IPSI, BAND_IPSI, n=len(s100i), method=two(s100i),
                      note="our ipsilateral MN9 mean minus the published one, Hz")], note="laterality, and the ipsilateral magnitude")
     dose = [col(arm_of(s, 0), "mn9_contra_hz") for s in S4_RATES]
-    e, lo, hi = _boot_multi(dose, lambda xs: np.mean(xs[1]) / max(np.mean(x) for x in xs) if max(np.mean(x) for x in xs) > 0 else np.nan)
-    U["S4_calibration_reproduced"] = stats.scored(e, lo, hi, 0.7, 0.9, n=TRIALS * 4,
+
+    def ratio(xs):
+        top = max(np.mean(x) for x in xs)
+        return np.mean(xs[1]) / top if top > 0 else np.nan
+    e, lo, hi = _boot_multi(dose, ratio)
+    U["S4_calibration_reproduced"] = stats.scored(e, lo, hi, 0.7, 0.9, n=sum(len(x) for x in dose),
                                                   method="bootstrap, each of the 4 arms resampled",
                                                   note="MN9(100 Hz) / max of the MN9 means at 50-200 Hz; does not count "
-                                                       "towards A1 (the authors' own output: 0.705, UNRESOLVED)")
+                                                       "towards A1 (the reference's own output: 0.705, UNRESOLVED)")
     U["S4b_dose_curve_matches_published"] = stats.combine([
-        stats.scored(*stats.bootstrap_diff(x, pub["dose"][s]), -MARGIN, MARGIN, n=TRIALS,
-                     method="bootstrap, two samples of 30 trials", note=f"sugar {s} Hz: ours minus published, Hz")
+        stats.scored(*stats.bootstrap_diff(x, pub["dose"][s]), -MARGIN, MARGIN, n=len(x), method=two(x),
+                     note=f"sugar {s} Hz: ours minus published, Hz")
         for s, x in zip(S4_RATES, dose)], note="the published dose curve, point by point")
     bit = [col(arm_of(100, b), "mn9_contra_hz") for b in S5_RATES]
     e1, lo1, hi1 = stats.bootstrap_diff(bit[0], bit[2])
-    labels = np.repeat(S5_RATES, TRIALS)
-    e2, lo2, hi2 = _boot_multi(bit, lambda xs: -spearmanr(labels, np.concatenate(xs)).correlation)
+
+    def neg_rho(xs):
+        return -spearmanr(np.concatenate([np.full(len(x), r) for x, r in zip(xs, S5_RATES)]), np.concatenate(xs)).correlation
+    e2, lo2, hi2 = _boot_multi(bit, neg_rho)
     U["S5_bitter_suppression"] = stats.combine([
-        stats.scored(e1, lo1, hi1, low=0.0, strict=True, n=TRIALS, method="bootstrap, two samples of 30 trials",
+        stats.scored(e1, lo1, hi1, low=0.0, strict=True, n=len(bit[0]) + len(bit[2]), method="bootstrap, two samples",
                      note="suppression: MN9(sugar 100) - MN9(sugar 100 + bitter 100), Hz"),
-        stats.scored(e2, lo2, hi2, low=0.0, strict=True, n=TRIALS * 5, method="bootstrap, each of the 5 arms resampled",
+        stats.scored(e2, lo2, hi2, low=0.0, strict=True, n=sum(len(x) for x in bit),
+                     method="bootstrap, each of the 5 arms resampled",
                      note="minus the Spearman rho of per-trial MN9 against bitter rate (0-200 Hz)")],
         note="registered: both intervals below 0, scored here on their negatives (above 0)")
     U["S5b_bitter_curve_matches_published"] = stats.combine([
-        stats.scored(*stats.bootstrap_diff(col(arm_of(100, b), "mn9_contra_hz"), pub["bitter"][b]), -MARGIN, MARGIN,
-                     n=TRIALS, method="bootstrap, two samples of 30 trials", note=f"bitter {b} Hz: ours minus published, Hz")
-        for b in S5B_RATES], note="the published bitter curve, point by point")
+        stats.scored(*stats.bootstrap_diff(x, pub["bitter"][b]), -MARGIN, MARGIN, n=len(x), method=two(x),
+                     note=f"bitter {b} Hz: ours minus published, Hz")
+        for b, x in ((b, col(arm_of(100, b), "mn9_contra_hz")) for b in S5B_RATES)],
+        note="the published bitter curve, point by point")
     shuf = np.concatenate([col(f"a1_shuffle{k}", "mn9_contra_hz") for k in range(4)])
     n_act = int((shuf >= T_SHUFFLE).sum())
     U["S6_wiring_control"] = stats.point(n_act, n_act <= 5 and len(shuf) == 100,
                                          method=f"count: shuffles reaching {T_SHUFFLE} Hz, of {len(shuf)}; at most 5 allowed")
     m1 = col("m1_male", "mn9_hz")
     e, lo, hi = stats.bootstrap(m1)
-    U["M1_male_mn9"] = stats.scored(e, lo, hi, low=0.5, strict=True, n=TRIALS,
+    U["M1_male_mn9"] = stats.scored(e, lo, hi, low=0.5, strict=True, n=len(m1),
                                     note="MaleCNS MN9 rate (mean of its cells), Hz; PASS = responds")
+    return U
+
+
+def _reference_s6():
+    """The reference's own 100 shuffles, if they were run (only when A1's S6 fails)."""
+    if not REF_S6.exists():
+        return None
+    r = json.loads(REF_S6.read_text(encoding="utf-8"))
+    x = np.asarray(r["mn9_contra_hz"], dtype=float)
+    k = int((x >= T_SHUFFLE).sum())
+    return stats.point(k, k <= 5 and len(x) == 100, method=f"the reference's own code: shuffles reaching {T_SHUFFLE} Hz, "
+                                                           f"of {len(x)}; at most 5 allowed")
+
+
+def _a1(v, ref_s6):
+    """The registered A1 definition: counted checks (reference-calibrated), three outcomes."""
+    s6_fail = v["S6_wiring_control"] == "FAIL"
+    counted = [k for k in COUNTED if not (k == "S6_wiring_control" and ref_s6 is not None and ref_s6["verdict"] == "FAIL")]
+    others = [k for k in counted if k != "S6_wiring_control"]
+    if any(v[k] == "FAIL" for k in others):
+        return "FAILS", counted, False
+    if s6_fail and ref_s6 is None:
+        return "PENDING", counted, True           # the reference's own shuffles decide whether S6 counts
+    if any(v[k] == "FAIL" for k in counted):
+        return "FAILS", counted, False
+    return ("PASSES" if all(v[k] == "PASS" for k in counted) else "UNRESOLVED"), counted, False
+
+
+def score(repo):
+    from flycns.bench import provenance
+    base = {a: _load_arm(a) for a in ARMS}
+    ext_file = OUT / "extension.json"
+    present_ext = sorted(f.stem for f in (OUT / "arms").glob("*_ext.json"))
+    plan = json.loads(ext_file.read_text(encoding="utf-8")) if ext_file.exists() else None
+    needed = plan["arms"] if plan else []
+    if sorted(f"{a}_ext" for a in needed) != present_ext:
+        if not plan:
+            raise SystemExit(f"[phase1] extension arms {present_ext} exist but no extension was called for")
+        missing = sorted(set(f"{a}_ext" for a in needed) - set(present_ext))
+        extra = sorted(set(present_ext) - set(f"{a}_ext" for a in needed))
+        raise SystemExit(f"[phase1] the registered extension needs {missing or 'nothing more'}; not called for: {extra or 'none'}")
+    ext = {a: _load_arm(f"{a}_ext") for a in needed}
+
+    def col(a, k):
+        rows = base[a]["trials"] + (ext[a]["trials"] if a in ext else [])
+        return np.array([t[k] for t in rows], dtype=float)
+    pub = _published(repo)
+    U = _checks(col, pub)
     registry.verify_bands(REG, U)
     v = {k: r["verdict"] for k, r in U.items()}
-    a1_keys = ["S1_sugar_mn9_magnitude", "S2_reliability", "S3_laterality", "S4b_dose_curve_matches_published",
-               "S5_bitter_suppression", "S5b_bitter_curve_matches_published", "S6_wiring_control"]
-    a1_passes = all(v[k] == "PASS" for k in a1_keys)
+    ref_s6 = _reference_s6()
+    a1, counted, need_ref_s6 = _a1(v, ref_s6)
     m1v = v["M1_male_mn9"]
-    if not a1_passes:
+    stage = "extended" if plan else "first"
+    status = "final"
+    if stage == "first":
+        unresolved = [k for k in counted if v[k] == "UNRESOLVED"] if a1 in ("UNRESOLVED", "PENDING") else []
+        if a1 in ("PASSES", "UNRESOLVED", "PENDING") and m1v == "UNRESOLVED":
+            unresolved.append("M1_male_mn9")
+        arms_needed = set()
+        for k in unresolved:
+            parts = U[k].get("parts")
+            if parts and k in PART_FEEDS:
+                arms_needed |= {a for p_, feed in zip(parts, PART_FEEDS[k]) if p_["verdict"] == "UNRESOLVED" for a in feed}
+            else:
+                arms_needed |= set(FEEDS[k])
+        arms_needed = sorted(arms_needed)
+        if arms_needed:
+            ext_file.write_text(json.dumps(dict(arms=arms_needed, because=unresolved, first_pass=U,
+                                                provenance=provenance()), indent=2, default=float), encoding="utf-8")
+            status = "extension needed (commit extension.json, then run the p1-ext-* jobs)"
+        if need_ref_s6:
+            status = ("reference shuffles needed (push reference/<label>--s6)" if not arms_needed else
+                      status + "; and the reference shuffles (push reference/<label>--s6)")
+    elif need_ref_s6:
+        status = "reference shuffles needed (push reference/<label>--s6)"
+    if status != "final":
+        outcome = f"not decided yet: {status}"
+    elif a1 == "FAILS":
         outcome = "A1 fails: flycns differs from Shiu's model beyond the listed settings; bisect first"
+    elif a1 == "UNRESOLVED":
+        outcome = "A1 is UNRESOLVED after its one extension: the decision rule does not decide; stop for review"
     elif m1v == "PASS":
         outcome = "A1 passes and M1 responds: the male MN9 zero is caused by flycns settings (the ladder names which)"
     elif m1v == "FAIL":
-        outcome = ("A1 passes and M1 does not respond: the male zero is wiring or annotation, not the simulator"
-                   " (addendum: unless L3 loses MN9, in which case a floor-1 MaleCNS fetch comes first)")
+        outcome = ("A1 passes and M1 does not respond: the male zero is wiring or annotation, not the simulator "
+                   "(addendum: unless L3 loses MN9, in which case a floor-1 MaleCNS fetch comes first)")
     else:
-        outcome = "A1 passes; M1 is UNRESOLVED: more M1 trials are needed before the rule decides"
+        outcome = "A1 passes; M1 is UNRESOLVED after its one extension: the rule does not decide; stop for review"
+    s100c = col("a1_sugar100", "mn9_contra_hz")
     ladder = {}
     for name in LADDER:
         x = col(name, "mn9_contra_hz")
         e, lo, hi = stats.bootstrap(x)
         d, dlo, dhi = stats.bootstrap_diff(x, s100c)
         ladder[name] = dict(switched=LADDER[name], mn9_contra_hz=[e, lo, hi], minus_a1=[d, dlo, dhi],
-                            fired_trials=int((x > 0).sum()))
+                            fired_trials=int((x > 0).sum()), trials=len(x))
     reported = dict(
-        a1_sugar100=dict(mn9_contra_hz=float(s100c.mean()), mn9_ipsi_hz=float(s100i.mean()),
+        a1_sugar100=dict(mn9_contra_hz=float(s100c.mean()), mn9_ipsi_hz=float(col("a1_sugar100", "mn9_ipsi_hz").mean()),
                          published_contra_hz=float(pub["contra"].mean()), published_ipsi_hz=float(pub["ipsi"].mean()),
                          grn_mean_hz=float(np.mean(col("a1_sugar100", "grn_mean_hz"))),
                          neurons_active=float(np.mean(col("a1_sugar100", "n_active")))),
-        dose={s: [float(x.mean()), float(pub["dose"][s].mean())] for s, x in zip(S4_RATES, dose)},
+        dose={s: [float(col(arm_of(s, 0), "mn9_contra_hz").mean()), float(pub["dose"][s].mean())] for s in S4_RATES},
         bitter={b: [float(col(arm_of(100, b), "mn9_contra_hz").mean()),
-                    float(pub["bitter"][b].mean()) if b in pub["bitter"] else None] for b in sorted(set(S5_RATES) | set(S5B_RATES))},
-        shuffles_mn9_contra_hz=shuf.tolist(), m1_mn9_hz=m1.tolist(),
-        m1_unknown_transmitter=arms["m1_male"]["unknown_transmitter"], ladder=ladder,
-        wall_s={a: arms[a]["wall_s"] for a in arms})
-    report = dict(benchmark=LABEL, criteria=CRITERIA, uncertainty=U, checks={k: x == "PASS" for k, x in v.items()},
-                  a1_passes=a1_passes, outcome=outcome, reported=reported, registration=registry.stamp(REG),
-                  provenance=provenance())
+                    float(pub["bitter"][b].mean()) if b in pub["bitter"] else None]
+                for b in sorted(set(S5_RATES) | set(S5B_RATES))},
+        shuffles_mn9_contra_hz=col("a1_shuffle0", "mn9_contra_hz").tolist() + col("a1_shuffle1", "mn9_contra_hz").tolist()
+        + col("a1_shuffle2", "mn9_contra_hz").tolist() + col("a1_shuffle3", "mn9_contra_hz").tolist(),
+        reference_s6=ref_s6, m1_mn9_hz=col("m1_male", "mn9_hz").tolist(),
+        m1_unknown_transmitter=base["m1_male"]["unknown_transmitter"], ladder=ladder,
+        wall_s={a: r["wall_s"] for a, r in {**base, **{f"{a}_ext": r for a, r in ext.items()}}.items()})
+    report = dict(benchmark=LABEL, criteria=CRITERIA, stage=stage, status=status, uncertainty=U,
+                  checks={k: x == "PASS" for k, x in v.items()}, a1=a1, a1_counted=counted, m1=m1v, outcome=outcome,
+                  extension=plan and dict(arms=plan["arms"], because=plan["because"]), reported=reported,
+                  registration=registry.stamp(REG), provenance=provenance())
     (OUT / "phase1.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
     for k, x in v.items():
-        print(f"  {x:<10} {k}" + ("" if k in a1_keys or k == "M1_male_mn9" else "   (reported; not part of A1)"))
-    print(f"A1 {'PASSES' if a1_passes else 'FAILS'}; M1 {m1v}\n{outcome}")
+        print(f"  {x:<10} {k}" + ("" if k in counted or k == "M1_male_mn9" else "   (reported; does not count towards A1)"))
+    print(f"A1 {a1}; M1 {m1v} ({stage} scoring)\n{outcome}")
     for name, r in ladder.items():
         print(f"  {name:<16} MN9 {r['mn9_contra_hz'][0]:6.2f} Hz ({r['mn9_contra_hz'][1]:.2f}-{r['mn9_contra_hz'][2]:.2f}); "
               f"minus A1 {r['minus_a1'][0]:+.2f}")
+
+
+def run_extension(k, n, repo):
+    plan = OUT / "extension.json"
+    if not plan.exists():
+        raise SystemExit("[phase1] no extension was called for (results/shiu2024_phase1/extension.json is absent)")
+    mine = json.loads(plan.read_text(encoding="utf-8"))["arms"][k::n]
+    if not mine:
+        print(f"[phase1] extension share {k} of {n}: nothing to run")
+        return
+    PARTS[f"p1-ext-{k}"] = [f"{a}_ext" for a in mine]
+    run_part(f"p1-ext-{k}", repo)
 
 
 REG = registry.register(LABEL, CRITERIA, scripts=[__file__])     # exits here under FLYCNS_REGISTER_ONLY
@@ -448,14 +591,17 @@ if __name__ == "__main__":
     if mode == "parts":
         for p, arms in PARTS.items():
             print(f"{p:<14} {', '.join(arms)}")
-    elif mode in ("part", "arm", "score"):
+    elif mode in ("part", "arm", "score", "extension"):
         refuse_overrides(f"phase 1 {mode}")
-        repo = shiu_repo(sys.argv[3] if len(sys.argv) > 3 else (sys.argv[2] if mode == "score" and len(sys.argv) > 2 else None))
+        repo_arg = {"part": 3, "arm": 3, "score": 2, "extension": 4}[mode]
+        repo = shiu_repo(sys.argv[repo_arg] if len(sys.argv) > repo_arg else None)
+        (OUT / "arms").mkdir(parents=True, exist_ok=True)
         if mode == "part":
-            (OUT / "arms").mkdir(parents=True, exist_ok=True)
             run_part(sys.argv[2], repo)
         elif mode == "arm":
             run_arm(sys.argv[2], repo)
+        elif mode == "extension":
+            run_extension(int(sys.argv[2]), int(sys.argv[3]), repo)
         else:
             score(repo)
     else:
