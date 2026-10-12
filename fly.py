@@ -3,13 +3,15 @@ flycns launcher: one menu for setup, benchmarks, fits, exploration and visualiza
 
     .\fly.cmd          (runs this file in the project's environment)
 """
-import json, os, shutil, subprocess, sys, zipfile
+import json, os, shutil, subprocess, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 os.chdir(ROOT)
 sys.path.insert(0, str(ROOT))
+sys.path.insert(1, str(ROOT / "scripts"))
 from flycns.windows import console, load_token_into_env, open_path, open_text, TOKEN_FILE  # noqa: E402
+from menu_guard import benchmark_script, safe_extract  # noqa: E402
 
 console()
 load_token_into_env()        # so the fetch scripts see the token saved by setup.cmd
@@ -67,7 +69,7 @@ MENU = """
                 46  regression test: unit checks + whole toy suite in an isolated copy (~10 min)
                 49  integrity: code committed? settings overridden? data match data/MANIFEST.json?
                 50  stricter null: escape and pC1 controls on a superclass-preserving shuffle (registered)
-                51  canonical rerun: update, pin data, core suite, stricter null, commit and push (~1.5 h)
+                51  canonical rerun: update, pin data, core suite, stricter null; results to a review branch (~1.5 h)
                 28  cord parameter sensitivity (do brain values distort the nerve cord?)
                 36  flight sensitivity: does DLM's silence depend on the relay layer's parameters?
   FITS           8  GF adaptation sweep       9  SEZ regional gain sweep      10  afferent screen
@@ -112,21 +114,28 @@ while True:
     elif c == "3": status()
     elif c == "4": run("scripts/run_all.py", ask("trials", "40"))
     elif c == "5":
-        b = ask("benchmark (gf_escape / auditory / feeding)", "gf_escape")
-        run(f"benchmarks/{b}.py", ask("trials", "40"))
-        if b == "gf_escape": state["cell"] = "DNp01"; save()
-        if b == "feeding": state["cell"] = "MN9"; save()
+        b = ask("benchmark (gf_escape / auditory / feeding, or another name in benchmarks)", "gf_escape")
+        script = benchmark_script(b)
+        if script is None:
+            print(f"  {b!r} is not a benchmark: give a script name from the benchmarks folder, without a path")
+        else:
+            run(str(script.relative_to(ROOT)), ask("trials", "40"))
+            if script.stem == "gf_escape": state["cell"] = "DNp01"; save()
+            if script.stem == "feeding": state["cell"] = "MN9"; save()
     elif c == "6":
         run("benchmarks/summarize.py")
     elif c == "7":
-        print("  twelve suites, several hours; keeps Windows awake, commits and pushes each one as it finishes")
+        print("  the robustness suites, several hours; keeps Windows awake; each is committed to a new review branch,\n"
+              "  which is pushed (your own branch is not), and you are switched back at the end")
         if ask("start now? (y/n)", "n").lower() == "y": run("scripts/overnight.py")
     elif c == "8": run("benchmarks/fit_gf_adapt.py", ask("trials (40 or more)", "40"))
     elif c == "9": run("benchmarks/fit_regional.py", ask("trials", "6"))
     elif c == "10":
         run("benchmarks/screen_afferents.py", ask("trials", "3"), "data", ask("rate Hz", "50"), ask("w_scale", "0.4"))
     elif c == "11":
-        run("viz/explore.py", "--sez", ask("SEZ gain", "2.0"))
+        print("  SEZ gain: 1.0 is the declared model. The regional gain of 2.0 is retired (an artefact of naming the\n"
+              "  SEZ by cell type, 8 September 2026); other values are for exploration only")
+        run("viz/explore.py", "--sez", ask("SEZ gain", "1.0"))
     elif c == "12":
         run("viz/cascade_ascii.py", *([] if ask("layout: landscape / portrait", "landscape") == "landscape" else ["--portrait"]))
     elif c == "13":
@@ -162,7 +171,12 @@ while True:
                 if (dl / n).exists() and not (dest / n).exists():
                     shutil.move(str(dl / n), str(dest / n)); print(f"  moved {n}")
             for z in ("template_brain.zip", "datafiles.zip"):
-                print(f"  unpacking {z} ..."); zipfile.ZipFile(dest / z).extractall(dest)
+                print(f"  unpacking {z} ...")
+                n, refused = safe_extract(dest / z, dest)
+                for name, why in refused[:10]:
+                    print(f"    refused {name!r}: {why}")
+                if refused:
+                    print(f"    {len(refused)} entr{'y' if len(refused) == 1 else 'ies'} refused; {n} unpacked")
             print(f"  ready in {dest}. Next: option 22 extracts the loom tuning.")
     elif c == "22":
         if subprocess.run([sys.executable, "-m", "pip", "show", "visanalysis"], capture_output=True).returncode != 0:

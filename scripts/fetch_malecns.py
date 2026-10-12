@@ -98,23 +98,21 @@ for i in range(0, len(ids), BATCH):
 
 edges = pd.concat(chunks, ignore_index=True)
 
-# ---------------------------------------------------------------- sign edges
-# Fly rule: acetylcholine excitatory; GABA and glutamate inhibitory.
-# Prefer consensusNt, fall back to predictedNt, else unknown.
+# ---------------------------------------------------------------- transmitter of each edge
+# Each edge carries its sender's transmitter: consensusNt, else predictedNt, else unknown. No sign is
+# written: there is ONE transmitter-to-sign table, flycns/graph.py SIGN_MAP, applied by load_graph
+# (histamine included). Until generation 4 (October 2026) the fetch also wrote a legacy `sign` column
+# from its own three-entry table, which nothing read; it was dropped at the generation-4 data re-pin.
+from flycns.graph import SIGN_MAP  # noqa: E402
 nt = neurons.set_index("bodyId")
 nt_col = nt["consensusNt"].fillna(nt["predictedNt"]).str.lower()
-# LEGACY COLUMN. The model never reads this `sign`: flycns/graph.py load_graph re-derives every sign
-# from `nt` with SIGN_MAP (which also signs histamine). Kept unchanged only so a fresh fetch matches the
-# pinned data/MANIFEST.json byte for byte; drop it at the next deliberate data re-pin. Anything that
-# needs signs must go through load_graph (tests/unit.py checks no file carries its own sign table).
-sign_map = {"acetylcholine": 1, "gaba": -1, "glutamate": -1}
 edges["nt"] = edges["pre"].map(nt_col)
-edges["sign"] = edges["nt"].map(sign_map)
 
 n_total = len(edges)
-n_unknown = edges["sign"].isna().sum()
+_sign = edges["nt"].map(SIGN_MAP)
+n_unknown = (_sign.isna() | (_sign == 0)).sum()
 print(f"\nedge pairs total:   {n_total:,}")
-print(f"unknown NT sign:    {n_unknown:,} ({100*n_unknown/n_total:.1f}%)")
+print(f"unsigned (unknown or modulatory transmitter, dropped by load_graph): {n_unknown:,} ({100*n_unknown/n_total:.1f}%)")
 print("NT breakdown:\n", edges["nt"].value_counts(dropna=False))
 
 edges.to_parquet(OUT / "edges.parquet", index=False)

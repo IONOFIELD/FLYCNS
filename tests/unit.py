@@ -129,7 +129,8 @@ def t_targeted_flip_needs_its_table(tmp):
 def t_signs_come_from_one_map(tmp):
     """Every transmitter label, mixed case and missing labels, signed only by graph.SIGN_MAP; any sign
     column already in the file is ignored; dropped edges and silent senders are counted; and no other
-    file carries its own transmitter-to-sign table."""
+    file (flycns, benchmarks, fit, viz, scripts including scripts/legacy, fly.py) carries its own
+    transmitter-to-sign table or writes a sign column into edges.parquet."""
     import re
     from flycns import graph, integrity
     d = tmp / "sg"; d.mkdir()
@@ -147,10 +148,14 @@ def t_signs_come_from_one_map(tmp):
              and set(zip(g.pre, g.post)) == set(zip(kept.pre, kept.post)))
     counted = integrity.LOADED["n_dropped_unsigned_edges"] == len(e) - len(kept)
     stray = []
-    for f in list((ROOT / "flycns").glob("*.py")) + list((ROOT / "benchmarks").glob("*.py")) + \
-            list((ROOT / "fit").glob("*.py")) + list((ROOT / "viz").glob("*.py")):
-        if f.name != "graph.py" and re.search(r'["\']glutamate["\']\s*:\s*-1', f.read_text(encoding="utf-8")):
-            stray.append(str(f.relative_to(ROOT)))
+    files = [ROOT / "fly.py"] + [f for d in ("flycns", "benchmarks", "fit", "viz", "scripts")
+                                 for f in (ROOT / d).rglob("*.py") if "__pycache__" not in f.parts]
+    for f in files:
+        text = f.read_text(encoding="utf-8")
+        if f.name != "graph.py" and re.search(r'["\']glutamate["\']\s*:\s*-1', text):
+            stray.append(str(f.relative_to(ROOT)))          # its own transmitter-to-sign table
+        if re.search(r'to_parquet\([^)]*edges\.parquet', text) and re.search(r'\[["\']sign["\']\]\s*=', text):
+            stray.append(str(f.relative_to(ROOT)) + " (writes a sign column into edges.parquet)")
     ok = right and counted and not stray
     return ok, (f"{len(g)} of {len(e)} edges signed by SIGN_MAP (7 labels, mixed case, missing); stale column "
                 f"ignored; {len(e) - len(kept)} dropped and counted" if ok else
@@ -1008,6 +1013,119 @@ def t_registry_generations(tmp):
                 f"{NAME}; a deleted {NAME} is caught" if ok else
                 f"rec {rec.get('version')} {sup}; scored {scored.stdout[-200:]!r} {scored.stderr[-200:]!r}; hist {hist.stdout!r}")
 
+
+def _scripts_module(name):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(f"flycns_scripts_{name}", ROOT / "scripts" / f"{name}.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def t_review_branch(tmp):
+    """Menu 51 and the battery commit to a NEW review branch and push only that branch: the working branch
+    is never pushed and the checkout returns to it; a missing remote is caught before any run."""
+    if not shutil.which("git"):
+        return True, "git not installed; not exercised"
+    rb = _scripts_module("review_branch")
+    g = ["git", "-c", "user.name=t", "-c", "user.email=t@t", "-c", "commit.gpgsign=false"]
+    remote, work, lone = tmp / "rb_remote.git", tmp / "rb_work", tmp / "rb_lone"
+    subprocess.run(["git", "init", "-q", "--bare", str(remote)], check=True)
+    subprocess.run(["git", "init", "-q", "-b", "main", str(work)], check=True)
+    subprocess.run(["git", "init", "-q", "-b", "main", str(lone)], check=True)
+    (work / "a.txt").write_text("a", encoding="utf-8")
+    subprocess.run([*g, "add", "-A"], cwd=work, check=True)
+    subprocess.run([*g, "commit", "-qm", "base"], cwd=work, check=True)
+    subprocess.run(["git", "remote", "add", "origin", str(remote)], cwd=work, check=True)
+    subprocess.run(["git", "push", "-q", "-u", "origin", "main"], cwd=work, check=True)
+    here = os.getcwd()
+    try:
+        os.chdir(lone)
+        _, no_remote = rb.confirm_remote()
+        os.chdir(work)
+        url, why = rb.confirm_remote()
+        branch, back = rb.open_review_branch("canonical rerun")
+        (work / "results.txt").write_text("r", encoding="utf-8")
+        subprocess.run([*g, "add", "-A"], cwd=work, check=True)
+        subprocess.run([*g, "commit", "-qm", "canonical rerun: results"], cwd=work, check=True)
+        pushed = rb.push_review(branch)
+        returned = rb.close_review_branch(back) and rb.current_branch() == "main"
+        try:
+            rb.push_review("main")
+            refused = False
+        except ValueError:
+            refused = True
+        subprocess.run(["git", "switch", "-q", branch], cwd=work, check=True)
+        stay, none = rb.open_review_branch("again")         # already on a review branch: stays there
+        subprocess.run(["git", "switch", "-q", "main"], cwd=work, check=True)
+    finally:
+        os.chdir(here)
+    heads = subprocess.run(["git", "for-each-ref", "--format=%(refname:short) %(subject)", "refs/heads/"], cwd=remote,
+                           capture_output=True, text=True).stdout.splitlines()
+    main_log = subprocess.run(["git", "log", "--format=%s", "main"], cwd=remote, capture_output=True, text=True).stdout.split("\n")
+    ok = (bool(no_remote) and why is None and url and branch.startswith("review/canonical-rerun-") and back == "main"
+          and pushed and returned and refused and stay == branch and none is None
+          and any(h.startswith(branch + " canonical rerun") for h in heads) and "canonical rerun: results" not in main_log
+          and not (work / "results.txt").exists())
+    return ok, (f"results pushed to {branch} only; main untouched on the remote and checked out again; pushing "
+                f"main refused; no remote caught first" if ok else
+                f"no_remote {no_remote!r} why {why!r} branch {branch} back {back} pushed {pushed} returned {returned} "
+                f"refused {refused} stay {stay} heads {heads} main {main_log}")
+
+
+def t_menu_guards(tmp):
+    """Menu option 5 runs only a script in benchmarks/ named without a path; menu option 21 unpacks a zip
+    only inside its destination (absolute paths, drive letters, '..' and links refused)."""
+    import zipfile
+    mg = _scripts_module("menu_guard")
+    names_ok = (mg.benchmark_script("gf_escape") is not None and mg.benchmark_script("gf_escape.py") is not None
+                and all(mg.benchmark_script(x) is None for x in
+                        ("../scripts/setup", "benchmarks/gf_escape", "..\\fly", "no_such_benchmark", "", "gf escape",
+                         "/etc/passwd", "C:\\x")))
+    z = tmp / "mg.zip"
+    with zipfile.ZipFile(z, "w") as f:
+        f.writestr("ok/inside.txt", "fine")
+        f.writestr(zipfile.ZipInfo("../evil.txt"), "x")
+        f.writestr(zipfile.ZipInfo("deep/../../evil2.txt"), "x")
+        f.writestr(zipfile.ZipInfo("/abs.txt"), "x")
+        f.writestr(zipfile.ZipInfo("C:/drive.txt"), "x")
+        link = zipfile.ZipInfo("link")
+        link.external_attr = (0o120777 << 16)
+        f.writestr(link, "/etc/passwd")
+    dest = tmp / "mg_out"
+    n, refused = mg.safe_extract(z, dest)
+    outside = [p for p in (tmp / "evil.txt", tmp / "evil2.txt") if p.exists()]
+    files = sorted(p.relative_to(dest).as_posix() for p in dest.rglob("*") if p.is_file())
+    ok = names_ok and n == 1 and files == ["ok/inside.txt"] and len(refused) == 5 and not outside
+    return ok, ("benchmark names only from benchmarks/; 1 entry unpacked, 5 unsafe entries refused" if ok else
+                f"names {names_ok}, extracted {n} {files}, refused {refused}, outside {outside}")
+
+
+def t_token_private(tmp):
+    """The saved neuPrint token is readable by the current user only (mode 0600 on Linux and macOS; on
+    Windows no inherited access and only the user granted)."""
+    from flycns import windows as W
+    f = W.save_token("x" * 40 + " \n", path=tmp / "tok")
+    if os.name != "nt":
+        mode = f.stat().st_mode & 0o777
+        ok = mode == 0o600 and f.read_text(encoding="utf-8") == "x" * 40
+        return ok, f"token file mode {oct(mode)}" + ("" if ok else " (want 0o600)")
+    out = subprocess.run(["icacls", str(f)], capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
+    user = os.environ.get("USERNAME", "")
+    others = [w for w in ("Everyone", "BUILTIN\\Users", "Authenticated Users", "(I)") if w in out]
+    ok = bool(user) and user.lower() in out.lower() and not others
+    return ok, ("only the current user has access; nothing inherited" if ok else f"icacls: {out.strip()[:300]}")
+
+
+def t_neutral_wording():
+    """User-facing messages ask for help neutrally; none tells the user to send output to a named assistant."""
+    bad = []
+    for f in [ROOT / "fly.py", *ROOT.glob("*.cmd")] + [p for d in ("scripts", "flycns", "benchmarks", "fit", "viz")
+                                                     for p in (ROOT / d).rglob("*.py") if "__pycache__" not in p.parts]:
+        if re.search(r"send claude", f.read_text(encoding="utf-8", errors="replace"), re.I):
+            bad.append(str(f.relative_to(ROOT)))
+    return not bad, "no message names an assistant" if not bad else f"found in {bad}"
+
 def run_all():
     out = []
     tmp = Path(tempfile.mkdtemp(prefix="flycns_unit_"))
@@ -1051,7 +1169,11 @@ def run_all():
                          ("JON -> GF contact modes", t_jon_contact_modes),
                          ("nerve-cord glutamate option", lambda: t_vnc_glutamate_option(tmp)),
                          ("registration freezes the model", lambda: t_registry_freezes_model(tmp)),
-                         ("a refrozen model registers a new generation", lambda: t_registry_generations(tmp))]:
+                         ("a refrozen model registers a new generation", lambda: t_registry_generations(tmp)),
+                         ("results go to a review branch only", lambda: t_review_branch(tmp)),
+                         ("menu input guards", lambda: t_menu_guards(tmp)),
+                         ("token file is private", lambda: t_token_private(tmp)),
+                         ("messages use neutral wording", t_neutral_wording)]:
             try:
                 ok, msg = fn()
             except (Exception, SystemExit) as ex:  # a crashing or exiting check is a failing check

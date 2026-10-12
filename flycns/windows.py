@@ -7,6 +7,7 @@ Windows platform layer. flycns runs on Windows; this module is the one place tha
                        same equations). FLYCNS_CODEGEN=cython|numpy forces one.
   neuprint_token()     the neuPrint token from NEUPRINT_TOKEN or %USERPROFILE%\\.neuprint_token,
                        read robustly (a file written by PowerShell's `echo > file` is UTF-16)
+  save_token()         writes that file readable by the current user only (restrict_token_file)
   keep_awake()         stop Windows sleeping during a long run (released when the process exits)
   open_path(p)         open a file or URL with its default Windows app
   unencoded_text_io()  finds text file I/O without an explicit encoding (used by the tests: on
@@ -86,9 +87,42 @@ def neuprint_token():
     return ""
 
 
-def save_token(token):
-    TOKEN_FILE.write_text("".join(token.split()), encoding="utf-8")
-    return TOKEN_FILE
+def save_token(token, path=None):
+    """Write the token readable by the current user only: created with mode 0600 on Linux and macOS; on
+    Windows, inherited permissions are removed and only the current user is granted access (icacls)."""
+    path = Path(path or TOKEN_FILE)
+    data = "".join(token.split())
+    if os.name == "nt":
+        path.write_text(data, encoding="utf-8")
+    else:
+        fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(data)
+    ok, why = restrict_token_file(path)
+    if not ok:
+        print(f"[token] WARNING: could not restrict {path} to your user only: {why}", file=sys.stderr)
+    return path
+
+
+def restrict_token_file(path=None):
+    """Make the token file readable by the current user only. Returns (ok, why). Safe to repeat."""
+    path = Path(path or TOKEN_FILE)
+    if not path.exists():
+        return True, "no token file"
+    if os.name != "nt":
+        try:
+            os.chmod(path, 0o600)
+            return (path.stat().st_mode & 0o077) == 0, "mode is not 0600"
+        except OSError as e:
+            return False, str(e)
+    import subprocess
+    user = os.environ.get("USERNAME", "")
+    if not user:
+        return False, "USERNAME is not set"
+    who = f"{os.environ['USERDOMAIN']}\\{user}" if os.environ.get("USERDOMAIN") else user
+    r = subprocess.run(["icacls", str(path), "/inheritance:r", "/grant:r", f"{who}:F"],
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    return r.returncode == 0, (r.stdout + r.stderr).strip()[:200]
 
 
 def load_token_into_env():

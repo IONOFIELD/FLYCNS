@@ -5,18 +5,21 @@ the neurons for the first cascade test (photoreceptors -> DNg13).
 Run:  python scripts/legacy/inspect_graph.py
 """
 
+import sys
+from pathlib import Path
+
 import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from flycns.graph import SIGN_MAP  # noqa: E402  (the one transmitter-to-sign table)
 
 neurons = pd.read_parquet("data/neurons.parquet")
 edges = pd.read_parquet("data/edges.parquet")
 
-# ------------------------------------------------ fix histamine sign
-# Histamine is inhibitory in fly; modulatory amines get 0 for now.
-sign_map = {"acetylcholine": 1, "gaba": -1, "glutamate": -1, "histamine": -1,
-            "dopamine": 0, "octopamine": 0, "serotonin": 0}
-edges["sign"] = edges["nt"].map(sign_map)
+# Signs come from flycns/graph.py SIGN_MAP, in memory only. (This script used to carry its own table and
+# write the result back to data/edges.parquet, which would have altered the pinned input data.)
+edges["sign"] = edges["nt"].str.lower().map(SIGN_MAP)
 print("sign coverage:", edges["sign"].notna().mean().round(3))
-edges.to_parquet("data/edges.parquet", index=False)
 
 # ------------------------------------------------ basic graph stats
 print("\nsuperclass counts:\n", neurons["superclass"].value_counts(dropna=False))

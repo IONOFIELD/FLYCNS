@@ -151,10 +151,17 @@ jobs:
                     Select-Object -Last 12 | ForEach-Object { $_.Line }) -join "`n"
             Fail "menu 51 did not finish" ($(if ($why) { $why } else { $out }))
           }
+          # results go to a NEW review branch; the working branch (ci-main) is never pushed
           $after = [int](Must git -C "$w\remote.git" rev-list --count HEAD).Trim()
-          $last = (Must git -C "$w\remote.git" log -1 --format=%s).Trim()
-          Write-Output "remote commits: $before -> $after; last: $last"
-          if ($after -le $before -or -not $last.StartsWith("canonical rerun")) { Fail "menu 51 did not push its results" $out }
+          $review = @((Must git -C "$w\remote.git" for-each-ref --format="%(refname:short)" refs/heads/review/) -split "`n" |
+                      Where-Object { $_.Trim() })
+          Write-Output "remote ci-main commits: $before -> $after; review branches: $($review -join ', ')"
+          if ($after -ne $before) { Fail "menu 51 pushed to the working branch" $out }
+          if ($review.Count -ne 1) { Fail "menu 51 did not push exactly one review branch" $out }
+          $last = (Must git -C "$w\remote.git" log -1 --format=%s $review[0].Trim()).Trim()
+          if (-not $last.StartsWith("canonical rerun")) { Fail "the review branch does not carry the results ($last)" $out }
+          $here = (Must git symbolic-ref --short HEAD).Trim()
+          if ($here -ne "ci-main") { Fail "menu 51 left the checkout on $here, not ci-main" $out }
           $dirty = (Must git status --porcelain --untracked-files=no).Trim()
           if ($dirty) { Fail "menu 51 left uncommitted changes" $dirty }
-          Write-Host "::notice title=menu 51::update, pinned data, core suite, stricter null, commit and push all verified ($before -> $after commits)"
+          Write-Host "::notice title=menu 51::update, pinned data, core suite, stricter null, commit to review branch $($review[0].Trim()) and push all verified; ci-main untouched ($before commits)"

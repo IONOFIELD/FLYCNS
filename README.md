@@ -122,6 +122,27 @@ Most independent checks fail or are unresolved (`results/SUITE.md`, RESULTS.md).
 - **Faster runs:** setup offers to install the free Microsoft C++ Build Tools. Without them everything still works, about 4 times slower, with identical results.
 - **Updating:** in the `flycns` folder, run `git pull`, then `.\setup.cmd`.
 
+## Install (Linux and macOS)
+
+The Windows files (`setup.cmd`, `fly.cmd`) are thin launchers; the work is done by `scripts/setup.py` and
+`fly.py`, which run on Linux and macOS too. **Tested on Linux** (Python 3.13, 12 October 2026: a fresh
+clone passes `python3 scripts/setup.py --check`, the whole toy regression, 87 of 87). **Not yet tested on
+macOS.** You need git, Python 3.10 to 3.13, and for the faster compiled engine a C++ compiler (`g++` on
+Linux, e.g. `sudo apt install g++`; `xcode-select --install` on macOS). Without one, the pure-Python
+engine runs with identical results, about 4 times slower.
+
+    git clone https://github.com/IONOFIELD/FLYCNS.git flycns
+    cd flycns
+    python3 scripts/setup.py --check      # environment and self-test on the practice network, no account
+    python3 scripts/setup.py              # asks for the neuPrint token once, then downloads the data
+    .venv/bin/python fly.py               # the menu
+
+- The token is saved to `~/.neuprint_token`, readable by your user only (mode 0600); or set the
+  `NEUPRINT_TOKEN` environment variable instead.
+- **Updating:** `git pull`, then `python3 scripts/setup.py`.
+- Keeping the computer awake during long runs is Windows-only; on Linux and macOS use your system's own
+  setting (for example `caffeinate` on macOS) for menu options 7 and 51.
+
 ---
 
 ## More detail
@@ -131,7 +152,7 @@ Most independent checks fail or are unresolved (`results/SUITE.md`, RESULTS.md).
 - Each circuit is tested against numbers from published recordings, with pass/fail criteria, null models (the same neurons with shuffled wiring) and ablations.
 - Many tests are **pre-registered**: their criteria are committed to git before they run, so a result cannot be tuned after the fact.
 - Every check is labelled with **what it is evidence of**. A check that a parameter was tuned to pass is marked *calibrated* and is not counted as a test of the model ([`docs/CALIBRATION.md`](docs/CALIBRATION.md)).
-- **For the maintainer:** after an update, menu option **51** does four things. It updates the code, pins the data fingerprint, reruns the core suite and the stricter null, then commits and pushes the results. It keeps Windows awake while it runs, and it is safe to run again after an interruption.
+- **For the maintainer:** after an update, menu option **51** does four things. It updates the code, pins the data fingerprint, reruns the core suite and the stricter null, then commits the results to a new `review/...` branch and pushes that branch only; your own branch is never pushed, and the results reach `main` through a pull request. It checks the git remote before it starts, keeps Windows awake while it runs, and is safe to run again after an interruption. The robustness battery (menu 7) does the same.
 - **Without your own computer:** push any commit to a branch named `rerun/<anything>` and GitHub's Windows machines run every real-data rerun at once: menu 51, the battery, the A2 and flight tests ([`.github/workflows/rerun.yml`](.github/workflows/rerun.yml)). It needs your neuPrint token saved once as the repository secret `NEUPRINT_TOKEN`. Add `--name+name` to the branch name to run only some, for example `rerun/2026-11-01--core+a2`. Each run fetches the connectome once (about 6 minutes) and refuses data that differ from `data/MANIFEST.json`. Each run's results come back on its own `rerun-out/...` branch for review; nothing reaches main unreviewed.
 
 ### Where this sits (2026)

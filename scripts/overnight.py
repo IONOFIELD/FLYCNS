@@ -4,7 +4,8 @@ scale, connection-size threshold, and a stricter (superclass-preserving) null. E
 three-benchmark core suite (about 25 min); twelve runs in all. Keeps Windows awake while it runs.
 
 Results go to results\\overnight\\<tag>\\ : SUITE.md plus one <benchmark>_report.json per benchmark, and
-each tag is committed and pushed as it finishes. The CANONICAL results (results\\<benchmark>\\,
+each tag is committed as it finishes to a NEW review branch, which is pushed (scripts/review_branch.py);
+your own branch is never pushed, and you are switched back to it at the end. The CANONICAL results (results\\<benchmark>\\,
 results\\SUITE.md) are snapshotted first and restored at the end, even after an error or Ctrl+C, so a
 perturbed run can never be left standing as the headline result.
 
@@ -22,6 +23,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from flycns.integrity import DEFAULTS, preserved  # noqa: E402
 from flycns.windows import console, keep_awake  # noqa: E402
+sys.path.insert(0, str(ROOT / "scripts"))
+from review_branch import (close_review_branch, confirm_remote, open_review_branch,  # noqa: E402
+                           pull_request_url, push_review)
 
 console()
 keep_awake()
@@ -80,6 +84,24 @@ def main():
     for args in (["fit/audit_stimuli.py", "data"], ["-m", "flycns.integrity", "verify", "data"]):
         if subprocess.run([PY, *args]).returncode != 0:
             sys.exit("pre-flight check failed (see above); battery not started")
+    url, why = confirm_remote()          # where the results go, checked before hours of simulation
+    if why:
+        sys.exit(f"{why}; battery not started")
+    branch, back = open_review_branch("battery")
+    print(f"results go to the review branch {branch} on {url}; your branch is not pushed", flush=True)
+    try:
+        incomplete = _battery(only, branch)
+    finally:
+        if not close_review_branch(back):
+            print(f"NOTE: could not switch back to {back}; you are on {branch}")
+    pr = pull_request_url(branch)
+    if pr and back:
+        print(f"\nreview and merge the results: {pr}")
+    if incomplete:
+        sys.exit(f"incomplete runs: {', '.join(incomplete)} (see their logs in results\\overnight)")
+
+
+def _battery(only, branch):
     incomplete = []
     with preserved(*(RES / b for b in BENCHES), RES / "SUITE.md"):   # canonical results come back exactly
         for tag, seed, flip, wscale, extra in (r for r in RUNS if not only or r[0] in only):
@@ -113,15 +135,14 @@ def main():
             git("add", "-A", "--", "results/overnight")
             if git("commit", "-qm", f"overnight: {tag} {line}" + (" INCOMPLETE" if failed else ""),
                    "--", "results/overnight").returncode == 0:
-                if git("push", "-q").returncode != 0:
-                    print("  (push failed; the commit is kept locally, run git push later)")
+                if not push_review(branch):
+                    print(f"  (push failed; the commit is kept on {branch}, run: git push -u origin {branch})")
             print(f"=== {time.strftime('%H:%M')} done  {tag}", flush=True)
     print("\nSUMMARY")
     for d in sorted((RES / "overnight").iterdir()):
         if (d / "SUITE.md").exists():
             print(f"{d.name:<20} {checks_line(d / 'SUITE.md')}")
-    if incomplete:
-        sys.exit(f"incomplete runs: {', '.join(incomplete)} (see their logs in results\\overnight)")
+    return incomplete
 
 
 if __name__ == "__main__":

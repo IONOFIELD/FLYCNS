@@ -14,7 +14,7 @@ variables are stamped into each report.
 
 **Source.** Janelia FlyEM MaleCNS v1.0 (neuprint dataset `male-cns:v1.0`). Two tables:
 - **neurons:** `bodyId`, `type`, `superclass`, `somaSide`, and annotations.
-- **edges:** `pre`, `post`, `weight` = synapse count, `nt` = the transmitter of the presynaptic neuron: its `consensusNt` where the dataset gives one, otherwise its `predictedNt` (the classifier's call), otherwise unknown. The table also carries a legacy `sign` column that the model never reads (signs come from `SIGN_MAP` below).
+- **edges:** `pre`, `post`, `weight` = synapse count, `nt` = the transmitter of the presynaptic neuron: its `consensusNt` where the dataset gives one, otherwise its `predictedNt` (the classifier's call), otherwise unknown. The table carries no sign: every sign comes from the one table `SIGN_MAP` below, applied when the graph is loaded. (Until generation 4 the fetch also wrote a legacy `sign` column from its own three-entry table, without histamine, which the model never read; it was dropped when the data were re-pinned.)
 
 Their content is pinned by `data/MANIFEST.json`.
 
