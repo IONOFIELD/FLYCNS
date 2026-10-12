@@ -1,0 +1,8 @@
+[fingerprint] a2-robustness: benchmarks/a2_robustness.py 2
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! a2_robustness: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! the criteria in the code differ from the registered ones
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test.
+[fingerprint] a2-robustness: nothing was fingerprinted
+[fingerprint] a2-robustness: 0 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\a2-robustness.jsonl; exited non-zero: ['benchmarks/a2_robustness.py 2']
