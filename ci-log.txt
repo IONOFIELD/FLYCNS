@@ -1,0 +1,25 @@
+criteria registered: e4e5524
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+blind drive: 1,575 of 15,757 eligible sensory neurons (17,937 sensory in all) at 20 Hz
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.15  CNS   0.0014 Hz  active  0.01%  quiet (95s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.2   CNS   0.0024 Hz  active  0.02%  quiet (190s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.25  CNS   0.0043 Hz  active  0.04%  quiet (212s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.3   CNS   0.0068 Hz  active  0.06%  quiet (235s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.35  CNS   0.0103 Hz  active  0.10%  quiet (257s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.4   CNS   0.0152 Hz  active  0.16%  quiet (284s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.5   CNS   2.5112 Hz  active  3.73%  NOT quiet (308s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.6   CNS   3.1557 Hz  active  4.43%  NOT quiet (331s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.75  CNS   4.2591 Hz  active  6.09%  NOT quiet (356s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 1.0   CNS   7.0926 Hz  active  9.80%  NOT quiet (384s)
+
+selected w_scale: 0.4 (declared 0.4); agrees
