@@ -1,0 +1,65 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+DNp31: 2 cells
+       instance somaSide    consensusNt         superclass
+bodyId                                                    
+10264   DNp31_R        R  acetylcholine  descending_neuron
+10249   DNp31_L        L  acetylcholine  descending_neuron
+
+input balance: 22,989 excitatory vs 8,421 inhibitory (net +14,568)
+
+strongest inputs (signed):
+ty        sc               
+LLPC2     visual_projection    2501
+LPLC4     visual_projection    1988
+AN07B004  ascending_neuron      901
+LC36      visual_projection     643
+AOTU023   cb_intrinsic          636
+GNG544    cb_intrinsic          599
+PS042     cb_intrinsic          591
+LPC2      visual_projection     590
+vCal3     visual_projection     576
+PS238     cb_intrinsic          540
+PVLP144   cb_intrinsic          503
+PS058     cb_intrinsic          406
+
+two-hop weighted input by modality:
+  auditory (JO)                         5,686   (114 afferents)
+  wind/gravity (JO)                   642,257   (475 afferents)
+  loom (LC types)                     306,541   (2526 afferents)
+  gustatory                                 0   (310 afferents)
+  leg/body bristle                        265   (3359 afferents)
+  chordotonal / campaniform         1,070,139   (851 afferents)
+  -> dominant modality: chordotonal / campaniform
+
+strongest outputs (signed):
+ty          sc           
+DLMn c-f    vnc_motor        1128
+MNwm36      vnc_motor         722
+IN06B066    vnc_intrinsic     720
+ps1 MN      vnc_motor         593
+DVMn 1a-c   vnc_motor         461
+IN19B043    vnc_intrinsic     332
+DVMn 3a, b  vnc_motor         320
+IN06B013    vnc_intrinsic     301
+DVMn 2a, b  vnc_motor         296
+IN11B014    vnc_intrinsic     288
+IN19B056    vnc_intrinsic     262
+IN06B042    vnc_intrinsic     255
+
+onto wing motor neurons, 3,019 synapses total:
+            signed  synapses
+ty                          
+DLMn c-f      1128      1128
+ps1 MN         593       593
+DVMn 1a-c      461       461
+DVMn 3a, b     320       320
+DVMn 2a, b     296       296
+DLMn a, b      156       156
+b2 MN           48        48
+hg4 MN          11        11
+b1 MN            6         6
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+
+under measured loom drive (6 trials): DNp31 0 spikes, wing motor pool 34 spikes
+
+wrote results\dnp31\trace.json
