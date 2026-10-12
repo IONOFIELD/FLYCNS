@@ -1,0 +1,104 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+wing campaniform (ADMN) 218, haltere campaniform (DMetaN) 195
+wing motor neurons: 52 across 19 types
+DNg02 subtypes: ['DNg02_a', 'DNg02_b', 'DNg02_c', 'DNg02_d', 'DNg02_e', 'DNg02_f', 'DNg02_g'] (29 cells)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[open_load_0.125] load 0.12 DNg02     0 Hz | DVMn 1a-c   2.00 +/-  2.66 (range 0.0-6.7) | DLMn c-f  0.00 | steering   14.3 | b1   52.6 | DNp31  0.0 | CNS 0.077 | 5 draws, 320s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[open_load_0.25] load 0.25 DNg02     0 Hz | DVMn 1a-c  18.27 +/- 15.88 (range 0.0-41.0) | DLMn c-f  0.00 | steering   27.0 | b1  125.2 | DNp31  0.0 | CNS 0.150 | 5 draws, 218s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[open_load_0.3] load 0.30 DNg02     0 Hz | DVMn 1a-c  19.29 +/- 15.44 (range 0.0-38.4) | DLMn c-f  0.00 | steering   35.0 | b1  167.7 | DNp31  0.0 | CNS 0.233 | 5 draws, 215s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[open_load_0.35] load 0.35 DNg02     0 Hz | DVMn 1a-c  20.71 +/- 20.04 (range 0.5-50.6) | DLMn c-f  0.00 | steering   37.2 | b1  141.5 | DNp31  1.9 | CNS 0.217 | 5 draws, 215s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[open_load_0.4] load 0.40 DNg02     0 Hz | DVMn 1a-c  45.82 +/- 12.89 (range 31.0-65.3) | DLMn c-f  0.00 | steering   35.7 | b1  156.5 | DNp31  3.2 | CNS 0.239 | 5 draws, 225s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[open_load_0.5] load 0.50 DNg02     0 Hz | DVMn 1a-c  55.68 +/- 24.46 (range 13.8-86.4) | DLMn c-f  0.00 | steering   44.1 | b1  199.3 | DNp31  0.0 | CNS 0.313 | 5 draws, 226s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[open_load_1.0] load 1.00 DNg02     0 Hz | DVMn 1a-c 110.44 +/-  0.28 (range 110.0-110.8) | DLMn c-f  0.01 | steering   73.7 | b1  291.7 | DNp31  0.0 | CNS 0.616 | 5 draws, 227s
+
+anchor load by rule (smallest with DVMn 1a-c in 2-12 Hz): 0.125
+[rewired_null_load_0.125] load 0.12 DNg02     0 Hz | DVMn 1a-c   0.00 +/-  0.00 (range 0.0-0.0) | DLMn c-f  0.00 | steering    0.0 | b1    0.0 | DNp31  0.0 | CNS 0.057 | 5 draws, 217s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[closed_from_0.125] load 0.12 DNg02     0 Hz (0 src, 0 syn) | power MN  34.30 Hz | steering MN  69.96 Hz | b1  277.2 Hz (VS 0.01) | DNp31   0.0 Hz | leg MN 0.90 Hz | CNS 0.584 Hz | 60s
+DLM gating at anchor: excitatory relays 5/92 active at 1.2 Hz (first 225.0) | inhibitory relays 8/85 active at 3.3 Hz (first 226.79999999999998) | DLMn c-f 0.00 Hz
+
+STAGE 2: proprioceptive loop at anchor + DNg02 descending command
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[anchor_plus_DNg02_10Hz] load 0.12 DNg02    10 Hz | DVMn 1a-c   3.23 +/-  3.84 (range 0.0-9.8) | DLMn c-f  0.00 | steering   14.6 | b1   51.4 | DNp31  0.0 | CNS 0.077 | 5 draws, 279s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[anchor_plus_DNg02_25Hz] load 0.12 DNg02    25 Hz | DVMn 1a-c   6.30 +/-  5.50 (range 0.1-13.9) | DLMn c-f  0.01 | steering   17.3 | b1   48.9 | DNp31  0.0 | CNS 0.077 | 5 draws, 212s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[anchor_plus_DNg02_50Hz] load 0.12 DNg02    50 Hz | DVMn 1a-c  16.92 +/- 10.97 (range 5.3-35.4) | DLMn c-f  3.93 | steering   21.2 | b1   45.6 | DNp31  0.0 | CNS 0.082 | 5 draws, 214s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[anchor_plus_DNg02_100Hz] load 0.12 DNg02   100 Hz | DVMn 1a-c  56.17 +/- 12.73 (range 43.2-77.7) | DLMn c-f 41.72 | steering   26.5 | b1   38.9 | DNp31  0.4 | CNS 0.100 | 5 draws, 210s
+DNg02 rate rule: no rate puts both DLMn c-f and DVMn in band
+
+CHECKS
+  PASS  L1a_DVMn_2_to_12_hz
+  FAIL  L1b_DLMn_cf_2_to_12_hz
+  FAIL  L2_b1_0.5_to_1.2_spikes_per_wingbeat
+  PASS  L3_leg_mn_not_entrained
+  PASS  L4_steering_specific_vs_null
+  FAIL  L5_DLMn_cf_2_to_12_hz_with_DNg02
+  REPORTED  L6_DVMn_still_in_band_with_DNg02
+
+UNCERTAINTY (flycns/stats.py; three-way verdict, scored per recruitment seed)
+  UNRESOLVED  L1a_DVMn_2_to_12_hz: per-draw (2 of 5 in band; pass needs 4), draws [3.37, 0.0, 6.65, 0.0, 0.0] (DVMn 1a-c at the anchor load 0.125, per recruitment seed)
+  FAIL        L1b_DLMn_cf_2_to_12_hz: per-draw (0 of 5 in band; pass needs 4), draws [0.0, 0.0, 0.0, 0.0, 0.0] (DLMn c-f at the anchor load 0.125, per recruitment seed)
+  FAIL        L2_b1_0.5_to_1.2_spikes_per_wingbeat: per-draw (0 of 5 in band; pass needs 4), draws [49.74, 55.3, 55.55, 87.62, 14.64] (b1 MN rate in Hz at the anchor load 0.125, per recruitment seed)
+  PASS        L3_leg_mn_not_entrained: per-draw (5 of 5 in band; pass needs 4), draws [0.66, 0.23, 0.0, 0.14, 0.0] (leg MN rate in Hz at the anchor load 0.125, per recruitment seed; the check is strict, per_draw's edge is inclusive)
+  PASS        L4_steering_specific_vs_null: per-draw (5 of 5 in band; pass needs 4), draws [94.69, 89.73, 62.85, 76.92, 34.27] (real steering / max(null steering, 0.2 Hz), paired by recruitment seed; the check is strict (> 5x), per_draw's edge is inclusive; the null fired 13233 spikes outside the afferents)
+  FAIL        L5_DLMn_cf_2_to_12_hz_with_DNg02: any of 4 parts (some DNg02 rate with DLMn c-f and DVMn 1a-c both in band per recruitment seed)
+      FAIL        all of 2 parts (DNg02 10 Hz)
+      FAIL        all of 2 parts (DNg02 25 Hz)
+      FAIL        all of 2 parts (DNg02 50 Hz)
+      FAIL        all of 2 parts (DNg02 100 Hz)
+
+REPORTED  anchor load 0.125 | DVMn 2.0 Hz DLMn c-f 0.00 Hz | b1 53 Hz VS 0.12 | DNp31 0.0 Hz | closed loop saturated=True
+
+BENCHMARK FAIL  -> results\flight_loop\report.json
