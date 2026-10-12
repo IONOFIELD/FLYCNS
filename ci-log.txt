@@ -1,0 +1,37 @@
+[fingerprint] select-wscale: fit/select_wscale.py
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! select_wscale: RUNNING ON UNCOMMITTED CODE (FLYCNS_ALLOW_DIRTY=1)
+! 11 code file(s) differ from commit 2cae86d: D results/a2_registered/criteria.json, D results/a2_robustness/criteria.json, D results/dnp13_control/criteria.json, D results/feeding_by_modality/criteria.json, D results/flight_snpp16_graded/criteria.json, D results/flight_snpp16_robustness/criteria.json, D results/gustatory_signed_map/criteria.json, D results/null_strict/criteria.json ...
+! The report is stamped dirty and must not be quoted as a registered result.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+criteria registered: 2cae86d
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+blind drive: 1,575 of 15,757 eligible sensory neurons (17,937 sensory in all) at 20 Hz
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.15  CNS   0.0014 Hz  active  0.01%  quiet (95s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.2   CNS   0.0024 Hz  active  0.02%  quiet (188s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.25  CNS   0.0043 Hz  active  0.04%  quiet (216s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.3   CNS   0.0068 Hz  active  0.06%  quiet (244s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.35  CNS   0.0103 Hz  active  0.10%  quiet (272s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.4   CNS   0.0152 Hz  active  0.16%  quiet (301s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.5   CNS   2.5112 Hz  active  3.73%  NOT quiet (332s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.6   CNS   3.1557 Hz  active  4.43%  NOT quiet (361s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 0.75  CNS   4.2591 Hz  active  6.09%  NOT quiet (393s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  w_scale 1.0   CNS   7.0926 Hz  active  9.80%  NOT quiet (426s)
+
+selected w_scale: 0.4 (declared 0.4); agrees
+[fingerprint] select-wscale: 20 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\select-wscale.jsonl
