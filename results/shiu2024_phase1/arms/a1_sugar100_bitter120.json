@@ -1,0 +1,315 @@
+{
+ "arm": "a1_sugar100_bitter120",
+ "spec": {
+  "seed": 11,
+  "trials": 30,
+  "data": "flywire",
+  "settings": {
+   "reset": "v_and_g",
+   "stimulation": "kick",
+   "integration": "exact",
+   "adaptation": false,
+   "w_scale": 1.0,
+   "floor": 1
+  },
+  "sugar_hz": 100,
+  "bitter_hz": 120
+ },
+ "options": {
+  "reset": "v_and_g",
+  "stimulation": "kick",
+  "stim_kick_mV": 68.75,
+  "integration": "exact",
+  "adaptation": false
+ },
+ "n_lif": 127400,
+ "n_recurrent": 14687178,
+ "n_stimulated": 42,
+ "unknown_transmitter": null,
+ "build_s": 14.0,
+ "wall_s": 1596.5,
+ "trials": [
+  {
+   "k": 0,
+   "n_active": 275,
+   "n_spikes": 9404,
+   "grn_mean_hz": 103.66666666666667,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 10.0
+  },
+  {
+   "k": 1,
+   "n_active": 254,
+   "n_spikes": 9052,
+   "grn_mean_hz": 97.57142857142857,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 5.0
+  },
+  {
+   "k": 2,
+   "n_active": 281,
+   "n_spikes": 9367,
+   "grn_mean_hz": 101.0952380952381,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 9.0
+  },
+  {
+   "k": 3,
+   "n_active": 268,
+   "n_spikes": 9390,
+   "grn_mean_hz": 97.95238095238095,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 11.0
+  },
+  {
+   "k": 4,
+   "n_active": 291,
+   "n_spikes": 9630,
+   "grn_mean_hz": 102.38095238095238,
+   "mn9_contra_hz": 2.0,
+   "mn9_ipsi_hz": 7.0
+  },
+  {
+   "k": 5,
+   "n_active": 273,
+   "n_spikes": 9058,
+   "grn_mean_hz": 97.9047619047619,
+   "mn9_contra_hz": 1.0,
+   "mn9_ipsi_hz": 6.0
+  },
+  {
+   "k": 6,
+   "n_active": 271,
+   "n_spikes": 9058,
+   "grn_mean_hz": 96.80952380952381,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 6.0
+  },
+  {
+   "k": 7,
+   "n_active": 316,
+   "n_spikes": 9533,
+   "grn_mean_hz": 100.23809523809524,
+   "mn9_contra_hz": 2.0,
+   "mn9_ipsi_hz": 8.0
+  },
+  {
+   "k": 8,
+   "n_active": 296,
+   "n_spikes": 9156,
+   "grn_mean_hz": 99.33333333333333,
+   "mn9_contra_hz": 1.0,
+   "mn9_ipsi_hz": 6.0
+  },
+  {
+   "k": 9,
+   "n_active": 280,
+   "n_spikes": 9208,
+   "grn_mean_hz": 97.71428571428571,
+   "mn9_contra_hz": 1.0,
+   "mn9_ipsi_hz": 6.0
+  },
+  {
+   "k": 10,
+   "n_active": 269,
+   "n_spikes": 9195,
+   "grn_mean_hz": 95.23809523809524,
+   "mn9_contra_hz": 1.0,
+   "mn9_ipsi_hz": 7.0
+  },
+  {
+   "k": 11,
+   "n_active": 273,
+   "n_spikes": 8719,
+   "grn_mean_hz": 93.95238095238095,
+   "mn9_contra_hz": 1.0,
+   "mn9_ipsi_hz": 6.0
+  },
+  {
+   "k": 12,
+   "n_active": 274,
+   "n_spikes": 9343,
+   "grn_mean_hz": 98.23809523809524,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 5.0
+  },
+  {
+   "k": 13,
+   "n_active": 312,
+   "n_spikes": 9769,
+   "grn_mean_hz": 98.04761904761905,
+   "mn9_contra_hz": 3.0,
+   "mn9_ipsi_hz": 8.0
+  },
+  {
+   "k": 14,
+   "n_active": 315,
+   "n_spikes": 9408,
+   "grn_mean_hz": 98.57142857142857,
+   "mn9_contra_hz": 2.0,
+   "mn9_ipsi_hz": 6.0
+  },
+  {
+   "k": 15,
+   "n_active": 267,
+   "n_spikes": 9396,
+   "grn_mean_hz": 97.28571428571429,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 4.0
+  },
+  {
+   "k": 16,
+   "n_active": 294,
+   "n_spikes": 9358,
+   "grn_mean_hz": 96.0952380952381,
+   "mn9_contra_hz": 2.0,
+   "mn9_ipsi_hz": 7.0
+  },
+  {
+   "k": 17,
+   "n_active": 308,
+   "n_spikes": 9456,
+   "grn_mean_hz": 99.04761904761905,
+   "mn9_contra_hz": 3.0,
+   "mn9_ipsi_hz": 10.0
+  },
+  {
+   "k": 18,
+   "n_active": 279,
+   "n_spikes": 9051,
+   "grn_mean_hz": 97.95238095238095,
+   "mn9_contra_hz": 2.0,
+   "mn9_ipsi_hz": 8.0
+  },
+  {
+   "k": 19,
+   "n_active": 262,
+   "n_spikes": 9087,
+   "grn_mean_hz": 96.52380952380952,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 7.0
+  },
+  {
+   "k": 20,
+   "n_active": 266,
+   "n_spikes": 8777,
+   "grn_mean_hz": 96.57142857142857,
+   "mn9_contra_hz": 1.0,
+   "mn9_ipsi_hz": 5.0
+  },
+  {
+   "k": 21,
+   "n_active": 262,
+   "n_spikes": 9136,
+   "grn_mean_hz": 97.80952380952381,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 5.0
+  },
+  {
+   "k": 22,
+   "n_active": 285,
+   "n_spikes": 9382,
+   "grn_mean_hz": 100.19047619047619,
+   "mn9_contra_hz": 1.0,
+   "mn9_ipsi_hz": 7.0
+  },
+  {
+   "k": 23,
+   "n_active": 283,
+   "n_spikes": 9634,
+   "grn_mean_hz": 99.0952380952381,
+   "mn9_contra_hz": 1.0,
+   "mn9_ipsi_hz": 7.0
+  },
+  {
+   "k": 24,
+   "n_active": 270,
+   "n_spikes": 9519,
+   "grn_mean_hz": 101.52380952380952,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 2.0
+  },
+  {
+   "k": 25,
+   "n_active": 257,
+   "n_spikes": 8811,
+   "grn_mean_hz": 96.85714285714286,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 4.0
+  },
+  {
+   "k": 26,
+   "n_active": 279,
+   "n_spikes": 9050,
+   "grn_mean_hz": 100.57142857142857,
+   "mn9_contra_hz": 1.0,
+   "mn9_ipsi_hz": 7.0
+  },
+  {
+   "k": 27,
+   "n_active": 322,
+   "n_spikes": 9352,
+   "grn_mean_hz": 97.47619047619048,
+   "mn9_contra_hz": 5.0,
+   "mn9_ipsi_hz": 5.0
+  },
+  {
+   "k": 28,
+   "n_active": 276,
+   "n_spikes": 8655,
+   "grn_mean_hz": 96.28571428571429,
+   "mn9_contra_hz": 1.0,
+   "mn9_ipsi_hz": 2.0
+  },
+  {
+   "k": 29,
+   "n_active": 280,
+   "n_spikes": 9564,
+   "grn_mean_hz": 100.47619047619048,
+   "mn9_contra_hz": 1.0,
+   "mn9_ipsi_hz": 9.0
+  }
+ ],
+ "registration": {
+  "file": "results/shiu2024_phase1/registration_v5.json",
+  "version": 5,
+  "supersedes": null,
+  "git_commit": "24ea400",
+  "model_hash": "1e1bb7c3d79260114b0ad90fded7f3ec3d5740f664fba48bf11ec7625743111e",
+  "registered_at": "2026-10-12T10:44:08",
+  "matches": true,
+  "problems": []
+ },
+ "provenance": {
+  "written_at": "2026-10-12T18:20:42",
+  "git_commit": "65ce101",
+  "git_is_repo": true,
+  "git_dirty": false,
+  "dirty_files": [],
+  "allow_dirty": false,
+  "env": {},
+  "python": "3.12.10",
+  "versions": {
+   "brian2": "2.10.1",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6"
+  },
+  "engine": "cython",
+  "platform": "win32",
+  "machine": "AMD64",
+  "float_dtype": "float64",
+  "graph": {
+   "data_dir": "D:\\a\\_temp\\shiu",
+   "min_weight": 1,
+   "n_neurons": 127400,
+   "n_signed_edges": 14687178,
+   "n_signed_synapses": 52793639,
+   "dataset": "FlyWire v630"
+  },
+  "data": {
+   "dir": "D:\\a\\_temp\\shiu",
+   "digests": {},
+   "manifest": "no-manifest"
+  }
+ }
+}

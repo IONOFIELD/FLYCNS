@@ -1,0 +1,315 @@
+{
+ "arm": "L5_adaptation",
+ "spec": {
+  "seed": 22,
+  "trials": 30,
+  "data": "flywire",
+  "settings": {
+   "reset": "v_and_g",
+   "stimulation": "kick",
+   "integration": "exact",
+   "adaptation": true,
+   "w_scale": 1.0,
+   "floor": 1
+  },
+  "sugar_hz": 100,
+  "bitter_hz": 0
+ },
+ "options": {
+  "reset": "v_and_g",
+  "stimulation": "kick",
+  "stim_kick_mV": 68.75,
+  "integration": "exact",
+  "adaptation": true
+ },
+ "n_lif": 127400,
+ "n_recurrent": 14687178,
+ "n_stimulated": 42,
+ "unknown_transmitter": null,
+ "build_s": 13.3,
+ "wall_s": 1443.6,
+ "trials": [
+  {
+   "k": 0,
+   "n_active": 358,
+   "n_spikes": 9791,
+   "grn_mean_hz": 99.52380952380952,
+   "mn9_contra_hz": 40.0,
+   "mn9_ipsi_hz": 25.0
+  },
+  {
+   "k": 1,
+   "n_active": 356,
+   "n_spikes": 9674,
+   "grn_mean_hz": 102.14285714285714,
+   "mn9_contra_hz": 36.0,
+   "mn9_ipsi_hz": 26.0
+  },
+  {
+   "k": 2,
+   "n_active": 350,
+   "n_spikes": 9483,
+   "grn_mean_hz": 101.04761904761905,
+   "mn9_contra_hz": 33.0,
+   "mn9_ipsi_hz": 20.0
+  },
+  {
+   "k": 3,
+   "n_active": 366,
+   "n_spikes": 9853,
+   "grn_mean_hz": 96.47619047619048,
+   "mn9_contra_hz": 40.0,
+   "mn9_ipsi_hz": 28.0
+  },
+  {
+   "k": 4,
+   "n_active": 350,
+   "n_spikes": 9226,
+   "grn_mean_hz": 96.38095238095238,
+   "mn9_contra_hz": 39.0,
+   "mn9_ipsi_hz": 25.0
+  },
+  {
+   "k": 5,
+   "n_active": 359,
+   "n_spikes": 10258,
+   "grn_mean_hz": 100.04761904761905,
+   "mn9_contra_hz": 46.0,
+   "mn9_ipsi_hz": 28.0
+  },
+  {
+   "k": 6,
+   "n_active": 355,
+   "n_spikes": 9562,
+   "grn_mean_hz": 101.0952380952381,
+   "mn9_contra_hz": 38.0,
+   "mn9_ipsi_hz": 27.0
+  },
+  {
+   "k": 7,
+   "n_active": 359,
+   "n_spikes": 9695,
+   "grn_mean_hz": 100.80952380952381,
+   "mn9_contra_hz": 37.0,
+   "mn9_ipsi_hz": 25.0
+  },
+  {
+   "k": 8,
+   "n_active": 357,
+   "n_spikes": 9651,
+   "grn_mean_hz": 98.95238095238095,
+   "mn9_contra_hz": 41.0,
+   "mn9_ipsi_hz": 28.0
+  },
+  {
+   "k": 9,
+   "n_active": 365,
+   "n_spikes": 9909,
+   "grn_mean_hz": 100.80952380952381,
+   "mn9_contra_hz": 41.0,
+   "mn9_ipsi_hz": 29.0
+  },
+  {
+   "k": 10,
+   "n_active": 362,
+   "n_spikes": 9477,
+   "grn_mean_hz": 101.66666666666667,
+   "mn9_contra_hz": 40.0,
+   "mn9_ipsi_hz": 26.0
+  },
+  {
+   "k": 11,
+   "n_active": 348,
+   "n_spikes": 9310,
+   "grn_mean_hz": 96.76190476190476,
+   "mn9_contra_hz": 37.0,
+   "mn9_ipsi_hz": 25.0
+  },
+  {
+   "k": 12,
+   "n_active": 368,
+   "n_spikes": 9390,
+   "grn_mean_hz": 95.19047619047619,
+   "mn9_contra_hz": 36.0,
+   "mn9_ipsi_hz": 29.0
+  },
+  {
+   "k": 13,
+   "n_active": 343,
+   "n_spikes": 9186,
+   "grn_mean_hz": 93.66666666666667,
+   "mn9_contra_hz": 38.0,
+   "mn9_ipsi_hz": 27.0
+  },
+  {
+   "k": 14,
+   "n_active": 351,
+   "n_spikes": 10161,
+   "grn_mean_hz": 102.23809523809524,
+   "mn9_contra_hz": 40.0,
+   "mn9_ipsi_hz": 29.0
+  },
+  {
+   "k": 15,
+   "n_active": 353,
+   "n_spikes": 9612,
+   "grn_mean_hz": 99.0952380952381,
+   "mn9_contra_hz": 34.0,
+   "mn9_ipsi_hz": 24.0
+  },
+  {
+   "k": 16,
+   "n_active": 343,
+   "n_spikes": 9485,
+   "grn_mean_hz": 99.80952380952381,
+   "mn9_contra_hz": 39.0,
+   "mn9_ipsi_hz": 28.0
+  },
+  {
+   "k": 17,
+   "n_active": 357,
+   "n_spikes": 9145,
+   "grn_mean_hz": 97.19047619047619,
+   "mn9_contra_hz": 37.0,
+   "mn9_ipsi_hz": 25.0
+  },
+  {
+   "k": 18,
+   "n_active": 350,
+   "n_spikes": 9638,
+   "grn_mean_hz": 99.95238095238095,
+   "mn9_contra_hz": 40.0,
+   "mn9_ipsi_hz": 28.0
+  },
+  {
+   "k": 19,
+   "n_active": 376,
+   "n_spikes": 10153,
+   "grn_mean_hz": 98.76190476190476,
+   "mn9_contra_hz": 39.0,
+   "mn9_ipsi_hz": 31.0
+  },
+  {
+   "k": 20,
+   "n_active": 356,
+   "n_spikes": 9272,
+   "grn_mean_hz": 95.52380952380952,
+   "mn9_contra_hz": 38.0,
+   "mn9_ipsi_hz": 29.0
+  },
+  {
+   "k": 21,
+   "n_active": 367,
+   "n_spikes": 9853,
+   "grn_mean_hz": 99.9047619047619,
+   "mn9_contra_hz": 37.0,
+   "mn9_ipsi_hz": 27.0
+  },
+  {
+   "k": 22,
+   "n_active": 349,
+   "n_spikes": 9367,
+   "grn_mean_hz": 98.80952380952381,
+   "mn9_contra_hz": 33.0,
+   "mn9_ipsi_hz": 23.0
+  },
+  {
+   "k": 23,
+   "n_active": 350,
+   "n_spikes": 9293,
+   "grn_mean_hz": 97.47619047619048,
+   "mn9_contra_hz": 35.0,
+   "mn9_ipsi_hz": 24.0
+  },
+  {
+   "k": 24,
+   "n_active": 363,
+   "n_spikes": 10204,
+   "grn_mean_hz": 101.61904761904762,
+   "mn9_contra_hz": 41.0,
+   "mn9_ipsi_hz": 29.0
+  },
+  {
+   "k": 25,
+   "n_active": 363,
+   "n_spikes": 9829,
+   "grn_mean_hz": 97.57142857142857,
+   "mn9_contra_hz": 39.0,
+   "mn9_ipsi_hz": 29.0
+  },
+  {
+   "k": 26,
+   "n_active": 356,
+   "n_spikes": 9813,
+   "grn_mean_hz": 102.04761904761905,
+   "mn9_contra_hz": 38.0,
+   "mn9_ipsi_hz": 24.0
+  },
+  {
+   "k": 27,
+   "n_active": 340,
+   "n_spikes": 9456,
+   "grn_mean_hz": 100.19047619047619,
+   "mn9_contra_hz": 38.0,
+   "mn9_ipsi_hz": 27.0
+  },
+  {
+   "k": 28,
+   "n_active": 347,
+   "n_spikes": 9189,
+   "grn_mean_hz": 98.76190476190476,
+   "mn9_contra_hz": 34.0,
+   "mn9_ipsi_hz": 25.0
+  },
+  {
+   "k": 29,
+   "n_active": 359,
+   "n_spikes": 9353,
+   "grn_mean_hz": 98.71428571428571,
+   "mn9_contra_hz": 34.0,
+   "mn9_ipsi_hz": 27.0
+  }
+ ],
+ "registration": {
+  "file": "results/shiu2024_phase1/registration_v5.json",
+  "version": 5,
+  "supersedes": null,
+  "git_commit": "24ea400",
+  "model_hash": "1e1bb7c3d79260114b0ad90fded7f3ec3d5740f664fba48bf11ec7625743111e",
+  "registered_at": "2026-10-12T10:44:08",
+  "matches": true,
+  "problems": []
+ },
+ "provenance": {
+  "written_at": "2026-10-12T18:17:58",
+  "git_commit": "65ce101",
+  "git_is_repo": true,
+  "git_dirty": false,
+  "dirty_files": [],
+  "allow_dirty": false,
+  "env": {},
+  "python": "3.12.10",
+  "versions": {
+   "brian2": "2.10.1",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6"
+  },
+  "engine": "cython",
+  "platform": "win32",
+  "machine": "AMD64",
+  "float_dtype": "float64",
+  "graph": {
+   "data_dir": "D:\\a\\_temp\\shiu",
+   "min_weight": 1,
+   "n_neurons": 127400,
+   "n_signed_edges": 14687178,
+   "n_signed_synapses": 52793639,
+   "dataset": "FlyWire v630"
+  },
+  "data": {
+   "dir": "D:\\a\\_temp\\shiu",
+   "digests": {},
+   "manifest": "no-manifest"
+  }
+ }
+}
