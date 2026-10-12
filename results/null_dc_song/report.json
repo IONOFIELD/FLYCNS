@@ -188,19 +188,19 @@
     }
   },
   "registration": {
-    "file": "results/null_dc_song/registration_v4.json",
-    "version": 4,
-    "supersedes": "results/null_dc_song/registration_v3.json",
-    "git_commit": "7851c7c",
-    "model_hash": "5e0e154cd563bd2d85fd890dad905439b18ce75b6d847f8e71cae2ff5a4e12a9",
-    "registered_at": "2026-10-12T03:48:50",
+    "file": "results/null_dc_song/registration_v5.json",
+    "version": 5,
+    "supersedes": "results/null_dc_song/registration_v4.json",
+    "git_commit": "24ea400",
+    "model_hash": "b64f82b31b1b47b13f57932fb09230a2299a0a446ca89e095818cc0fc6e1df42",
+    "registered_at": "2026-10-12T10:44:04",
     "matches": true,
     "problems": []
   },
-  "wall_s": 5886.4,
+  "wall_s": 5800.9,
   "provenance": {
-    "written_at": "2026-10-12T13:38:59",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T19:33:20",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

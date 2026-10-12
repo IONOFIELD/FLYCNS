@@ -1,9 +1,9 @@
 b_mV,per_response,per_response_strong,max_per_response,hit,ttmn_ratio,wall_s,C1,C2,C3,C4,ok
-0,5.541666666666667,9.7,15.0,0.9,1.0,335,False,False,True,True,False
-5,4.318181818181818,6.8,9.0,0.825,1.0,353,False,False,True,True,False
-10,3.3484848484848486,5.1,6.5,0.825,1.0,285,False,False,True,True,False
-15,2.953125,4.25,5.5,0.8,1.0,297,False,False,True,True,False
-20,2.578125,3.65,4.5,0.8,1.0,282,False,False,True,True,False
-30,2.078125,2.75,3.5,0.8,1.0,274,False,False,True,True,False
-45,1.59375,2.0,2.5,0.8,1.0,274,True,True,True,True,True
-60,1.4333333333333333,1.7,2.5,0.75,0.9878048780487805,273,True,True,True,True,True
+0,5.541666666666667,9.7,15.0,0.9,1.0,324,False,False,True,True,False
+5,4.318181818181818,6.8,9.0,0.825,1.0,339,False,False,True,True,False
+10,3.3484848484848486,5.1,6.5,0.825,1.0,268,False,False,True,True,False
+15,2.953125,4.25,5.5,0.8,1.0,288,False,False,True,True,False
+20,2.578125,3.65,4.5,0.8,1.0,267,False,False,True,True,False
+30,2.078125,2.75,3.5,0.8,1.0,258,False,False,True,True,False
+45,1.59375,2.0,2.5,0.8,1.0,258,True,True,True,True,True
+60,1.4333333333333333,1.7,2.5,0.75,0.9878048780487805,258,True,True,True,True,True

@@ -940,7 +940,7 @@
           ]
         ]
       },
-      "wall_s": 666.7,
+      "wall_s": 683.2,
       "n_trials": 100,
       "gf_depol_mV": 4.495113649358234
     },
@@ -1863,7 +1863,7 @@
           ]
         ]
       },
-      "wall_s": 697.2,
+      "wall_s": 749.6,
       "n_trials": 100,
       "gf_depol_mV": 3.173390126785822
     },
@@ -2806,7 +2806,7 @@
           ]
         ]
       },
-      "wall_s": 687.4,
+      "wall_s": 713.4,
       "n_trials": 100,
       "gf_depol_mV": 1.7284721358719077,
       "label": "A2_sound_alone"
@@ -2833,8 +2833,8 @@
   },
   "checks": {},
   "provenance": {
-    "written_at": "2026-10-12T12:12:25",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T19:14:01",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

@@ -74,8 +74,8 @@ Declared deviations from the raw connectome: see each results/*/provenance.md an
 ## Report provenance
 | benchmark | written | commit | data (neurons / edges) | env overrides |
 |---|---|---|---|---|
-| auditory | 2026-10-12T12:27:39 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | {'FLYCNS_SEED': '1', 'FLYCNS_SIGNFLIP': '0.05'} |
-| feeding | 2026-10-12T12:41:21 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | {'FLYCNS_SEED': '1', 'FLYCNS_SIGNFLIP': '0.05'} |
-| gf_escape | 2026-10-12T11:28:42 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | {'FLYCNS_SEED': '1', 'FLYCNS_SIGNFLIP': '0.05'} |
+| auditory | 2026-10-12T20:21:36 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | {'FLYCNS_SEED': '1', 'FLYCNS_SIGNFLIP': '0.05'} |
+| feeding | 2026-10-12T20:33:09 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | {'FLYCNS_SEED': '1', 'FLYCNS_SIGNFLIP': '0.05'} |
+| gf_escape | 2026-10-12T19:32:25 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | {'FLYCNS_SEED': '1', 'FLYCNS_SIGNFLIP': '0.05'} |
 
 ## Citation check: 49/49 tags resolve in REFERENCES.md

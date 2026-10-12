@@ -107,10 +107,10 @@
     },
     "n_trials": 10
   },
-  "wall_s": 1754.8,
+  "wall_s": 1416.1,
   "provenance": {
-    "written_at": "2026-10-12T12:46:32",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T19:25:02",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -169,12 +169,12 @@
     }
   },
   "registration": {
-    "file": "results/null_strict/registration_v4.json",
-    "version": 4,
-    "supersedes": "results/null_strict/registration_v3.json",
-    "git_commit": "7851c7c",
-    "model_hash": "b32498cea813d7b76a06a5d4827f596064743a0606005869fff8ebffcea0c622",
-    "registered_at": "2026-10-12T03:48:32",
+    "file": "results/null_strict/registration_v5.json",
+    "version": 5,
+    "supersedes": "results/null_strict/registration_v4.json",
+    "git_commit": "24ea400",
+    "model_hash": "e3c8a8a2c96db22e36a984ae39d6025a383e541a465f550d01025b45f19bf3ec",
+    "registered_at": "2026-10-12T10:43:46",
     "matches": true,
     "problems": []
   }

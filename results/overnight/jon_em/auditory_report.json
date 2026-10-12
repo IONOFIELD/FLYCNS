@@ -395,7 +395,7 @@
           ]
         ]
       },
-      "wall_s": 305.4,
+      "wall_s": 274.3,
       "n_trials": 40,
       "gf_depol_mV": 4.008887208034567
     },
@@ -778,7 +778,7 @@
           ]
         ]
       },
-      "wall_s": 290.3,
+      "wall_s": 313.5,
       "n_trials": 40,
       "gf_depol_mV": 5.081092248463285
     },
@@ -1161,7 +1161,7 @@
           ]
         ]
       },
-      "wall_s": 264.5,
+      "wall_s": 267.0,
       "n_trials": 40,
       "gf_depol_mV": 6.350539055283022
     },
@@ -1544,7 +1544,7 @@
           ]
         ]
       },
-      "wall_s": 264.6,
+      "wall_s": 258.9,
       "n_trials": 40,
       "gf_depol_mV": 6.815403300094968
     },
@@ -1927,7 +1927,7 @@
           ]
         ]
       },
-      "wall_s": 261.9,
+      "wall_s": 259.3,
       "n_trials": 40,
       "gf_depol_mV": 6.949846393580344
     },
@@ -2341,7 +2341,7 @@
           ]
         ]
       },
-      "wall_s": 262.2,
+      "wall_s": 262.7,
       "n_trials": 40,
       "gf_depol_mV": 3.644964135567696,
       "label": "A1_jo_alone_electrical"
@@ -2725,7 +2725,7 @@
           ]
         ]
       },
-      "wall_s": 255.6,
+      "wall_s": 260.1,
       "n_trials": 40,
       "gf_depol_mV": 3.644964135567696
     },
@@ -3108,7 +3108,7 @@
           ]
         ]
       },
-      "wall_s": 255.5,
+      "wall_s": 258.3,
       "n_trials": 40,
       "gf_depol_mV": 3.644964135567696
     },
@@ -3491,7 +3491,7 @@
           ]
         ]
       },
-      "wall_s": 265.6,
+      "wall_s": 262.8,
       "n_trials": 40,
       "gf_depol_mV": 4.059340382948757
     },
@@ -3874,7 +3874,7 @@
           ]
         ]
       },
-      "wall_s": 270.8,
+      "wall_s": 273.1,
       "n_trials": 40,
       "gf_depol_mV": 3.9852025094558785
     },
@@ -4257,7 +4257,7 @@
           ]
         ]
       },
-      "wall_s": 249.5,
+      "wall_s": 250.5,
       "n_trials": 40,
       "gf_depol_mV": -1.92802156462335e-09
     },
@@ -4426,20 +4426,20 @@
     }
   },
   "registration": {
-    "file": "results/auditory/registration_v4.json",
-    "version": 4,
-    "supersedes": "results/auditory/registration_v3.json",
-    "git_commit": "7851c7c",
-    "model_hash": "3fd99071f3988cd332b33c073da69ac38184f917d44dc43acaafd532ead83918",
-    "registered_at": "2026-10-12T03:48:19",
+    "file": "results/auditory/registration_v5.json",
+    "version": 5,
+    "supersedes": "results/auditory/registration_v4.json",
+    "git_commit": "24ea400",
+    "model_hash": "bc3a1bd77f28d778fc5e1f19020da4ec635d6874d8f7380021594a106df2b688",
+    "registered_at": "2026-10-12T10:43:32",
     "matches": false,
     "problems": [
       "model settings overridden: FLYCNS_JON=em"
     ]
   },
   "provenance": {
-    "written_at": "2026-10-12T13:41:51",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T20:08:09",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

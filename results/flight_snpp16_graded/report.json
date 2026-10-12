@@ -13,12 +13,12 @@
     "jitter_ms": 0.8
   },
   "registration": {
-    "file": "results/flight_snpp16_graded/registration_v4.json",
-    "version": 4,
-    "supersedes": "results/flight_snpp16_graded/registration_v3.json",
-    "git_commit": "7851c7c",
-    "model_hash": "0eb810329899b49d3a0de0eed3f108198fadfb9a85ac63a1e150d0d549bbe2ca",
-    "registered_at": "2026-10-12T03:48:41",
+    "file": "results/flight_snpp16_graded/registration_v5.json",
+    "version": 5,
+    "supersedes": "results/flight_snpp16_graded/registration_v4.json",
+    "git_commit": "24ea400",
+    "model_hash": "39d9aee1ca3b6836faeebe607f20538907c68c65795bdfc83f386b4e168f9aa9",
+    "registered_at": "2026-10-12T10:43:55",
     "matches": true,
     "problems": []
   },
@@ -1474,8 +1474,8 @@
     "script_uncommitted": false
   },
   "provenance": {
-    "written_at": "2026-10-12T11:39:35",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T19:15:38",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

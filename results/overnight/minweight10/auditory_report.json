@@ -395,7 +395,7 @@
           ]
         ]
       },
-      "wall_s": 273.7,
+      "wall_s": 260.5,
       "n_trials": 40,
       "gf_depol_mV": 3.7101109093226645
     },
@@ -778,7 +778,7 @@
           ]
         ]
       },
-      "wall_s": 270.8,
+      "wall_s": 298.2,
       "n_trials": 40,
       "gf_depol_mV": 4.903278254279198
     },
@@ -1161,7 +1161,7 @@
           ]
         ]
       },
-      "wall_s": 248.1,
+      "wall_s": 269.1,
       "n_trials": 40,
       "gf_depol_mV": 6.1912588415337835
     },
@@ -1544,7 +1544,7 @@
           ]
         ]
       },
-      "wall_s": 256.5,
+      "wall_s": 252.9,
       "n_trials": 40,
       "gf_depol_mV": 6.819954598897631
     },
@@ -1927,7 +1927,7 @@
           ]
         ]
       },
-      "wall_s": 246.7,
+      "wall_s": 254.2,
       "n_trials": 40,
       "gf_depol_mV": 6.943885109966561
     },
@@ -2341,7 +2341,7 @@
           ]
         ]
       },
-      "wall_s": 256.7,
+      "wall_s": 251.8,
       "n_trials": 40,
       "gf_depol_mV": 1.8537380083428954,
       "label": "A1_jo_alone_electrical"
@@ -2725,7 +2725,7 @@
           ]
         ]
       },
-      "wall_s": 241.4,
+      "wall_s": 254.8,
       "n_trials": 40,
       "gf_depol_mV": 0.33269178392181187
     },
@@ -3108,7 +3108,7 @@
           ]
         ]
       },
-      "wall_s": 241.7,
+      "wall_s": 247.4,
       "n_trials": 40,
       "gf_depol_mV": 3.6637799722116666
     },
@@ -3491,7 +3491,7 @@
           ]
         ]
       },
-      "wall_s": 253.2,
+      "wall_s": 247.1,
       "n_trials": 40,
       "gf_depol_mV": 4.985725519528994
     },
@@ -3874,7 +3874,7 @@
           ]
         ]
       },
-      "wall_s": 254.3,
+      "wall_s": 257.7,
       "n_trials": 40,
       "gf_depol_mV": 3.3037630569245513
     },
@@ -4257,7 +4257,7 @@
           ]
         ]
       },
-      "wall_s": 243.9,
+      "wall_s": 249.0,
       "n_trials": 40,
       "gf_depol_mV": 0.05956677363996672
     },
@@ -4426,20 +4426,20 @@
     }
   },
   "registration": {
-    "file": "results/auditory/registration_v4.json",
-    "version": 4,
-    "supersedes": "results/auditory/registration_v3.json",
-    "git_commit": "7851c7c",
-    "model_hash": "3fd99071f3988cd332b33c073da69ac38184f917d44dc43acaafd532ead83918",
-    "registered_at": "2026-10-12T03:48:19",
+    "file": "results/auditory/registration_v5.json",
+    "version": 5,
+    "supersedes": "results/auditory/registration_v4.json",
+    "git_commit": "24ea400",
+    "model_hash": "bc3a1bd77f28d778fc5e1f19020da4ec635d6874d8f7380021594a106df2b688",
+    "registered_at": "2026-10-12T10:43:32",
     "matches": false,
     "problems": [
       "model settings overridden: FLYCNS_MIN_WEIGHT=10"
     ]
   },
   "provenance": {
-    "written_at": "2026-10-12T13:27:40",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T19:26:01",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

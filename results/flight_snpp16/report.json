@@ -136,18 +136,18 @@
     "prediction": "silencing SNpp16 in a flying fly should suppress DVM motor neuron activity; the model's DVMn output under proprioceptive drive is set by this one wing campaniform type"
   },
   "registration": {
-    "file": "results/flight_snpp16/registration_v4.json",
-    "version": 4,
-    "supersedes": "results/flight_snpp16/registration_v3.json",
-    "git_commit": "7851c7c",
-    "model_hash": "6646924f59b67bf4f2e1c4608d6d1cbb2b0002e5ccaf3693991064f4aa48c350",
-    "registered_at": "2026-10-12T03:48:39",
+    "file": "results/flight_snpp16/registration_v5.json",
+    "version": 5,
+    "supersedes": "results/flight_snpp16/registration_v4.json",
+    "git_commit": "24ea400",
+    "model_hash": "13478beb821948b788b800d053920670c963ea2478b0d77d027479a72810fb21",
+    "registered_at": "2026-10-12T10:43:53",
     "matches": true,
     "problems": []
   },
   "provenance": {
-    "written_at": "2026-10-12T11:58:55",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T19:48:44",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

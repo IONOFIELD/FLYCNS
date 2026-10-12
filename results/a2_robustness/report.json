@@ -100,7 +100,7 @@
   "checks": {
     "RA2_facilitation_at_every_near_threshold_gain": false
   },
-  "wall_s": 10635,
+  "wall_s": 11247,
   "uncertainty": {
     "RA2_facilitation_at_every_near_threshold_gain": {
       "estimate": null,
@@ -156,18 +156,18 @@
     }
   },
   "registration": {
-    "file": "results/a2_robustness/registration_v4.json",
-    "version": 4,
-    "supersedes": "results/a2_robustness/registration_v3.json",
-    "git_commit": "7851c7c",
-    "model_hash": "fdbb3eadb87feb4ca8519b5200ae4556d393d160520cd80cf18d57ed47241077",
-    "registered_at": "2026-10-12T03:48:35",
+    "file": "results/a2_robustness/registration_v5.json",
+    "version": 5,
+    "supersedes": "results/a2_robustness/registration_v4.json",
+    "git_commit": "24ea400",
+    "model_hash": "c7c27a9c9ae4647eea8da55b3f0396e60d1c9115adeb3d2a4a17d0517595f8a0",
+    "registered_at": "2026-10-12T10:43:49",
     "matches": true,
     "problems": []
   },
   "provenance": {
-    "written_at": "2026-10-12T13:56:27",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T21:04:08",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
