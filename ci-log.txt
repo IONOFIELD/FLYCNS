@@ -1,0 +1,14 @@
+--- a1_sugar50
+[phase1] a1_sugar50 27/30 done (1227 s)
+[phase1] a1_sugar50 28/30 done (1280 s)
+[phase1] a1_sugar50 29/30 done (1331 s)
+[phase1] a1_sugar50 30/30 done (1385 s)
+[phase1] a1_sugar50: 30 runs in 1384.7 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1\arms\a1_sugar50.json
+
+--- a1_sugar100
+[phase1] a1_sugar100 27/30 done (1225 s)
+[phase1] a1_sugar100 28/30 done (1277 s)
+[phase1] a1_sugar100 29/30 done (1330 s)
+[phase1] a1_sugar100 30/30 done (1383 s)
+[phase1] a1_sugar100: 30 runs in 1382.8 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1\arms\a1_sugar100.json
+
