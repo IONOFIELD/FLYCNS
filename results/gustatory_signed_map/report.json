@@ -295,18 +295,18 @@
     }
   },
   "registration": {
-    "file": "results/gustatory_signed_map/registration_v4.json",
-    "version": 4,
-    "supersedes": "results/gustatory_signed_map/registration_v3.json",
-    "git_commit": "7851c7c",
-    "model_hash": "2bccbfaf8a38b40765c22c3ce1900d4317a35362a8c3c90d5c02430a66949ed2",
-    "registered_at": "2026-10-12T03:48:24",
+    "file": "results/gustatory_signed_map/registration_v5.json",
+    "version": 5,
+    "supersedes": "results/gustatory_signed_map/registration_v4.json",
+    "git_commit": "24ea400",
+    "model_hash": "162b23ac653634763adecf3bb397bc18d5d74b14d6d455f414690c27ab05f9b8",
+    "registered_at": "2026-10-12T10:43:38",
     "matches": true,
     "problems": []
   },
   "provenance": {
-    "written_at": "2026-10-12T10:58:53",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T18:28:13",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
