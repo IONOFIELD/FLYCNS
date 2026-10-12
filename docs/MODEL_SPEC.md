@@ -33,7 +33,7 @@ Their content is pinned by `data/MANIFEST.json`.
 
 **Electrical synapses.** EM cannot see gap junctions, so they are added from the literature. Each is a one-way pair (pre → post) with a citation (`ELECTRICAL_SYNAPSES`):
 - **GF (DNp01) → TTMn and GF → PSI:** spikelet 9 mV, ipsilateral, coupling g = 0.2.
-- **JO-B1_a and JO-B1_c → GF:** spikelet calibrated so the population at 150 Hz gives a 3 mV compound potential, with coupling 0.2 / n. Here n is the afferents converging on one GF: the mean count per body side of the sided afferents (both types pooled), plus every unsided afferent. One spikelet value serves both sides, so if the two sides have different counts, the two giant fibers receive slightly different compound potentials (the larger side more). A sided afferent couples only to the giant fiber on its own side; an unsided one, or one with no giant fiber on its side, couples to both. The 3 mV value has no traced source (docs/CALIBRATION.md, "Literature check"); `FLYCNS_JON` and `FLYCNS_JON_MV` give the alternatives (section 10).
+- **JO-B1_a and JO-B1_c → GF:** spikelet calibrated so the population at 150 Hz gives a 3 mV compound potential **in each giant fiber**, with coupling 0.2 / n. Here n is the number of afferents (both types pooled) coupled to THAT giant fiber, so each giant fiber gets its own spikelet and its own coupling, and the two reach the same 3 mV even though the connectome's two sides have different afferent counts (`fit/check_jon_calibration.py` measures it on the connectome). Until 11 October 2026 one spikelet, from the mean count per side, served both, and run 12 measured 3.65 and 0.73 mV. A sided afferent couples only to the giant fiber on its own side; an unsided one, or one with no giant fiber on its side, couples to both. The 3 mV value has no traced source (docs/CALIBRATION.md, "Literature check"); `FLYCNS_JON` and `FLYCNS_JON_MV` give the alternatives (section 10).
 
 The 679 EM "chemical" synapses on the JO→GF contact are removed so the contact is not counted twice.
 
@@ -73,9 +73,9 @@ g_post ← g_post + s_ij · n_ij · w_syn · w_scale
 - s_ij is the sign.
 - n_ij is the synapse count.
 - w_syn = 0.275 mV (Shiu et al. 2024).
-- w_scale = 0.3 (docs/CALIBRATION.md).
+- w_scale = 0.4, chosen by a registered rule blind to every benchmark (`fit/select_wscale.py`; docs/CALIBRATION.md). 0.3 until 11 October 2026.
 
-The effective kick is 0.0825 mV per synapse. Class and region gains exist in the code but are all 1.0 in the declared set.
+The effective kick is 0.11 mV per synapse (a peak PSP of about 0.017 mV, since τ_syn = 5 ms and τ_m = 20 ms give a peak of 0.158 × the kick). Class and region gains exist in the code but are all 1.0 in the declared set.
 
 ## 4. Electrical synapse
 
@@ -89,7 +89,7 @@ on a pre spike, after d_gap = 0.8 ms:  v_post ← v_post + A_spikelet
 - The spikelet stands in for the action potential, which a LIF unit does not have.
 - Coupling acts on the post cell only. The giant-fiber synapses rectify in vivo (Phelan et al. 2008).
 - A stimulated source has no membrane. It contributes the spikelet, plus the load of a partner at rest, `g_shunt · (V_rest − v_post)`, where `g_shunt` is the summed `g_gap` of the post cell's stimulated partners. Without that term, replacing a cell by a source would remove its load and change its partner's excitability; this confounded the A2 arms before 10 October 2026.
-- **Calibration under load.** A population's spikelet is set to `compound_mV · (1 + G) / (n · rate · tau_m)`, with `G = 0.2` the population's total coupling onto the post cell. The load shortens the post cell's effective time constant to `tau_m / (1 + G)`, so this keeps the calibrated potential exact.
+- **Calibration under load.** For each post cell, the spikelet of its partners is set to `compound_mV · (1 + G) / (n · rate · tau_m)`, with n that cell's own partner count and `G = 0.2` their total coupling onto it. The load shortens the post cell's effective time constant to `tau_m / (1 + G)`, so this keeps the calibrated potential exact.
 
 ## 5. Stimulus
 

@@ -1,10 +1,10 @@
 """
 Re-select the global synaptic scale w_scale on a criterion blind to every benchmark (audit 2026-10-11, gap 6).
 
-The declared w_scale = 0.3 was chosen in September with an earlier simulator (exact integration, no gap
-junctions, no adaptation, the on-disk sign column without histamine), on a grid {1.0, 0.5, 0.25} that
-does not contain 0.3, and partly by looking at the giant fiber (docs/CALIBRATION.md). This script makes
-the choice again with the current model and a criterion that sees no benchmark:
+Until 11 October 2026 the declared w_scale was 0.3, chosen in September with an earlier simulator (exact
+integration, no gap junctions, no adaptation, the on-disk sign column without histamine), on a grid
+{1.0, 0.5, 0.25} that does not contain 0.3, and partly by looking at the giant fiber (docs/CALIBRATION.md).
+This script makes the choice again with the current model and a criterion that sees no benchmark:
 
   DRIVE     a fixed random 10% (seed 0) of the sensory neurons whose types and subclasses no benchmark
             uses as a stimulus, at 20 Hz Poisson for 1 s (after 200 ms of silence)
@@ -13,9 +13,11 @@ the choice again with the current model and a criterion that sees no benchmark:
   CRITERION the largest w_scale on the grid with whole-CNS rate < 1 Hz AND fraction active < 10% (the
             two quietness conditions of the September sweep, without its giant fiber condition)
 
-The criterion is registered in results/select_wscale/criteria.json before anything runs. The result is a
-recommendation, not a change: adopting a different value moves every calibrated value after it (the loom
-rate scale, the giant fiber adaptation, the A2 working point), which is a decision for the model freeze.
+The criterion is registered in results/select_wscale/criteria.json before anything runs. Its answer, 0.4,
+was adopted as the declared value on 11 October 2026 (registration generation 3, flycns/registry.py), with
+the giant fiber adaptation refit under it. (The registered criteria's "consequence" text still says
+"other than 0.3": a registered text is never edited.) A rerun that selects anything other than the
+declared value says so in its report (agrees_with_declared).
 
 Run:  python fit/select_wscale.py [data_dir]
 """

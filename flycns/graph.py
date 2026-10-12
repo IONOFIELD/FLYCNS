@@ -201,13 +201,13 @@ PEPTIDE_MODULATION = [
 # GF fires 1 to 2 spikes per loom regardless of input strength
 # (von Reyn et al. 2014; Ache et al. 2019): spike-triggered adaptation.
 INTRINSIC_OVERRIDES = [
-    ("DNp01", "b_adapt_mV", 10.0, "all-or-none GF response; von Reyn 2014; Ache 2019. Fitted by pre-stated rule "
+    ("DNp01", "b_adapt_mV", 45.0, "all-or-none GF response; von Reyn 2014; Ache 2019. Fitted by pre-stated rule "
                                   "(smallest value giving 1-2 spikes/response, <=2 on the strongest gain quartile, "
                                   "P(response) 0.5-1, TTMn relay intact; benchmarks/fit_gf_adapt.py at >=40 trials). "
-                                  "10 mV under the measured stationary loom input (refit 2026-10-10, 40 trials; the "
-                                  "strong-quartile constraint holds at 1.95, close to its limit of 2). Earlier 30 mV "
-                                  "was fitted under the all-trials input; a 15 mV value came from an undersampled "
-                                  "20-trial fit. 0 mV gives up to 7 spikes per loom."),
+                                  "45 mV at w_scale 0.4 with the per-GF JON calibration (refit 2026-10-11, cloud run 13, "
+                                  "40 trials; the strong-quartile constraint holds at exactly 2.0, its limit; 30 mV gives "
+                                  "2.75). Before: 10 mV at w_scale 0.3 (2026-10-10), 30 mV under the all-trials loom "
+                                  "input, 15 mV from an undersampled 20-trial fit. 0 mV gives up to 10 spikes per loom."),
     # superclass-level: sustained fly motor neuron firing stays well under 100 Hz
     # (leg MNs, Azevedo et al. 2020; proboscis MNs, McKellar et al. 2020). Without
     # adaptation the LIF motor pool pins at the 450 Hz refractory ceiling.

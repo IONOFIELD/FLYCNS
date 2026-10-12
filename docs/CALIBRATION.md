@@ -24,9 +24,9 @@ of the model. CI fails if a scored check has no role.
 
 | value | where | how it was chosen | checks it touches |
 |---|---|---|---|
-| **w_scale = 0.3** (global synaptic scale; 0.275 mV × 0.3 = 0.0825 mV per synapse) | `flycns/model.py` | A sweep (`scripts/legacy/sweep.py`, `data/sweep_results.csv`) over 1.0, 0.5 and 0.25, looking for low population rate (under about 1 Hz), few active cells (under 10%), and giant fiber firing far more under loom than under sound. The committed grid does not contain 0.3. `scripts/legacy/gf_physio.py` records the reasoning as roughly a 3× reduction, because the raw value is too strong once the nerve cord is included. No other record of the derivation exists. | escape `cns_quiet`, auditory `A5_cns_quiet` and feeding `F2b_extra_SEZ_quiet` are **calibrated**. The selection also looked at GF/TTMn firing, so the escape circuit is not held out from it. **Re-selected blind, 11 October 2026** (`fit/select_wscale.py`, criterion registered before the run): under a random 10% of the sensory neurons no benchmark drives, at 20 Hz, the network stays quiet (rate < 1 Hz, < 10% active) for every w_scale from 0.15 to 0.4 (0.3: 0.007 Hz, 0.06% active) and runs away between 0.4 and 0.5 (2.5 Hz, 3.7% active at 0.5). The registered rule, "the largest quiet value", picks 0.4, at the edge of that transition. 0.3 satisfies the two quietness conditions but is **not** what the registered rule selects. It is kept anyway, because adopting 0.4 would place the model at the edge of a runaway transition and would require refitting the loom rate scale, the GF adaptation and the A2 working point. This departs from the registered rule; it is a decision taken after seeing the result, recorded as such, and gap 6 stays open. The selection's registration and report are committed in `results/select_wscale/`. |
+| **w_scale = 0.4** (global synaptic scale; 0.275 mV × 0.4 = 0.11 mV per synapse; 0.3 until 11 October 2026) | `flycns/model.py` | **Chosen by a registered rule blind to every benchmark** (`fit/select_wscale.py`, criterion committed in `results/select_wscale/criteria.json` before it ran): under a random 10% of the sensory neurons no benchmark drives, at 20 Hz, the largest grid value with whole-CNS rate < 1 Hz and < 10% of neurons active. The network stays quiet from 0.15 to 0.4 (0.4: 0.015 Hz) and runs away between 0.4 and 0.5 (2.5 Hz at 0.5), so the rule picks 0.4. Adopted on 11 October 2026 (registration generation 3) because it is the only value with a derivation anyone can rerun. The earlier 0.3 came from a September sweep over {1.0, 0.5, 0.25} that does not contain 0.3 and partly looked at the giant fiber. **Not a measured constant:** the one measured per-synapse anchor found, ORN → PN (about 5 mV per unitary EPSP, Kazama & Wilson 2008, over about 23 EM synapses, Tobin et al. 2017, so about 0.2 mV per synapse), is about 14 times the model's peak PSP per synapse at 0.4 (0.017 mV; 19 times at 0.3). Matching it would need w_scale ≈ 5, far into the runaway regime. Shiu et al. 2024's own 0.275 mV was fitted to a behaviour (sugar → MN9), not measured. The global scale therefore stands in for missing biology (per-class input resistance, amines, spontaneous background). **Risk:** 0.4 sits one grid step below the transition; the robustness battery runs the core suite at 0.30, 0.35 and 0.45 so a result that holds only next to the transition shows. | escape `cns_quiet`, auditory `A5_cns_quiet` and feeding `F2b_extra_SEZ_quiet` are **calibrated** (the rule picks the largest quiet value). The rule sees no benchmark circuit, so the escape circuit is no longer part of the choice. |
 | **PEAK_HZ = 5.0** (dF/F to spike-rate scale of the loom stimulus) | `flycns/protocols.py` | Anchored so the giant fiber fires 1 to 2 spikes with P(response) ≥ 0.5 (von Reyn et al. 2014). No recording links glomerulus dF/F to spike rate, so this is the stimulus's one free scale. | escape `gf_spikes_per_response_1_to_2` and `gf_response_prob_0.5_to_1` are **calibrated** |
-| **GF adaptation b_adapt = 10 mV** (30 mV before 10 October 2026) | `flycns/graph.py` INTRINSIC_OVERRIDES | `benchmarks/fit_gf_adapt.py`: the smallest value giving 1 to 2 spikes per response, ≤ 2 on the strongest gain quartile, P(response) 0.5 to 1, and an intact TTMn relay | same two escape checks (**calibrated**) |
+| **GF adaptation b_adapt = 45 mV** (10 mV at w_scale 0.3, 10 October 2026; 30 mV before) | `flycns/graph.py` INTRINSIC_OVERRIDES | `benchmarks/fit_gf_adapt.py`: the smallest value giving 1 to 2 spikes per response, ≤ 2 on the strongest gain quartile, P(response) 0.5 to 1, and an intact TTMn relay | same two escape checks (**calibrated**) |
 | **GF→TTMn, GF→PSI spikelet 9 mV, delay 0.8 ms** | `flycns/graph.py` ELECTRICAL_SYNAPSES, `model.py` | Physiological constraint: a 1:1 relay at about 0.8 ms (Tanouye & Wyman 1980). The spikelet is set just above the 7 mV distance from rest to threshold. | escape `ttmn_one_to_one` and `ttmn_lag_0.5_1.5ms` hold **by construction** |
 | **JON→GF compound potential 3 mV at 150 Hz** | `flycns/graph.py` | Chosen to keep sound alone subthreshold, as recorded. **The 3 mV value has not been traced to a source figure.** | auditory `A1_jo_alone_mostly_subthreshold` is **calibrated** |
 | **G_GAP_RELAY = 0.2** (ohmic coupling, as a fraction of leak) | `flycns/graph.py` | Set by hand for a 1:1 relay pair and shared across population pairs | none scored directly |
@@ -55,6 +55,28 @@ therefore re-checked under the stationary input, on 10 October 2026, on GitHub's
 gap-junction load the afferents put on the giant fiber (docs/MODEL_SPEC.md §4). The 3 mV target is
 unchanged and is now met in every configuration. Before, it was met only when the afferents were
 stimulus sources.
+
+**Refrozen 11 October 2026 (registration generation 3).** Two changes, then every value chosen on a
+loom-driven readout re-derived by its own rule, on GitHub's Windows machines (cloud run 13, commit
+77d3726):
+- **JON→GF calibrated per giant fiber.** The connectome couples 21 auditory afferents (JO-B1_a and
+  JO-B1_c) to the left giant fiber and 6 to the right. One spikelet from the mean count per side gave
+  the left about 4.3 mV and the right about 1.5 mV in steady state from the coupling alone (run 12
+  measured peaks of 3.65 and 0.73 mV in the full network). Each giant fiber now gets its own spikelet (0.057 and 0.2 mV) and the same 0.2 coupling
+  load. `fit/check_jon_calibration.py` measures, with only the coupling acting, a plateau of 2.72 and
+  2.78 mV against the 2.76 mV a 60 ms pulse can reach (PASS on both). With the chemical network on, the
+  same sound drive gives an early peak of 2.5 and 1.5 mV and then a plateau of −9 and −21 mV by the end
+  of the pulse: polysynaptic inhibition, not the coupling, dominates the giant fiber under sound at
+  w_scale 0.4 (`results/checks/jon_calibration.json`, network arm; reported, not scored).
+- **w_scale 0.3 → 0.4** (table above). The blind selection, rerun at the new code, gives the same grid
+  and the same answer (`results/select_wscale/`, agrees_with_declared true).
+- **GF adaptation: refit to 45 mV** by the fit's unchanged rule (`results/fit_gf_adapt/`): 1.59 spikes
+  per response, exactly 2.0 on the strongest gain quartile (its limit), P(response) 0.80, 1:1 TTMn
+  relay. 30 mV gives 2.75 on the strong quartile. The stronger synapses drive the giant fiber harder,
+  and the adaptation absorbs it; the fit sits at its constraint edge.
+- **PEAK_HZ: holds at 5.0** (P(response) 0.80 ≥ 0.5, 1 to 2 spikes per response at the fitted
+  adaptation).
+- **A2 working point, flight afferent load:** re-derived by their registered rules inside every run.
 
 Values that are **measured, not chosen**:
 - **Single-neuron parameters:** Shiu et al. 2024.
@@ -124,12 +146,13 @@ A search for the measurements that would anchor the hand-set values (sources in 
   (Hafez et al. 2023), close to the model's 20 ms. Too sparse to set per-class values.
 - **Numerics.** A battery variant halves the time step (`FLYCNS_DT_MS=0.05`): the TTMn lag should
   move from 0.9 to 0.85 ms (0.8 ms delay plus one step), and nothing else should change.
-- **w_scale.** `fit/select_wscale.py` re-selects the global scale on the benchmark-blind criterion
-  below, registered before it runs. Its answer is a recommendation; adopting a different value would
-  move every calibrated value after it.
+- **w_scale.** `fit/select_wscale.py` selects the global scale on a benchmark-blind criterion,
+  registered before it ran. Its answer, 0.4, is the declared value since 11 October 2026 (registration
+  generation 3); the giant fiber adaptation was refit under it, and the loom scale, the flight load and
+  the A2 working point re-derive themselves by their own rules in every run.
 
 ## Turning calibrated checks into tests
 
 - **PEAK_HZ:** anchor it to recorded LC4/LPLC2 spike rates instead of to the giant fiber's output. Escape spikes per response and response probability then become tests. This needs a published spike-rate measurement for loom in those cell types.
-- **w_scale:** choose it on a criterion blind to every benchmark, such as population rate and fraction active under broad sensory drive that excludes all benchmark input types. Then rerun the suite. Register the criterion before running.
+- **w_scale:** done (11 October 2026): chosen on a registered criterion blind to every benchmark (`fit/select_wscale.py`). It is still a calibration, not a measurement: a measured per-synapse PSP is about 14 times the model's (see the table).
 - **3 mV:** trace it to a figure or replace it, then report A1 as a test of that number.
