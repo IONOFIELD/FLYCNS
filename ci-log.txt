@@ -1,0 +1,7 @@
+--- a1_sugar100_bitter200
+[phase1] a1_sugar100_bitter200 27/30 done (1284 s)
+[phase1] a1_sugar100_bitter200 28/30 done (1329 s)
+[phase1] a1_sugar100_bitter200 29/30 done (1374 s)
+[phase1] a1_sugar100_bitter200 30/30 done (1422 s)
+[phase1] a1_sugar100_bitter200: 30 runs in 1421.9 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1\arms\a1_sugar100_bitter200.json
+
