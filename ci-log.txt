@@ -1,0 +1,7 @@
+--- L6_all
+[phase1] L6_all 27/30 done (350 s)
+[phase1] L6_all 28/30 done (362 s)
+[phase1] L6_all 29/30 done (373 s)
+[phase1] L6_all 30/30 done (384 s)
+[phase1] L6_all: 30 runs in 383.6 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1\arms\L6_all.json
+

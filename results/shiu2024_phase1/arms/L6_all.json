@@ -1,0 +1,315 @@
+{
+ "arm": "L6_all",
+ "spec": {
+  "seed": 24,
+  "trials": 30,
+  "data": "flywire",
+  "settings": {
+   "reset": "v",
+   "stimulation": "source",
+   "integration": "euler",
+   "adaptation": true,
+   "w_scale": 0.4,
+   "floor": 5
+  },
+  "sugar_hz": 100,
+  "bitter_hz": 0
+ },
+ "options": {
+  "reset": "v",
+  "stimulation": "source",
+  "stim_kick_mV": 68.75,
+  "integration": "euler",
+  "adaptation": true
+ },
+ "n_lif": 124905,
+ "n_recurrent": 2613146,
+ "n_stimulated": 42,
+ "unknown_transmitter": null,
+ "build_s": 9.9,
+ "wall_s": 383.6,
+ "trials": [
+  {
+   "k": 0,
+   "n_active": 21,
+   "n_spikes": 695,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 1,
+   "n_active": 21,
+   "n_spikes": 698,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 2,
+   "n_active": 22,
+   "n_spikes": 692,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 3,
+   "n_active": 20,
+   "n_spikes": 629,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 4,
+   "n_active": 22,
+   "n_spikes": 708,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 5,
+   "n_active": 20,
+   "n_spikes": 658,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 6,
+   "n_active": 21,
+   "n_spikes": 699,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 7,
+   "n_active": 22,
+   "n_spikes": 633,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 8,
+   "n_active": 22,
+   "n_spikes": 685,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 9,
+   "n_active": 22,
+   "n_spikes": 712,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 10,
+   "n_active": 19,
+   "n_spikes": 680,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 11,
+   "n_active": 20,
+   "n_spikes": 708,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 12,
+   "n_active": 22,
+   "n_spikes": 690,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 13,
+   "n_active": 20,
+   "n_spikes": 660,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 14,
+   "n_active": 20,
+   "n_spikes": 672,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 15,
+   "n_active": 21,
+   "n_spikes": 697,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 16,
+   "n_active": 21,
+   "n_spikes": 659,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 17,
+   "n_active": 21,
+   "n_spikes": 651,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 18,
+   "n_active": 22,
+   "n_spikes": 660,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 19,
+   "n_active": 20,
+   "n_spikes": 646,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 20,
+   "n_active": 21,
+   "n_spikes": 685,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 21,
+   "n_active": 18,
+   "n_spikes": 613,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 22,
+   "n_active": 21,
+   "n_spikes": 713,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 23,
+   "n_active": 22,
+   "n_spikes": 649,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 24,
+   "n_active": 20,
+   "n_spikes": 623,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 25,
+   "n_active": 21,
+   "n_spikes": 712,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 26,
+   "n_active": 20,
+   "n_spikes": 669,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 27,
+   "n_active": 21,
+   "n_spikes": 681,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 28,
+   "n_active": 21,
+   "n_spikes": 668,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  },
+  {
+   "k": 29,
+   "n_active": 20,
+   "n_spikes": 656,
+   "grn_mean_hz": null,
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0
+  }
+ ],
+ "registration": {
+  "file": "results/shiu2024_phase1/registration_v5.json",
+  "version": 5,
+  "supersedes": null,
+  "git_commit": "24ea400",
+  "model_hash": "1e1bb7c3d79260114b0ad90fded7f3ec3d5740f664fba48bf11ec7625743111e",
+  "registered_at": "2026-10-12T10:44:08",
+  "matches": true,
+  "problems": []
+ },
+ "provenance": {
+  "written_at": "2026-10-12T18:00:22",
+  "git_commit": "65ce101",
+  "git_is_repo": true,
+  "git_dirty": false,
+  "dirty_files": [],
+  "allow_dirty": false,
+  "env": {},
+  "python": "3.12.10",
+  "versions": {
+   "brian2": "2.10.1",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6"
+  },
+  "engine": "cython",
+  "platform": "win32",
+  "machine": "AMD64",
+  "float_dtype": "float64",
+  "graph": {
+   "data_dir": "D:\\a\\_temp\\shiu",
+   "min_weight": 5,
+   "n_neurons": 127400,
+   "n_signed_edges": 2614028,
+   "n_signed_synapses": 32981602,
+   "dataset": "FlyWire v630"
+  },
+  "data": {
+   "dir": "D:\\a\\_temp\\shiu",
+   "digests": {},
+   "manifest": "no-manifest"
+  }
+ }
+}
