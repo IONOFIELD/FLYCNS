@@ -1,0 +1,29 @@
+[fingerprint] null-dc-escape: benchmarks/null_distribution.py escape 2 2
+[registry] null_dc_escape: registered (version 5, model b64f82b31b1b, commit 2cae86d)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! null_dc_escape: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! results\null_dc_escape\registration_v5.json is not committed (or differs from the commit): a registration must be committed before the run it governs
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! null_dc_escape: RUNNING ON UNCOMMITTED CODE (FLYCNS_ALLOW_DIRTY=1)
+! 11 code file(s) differ from commit 2cae86d: D results/a2_registered/criteria.json, D results/a2_robustness/criteria.json, D results/dnp13_control/criteria.json, D results/feeding_by_modality/criteria.json, D results/flight_snpp16_graded/criteria.json, D results/flight_snpp16_robustness/criteria.json, D results/gustatory_signed_map/criteria.json, D results/null_strict/criteria.json ...
+! The report is stamped dirty and must not be quoted as a registered result.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+escape: real network, 2 trials ...
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  real giant fiber response probability: 1.0000; whole CNS 0.00464 Hz
+[graph] removed 72 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  null  1/2: 0.0000; whole CNS 0.00427 Hz (192s)
+[graph] removed 150 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  null  2/2: 0.5000; whole CNS 0.00485 Hz (224s)
+
+real 1.0000 vs null median 0.2500, max 0.5000 (percentile 1.00); null CNS 0.00456 Hz vs real 0.00464 Hz (active)
+  PASS  N1_escape_gf_wiring_specific
+wrote results\null_dc_escape\report.json
+[fingerprint] null-dc-escape: 15 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\null-dc-escape.jsonl
