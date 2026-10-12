@@ -1,0 +1,23 @@
+[fingerprint] null-dc-song: benchmarks/null_distribution.py song 2 2
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! null_dc_song: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! the criteria in the code differ from the registered ones
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+song: real network, 2 trials ...
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  real pMP2 spikes per cell per pulse: 8.5000; whole CNS 0.01601 Hz
+[graph] removed 72 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  null  1/2: 10.5000; whole CNS 0.00695 Hz (197s)
+[graph] removed 150 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  null  2/2: 1.7500; whole CNS 0.00170 Hz (237s)
+
+real 8.5000 vs null median 6.1250, max 10.5000 (percentile 0.50); null CNS 0.00433 Hz vs real 0.01601 Hz (active)
+  UNRESOLVED  N2_song_pmp2_wiring_specific
+wrote results\null_dc_song\report.json
+[fingerprint] null-dc-song: 15 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\null-dc-song.jsonl
