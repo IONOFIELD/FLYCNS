@@ -1,0 +1,14 @@
+--- L5_adaptation
+[phase1] L5_adaptation 27/30 done (1299 s)
+[phase1] L5_adaptation 28/30 done (1354 s)
+[phase1] L5_adaptation 29/30 done (1399 s)
+[phase1] L5_adaptation 30/30 done (1444 s)
+[phase1] L5_adaptation: 30 runs in 1443.6 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1\arms\L5_adaptation.json
+
+--- Le_euler
+[phase1] Le_euler 27/30 done (412 s)
+[phase1] Le_euler 28/30 done (431 s)
+[phase1] Le_euler 29/30 done (449 s)
+[phase1] Le_euler 30/30 done (465 s)
+[phase1] Le_euler: 30 runs in 464.7 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1\arms\Le_euler.json
+
