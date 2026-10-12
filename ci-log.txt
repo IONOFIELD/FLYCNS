@@ -1,0 +1,68 @@
+[fingerprint] fit-gains: benchmarks/fit_gains.py 1
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+taste drive ['aPhM2a', 'aPhM5', 'BM_Taste', 'claw_tpGRN', 'PhG1c']; control ['JO-FV']; 11 JO types
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.0  r=1.0  l=0.75  score 6/8  [E1 E2 E3 A1 F2 S1       ]  GF hit 1.00 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.010 | 180s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.0  r=1.0  l=1.0   score 6/8  [E1 E2 E3 A1 F2 S1       ]  GF hit 1.00 per 1.50 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.009 | 180s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.0  r=1.0  l=1.5   score 5/8  [E2 E3 A1 F2 S1          ]  GF hit 1.00 per 4.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.034 | 92s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.0  r=1.5  l=0.75  score 6/8  [E1 E2 E3 A1 F2 S1       ]  GF hit 1.00 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.015 | 84s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.0  r=1.5  l=1.0   score 5/8  [E2 E3 A1 F2 S1          ]  GF hit 1.00 per 2.50 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.013 | 85s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.0  r=1.5  l=1.5   score 4/8  [E2 E3 A1 F2             ]  GF hit 1.00 per 5.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.50 pop 0.042 | 84s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.5  r=1.0  l=0.75  score 6/8  [E1 E2 E3 A1 F2 S1       ]  GF hit 1.00 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.017 | 84s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.5  r=1.0  l=1.0   score 6/8  [E1 E2 E3 A1 F2 S1       ]  GF hit 1.00 per 1.50 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.016 | 85s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.5  r=1.0  l=1.5   score 4/8  [E2 E3 A1 F2             ]  GF hit 1.00 per 4.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.50 pop 0.045 | 85s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.5  r=1.5  l=0.75  score 6/8  [E1 E2 E3 A1 F2 S1       ]  GF hit 1.00 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.027 | 84s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.5  r=1.5  l=1.0   score 5/8  [E2 E3 A1 F2 S1          ]  GF hit 1.00 per 2.50 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.025 | 85s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.5  r=1.5  l=1.5   score 3/8  [E2 E3 A1                ]  GF hit 1.00 per 5.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.50 pop 0.052 | 85s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=2.0  r=1.0  l=0.75  score 6/8  [E1 E2 E3 A1 F2 S1       ]  GF hit 1.00 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.025 | 85s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=2.0  r=1.0  l=1.0   score 6/8  [E1 E2 E3 A1 F2 S1       ]  GF hit 1.00 per 1.50 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.024 | 86s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=2.0  r=1.0  l=1.5   score 4/8  [E2 E3 A1 F2             ]  GF hit 1.00 per 4.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 1.00 pop 0.050 | 88s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=2.0  r=1.5  l=0.75  score 6/8  [E1 E2 E3 A1 F2 S1       ]  GF hit 1.00 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.035 | 85s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=2.0  r=1.5  l=1.0   score 5/8  [E2 E3 A1 F2 S1          ]  GF hit 1.00 per 2.50 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.033 | 87s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=2.0  r=1.5  l=1.5   score 3/8  [E2 E3 A1                ]  GF hit 1.00 per 5.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 1.00 pop 0.061 | 87s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=3.0  r=1.0  l=0.75  score 6/8  [E1 E2 E3 A1 F2 S1       ]  GF hit 1.00 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.040 | 85s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=3.0  r=1.0  l=1.0   score 5/8  [E1 E2 E3 A1 F2          ]  GF hit 1.00 per 1.50 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.50 pop 0.038 | 85s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=3.0  r=1.0  l=1.5   score 3/8  [E2 E3 A1                ]  GF hit 1.00 per 4.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 1.50 pop 0.065 | 87s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=3.0  r=1.5  l=0.75  score 5/8  [E1 E2 E3 A1 S1          ]  GF hit 1.00 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.056 | 87s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=3.0  r=1.5  l=1.0   score 3/8  [E2 E3 A1                ]  GF hit 1.00 per 2.50 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.50 pop 0.052 | 89s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=3.0  r=1.5  l=1.5   score 3/8  [E2 E3 A1                ]  GF hit 1.00 per 5.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 1.50 pop 0.082 | 87s
+
+best: sensory 1.0 relay 1.0 local 1.0  score 6/8   (38 min total)
+ sensory  relay  local  score  chk_E1  chk_E2  chk_E3  chk_A1  chk_A2  chk_F1  chk_F2  chk_S1
+     1.0    1.0   1.00      6    True    True    True    True   False   False    True    True
+     1.0    1.0   0.75      6    True    True    True    True   False   False    True    True
+     1.5    1.0   1.00      6    True    True    True    True   False   False    True    True
+     1.0    1.5   0.75      6    True    True    True    True   False   False    True    True
+     1.5    1.0   0.75      6    True    True    True    True   False   False    True    True
+     2.0    1.0   1.00      6    True    True    True    True   False   False    True    True
+     1.5    1.5   0.75      6    True    True    True    True   False   False    True    True
+     2.0    1.0   0.75      6    True    True    True    True   False   False    True    True
+[fingerprint] fit-gains: 432 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\fit-gains.jsonl
