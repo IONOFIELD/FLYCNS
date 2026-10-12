@@ -1,0 +1,19 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+b=  0 mV  per response 5.54 (strong gains 9.70, max 15)  hit 0.90  TTMn/GF 1.00  [C3 C4      ]   324s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+b=  5 mV  per response 4.32 (strong gains 6.80, max 9)  hit 0.82  TTMn/GF 1.00  [C3 C4      ]   339s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+b= 10 mV  per response 3.35 (strong gains 5.10, max 6)  hit 0.82  TTMn/GF 1.00  [C3 C4      ]   268s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+b= 15 mV  per response 2.95 (strong gains 4.25, max 6)  hit 0.80  TTMn/GF 1.00  [C3 C4      ]   288s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+b= 20 mV  per response 2.58 (strong gains 3.65, max 4)  hit 0.80  TTMn/GF 1.00  [C3 C4      ]   267s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+b= 30 mV  per response 2.08 (strong gains 2.75, max 4)  hit 0.80  TTMn/GF 1.00  [C3 C4      ]   258s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+b= 45 mV  per response 1.59 (strong gains 2.00, max 2)  hit 0.80  TTMn/GF 1.00  [C1 C2 C3 C4] OK  258s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+b= 60 mV  per response 1.43 (strong gains 1.70, max 2)  hit 0.75  TTMn/GF 0.99  [C1 C2 C3 C4] OK  258s
+
+smallest increment satisfying C1-C4: 45 mV
