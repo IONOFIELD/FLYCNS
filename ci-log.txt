@@ -1,0 +1,20 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+DNp13 input: 9,101 excitatory vs 7,307 inhibitory synapses
+strongest excitatory input types: {'SIP108m': 870, 'PVLP204m': 720, 'SIP109m': 698, 'SIP110m_a': 338, 'AVLP713m': 270}
+rule picks best_input = SIP108m
+criteria registered at commit c67b98e; this run at bd631a2
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  best_input  ['SIP108m']                              (  4 cells) | DNp13 19.60  pMP2  0.00  pIP10  0.65 | static DNp13 +1.16e-01 pMP2 +1.52e-02 | 166s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  pC1_1b      ['pC1_1b']                               (  2 cells) | DNp13  0.15  pMP2  0.00  pIP10  0.00 | static DNp13 +1.56e-02 pMP2 +2.19e-04 | 165s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  LC10a       ['LC10a']                                (275 cells) | DNp13  0.00  pMP2  0.00  pIP10  0.55 | static DNp13 +1.38e-02 pMP2 +5.71e-03 | 92s
+
+CHECKS (criteria registered before the run)
+  PASS  D1_dnp13_reachable
+  FAIL  D2_pc1_1b_sine_choice
+UNCERTAINTY (95% intervals, flycns/stats.py: PASS only if the whole interval lies in the band)
+  PASS        D1_dnp13_reachable: 19.6 [18.1, 21] in [0.5, inf] (bootstrap)
+  FAIL        D2_pc1_1b_sine_choice: FAIL 0.15 [0.05, 0.3] in [0.5, inf] (bootstrap); PASS 0.15 [0.05, 0.3] in (0, inf] (bootstrap)
+VERDICT: DNp13 reachable, so pC1_14a's pulse-over-sine is genuine selectivity; pC1_1b -> sine not reproduced
+wrote results\dnp13_control\report.json
