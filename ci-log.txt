@@ -1,0 +1,8 @@
+[fingerprint] flight-robustness: benchmarks/flight_snpp16_robustness.py 20
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! flight_snpp16_robustness: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! the criteria in the code differ from the registered ones
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test.
+[fingerprint] flight-robustness: 0 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\flight-robustness.jsonl; exited non-zero: ['benchmarks/flight_snpp16_robustness.py 20']
+[fingerprint] flight-robustness: nothing was fingerprinted

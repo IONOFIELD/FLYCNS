@@ -1,0 +1,2 @@
+{"argv": ["flight_snpp16_robustness.py", "20"], "env": {"FLYCNS_ALLOW_DIRTY": "1"}, "kind": "proc"}
+{"argv": ["benchmarks/flight_snpp16_robustness.py", "20"], "code": 1, "kind": "exit"}
