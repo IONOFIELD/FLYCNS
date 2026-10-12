@@ -1,0 +1,96 @@
+{
+  "algorithm": "rowhash-v2",
+  "pandas": "3.0.6",
+  "dataset": "male-cns:v1.0 (neuprint.janelia.org)",
+  "written_at": "2026-10-12T10:33:39",
+  "files": {
+    "edges.parquet": {
+      "digest": "f08e90783d6b6420da7ef3c0de438a44a4686604ee11ab47c9af6f52ed4e22a8",
+      "rows": 6287789,
+      "columns": [
+        "nt",
+        "post",
+        "pre",
+        "weight"
+      ],
+      "sums": {
+        "post": "11517611213871",
+        "pre": "18683378936444",
+        "weight": "90297299"
+      },
+      "sha256": "61f8c2edbb214111073701fa5c4bef835e52925ce742f24e4011ce98d92da958"
+    },
+    "edges_nt.parquet": {
+      "digest": "53db371d0fbda2425dabb1e8d7d511bad66109f9f0a0eb0d935a7e49b35f0536",
+      "rows": 6287789,
+      "columns": [
+        "nt",
+        "nt_agree",
+        "nt_conf",
+        "post",
+        "pre",
+        "weight"
+      ],
+      "sums": {
+        "nt_agree": 5796598.921814,
+        "nt_conf": 5719571.37964,
+        "post": "11517611213871",
+        "pre": "18683378936444",
+        "weight": "90297299"
+      },
+      "sha256": "caadd394e7736cb1ef4ee7036aab2153b63502067cb9a6f0eef7d4f8afd818c7"
+    },
+    "neurons.parquet": {
+      "digest": "06ea0afb48c414adecc6419b51a3fd8357ecbc0067ab9f55cc8cb7f06da3cb93",
+      "rows": 176422,
+      "columns": [
+        "bodyId",
+        "consensusNt",
+        "dimorphism",
+        "entryNerve",
+        "exitNerve",
+        "fruDsx",
+        "instance",
+        "post",
+        "pre",
+        "predictedNt",
+        "somaSide",
+        "status",
+        "subclass",
+        "superclass",
+        "synonyms",
+        "type",
+        "x",
+        "y",
+        "z"
+      ],
+      "sums": {
+        "bodyId": "2570954121010",
+        "post": "130889681",
+        "pre": "42957584",
+        "x": 6882363994.0,
+        "y": 4592901473.0,
+        "z": 5503515286.0
+      },
+      "sha256": "b60448d9e2f26bfc0389cada9bb08a1a4d5f4d2149163da3fdd3e48621ee9e21"
+    },
+    "roi_membership.parquet": {
+      "digest": "5fce5c5d54e455704cc91124b0327e6be770447c1304d4d6b49ddbd406677d60",
+      "rows": 174802,
+      "columns": [
+        "bodyId",
+        "dominant_frac",
+        "dominant_roi",
+        "n_syn",
+        "sez_frac"
+      ],
+      "sums": {
+        "bodyId": "2259809907048",
+        "dominant_frac": 132068.894561,
+        "n_syn": "173844672",
+        "sez_frac": 7160.603613
+      },
+      "sha256": "34eb88a9bda0aab28e897f97e69eaee822320565c61d706d53deec588849a4df"
+    }
+  }
+}

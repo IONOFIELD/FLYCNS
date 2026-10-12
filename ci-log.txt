@@ -1,0 +1,6 @@
+wrote data/MANIFEST.json:
+  edges.parquet                   6,287,789 rows  f08e90783d6b6420
+  edges_nt.parquet                6,287,789 rows  53db371d0fbda242
+  neurons.parquet                   176,422 rows  06ea0afb48c414ad
+  roi_membership.parquet            174,802 rows  5fce5c5d54e45570
+commit it:  git add data/MANIFEST.json   then   git commit -m "pin input data"
