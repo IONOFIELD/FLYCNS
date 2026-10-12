@@ -1,0 +1,37 @@
+[fingerprint] flight-snpp16: benchmarks/flight_snpp16.py 20
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! flight_snpp16: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! the criteria in the code differ from the registered ones
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+afferents: 413 total | SNpp16 13 cells | others 400
+SNpp16 -> DVMn 1a-c: 664 of 1017 afferent synapses (65%)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[S1 SNpp16 alone         ]  13 afferents | DVMn 1a-c  43.77 Hz (seeds 47.1/40.4/43.8) | DLMn c-f  0.00 | steering    0.1 | b1    0.0 | CNS 0.023 | 151s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[S2 all but SNpp16       ] 400 afferents | DVMn 1a-c  33.67 Hz (seeds 33.7/32.0/35.4) | DLMn c-f  0.42 | steering   78.5 | b1  282.8 | CNS 0.231 | 36s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[S3 all afferents        ] 413 afferents | DVMn 1a-c  99.32 Hz (seeds 97.6/101.0/99.3) | DLMn c-f  0.00 | steering   72.5 | b1  281.1 | CNS 0.241 | 40s
+[null: SNpp16 alone      ]  13 afferents | DVMn 1a-c   0.00 Hz (seeds 0.0/0.0/0.0) | DLMn c-f  0.00 | steering    0.0 | b1    0.0 | CNS 0.006 | 37s
+
+CHECKS
+  FAIL  N1_snpp16_sufficient_dvmn_in_band
+  FAIL  N2_snpp16_necessary_dvmn_below_2hz
+
+UNCERTAINTY (flycns/stats.py; three-way verdict, scored per seed)
+  FAIL        N1_snpp16_sufficient_dvmn_in_band: per-draw (0 of 3 in band; pass needs 3), draws [47.13, 40.4, 43.77]
+  FAIL        N2_snpp16_necessary_dvmn_below_2hz: per-draw (0 of 3 in band; pass needs 3), draws [33.67, 31.98, 35.35]
+
+wrote results\flight_snpp16\report.json
+[fingerprint] flight-snpp16: 12 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\flight-snpp16.jsonl
