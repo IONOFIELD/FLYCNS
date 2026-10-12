@@ -1,0 +1,2 @@
+{"argv": ["sugar_laterality.py"], "env": {"FLYCNS_ALLOW_DIRTY": "1"}, "kind": "proc"}
+{"argv": ["benchmarks/sugar_laterality.py"], "code": 0, "kind": "exit"}

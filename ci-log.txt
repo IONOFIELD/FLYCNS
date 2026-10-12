@@ -1,0 +1,42 @@
+[fingerprint] sugar-laterality: benchmarks/sugar_laterality.py
+[registry] sugar_laterality: registered (version 5, model 29080f77161a, commit 2cae86d)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! sugar_laterality: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! results\sugar_laterality\registration_v5.json is not committed (or differs from the commit): a registration must be committed before the run it governs
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+  sugar              34 cells | L  17 R  17 | no explicit side (excluded) 0
+  bitter             38 cells | L  19 R  19 | no explicit side (excluded) 0
+  old_mixed_proxy   140 cells | L  69 R  71 | no explicit side (excluded) 0
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! sugar_laterality: RUNNING ON UNCOMMITTED CODE (FLYCNS_ALLOW_DIRTY=1)
+! 11 code file(s) differ from commit 2cae86d: D results/a2_registered/criteria.json, D results/a2_robustness/criteria.json, D results/dnp13_control/criteria.json, D results/feeding_by_modality/criteria.json, D results/flight_snpp16_graded/criteria.json, D results/flight_snpp16_robustness/criteria.json, D results/gustatory_signed_map/criteria.json, D results/null_strict/criteria.json ...
+! The report is stamped dirty and must not be quoted as a registered result.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+criteria registered at commit 2cae86d; this run at 2cae86d
+
+cumulative influence on MN9 (hops 1-5)          ipsi          contra     bias
+  sugar            signed   L afferents   +4.989e-04   +1.670e-03   contra/ipsi 3.35  CONTRALATERAL
+  sugar            signed   R afferents   +8.099e-04   +1.405e-03   contra/ipsi 1.73  CONTRALATERAL
+  sugar            unsigned L afferents   +4.919e-03   +5.607e-03   contra/ipsi 1.14  CONTRALATERAL
+  sugar            unsigned R afferents   +6.355e-03   +5.587e-03   contra/ipsi 0.88
+  bitter           signed   L afferents   -8.649e-05   +1.083e-04   not both positive
+  bitter           signed   R afferents   +2.423e-04   -5.353e-04   not both positive
+  bitter           unsigned L afferents   +3.831e-03   +4.106e-03   contra/ipsi 1.07
+  bitter           unsigned R afferents   +3.422e-03   +3.658e-03   contra/ipsi 1.07
+  old_mixed_proxy  signed   L afferents   +5.911e-04   +3.496e-03   contra/ipsi 5.91  CONTRALATERAL
+  old_mixed_proxy  signed   R afferents   +1.985e-03   +2.653e-03   contra/ipsi 1.34  CONTRALATERAL
+  old_mixed_proxy  unsigned L afferents   +3.019e-02   +3.076e-02   contra/ipsi 1.02
+  old_mixed_proxy  unsigned R afferents   +3.471e-02   +3.158e-02   contra/ipsi 0.91
+
+CHECK (criterion registered before the run)
+  PASS  L1_sugar_contralateral_bias
+UNCERTAINTY (flycns/stats.py): PASS  L1_sugar_contralateral_bias: 1.7349626892139418 (point; graph arithmetic, no sampling)
+wrote results\sugar_laterality\report.json
+[fingerprint] sugar-laterality: 0 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\sugar-laterality.jsonl
+[fingerprint] sugar-laterality: no simulation step was fingerprinted
