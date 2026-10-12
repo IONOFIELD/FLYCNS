@@ -17,8 +17,8 @@
   "note_bodies": "statistics are over annotated neurons only; the raw file covers ~1.8M EM segments, mostly unproofread fragments with no consensus label",
   "note": "per-T-bar predictions vs the aggregate consensus label used for signing; use nt_agree to target sign perturbations at genuinely uncertain neurons instead of a random fraction",
   "provenance": {
-    "written_at": "2026-10-11T19:50:51",
-    "git_commit": "b7eba83",
+    "written_at": "2026-10-12T04:51:28",
+    "git_commit": "47eb98e",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

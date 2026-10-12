@@ -1,0 +1,165 @@
+criteria registered at commit 77e0cc5; this run at 47eb98e
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+[graph] TARGETED SIGN FLIP: 110,462 edges (1.6% of weight) from neurons whose T-bars disagree with their consensus label
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+targeted sign inversion: 110462 edges differ from the declared graph
+SNpp16 13 cells | relay superclasses for R2: ['ascending_neuron', 'descending_neuron', 'vnc_intrinsic']
+targeted sign inversion on the path under test: 87 of 50286 connections among 2120 cells (16 between driven and readout cells directly)
+
+R1  targeted transmitter-sign inversion
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  k=7, flipped               DVMn  16.40 Hz (24.2/16.3/11.4/15.2/14.8; 1/5 in band) | steer max 0.94 | b1 max 0.00 | DLMn max 0.00
+
+R2  relay-layer single-neuron parameters
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  tau_m_ms=5.0               DVMn 235.35 Hz (227.2/229.4/250.0/224.6/245.5; 0/5 in band) | steer max 36.34 | b1 max 0.51 | DLMn max 290.75
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  tau_m_ms=10.0              DVMn  62.91 Hz (29.2/20.0/118.1/129.4/17.8; 0/5 in band) | steer max 9.74 | b1 max 0.00 | DLMn max 164.95
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  tau_m_ms=40.0              DVMn  15.54 Hz (21.2/15.8/13.2/14.7/12.7; 0/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  v_thresh_gap_mV=4.0        DVMn  24.17 Hz (32.8/19.7/26.3/21.6/20.5; 0/5 in band) | steer max 7.76 | b1 max 0.00 | DLMn max 11.68
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  v_thresh_gap_mV=10.0       DVMn  14.88 Hz (19.8/15.5/12.6/14.4/12.1; 0/5 in band) | steer max 0.02 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  refractory_ms=1.0          DVMn  16.40 Hz (22.7/16.3/13.6/15.2/14.1; 0/5 in band) | steer max 10.91 | b1 max 0.00 | DLMn max 5.49
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  refractory_ms=5.0          DVMn  16.61 Hz (23.7/16.2/15.0/15.2/13.1; 0/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+
+R3  fresh cell-identity and phase draws
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  k= 1                       DVMn   0.00 Hz (0.0/0.0/0.0/0.0/0.0; 0/5 in band) | steer max 0.00 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  k= 2                       DVMn   0.00 Hz (0.0/0.0/0.0/0.0/0.0; 0/5 in band) | steer max 2.13 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  k= 3                       DVMn   1.89 Hz (0.0/4.6/2.5/2.3/0.0; 3/5 in band) | steer max 3.12 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  k= 4                       DVMn   2.59 Hz (2.1/4.4/5.8/0.0/0.7; 3/5 in band) | steer max 1.44 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  k= 5                       DVMn   7.17 Hz (12.1/0.5/6.6/2.7/14.0; 2/5 in band) | steer max 0.99 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  k= 6                       DVMn   9.33 Hz (10.9/6.9/2.3/12.0/14.5; 3/5 in band) | steer max 4.20 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  k= 7                       DVMn  18.45 Hz (9.3/19.5/23.5/25.2/14.6; 1/5 in band) | steer max 2.76 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  k= 8                       DVMn  20.28 Hz (15.7/15.7/22.8/22.4/24.8; 0/5 in band) | steer max 1.19 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  k= 9                       DVMn  32.56 Hz (42.9/28.0/35.4/26.7/29.8; 0/5 in band) | steer max 0.40 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  k=10                       DVMn  33.48 Hz (32.3/26.9/33.5/41.0/33.7; 0/5 in band) | steer max 0.74 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  k=11                       DVMn  42.10 Hz (52.4/36.7/34.4/37.2/49.8; 0/5 in band) | steer max 0.51 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  k=12                       DVMn  54.54 Hz (52.8/54.5/55.8/54.2/55.5; 0/5 in band) | steer max 0.41 | b1 max 0.00 | DLMn max 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  k=13                       DVMn  60.26 Hz (60.9/60.5/60.4/59.8/59.7; 0/5 in band) | steer max 0.34 | b1 max 0.00 | DLMn max 0.00
+  fresh k* = 4 (original 5); monotone within 0.5 Hz: True (reported, not scored)
+
+CHECKS (criteria registered before the run) | 3927s
+  FAIL  R1_survives_transmitter_uncertainty
+  FAIL  R2_selectivity_holds_across_cord_params
+  FAIL  R3_replicates_with_fresh_draws
+
+UNCERTAINTY (flycns/stats.py; three-way verdict, scored per draw)
+  FAIL        R1_survives_transmitter_uncertainty: all of 4 parts (87 flipped connections on the path under test)
+      FAIL        per-draw (1 of 5 in band; pass needs 4), draws [24.16, 16.33, 11.45, 15.23, 14.81] (DVMn at k=7, flipped graph, >= 4 of 5 draws)
+      PASS        per-draw (5 of 5 in band; pass needs 5), draws [0.13, 0.0, 0.94, 0.0, 0.13] (steer at k=7, flipped graph, every draw below 1 Hz)
+      PASS        per-draw (5 of 5 in band; pass needs 5), draws [0.0, 0.0, 0.0, 0.0, 0.0] (b1 at k=7, flipped graph, every draw below 1 Hz)
+      PASS        per-draw (5 of 5 in band; pass needs 5), draws [0.0, 0.0, 0.0, 0.0, 0.0] (dlmn at k=7, flipped graph, every draw below 1 Hz)
+  FAIL        R2_selectivity_holds_across_cord_params: all of 7 parts (selective at every setting; relay superclasses ['ascending_neuron', 'descending_neuron', 'vnc_intrinsic'])
+      FAIL        all of 3 parts (tau_m_ms=5.0)
+      FAIL        all of 3 parts (tau_m_ms=10.0)
+      PASS        all of 3 parts (tau_m_ms=40.0)
+      FAIL        all of 3 parts (v_thresh_gap_mV=4.0)
+      PASS        all of 3 parts (v_thresh_gap_mV=10.0)
+      UNRESOLVED  all of 3 parts (refractory_ms=1.0)
+      PASS        all of 3 parts (refractory_ms=5.0)
+  FAIL        R3_replicates_with_fresh_draws: all of 2 parts (replication with fresh cell-identity and phase draws)
+      UNRESOLVED  all of 2 parts (fresh k* within 1 of 5, with 'in band at k' scored per draw)
+      FAIL        per-draw (1 of 5 in band; pass needs 4), draws [9.34, 19.53, 23.48, 25.25, 14.64] (DVMn at k=7, fresh draws, >= 4 of 5)
+
+BATTERY FAIL  -> results\flight_snpp16_robustness\report.json
