@@ -1,0 +1,6 @@
+[shiu2024_a0] reference verified: 91bdd1e, 7 files byte-identical to the registration
+contralateral MN9: ours 67.10 Hz vs published 67.03 Hz (difference +0.07, 95% CI -2.87 to +2.93); ipsilateral ours 48.47 vs 48.63; fired in 30/30 trials
+  PASS       A0_S1_mn9_contra_magnitude
+  PASS       A0_S2_mn9_reliability
+  PASS       A0_S3_laterality
+A0 PASSES: the published model replicates here
