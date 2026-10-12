@@ -1,0 +1,42 @@
+[fingerprint] screen-w075: benchmarks/screen_afferents.py 1 data 50 0.75 aPhM2a,aPhM5,TPMN1,PhG1c,BM_Taste,claw_tpGRN,JO-FV,BM_Vib
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+screening 8 afferent types at 50.0 Hz, w_scale 0.75, 1 trials each
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 1/8] aPhM2a             n=5    MN9   9.50  CNS 0.4958 Hz  (112s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 2/8] aPhM5              n=4    MN9   0.00  CNS 0.0006 Hz  (192s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 3/8] TPMN1              n=48   MN9   1.50  CNS 0.0154 Hz  (215s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 4/8] PhG1c              n=4    MN9   0.00  CNS 0.0813 Hz  (238s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 5/8] BM_Taste           n=40   MN9   0.00  CNS 0.0132 Hz  (261s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 6/8] claw_tpGRN         n=50   MN9   3.50  CNS 0.2144 Hz  (283s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 7/8] JO-FV              n=70   MN9   1.00  CNS 0.1284 Hz  (307s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[ 8/8] BM_Vib             n=22   MN9   3.00  CNS 2.0240 Hz  (331s)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  suppression aPhM5              MN9   0.00 vs 1.50 alone  (+1.00)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  suppression PhG1c              MN9   2.50 vs 1.50 alone  (-0.67)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  suppression BM_Taste           MN9   0.00 vs 1.50 alone  (+1.00)
+
+DRIVERS (MN9 > 0.5 spikes/cell, CNS quiet):
+ type  n  mn9  mn9_L  mn9_R      cns
+TPMN1 48  1.5    3.0    0.0 0.015371
+
+SUPPRESSORS (>30% reduction of driver response):
+    type  n  suppression
+   aPhM5  4          1.0
+BM_Taste 40          1.0
+
+suggested: python benchmarks/feeding.py 6 data TPMN1 aPhM5,BM_Taste
+[fingerprint] screen-w075: 33 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\screen-w075.jsonl
