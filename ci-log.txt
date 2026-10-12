@@ -1,0 +1,14 @@
+--- a1_sugar100_bitter80
+[phase1] a1_sugar100_bitter80 27/30 done (715 s)
+[phase1] a1_sugar100_bitter80 28/30 done (744 s)
+[phase1] a1_sugar100_bitter80 29/30 done (769 s)
+[phase1] a1_sugar100_bitter80 30/30 done (793 s)
+[phase1] a1_sugar100_bitter80: 30 runs in 793.4 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1\arms\a1_sugar100_bitter80.json
+
+--- a1_sugar100_bitter100
+[phase1] a1_sugar100_bitter100 27/30 done (714 s)
+[phase1] a1_sugar100_bitter100 28/30 done (743 s)
+[phase1] a1_sugar100_bitter100 29/30 done (768 s)
+[phase1] a1_sugar100_bitter100 30/30 done (793 s)
+[phase1] a1_sugar100_bitter100: 30 runs in 792.7 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1\arms\a1_sugar100_bitter100.json
+
