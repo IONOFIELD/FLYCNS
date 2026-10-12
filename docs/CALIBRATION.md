@@ -85,6 +85,21 @@ loom-driven readout re-derived by its own rule, on GitHub's Windows machines (cl
   loom"; 9.7 is the strongest-quartile mean and the maximum is 15. The `flycns/registry.py` docstring
   dates version 2 to `b7eba83`, the commit of its registrations; the frozen model was `4c39a8f`.
 
+**Generation 4, phase 0 (hygiene), 12 October 2026. No parameter changed.** Logged as deviations from
+the generation-3 freeze:
+- **Input data re-pinned without the legacy `sign` column.** The fetch wrote a `sign` column from its
+  own three-entry table (no histamine) that the model never read; there is now one transmitter-to-sign
+  table, `flycns/graph.py` SIGN_MAP. The re-pin was made from a fresh neuPrint fetch (cloud run 16) and
+  checked against the old pin (cloud run 17): `neurons.parquet` and `roi_membership.parquet` are byte for
+  byte the same; `edges.parquet` and `edges_nt.parquet` have the same 6,287,789 rows, and their content
+  fingerprint with the old `sign` column dropped equals the new one, so every other value of every row is
+  unchanged. `data/MANIFEST.json` is therefore new, and every registration is redone (generation 4).
+- **`flycns/integrity.py` joins the hashed model files** (it holds the declared defaults and the data
+  checks a registered run depends on).
+- **Two frozen code comments corrected** (the errata listed above).
+- **Expected:** every number of generation 3 reproduces exactly; the generation-4 run is scored as a
+  replication of run 14, not as a new result.
+
 Values that are **measured, not chosen**:
 - **Single-neuron parameters:** Shiu et al. 2024.
 - **Loom tuning amplitudes and trial-gain sigma:** extracted from Turner et al. 2022 imaging, stationary trials.
