@@ -190,8 +190,8 @@
   },
   "verdict": "DNp13 reachable, so pC1_14a's pulse-over-sine is genuine selectivity; pC1_1b -> sine not reproduced",
   "provenance": {
-    "written_at": "2026-10-12T05:47:20",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T12:57:57",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -226,7 +226,7 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"
@@ -290,12 +290,12 @@
     }
   },
   "registration": {
-    "file": "results/dnp13_control/registration_v3.json",
-    "version": 3,
-    "supersedes": "results/dnp13_control/registration.json",
-    "git_commit": "a94769d",
-    "model_hash": "f60d6c8c3fa65ad36b55b0268678450feea6267f322074348bfbe18e39d52097",
-    "registered_at": "2026-10-11T21:41:46",
+    "file": "results/dnp13_control/registration_v4.json",
+    "version": 4,
+    "supersedes": "results/dnp13_control/registration_v3.json",
+    "git_commit": "7851c7c",
+    "model_hash": "bf06f6923c14a15b0ca9c6f3ff8c8c33dc29b053633fa83f0639601fb5da6907",
+    "registered_at": "2026-10-12T03:48:30",
     "matches": true,
     "problems": []
   }

@@ -91,7 +91,7 @@
       "MN9_ipsi_L": 0.16666666666666666,
       "MN9_contra_R": 0.0,
       "pop_rate_hz": 0.010753579254182074,
-      "wall_s": 103.5,
+      "wall_s": 105.0,
       "structural_2hop_L": 25650.0,
       "structural_2hop_R": 350.0,
       "MN9_ipsi_L_per_trial": [
@@ -228,20 +228,20 @@
     }
   },
   "registration": {
-    "file": "results/feeding/registration_v3.json",
-    "version": 3,
-    "supersedes": "results/feeding/registration.json",
-    "git_commit": "a94769d",
-    "model_hash": "44a27c3afe68f464a8720ad0c267c5f8fb884f984921c90b85d6f5e251b6b2a5",
-    "registered_at": "2026-10-11T21:41:36",
+    "file": "results/feeding/registration_v4.json",
+    "version": 4,
+    "supersedes": "results/feeding/registration_v3.json",
+    "git_commit": "7851c7c",
+    "model_hash": "8e1f60c2678af2152e18b5c7ea4ed255940a059154a1a2e5dabb6d5d72471e37",
+    "registered_at": "2026-10-12T03:48:21",
     "matches": false,
     "problems": [
       "model settings overridden: FLYCNS_DT_MS=0.05"
     ]
   },
   "provenance": {
-    "written_at": "2026-10-12T08:20:28",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T15:18:26",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -279,7 +279,7 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"

@@ -25,8 +25,10 @@ registration_history), so a refrozen model is registered under a new file name, 
 version 2 is results/<benchmark>/registration.json, version N >= 3 is registration_vN.json. Only the
 current generation's file governs a run; each new file names the one it supersedes and why
 (GENERATION_NOTE), and the older files stay committed as the record of what was registered before.
-  version 2  frozen 11 October 2026 at b7eba83 (run 12)
-  version 3  refrozen 11 October 2026: GENERATION_NOTE
+  version 2  model frozen 11 October 2026 at 4c39a8f, registrations committed at b7eba83 (run 12)
+  version 3  model refrozen at a94769d, registrations committed at 47eb98e (run 14): per-GF JON calibration,
+             w_scale 0.4, GF adaptation 45 mV
+  version 4  GENERATION_NOTE
 """
 import datetime
 import hashlib
@@ -37,19 +39,20 @@ from pathlib import Path
 
 from .integrity import PLUMBING, ROOT, _box, _git, allow_dirty, git_state, overrides
 
-VERSION = 3
+VERSION = 4
 NAME = "registration.json" if VERSION == 2 else f"registration_v{VERSION}.json"
-GENERATION_NOTE = ("model refrozen: the JON -> GF compound potential is calibrated per giant fiber on its own coupled "
-                   "afferents (run 12 measured 3.65 and 0.73 mV for a 3 mV target); w_scale 0.3 -> 0.4, the value the "
-                   "registered benchmark-blind rule selects (fit/select_wscale.py); the giant fiber adaptation refit "
-                   "under both (benchmarks/fit_gf_adapt.py). Criteria unchanged.")
+GENERATION_NOTE = ("hygiene refreeze (Gen 4 phase 0), no model parameter changed: flycns/integrity.py joins the hashed "
+                   "files (it holds the declared defaults and the data checks); the input data are re-pinned without "
+                   "the legacy `sign` column (one transmitter-to-sign table, graph.SIGN_MAP); two frozen code comments "
+                   "corrected. Criteria unchanged; every number is expected to equal generation 3's.")
 # Files that define the model and its inputs, and the role table (relabelling a failed independent check
-# after the fact is a design change). Not listed, by design: the guard and reporting code (registry.py,
-# integrity.py, benchmarks/summarize.py) and the display and platform code (ascii.py, windows.py). None of
-# them computes a number or a verdict; each report's verdicts come from its benchmark and stats.py, which
-# are frozen, so fixing a guard does not void every registration. (Engine choice is recorded per report.)
+# after the fact is a design change). integrity.py is listed since generation 4: it holds the declared
+# defaults (what counts as an override), the data verification and the guards a registered run depends on.
+# Not listed, by design: the registration and reporting code (registry.py, benchmarks/summarize.py) and the
+# display and platform code (ascii.py, windows.py). None of them computes a number or a verdict; each
+# report's verdicts come from its benchmark and stats.py, which are frozen. (Engine choice is per report.)
 MODEL_FILES = ["flycns/__init__.py", "flycns/anatomy.py", "flycns/bench.py", "flycns/calibration.py",
-               "flycns/graph.py", "flycns/model.py", "flycns/protocols.py", "flycns/stats.py",
+               "flycns/graph.py", "flycns/integrity.py", "flycns/model.py", "flycns/protocols.py", "flycns/stats.py",
                "data/loom_tuning_measured.json", "data/MANIFEST.json", "requirements.lock"]
 PACKAGES = ("brian2", "numpy", "pandas", "scipy")
 
@@ -111,12 +114,14 @@ def path(label):
 
 
 def _older(label):
-    """The newest registration of an earlier generation for this benchmark, if any (repo-relative)."""
+    """The newest COMMITTED registration of an earlier generation for this benchmark, if any (repo-relative).
+    A stray untracked file of that name is not a registration and is never named as superseded."""
     d = ROOT / "results" / label
     names = [f"registration_v{v}.json" for v in range(VERSION - 1, 2, -1)] + ["registration.json", "criteria.json"]
     for n in names:
-        if (d / n).exists():
-            return f"results/{label}/{n}"
+        rel = f"results/{label}/{n}"
+        if (d / n).exists() and _git("ls-files", "--error-unmatch", rel)[0] == 0:
+            return rel
     return None
 
 

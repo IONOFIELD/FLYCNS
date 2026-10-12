@@ -1,5 +1,6 @@
 """
-flycns setup (Windows). Started by setup.cmd; safe to run again at any time.
+flycns setup. Started by setup.cmd on Windows, or run directly (python3 scripts/setup.py) on Linux and
+macOS; safe to run again at any time.
 
   .\\setup.cmd --check     environment, then the regression test on the toy graph (no account)
   .\\setup.cmd             environment, then the connectome and its fingerprint (asks for the token once)
@@ -30,6 +31,9 @@ os.environ["PYTHONUTF8"] = "1"
 ARGS = set(sys.argv[1:])
 QUIET = "--refresh" in ARGS or not sys.stdin.isatty()     # never prompt in CI or unattended runs
 VENV_PY = ROOT / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+# the commands this script tells the user to run, as spelled on this platform
+SETUP = ".\\setup.cmd" if os.name == "nt" else "python3 scripts/setup.py"
+MENU = ".\\fly.cmd" if os.name == "nt" else ".venv/bin/python fly.py"
 # The lock installs from ready-made Windows builds only, except these pure-Python packages that are
 # published only as source (they build without a compiler). CI installs with the same flags.
 SOURCE_OK = "asciitree"
@@ -145,9 +149,13 @@ def engine_ok():
 def step_engine():
     say("[3/6] simulation engine")
     if engine_ok():
-        say("  compiled engine available (Microsoft C++ compiler found)")
+        say("  compiled engine available (a working C++ compiler was found)")
         return
     say("  No C++ compiler: the pure-Python engine will be used. Results are identical, runs are slower.")
+    if os.name != "nt":
+        say("  For full speed install a C++ compiler: g++ on Linux (e.g. sudo apt install g++), or the Xcode\n"
+            "  command line tools on macOS (xcode-select --install); then run scripts/setup.py again.")
+        return
     say("  For full speed install the free Microsoft C++ Build Tools (a one-time download of a few GB).")
     if ask_yes("  Install the Build Tools now with winget? (takes 10 to 20 minutes)", default=False):
         ok = winget("Microsoft.VisualStudio.2022.BuildTools",
@@ -159,8 +167,8 @@ def step_engine():
 def step_check():
     say("[4/6] regression test on the toy graph (no account needed; about 10 to 20 minutes)")
     code = vpy("tests/regression.py")
-    say("install works. For the real connectome run:  .\\setup.cmd" if code == 0 else
-        "the regression test failed: send Claude the lines above")
+    say(f"install works. For the real connectome run:  {SETUP}" if code == 0 else
+        "the regression test failed: copy the lines above when you ask for help (for example in a GitHub issue)")
     sys.exit(code)
 
 
@@ -169,16 +177,20 @@ def step_token():
     if W.neuprint_token():
         where = "the NEUPRINT_TOKEN environment variable" if os.environ.get("NEUPRINT_TOKEN", "").strip() else W.TOKEN_FILE
         say(f"  found ({where})")
+        if W.TOKEN_FILE.exists():
+            ok, why = W.restrict_token_file()     # a file saved before this check existed may be readable by others
+            if not ok:
+                say(f"  WARNING: could not restrict {W.TOKEN_FILE} to your user only: {why}")
         return
     if QUIET:
-        sys.exit(f"  no token at {W.TOKEN_FILE}; run .\\setup.cmd once by hand to save it")
+        sys.exit(f"  no token at {W.TOKEN_FILE}; run {SETUP} once by hand to save it")
     say("  The connectome is downloaded from neuPrint, which needs a free personal token:")
     say("    1. open https://neuprint.janelia.org and log in with Google")
     say("    2. click your account (top right), then Account, and copy the token")
     import getpass
     tok = getpass.getpass("  paste the token here (it will not be shown) and press Enter: ")
     if len("".join(tok.split())) < 40:
-        sys.exit("  that does not look like a token; run setup.cmd again")
+        sys.exit(f"  that does not look like a token; run {SETUP} again")
     say(f"  saved to {W.save_token(tok)}")
 
 
@@ -199,7 +211,7 @@ def step_data():
         # present but not matching: never refetch over it; say what differs and stop
         vpy("-m", "flycns.integrity", "verify", "data")
         sys.exit("  The tables here differ from the ones the committed results were produced on (see above).\n"
-                 "  Registered tests refuse to run until this is resolved. Send Claude the lines above.")
+                 "  Registered tests refuse to run until this is resolved. Copy the lines above when you ask for help.")
     if not present and vpy("scripts/fetch_malecns.py") != 0:
         sys.exit("  the connectome download failed; see above")
     for script in ("scripts/fetch_annotations.py", "scripts/fetch_dimorphism.py", "fit/roi_membership.py"):
@@ -211,11 +223,11 @@ def step_data():
         if vpy("-m", "flycns.integrity", "verify", "data") != 0:
             sys.exit("  The downloaded tables differ from the ones the committed results were produced on.\n"
                      "  Registered tests refuse to run until this is resolved; most likely neuPrint updated the\n"
-                     "  dataset. Send Claude the lines above before changing anything.")
+                     "  dataset. Keep the lines above and change nothing until the difference is understood.")
     else:
         vpy("-m", "flycns.integrity", "write", "data")
         say("  first fetch on this checkout: the fingerprint above now pins these tables")
-    say("\nready. Run  .\\fly.cmd  for the menu.")
+    say(f"\nready. Run  {MENU}  for the menu.")
 
 
 if __name__ == "__main__":
@@ -229,7 +241,7 @@ if __name__ == "__main__":
         if not (ROOT / "data/roi_membership.parquet").exists():
             say("  NOTE: no data\\roi_membership.parquet, so the SEZ is defined by cell-type name, not anatomy.\n"
                 "        The committed results use the anatomical SEZ: run menu 25 once to match them.")
-        say("\nready. Run  .\\fly.cmd  for the menu.")
+        say(f"\nready. Run  {MENU}  for the menu.")
         sys.exit(0)
     step_token()
     step_data()

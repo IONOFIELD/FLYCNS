@@ -940,7 +940,7 @@
           ]
         ]
       },
-      "wall_s": 664.8,
+      "wall_s": 667.5,
       "n_trials": 100,
       "gf_depol_mV": 5.108680205093507
     },
@@ -1863,7 +1863,7 @@
           ]
         ]
       },
-      "wall_s": 737.2,
+      "wall_s": 693.8,
       "n_trials": 100,
       "gf_depol_mV": 3.4551973236225244
     },
@@ -2806,7 +2806,7 @@
           ]
         ]
       },
-      "wall_s": 679.6,
+      "wall_s": 677.9,
       "n_trials": 100,
       "gf_depol_mV": 1.7284721358719077,
       "label": "A2_sound_alone"
@@ -2833,8 +2833,8 @@
   },
   "checks": {},
   "provenance": {
-    "written_at": "2026-10-12T06:44:23",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T12:46:30",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -2879,7 +2879,7 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"

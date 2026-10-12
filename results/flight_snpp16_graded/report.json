@@ -13,12 +13,12 @@
     "jitter_ms": 0.8
   },
   "registration": {
-    "file": "results/flight_snpp16_graded/registration_v3.json",
-    "version": 3,
-    "supersedes": "results/flight_snpp16_graded/registration.json",
-    "git_commit": "a94769d",
-    "model_hash": "e439f0382ecf0f9556f21cee1e35cd7a97a79c7603aae19cd33462d6ae8baf35",
-    "registered_at": "2026-10-11T21:41:57",
+    "file": "results/flight_snpp16_graded/registration_v4.json",
+    "version": 4,
+    "supersedes": "results/flight_snpp16_graded/registration_v3.json",
+    "git_commit": "7851c7c",
+    "model_hash": "0eb810329899b49d3a0de0eed3f108198fadfb9a85ac63a1e150d0d549bbe2ca",
+    "registered_at": "2026-10-12T03:48:41",
     "matches": true,
     "problems": []
   },
@@ -1474,8 +1474,8 @@
     "script_uncommitted": false
   },
   "provenance": {
-    "written_at": "2026-10-12T06:35:32",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T11:39:35",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -1510,7 +1510,7 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"

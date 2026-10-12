@@ -1,0 +1,220 @@
+{
+  "version": 4,
+  "benchmark": "feeding",
+  "criteria": {
+    "version": 2,
+    "question": "does taste drive reach MN9 through the SEZ (Shiu et al. 2024) without spreading beyond the SEZ or driving motor neurons at unphysiological rates, and is the pathway wiring-specific?",
+    "protocol": {
+      "n_trials": 6,
+      "pulse_ms": 200,
+      "gap_ms": 300,
+      "readout_window_ms": 250,
+      "dose_hz": [
+        10,
+        25,
+        50,
+        100,
+        200
+      ],
+      "test_hz": 50,
+      "drive": "explicit argv types, else annotated sugar GRN types (SUGAR_GRN_PATTERNS, BM_ excluded), else the screen-selected MN9-driving gustatory types present (GUSTATORY_MN9_DRIVING), else every gustatory afferent type, else the sensory afferents onto MN9's top excitatory inputs",
+      "drive_override": {
+        "sugar": null,
+        "bitter": null
+      },
+      "bitter": "BITTER_GRN_PATTERNS matches (or the argv override), driven at 50 Hz together with the sugar drive",
+      "second_order": "Fdg, Bract, Roundup, Zorro (Shiu names) each alone at 50 Hz; if absent, MN9's top 4 excitatory input types, which drive it by construction (F4 then not scored)",
+      "F1_drive": "left afferents only (inferred side), at the lowest dose-curve rate giving MN9 >= 2 spikes/cell under bilateral drive, else 100 Hz",
+      "null": "degree-preserving rewired null (flycns/graph.py rewire_null defaults), drive at 50 Hz",
+      "model": "declared parameter set (LIFParams), electrical synapses on"
+    },
+    "checks": {
+      "F2b_extra_SEZ_quiet": {
+        "band": [
+          null,
+          0.02
+        ],
+        "rule": "spikes outside the SEZ per neuron per second of drive (200 ms pulses only), sugar drive at 50 Hz, bootstrap over pulses: PASS if the 95% interval lies at or below 0.02 Hz"
+      },
+      "F2c_motor_rate_physiological": {
+        "band": [
+          0,
+          100
+        ],
+        "band_lower_exclusive": true,
+        "rule": "mean rate of the recruited cb_motor cells over the time the drive was on, sugar drive at 50 Hz, bootstrap over pulses: PASS if the 95% interval lies above 0 and at or below 100 Hz"
+      },
+      "F1_laterality_matches_wiring": {
+        "band": [
+          0,
+          null
+        ],
+        "band_lower_exclusive": true,
+        "conditional": true,
+        "condition": "MN9 responds to the left-only drive (ipsilateral + contralateral > 0) and both the functional and the structural laterality have a direction (neither is a tie); not met while MN9 does not fire under the declared parameters",
+        "rule": "(MN9-R minus MN9-L) per pulse times the sign of the structural prediction (unsigned 2-hop synapse-weighted drive, R minus L), paired in one simulation, bootstrap over pulses: PASS if the 95% interval lies above 0"
+      },
+      "F3_bitter_suppresses": {
+        "band": [
+          0,
+          null
+        ],
+        "band_lower_exclusive": true,
+        "conditional": true,
+        "condition": "a bitter GRN type resolves (BITTER_GRN_PATTERNS or the argv override)",
+        "rule": "MN9 under sugar alone minus under sugar + bitter, both at 50 Hz: two separate simulations, each resampled over its own pulses: PASS if the 95% interval lies above 0"
+      },
+      "F4_second_order_sufficient": {
+        "bands": [
+          [
+            0,
+            null
+          ]
+        ],
+        "band_lower_exclusive": true,
+        "conditional": true,
+        "condition": "Shiu's second-order names resolve (not the fallback to MN9's top excitatory inputs) and at least one of them is tried",
+        "rule": "each second-order type alone at 50 Hz: MN9 spikes/cell per pulse, bootstrap over pulses, 95% interval above 0; PASS only if every type passes"
+      },
+      "F5_null_silent": {
+        "band": [
+          null,
+          0.1
+        ],
+        "conditional": true,
+        "condition": "the real network responds: MN9 >= 0.5 spikes/cell at 50 Hz (point value); a silent null beside a silent network is not scored",
+        "rule": "MN9 on the rewired null at 50 Hz, bootstrap over pulses: PASS if the 95% interval lies at or below 0.1 spikes/cell"
+      }
+    },
+    "not_scored": {
+      "F2_dose_response_REPORTED": "monotonic MN9 response over 10-200 Hz: reported only, since MN9 firing from afferent drive needs a mechanism the model lacks (results/feeding/mechanism.json)",
+      "F1_shiu_contralateral_bias": "Shiu's contralateral prediction concerns labellar sugar GRNs; tested with LB3b/LB3c in benchmarks/sugar_laterality.py"
+    }
+  },
+  "model": {
+    "files": {
+      "flycns/__init__.py": "544f1616b7e65d1bf08ed482120ee5718dc0f379a43640f178adb55d9651f31c",
+      "flycns/anatomy.py": "ff00097801baf4cee8c8fe726b5437e3484360f7a262f50c4ecd688926ff605b",
+      "flycns/bench.py": "35022f6ae430c468bf46fa6178cf7cb84c8b6d6f6d0ac99f1fc930c45ab499a1",
+      "flycns/calibration.py": "7a9933748d3b7bd98b9327fc0417f60caaac1e27edbb94e090c9919e700117ce",
+      "flycns/graph.py": "9883a5b3d69e548d63671c1fd432d93fe7df8caa954217fc3d744152cac0ec61",
+      "flycns/integrity.py": "202bd32cfdad4e180b91e37853d319e0ae89ec1226772b7ce86747c151e1a32b",
+      "flycns/model.py": "a0b367724548a3240946ea5602ad6f9f9760b11853cc9df883a607884c1336df",
+      "flycns/protocols.py": "152a1abd79db86885c3473cb43a81a9f994809578d9ad2b4903c5f2cae0a155f",
+      "flycns/stats.py": "9baada5e46202c2f88bfd083fc577d5d80ca03c5274267332ffc1e07a1036e78",
+      "data/loom_tuning_measured.json": "238def4e51bd439f8cb0e8498d334eca9e934bfffc1361e240383b6bee1f6671",
+      "data/MANIFEST.json": "abe54e8ba24c43cbd11373adee94231bd085f197ecae3551b0802c5ac9c5818c",
+      "requirements.lock": "84481267167e01842aae97b321d07d888a3fb38c3213586c13f361118002d275",
+      "benchmarks/feeding.py": "6bfad20921f110f7eb73458eb0b1205ff3ed63c35ab6c24e29b58aff444a249d"
+    },
+    "hash": "8e1f60c2678af2152e18b5c7ea4ed255940a059154a1a2e5dabb6d5d72471e37"
+  },
+  "values": {
+    "lif": {
+      "v_rest_mV": -52.0,
+      "v_thresh_mV": -45.0,
+      "v_reset_mV": -52.0,
+      "tau_m_ms": 20.0,
+      "tau_syn_ms": 5.0,
+      "refractory_ms": 2.2,
+      "w_syn_mV": 0.275,
+      "w_scale": 0.4,
+      "tau_adapt_ms": 100.0,
+      "gap_delay_ms": 0.8,
+      "chem_delay_ms": 1.8,
+      "dt_ms": 0.1,
+      "seed": 0,
+      "class_gains": {
+        "sensory": 1.0,
+        "relay": 1.0,
+        "local": 1.0
+      },
+      "region_gains": {
+        "SEZ": 1.0,
+        "other": 1.0
+      },
+      "superclass_params": {},
+      "peptide_gain_scale": 0.0,
+      "peptide_exclude": [],
+      "baseline_depol_mV": 0.0,
+      "baseline_noise_mV": 0.0
+    },
+    "electrical": [
+      [
+        "DNp01",
+        "TTMn",
+        true,
+        9.0,
+        "shakB gap junction, 1:1 relay; Tanouye & Wyman 1980; Allen et al. 2006"
+      ],
+      [
+        "DNp01",
+        "PSI",
+        true,
+        9.0,
+        "shakB gap junction, 1:1 relay; Allen et al. 2006; Phelan et al. 2008"
+      ],
+      [
+        "JO-B1_a",
+        "DNp01",
+        true,
+        {
+          "compound_mV": 3.0,
+          "at_hz": 150
+        },
+        "JON->GF mixed synapse modelled as electrical; shakB-dependent (Pezier et al. 2016); mixed (Pezier et al. 2014); 3 mV target untraced; contact set from MaleCNS v1.0"
+      ],
+      [
+        "JO-B1_c",
+        "DNp01",
+        true,
+        {
+          "compound_mV": 3.0,
+          "at_hz": 150
+        },
+        "JON->GF mixed synapse modelled as electrical; shakB-dependent (Pezier et al. 2016); mixed (Pezier et al. 2014); 3 mV target untraced; contact set from MaleCNS v1.0"
+      ]
+    ],
+    "intrinsic": [
+      [
+        "DNp01",
+        "b_adapt_mV",
+        45.0,
+        "all-or-none GF response; von Reyn 2014; Ache 2019. Fitted by pre-stated rule (smallest value giving 1-2 spikes/response, <=2 on the strongest gain quartile, P(response) 0.5-1, TTMn relay intact; benchmarks/fit_gf_adapt.py at >=40 trials). 45 mV at w_scale 0.4 with the per-GF JON calibration (refit 2026-10-11, cloud run 13, 40 trials; the strong-quartile constraint holds at exactly 2.0, its limit; 30 mV gives 2.75). Before: 10 mV at w_scale 0.3 (2026-10-10), 30 mV under the all-trials loom input, 15 mV from an undersampled 20-trial fit. 0 mV gives up to 15 spikes per loom (9.7 on average on the strongest-gain quartile)."
+      ],
+      [
+        "superclass:cb_motor",
+        "b_adapt_mV",
+        10.0,
+        "sustained MN rates < 100 Hz; Azevedo 2020; McKellar 2020"
+      ]
+    ],
+    "sign_map": {
+      "acetylcholine": 1,
+      "gaba": -1,
+      "glutamate": -1,
+      "histamine": -1,
+      "dopamine": 0,
+      "octopamine": 0,
+      "serotonin": 0
+    },
+    "min_weight": 5,
+    "peak_hz": 5.0,
+    "gain_sigma": 0.357,
+    "loom_state": "stationary"
+  },
+  "packages": {
+    "brian2": "2.10.1",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scipy": "1.18.1"
+  },
+  "supersedes": {
+    "file": "results/feeding/registration_v3.json",
+    "why": "hygiene refreeze (Gen 4 phase 0), no model parameter changed: flycns/integrity.py joins the hashed files (it holds the declared defaults and the data checks); the input data are re-pinned without the legacy `sign` column (one transmitter-to-sign table, graph.SIGN_MAP); two frozen code comments corrected. Criteria unchanged; every number is expected to equal generation 3's.",
+    "earlier": null
+  },
+  "git_commit": "7851c7c",
+  "code_uncommitted": false,
+  "registered_at": "2026-10-12T03:48:21"
+}

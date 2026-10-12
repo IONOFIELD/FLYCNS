@@ -207,7 +207,8 @@ INTRINSIC_OVERRIDES = [
                                   "45 mV at w_scale 0.4 with the per-GF JON calibration (refit 2026-10-11, cloud run 13, "
                                   "40 trials; the strong-quartile constraint holds at exactly 2.0, its limit; 30 mV gives "
                                   "2.75). Before: 10 mV at w_scale 0.3 (2026-10-10), 30 mV under the all-trials loom "
-                                  "input, 15 mV from an undersampled 20-trial fit. 0 mV gives up to 10 spikes per loom."),
+                                  "input, 15 mV from an undersampled 20-trial fit. 0 mV gives up to 15 spikes per loom (9.7 on "
+                                  "average on the strongest-gain quartile)."),
     # superclass-level: sustained fly motor neuron firing stays well under 100 Hz
     # (leg MNs, Azevedo et al. 2020; proboscis MNs, McKellar et al. 2020). Without
     # adaptation the LIF motor pool pins at the 450 Hz refractory ceiling.

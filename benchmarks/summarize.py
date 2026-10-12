@@ -27,6 +27,21 @@ def interval_text(u):
     if not u:
         return "point, no interval"
     est, ci, band = u.get("estimate"), u.get("ci95"), u.get("band")
+    m = u.get("method", "")
+    if m.startswith("per-draw") and u.get("draws") is not None:
+        # the measurement (each draw's value) and the count of draws in band, kept apart: the estimate of a
+        # per-draw record is the SHARE of draws in band, which printed beside the band read as a measurement
+        d = [float(x) for x in u["draws"]]                      # in draw order
+        s_ = sorted(d)
+        vals = ("none" if not d else ", ".join(_fmt(x) for x in d) if len(d) <= 8 else
+                f"median {_fmt(s_[len(s_) // 2] if len(s_) % 2 else (s_[len(s_) // 2 - 1] + s_[len(s_) // 2]) / 2)}, "
+                f"range {_fmt(s_[0])} to {_fmt(s_[-1])}")
+        lo_b = "(" if u.get("band_lower_exclusive") else "["
+        bt = (f"{lo_b}{_fmt(band[0]) if band[0] is not None else '-inf'}, {_fmt(band[1]) if band[1] is not None else 'inf'}]"
+              if band and any(b is not None for b in band) else "its band")
+        mm = re.match(r"per-draw \((\d+) of (\d+) in band; pass needs (\d+)\)", m)
+        count = f"{mm.group(1)} of {mm.group(2)} draws in band, pass needs {mm.group(3)}" if mm else m
+        return f"draws {vals}; band {bt}; {count}"
     txt = _fmt(est)
     if ci:
         txt += f" [{_fmt(ci[0])}, {_fmt(ci[1])}]"

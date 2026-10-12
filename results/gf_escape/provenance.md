@@ -10,7 +10,7 @@
 - JO-B1_c -> DNp01 (ipsilateral, spikelet {'compound_mV': 3.0, 'at_hz': 150}): JON->GF mixed synapse modelled as electrical; shakB-dependent (Pezier et al. 2016); mixed (Pezier et al. 2014); 3 mV target untraced; contact set from MaleCNS v1.0
 
 ## Intrinsic overrides
-- DNp01.b_adapt_mV = 45.0: all-or-none GF response; von Reyn 2014; Ache 2019. Fitted by pre-stated rule (smallest value giving 1-2 spikes/response, <=2 on the strongest gain quartile, P(response) 0.5-1, TTMn relay intact; benchmarks/fit_gf_adapt.py at >=40 trials). 45 mV at w_scale 0.4 with the per-GF JON calibration (refit 2026-10-11, cloud run 13, 40 trials; the strong-quartile constraint holds at exactly 2.0, its limit; 30 mV gives 2.75). Before: 10 mV at w_scale 0.3 (2026-10-10), 30 mV under the all-trials loom input, 15 mV from an undersampled 20-trial fit. 0 mV gives up to 10 spikes per loom.
+- DNp01.b_adapt_mV = 45.0: all-or-none GF response; von Reyn 2014; Ache 2019. Fitted by pre-stated rule (smallest value giving 1-2 spikes/response, <=2 on the strongest gain quartile, P(response) 0.5-1, TTMn relay intact; benchmarks/fit_gf_adapt.py at >=40 trials). 45 mV at w_scale 0.4 with the per-GF JON calibration (refit 2026-10-11, cloud run 13, 40 trials; the strong-quartile constraint holds at exactly 2.0, its limit; 30 mV gives 2.75). Before: 10 mV at w_scale 0.3 (2026-10-10), 30 mV under the all-trials loom input, 15 mV from an undersampled 20-trial fit. 0 mV gives up to 15 spikes per loom (9.7 on average on the strongest-gain quartile).
 - superclass:cb_motor.b_adapt_mV = 10.0: sustained MN rates < 100 Hz; Azevedo 2020; McKellar 2020
 
 ## Regional gain: SEZ x1.0 (fitted, benchmarks/fit_regional.py), other x1

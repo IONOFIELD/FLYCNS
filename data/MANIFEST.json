@@ -2,28 +2,26 @@
   "algorithm": "rowhash-v2",
   "pandas": "3.0.6",
   "dataset": "male-cns:v1.0 (neuprint.janelia.org)",
-  "written_at": "2026-10-11T16:47:37",
+  "written_at": "2026-10-12T10:33:39",
   "files": {
     "edges.parquet": {
-      "digest": "becf568580708ba9d6c6170e2daa407a806a8ac64ffcbb70a29cc8bfdae78d3d",
+      "digest": "f08e90783d6b6420da7ef3c0de438a44a4686604ee11ab47c9af6f52ed4e22a8",
       "rows": 6287789,
       "columns": [
         "nt",
         "post",
         "pre",
-        "sign",
         "weight"
       ],
       "sums": {
         "post": "11517611213871",
         "pre": "18683378936444",
-        "sign": 1499819.0,
         "weight": "90297299"
       },
-      "sha256": "2a0629ed00a876c382a48846f5fc75da554c7eaf938ef32ce462ee788d752414"
+      "sha256": "61f8c2edbb214111073701fa5c4bef835e52925ce742f24e4011ce98d92da958"
     },
     "edges_nt.parquet": {
-      "digest": "4bcc6084a7fde88b6f318435717ddd03fded1e9d571399300cad8f45bdaf9641",
+      "digest": "53db371d0fbda2425dabb1e8d7d511bad66109f9f0a0eb0d935a7e49b35f0536",
       "rows": 6287789,
       "columns": [
         "nt",
@@ -31,7 +29,6 @@
         "nt_conf",
         "post",
         "pre",
-        "sign",
         "weight"
       ],
       "sums": {
@@ -39,10 +36,9 @@
         "nt_conf": 5719571.37964,
         "post": "11517611213871",
         "pre": "18683378936444",
-        "sign": 1499819.0,
         "weight": "90297299"
       },
-      "sha256": "480ab88439fc647fb325fa146f2ed6a26cdbfe8b5d7bcfbdb94645032af3d86a"
+      "sha256": "caadd394e7736cb1ef4ee7036aab2153b63502067cb9a6f0eef7d4f8afd818c7"
     },
     "neurons.parquet": {
       "digest": "06ea0afb48c414adecc6419b51a3fd8357ecbc0067ab9f55cc8cb7f06da3cb93",

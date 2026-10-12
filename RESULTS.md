@@ -1,6 +1,6 @@
 # flycns: results note
 
-*Status v0.10, model refrozen (registration generation 3) and every check re-registered, 12 October 2026. A working note, not a manuscript. Every number is reproducible
+*Status v0.11, registration generation 4 (a hygiene refreeze; run 18 reproduces generation 3 number for number), 12 October 2026. A working note, not a manuscript. Every number is reproducible
 from the scripts named beside it; run `./fly` and use the menu. Where the model disagrees with a
 measurement, the model is presumed wrong.*
 
@@ -34,6 +34,38 @@ every check re-registered before run 14 (below).
 
 (Earlier summaries that described the auditory result as "reproducing published physiology" are
 superseded by its registered tests.)
+
+---
+
+## 12 October 2026: generation 4, a hygiene refreeze; every number of run 14 reproduced (run 18)
+
+**What changed** (docs/CALIBRATION.md, "Generation 4, phase 0"): no parameter. The input data were re-pinned
+without the legacy `sign` column (the fetch's own sign table, which the model never read; one
+transmitter-to-sign table remains, `flycns/graph.py` SIGN_MAP); `flycns/integrity.py` joined the hashed
+model files; two pieces of frozen text were corrected (a rationale string in `flycns/graph.py`, which is
+printed into `results/gf_escape/provenance.md`, and the `flycns/registry.py` docstring); the suite table
+now lists per-draw values. The model was frozen at `7851c7c`; 20 `registration_v4.json` files were
+committed at `bd631a2` before any result. Run 18 ran at `bd631a2`: the same 55 run jobs as run 14, plus
+the plan, data and transmitter jobs (58 in all; run 14's "56" counted its output branches).
+
+**Result: every number of generation 3 reproduces.** Compared file by file with run 14: all 88 JSON
+result files are numerically identical (only provenance, registration stamps and run times differ); the six
+grid tables differ only in their wall-time column; the HDF5 exports are byte-identical; logs and summaries
+differ only in times, commits and the re-pinned data hashes, plus the one corrected line of
+`results/gf_escape/provenance.md`; all 61 rows of the suite table give the same verdict and role. 29 of
+53 checks pass, 6 unresolved; independent 5 of 19. Every collected file is the one its cloud job wrote,
+except `results/SUITE.md`, which was regenerated from all of them after collection
+(`benchmarks/summarize.py`; rerunning it reproduces the committed file). An independent check confirmed
+each of these points from the files themselves. Every scored report says `registration.matches: true`; 111 of 111 result files carry the stamp
+of `bd631a2`. (The robustness battery's reports are perturbations by design and are not registered
+results, as before.)
+
+**One plumbing fault, no data lost.** The core job ran 109 minutes and was marked failed at its last
+step: its own push of the results branch failed, and the script discarded git's message, so the cause
+is still unknown. The workflow's backup step then pushed the results commit with the console log added
+on top; the results are identical. The script now shows git's message, retries once, and checks with
+a dry-run push, before any long run, that the remote would accept results from this checkout (sign-in and
+write access; refusals the server makes only on receipt cannot be seen in advance).
 
 ---
 

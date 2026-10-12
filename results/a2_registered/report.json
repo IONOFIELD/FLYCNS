@@ -43,7 +43,7 @@
     "A2R_facilitation": false,
     "A2R2_beyond_summation": false
   },
-  "wall_s": 2558,
+  "wall_s": 4498,
   "uncertainty": {
     "A2R_facilitation": {
       "estimate": -0.13333333333333333,
@@ -79,18 +79,18 @@
     }
   },
   "registration": {
-    "file": "results/a2_registered/registration_v3.json",
-    "version": 3,
-    "supersedes": "results/a2_registered/registration.json",
-    "git_commit": "a94769d",
-    "model_hash": "52a177d55450322a70d10acd8ece37019fbd6e4f69ee58c44ae488202365a981",
-    "registered_at": "2026-10-11T21:41:50",
+    "file": "results/a2_registered/registration_v4.json",
+    "version": 4,
+    "supersedes": "results/a2_registered/registration_v3.json",
+    "git_commit": "7851c7c",
+    "model_hash": "90ea4e5743721b774d100c4dcc1f84f2064e397982fc13b6647e721113145899",
+    "registered_at": "2026-10-12T03:48:34",
     "matches": true,
     "problems": []
   },
   "provenance": {
-    "written_at": "2026-10-12T05:35:31",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T12:36:40",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -110,7 +110,7 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"

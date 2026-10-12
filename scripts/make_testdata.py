@@ -67,8 +67,7 @@ for i in range(3000):
         t = _nt[a].lower() if isinstance(_nt[a], str) else None
     e.append(dict(pre=a, post=b, weight=w, nt=t))
 e = pd.DataFrame(e)
-# the fetch also writes a legacy `sign` column the model must ignore (scripts/fetch_malecns.py)
-e["sign"] = e["nt"].map({"acetylcholine": 1, "gaba": -1, "glutamate": -1})
+# no sign column: like the fetch, the toy carries transmitters only; flycns/graph.py SIGN_MAP signs them
 # SEZ membership by anatomy, as fit/roi_membership.py writes it, so the anatomical SEZ path runs on the
 # toy (without it every SEZ-dependent step silently took the name-prefix fallback)
 sez = set(n.bodyId[n.type.isin(["GNG001", "Bract", "MN9", "Fdg"])]) | \

@@ -4,7 +4,8 @@ One command for the real-data steps:
   2. pin the input data: commit data\\MANIFEST.json the first time it is written
   3. rerun the core suite canonically, so its reports carry the integrity stamp
   4. run the registered stricter null (benchmarks\\null_strict.py)
-  5. commit the results and push them
+  5. commit the results to a NEW review branch and push that branch (scripts/review_branch.py): your
+     own branch is never pushed; the results reach main through a pull request
 About 1 to 1.5 hours with the compiled engine. Keeps Windows awake until it finishes.
 Safe to run again after an interruption: leftover result files are set aside (git stash, recoverable)
 and a data-pin commit from the earlier run is replayed on top of the latest code.
@@ -20,6 +21,8 @@ ROOT = Path(__file__).resolve().parents[1]
 os.chdir(ROOT)
 sys.path.insert(0, str(ROOT))
 from flycns.windows import console, keep_awake  # noqa: E402
+from review_branch import (close_review_branch, confirm_remote, open_review_branch,  # noqa: E402
+                           pull_request_url, push_review)
 
 console()
 PY = sys.executable
@@ -27,7 +30,8 @@ UPDATED = "_CANON_UPDATED"     # deliberately not FLYCNS_*, which would be stamp
 
 
 def stop(msg):
-    print(f"\nSTOPPED: {msg}\nNothing was pushed. Send Claude the lines above.")
+    print(f"\nSTOPPED: {msg}\nNothing was pushed. Copy the lines above when you ask for help "
+          f"(for example in a GitHub issue).")
     sys.exit(1)
 
 
@@ -69,6 +73,11 @@ def main():
             stop('git does not know who you are yet. Run these two lines once, then choose 51 again:\n'
                  '  git config --global user.name "Your Name"\n'
                  '  git config --global user.email "you@example.com"')
+        # where the results will go, checked before 1.5 hours of simulation, not after
+        url, why = confirm_remote()
+        if why:
+            stop(why)
+        print(f"  results will go to a new review branch on {url}; your branch is not pushed")
         # result files left by an interrupted run would block the pull; they are regenerated below, so
         # set them aside (recoverable) rather than discard them. Code changes are never touched.
         if git("status", "--porcelain", "--untracked-files=no", "--", "results", quiet=True).stdout.strip():
@@ -79,7 +88,7 @@ def main():
             gitdir = Path(git("rev-parse", "--git-dir", quiet=True).stdout.strip())
             if (gitdir / "rebase-merge").exists() or (gitdir / "rebase-apply").exists():
                 git("rebase", "--abort", quiet=True)      # never leave the folder half-rebased
-                stop("the update conflicts with a local commit; the folder is back as it was. Send Claude this message.")
+                stop("the update conflicts with a local commit; the folder is back as it was.")
             stop("git pull failed (uncommitted code changes, or no connection).")
         # restart from the updated copy of this script, so the newest steps run
         sys.exit(subprocess.run([PY, __file__, *sys.argv[1:]], env={**os.environ, UPDATED: "1"}).returncode)
@@ -111,8 +120,11 @@ def main():
     if py("benchmarks/null_strict.py", "data") != 0:
         stop("the stricter null did not finish.")
 
-    print("[5/5] commit and push")
+    print("[5/5] commit to a review branch and push it")
     refuse_overrides("menu 51")
+    url, why = confirm_remote()
+    if why:
+        stop(why)
     # every canonical report must come from this run: a benchmark that failed leaves its old report behind
     import json
     old = [b for b in CANONICAL_REPORTS
@@ -122,18 +134,28 @@ def main():
         stop(f"these reports were not rewritten by this run: {', '.join(old)} (see the messages above).")
     if py("benchmarks/summarize.py") != 0:
         stop("the suite summary failed.")
-    if not commit("canonical rerun of the core suite and the registered stricter null, under integrity stamping",
-                  "results"):
-        print("  (no result changes to commit)")
-    ahead = git("rev-list", "--count", "@{u}..HEAD", quiet=True).stdout.strip()
-    if ahead not in ("", "0") and git("push", "-q").returncode != 0:
-        stop("push failed; everything is committed locally, so just run: git push")
-    if git("rev-list", "--count", "@{u}..HEAD", quiet=True).stdout.strip() not in ("", "0"):
-        stop("the results are committed but not on GitHub yet; run: git push")
+    headline = (ROOT / "results/SUITE.md").read_text(encoding="utf-8").splitlines()[2:5]
+    branch, back = open_review_branch("canonical-rerun")
+    made = commit("canonical rerun of the core suite and the registered stricter null, under integrity stamping",
+                  "results")
+    pushed = made and push_review(branch)
+    if not close_review_branch(back):
+        print(f"  NOTE: could not switch back to {back}; you are on {branch}")
+    elif back and not made:
+        git("branch", "-D", branch, quiet=True)          # nothing was committed: no review branch is left
     print()
-    for line in (ROOT / "results/SUITE.md").read_text(encoding="utf-8").splitlines()[2:5]:
+    for line in headline:
         print(line)
-    print("\ndone: " + (f"{ahead} commit(s) pushed to GitHub." if ahead not in ("", "0") else "nothing new to push."))
+    if not made:
+        print("\ndone: no result changes, nothing to review.")
+    elif not pushed:
+        stop(f"push failed; the results are committed on the local branch {branch}. "
+             f"Push it with: git push -u origin {branch}")
+    else:
+        pr = pull_request_url(branch)
+        print(f"\ndone: results pushed to the review branch {branch} (your branch was not pushed).")
+        if pr:
+            print(f"open the pull request to review and merge them: {pr}")
 
 
 if __name__ == "__main__":
