@@ -74,8 +74,8 @@ Declared deviations from the raw connectome: see each results/*/provenance.md an
 ## Report provenance
 | benchmark | written | commit | data (neurons / edges) | env overrides |
 |---|---|---|---|---|
-| auditory | 2026-10-12T05:47:09 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_JON': 'em'} |
-| feeding | 2026-10-12T05:53:18 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_JON': 'em'} |
-| gf_escape | 2026-10-12T05:20:05 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | {'FLYCNS_JON': 'em'} |
+| auditory | 2026-10-12T13:41:51 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | {'FLYCNS_JON': 'em'} |
+| feeding | 2026-10-12T13:53:14 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | {'FLYCNS_JON': 'em'} |
+| gf_escape | 2026-10-12T12:52:37 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | {'FLYCNS_JON': 'em'} |
 
 ## Citation check: 49/49 tags resolve in REFERENCES.md
