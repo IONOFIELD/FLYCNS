@@ -1,0 +1,24 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord tau_m_ms       =    5.0  (19,912 neurons) | GF 1.59/resp hit 0.80 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0068 | [spikes prob relay lag quiet] 198s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord tau_m_ms       =   10.0  (19,912 neurons) | GF 1.59/resp hit 0.80 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0061 | [spikes prob relay lag quiet] 200s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord tau_m_ms       =   20.0  (19,912 neurons) | GF 1.59/resp hit 0.80 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0057 | [spikes prob relay lag quiet] 141s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord tau_m_ms       =   40.0  (19,912 neurons) | GF 1.59/resp hit 0.80 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0056 | [spikes prob relay lag quiet] 134s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord v_thresh_mV    =  -48.0  (19,912 neurons) | GF 1.59/resp hit 0.80 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0063 | [spikes prob relay lag quiet] 136s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord v_thresh_mV    =  -45.0  (19,912 neurons) | GF 1.59/resp hit 0.80 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0057 | [spikes prob relay lag quiet] 135s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord v_thresh_mV    =  -42.0  (19,912 neurons) | GF 1.59/resp hit 0.80 | TTMn/GF 0.30 lag 23.45 ms | pop 0.0056 | [spikes prob quiet] 135s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord refractory_ms  =    1.0  (19,912 neurons) | GF 1.59/resp hit 0.80 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0057 | [spikes prob relay lag quiet] 137s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord refractory_ms  =    2.2  (19,912 neurons) | GF 1.59/resp hit 0.80 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0057 | [spikes prob relay lag quiet] 139s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord refractory_ms  =    5.0  (19,912 neurons) | GF 1.59/resp hit 0.80 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0057 | [spikes prob relay lag quiet] 155s
+
+checks failing in at least one setting: {'E_spikes': 0, 'E_prob': 0, 'E_relay': 1, 'E_lag': 1, 'E_quiet': 0}
+metric spread across the sweep: {'E_spikes': 0.0, 'E_prob': 0.0, 'E_relay': 0.222, 'E_lag': 7.1309, 'E_quiet': 0.0004}
