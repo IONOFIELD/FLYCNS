@@ -1,0 +1,26 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+afferents: 413 total | SNpp16 13 cells | others 400
+SNpp16 -> DVMn 1a-c: 664 of 1017 afferent synapses (65%)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[S1 SNpp16 alone         ]  13 afferents | DVMn 1a-c  59.56 Hz (seeds 59.6/59.6/59.5) | DLMn c-f  0.00 | steering    0.3 | b1    0.0 | CNS 0.367 | 220s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[S2 all but SNpp16       ] 400 afferents | DVMn 1a-c  38.66 Hz (seeds 39.0/38.5/38.5) | DLMn c-f  0.67 | steering   82.1 | b1  295.7 | CNS 0.647 | 115s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[S3 all afferents        ] 413 afferents | DVMn 1a-c 110.71 Hz (seeds 110.5/110.9/110.7) | DLMn c-f  0.00 | steering   73.8 | b1  291.7 | CNS 0.672 | 118s
+[null: SNpp16 alone      ]  13 afferents | DVMn 1a-c   0.00 Hz (seeds 0.0/0.0/0.0) | DLMn c-f  0.00 | steering    0.0 | b1    0.0 | CNS 0.016 | 111s
+
+CHECKS
+  FAIL  N1_snpp16_sufficient_dvmn_in_band
+  FAIL  N2_snpp16_necessary_dvmn_below_2hz
+
+UNCERTAINTY (flycns/stats.py; three-way verdict, scored per seed)
+  FAIL        N1_snpp16_sufficient_dvmn_in_band: per-draw (0 of 3 in band; pass needs 3), draws [59.59, 59.59, 59.51]
+  FAIL        N2_snpp16_necessary_dvmn_below_2hz: per-draw (0 of 3 in band; pass needs 3), draws [38.97, 38.55, 38.46]
+
+wrote results\flight_snpp16\report.json
