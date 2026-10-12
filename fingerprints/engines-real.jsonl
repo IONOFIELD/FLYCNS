@@ -1,0 +1,14 @@
+{"argv": ["check_engines.py", "2"], "env": {"FLYCNS_ALLOW_DIRTY": "1"}, "kind": "proc"}
+{"h": "4e0a4d5911e03aa51c86e74774c1c3cc", "kind": "net", "model": 1, "n_objects": 6, "objects": ["NeuronGroup:neurongroup", "PoissonGroup:poissongroup", "SpikeMonitor:spikemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2"], "seq": 0}
+{"dur": 300.0, "kind": "run", "model": 1, "n_spikes": 0, "seq": 1, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "5c88ddf4389367f97d9945dcb97b45f1", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 1, "n_spikes": 374, "seq": 2, "spikes": "4eabd073a897ab81475e782b28093221", "state": "d9a2a4685c96130900312f4a04d81611", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 1, "n_spikes": 449, "seq": 3, "spikes": "ebf2b74d23e6b7edab65ebca3d999bd6", "state": "4889aed72a7704e87accd1f0e24c0989", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 1, "n_spikes": 757, "seq": 4, "spikes": "0d74fb295fad041a9fcf0bd981690390", "state": "9e4a592be52c8800325437ac6f9ce0b0", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 1, "n_spikes": 793, "seq": 5, "spikes": "843b3518e9e43159da50f06c75a5da87", "state": "6d86161c37054abe4c6490ed47f37ae7", "t_ms": 1020.0}
+{"h": "f0866c7ff4c2b7e4265e0b982d593740", "kind": "net", "model": 2, "n_objects": 6, "objects": ["NeuronGroup:neurongroup_1", "PoissonGroup:poissongroup_1", "SpikeMonitor:spikemonitor_1", "Synapses:synapses_3", "Synapses:synapses_4", "Synapses:synapses_5"], "seq": 5}
+{"dur": 300.0, "kind": "run", "model": 2, "n_spikes": 0, "seq": 6, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "66e2fc9cc2fe880970c53d590ed02bb8", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 2, "n_spikes": 374, "seq": 7, "spikes": "4eabd073a897ab81475e782b28093221", "state": "d8f8962bea20f90791c876e63dd3c54f", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 2, "n_spikes": 449, "seq": 8, "spikes": "ebf2b74d23e6b7edab65ebca3d999bd6", "state": "1f4410dd283a539aa1f97a446412a08b", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 2, "n_spikes": 757, "seq": 9, "spikes": "0d74fb295fad041a9fcf0bd981690390", "state": "4a284da784e35e6d3df02e5e9e561b36", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 2, "n_spikes": 793, "seq": 10, "spikes": "843b3518e9e43159da50f06c75a5da87", "state": "5e7a419da48d03f6d8a111dc03bd65ca", "t_ms": 1020.0}
+{"argv": ["fit/check_engines.py", "2"], "code": 0, "kind": "exit"}
