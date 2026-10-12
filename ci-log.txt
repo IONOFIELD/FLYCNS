@@ -1,0 +1,16 @@
+criteria registered at commit cc8d759; this run at 65ce101
+gain 0.4  | alone   6/100 = 0.060 | with sound  10/100 = 0.100 | difference +0.040 (95% CI -0.039 to +0.121) | near-threshold | 2487s
+gain 0.5  | alone  16/100 = 0.160 | with sound  13/100 = 0.130 | difference -0.030 (95% CI -0.129 to +0.069) | near-threshold | 4640s
+gain 0.6  | alone  31/100 = 0.310 | with sound  17/100 = 0.170 | difference -0.140 (95% CI -0.254 to -0.021) | above threshold | 6802s
+gain 0.7  | alone  49/100 = 0.490 | with sound  27/100 = 0.270 | difference -0.220 (95% CI -0.344 to -0.086) | above threshold | 8977s
+gain 0.8  | alone  80/100 = 0.800 | with sound  41/100 = 0.410 | difference -0.390 (95% CI -0.503 to -0.258) | above threshold | 11247s
+
+2 of 5 gains near threshold; facilitation at 0 of them
+CHECK (criterion registered before the run)
+  FAIL  RA2_facilitation_at_every_near_threshold_gain
+UNCERTAINTY (95% interval; PASS only if every part passes)
+  FAIL        RA2_facilitation_at_every_near_threshold_gain (all of 3 parts)
+      FAIL        near-threshold gains: 2 (need >= 3) (point)
+      UNRESOLVED  gain 0.4: difference +0.04 [-0.03874, +0.121] band (0, -) (newcombe (as registered))
+      UNRESOLVED  gain 0.5: difference -0.03 [-0.1292, +0.06928] band (0, -) (newcombe (as registered))
+wrote results\a2_robustness\report.json
