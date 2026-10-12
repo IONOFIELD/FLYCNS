@@ -1,0 +1,31 @@
+[fingerprint] sensitivity-cord: benchmarks/sensitivity_cord.py 2
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord tau_m_ms       =    5.0  (19,912 neurons) | GF 1.75/resp hit 1.00 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0055 | [spikes prob relay lag quiet] 94s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord tau_m_ms       =   10.0  (19,912 neurons) | GF 1.75/resp hit 1.00 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0050 | [spikes prob relay lag quiet] 93s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord tau_m_ms       =   20.0  (19,912 neurons) | GF 1.75/resp hit 1.00 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0046 | [spikes prob relay lag quiet] 25s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord tau_m_ms       =   40.0  (19,912 neurons) | GF 1.75/resp hit 1.00 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0045 | [spikes prob relay lag quiet] 24s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord v_thresh_mV    =  -48.0  (19,912 neurons) | GF 1.75/resp hit 1.00 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0051 | [spikes prob relay lag quiet] 25s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord v_thresh_mV    =  -45.0  (19,912 neurons) | GF 1.75/resp hit 1.00 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0046 | [spikes prob relay lag quiet] 25s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord v_thresh_mV    =  -42.0  (19,912 neurons) | GF 1.75/resp hit 1.00 | TTMn/GF 0.29 lag 22.70 ms | pop 0.0045 | [spikes prob quiet] 26s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord refractory_ms  =    1.0  (19,912 neurons) | GF 1.75/resp hit 1.00 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0046 | [spikes prob relay lag quiet] 25s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord refractory_ms  =    2.2  (19,912 neurons) | GF 1.75/resp hit 1.00 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0046 | [spikes prob relay lag quiet] 25s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+cord refractory_ms  =    5.0  (19,912 neurons) | GF 1.75/resp hit 1.00 | TTMn/GF 1.00 lag 0.90 ms | pop 0.0046 | [spikes prob relay lag quiet] 25s
+
+checks failing in at least one setting: {'E_spikes': 0, 'E_prob': 0, 'E_relay': 1, 'E_lag': 1, 'E_quiet': 0}
+metric spread across the sweep: {'E_spikes': 0.0, 'E_prob': 0.0, 'E_relay': 0.2259, 'E_lag': 6.8938, 'E_quiet': 0.0003}
+[fingerprint] sensitivity-cord: 50 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\sensitivity-cord.jsonl
