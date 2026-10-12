@@ -1,0 +1,16 @@
+[fingerprint] engines-real: fit/check_engines.py 2
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+running 2 looms on the cython engine ...
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  793 spikes, hash dbf9d8b22aea3052
+running 2 looms on the numpy engine ...
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  793 spikes, hash dbf9d8b22aea3052
+
+IDENTICAL: compiled 793 vs pure-Python 793 spikes
+[fingerprint] engines-real: 10 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\engines-real.jsonl
