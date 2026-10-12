@@ -1,0 +1,173 @@
+{
+  "version": 5,
+  "benchmark": "sugar_laterality",
+  "criteria": {
+    "version": 2,
+    "question": "does unilateral labellar sugar input (LB3b, LB3c) favour the contralateral MN9, as Shiu et al. 2024 predicted?",
+    "source": "Shiu et al. 2024 Nature 634:210-219 (prediction); Tastekin et al. 2026 Cell 189:5527-5551 (LB3b, LB3c sugar)",
+    "groups": {
+      "sugar": [
+        "LB3b",
+        "LB3c"
+      ],
+      "bitter": [
+        "LB1a",
+        "LB1b",
+        "LB1c",
+        "LB1d"
+      ],
+      "old_mixed_proxy": [
+        "aPhM2a",
+        "aPhM5",
+        "PhG1c",
+        "claw_tpGRN",
+        "LB3a",
+        "LB3b",
+        "LB3c",
+        "LB3d"
+      ]
+    },
+    "sides": "explicit only (somaSide, else _L/_R instance suffix); cells without one are excluded",
+    "measure": {
+      "kind": "input-normalised signed path products from each side's afferents onto the left and the right MN9 cells separately (the model's edge signs)",
+      "hops": 6,
+      "cumulative_hops": 5
+    },
+    "checks": {
+      "L1_sugar_contralateral_bias": {
+        "threshold": 1.1,
+        "rule": "point record: for the left and for the right sugar afferents separately, cumulative signed influence on the contralateral and on the ipsilateral MN9 are both above 0 and contralateral >= 1.10 x ipsilateral; PASS only if both sides do"
+      }
+    },
+    "reported": "the same unsigned; bitter (LB1a-d); the old mixed proxy; the hop at which each side's bias first appears"
+  },
+  "model": {
+    "files": {
+      "flycns/__init__.py": "544f1616b7e65d1bf08ed482120ee5718dc0f379a43640f178adb55d9651f31c",
+      "flycns/anatomy.py": "ff00097801baf4cee8c8fe726b5437e3484360f7a262f50c4ecd688926ff605b",
+      "flycns/bench.py": "35022f6ae430c468bf46fa6178cf7cb84c8b6d6f6d0ac99f1fc930c45ab499a1",
+      "flycns/calibration.py": "7a9933748d3b7bd98b9327fc0417f60caaac1e27edbb94e090c9919e700117ce",
+      "flycns/graph.py": "82bd29a7dfaae958e45131b8803ffc084dda6992082393ba6666ef3c245cefb9",
+      "flycns/integrity.py": "202bd32cfdad4e180b91e37853d319e0ae89ec1226772b7ce86747c151e1a32b",
+      "flycns/model.py": "b80432a37aecdabc1b3c4e5757f94f85a670c5832a4e0cbe526586c126fd8cb3",
+      "flycns/protocols.py": "152a1abd79db86885c3473cb43a81a9f994809578d9ad2b4903c5f2cae0a155f",
+      "flycns/stats.py": "9baada5e46202c2f88bfd083fc577d5d80ca03c5274267332ffc1e07a1036e78",
+      "data/loom_tuning_measured.json": "238def4e51bd439f8cb0e8498d334eca9e934bfffc1361e240383b6bee1f6671",
+      "data/MANIFEST.json": "abe54e8ba24c43cbd11373adee94231bd085f197ecae3551b0802c5ac9c5818c",
+      "requirements.lock": "84481267167e01842aae97b321d07d888a3fb38c3213586c13f361118002d275",
+      "benchmarks/sugar_laterality.py": "aa505a9de2b5436fcafb2b89ed7ab2fbc7dd69c4a6ebd9a840c2a85f669255e3"
+    },
+    "hash": "29080f77161afbf930c49007a21dfde28f9ec9bba2c777abe4383294be3cfc5c"
+  },
+  "values": {
+    "lif": {
+      "v_rest_mV": -52.0,
+      "v_thresh_mV": -45.0,
+      "v_reset_mV": -52.0,
+      "tau_m_ms": 20.0,
+      "tau_syn_ms": 5.0,
+      "refractory_ms": 2.2,
+      "w_syn_mV": 0.275,
+      "w_scale": 0.4,
+      "tau_adapt_ms": 100.0,
+      "gap_delay_ms": 0.8,
+      "chem_delay_ms": 1.8,
+      "dt_ms": 0.1,
+      "seed": 0,
+      "class_gains": {
+        "sensory": 1.0,
+        "relay": 1.0,
+        "local": 1.0
+      },
+      "region_gains": {
+        "SEZ": 1.0,
+        "other": 1.0
+      },
+      "superclass_params": {},
+      "peptide_gain_scale": 0.0,
+      "peptide_exclude": [],
+      "baseline_depol_mV": 0.0,
+      "baseline_noise_mV": 0.0
+    },
+    "electrical": [
+      [
+        "DNp01",
+        "TTMn",
+        true,
+        9.0,
+        "shakB gap junction, 1:1 relay; Tanouye & Wyman 1980; Allen et al. 2006"
+      ],
+      [
+        "DNp01",
+        "PSI",
+        true,
+        9.0,
+        "shakB gap junction, 1:1 relay; Allen et al. 2006; Phelan et al. 2008"
+      ],
+      [
+        "JO-B1_a",
+        "DNp01",
+        true,
+        {
+          "compound_mV": 3.0,
+          "at_hz": 150
+        },
+        "JON->GF mixed synapse modelled as electrical; shakB-dependent (Pezier et al. 2016); mixed (Pezier et al. 2014); 3 mV target untraced; contact set from MaleCNS v1.0"
+      ],
+      [
+        "JO-B1_c",
+        "DNp01",
+        true,
+        {
+          "compound_mV": 3.0,
+          "at_hz": 150
+        },
+        "JON->GF mixed synapse modelled as electrical; shakB-dependent (Pezier et al. 2016); mixed (Pezier et al. 2014); 3 mV target untraced; contact set from MaleCNS v1.0"
+      ]
+    ],
+    "intrinsic": [
+      [
+        "DNp01",
+        "b_adapt_mV",
+        45.0,
+        "all-or-none GF response; von Reyn 2014; Ache 2019. Fitted by pre-stated rule (smallest value giving 1-2 spikes/response, <=2 on the strongest gain quartile, P(response) 0.5-1, TTMn relay intact; benchmarks/fit_gf_adapt.py at >=40 trials). 45 mV at w_scale 0.4 with the per-GF JON calibration (refit 2026-10-11, cloud run 13, 40 trials; the strong-quartile constraint holds at exactly 2.0, its limit; 30 mV gives 2.75). Before: 10 mV at w_scale 0.3 (2026-10-10), 30 mV under the all-trials loom input, 15 mV from an undersampled 20-trial fit. 0 mV gives up to 15 spikes per loom (9.7 on average on the strongest-gain quartile)."
+      ],
+      [
+        "superclass:cb_motor",
+        "b_adapt_mV",
+        10.0,
+        "sustained MN rates < 100 Hz; Azevedo 2020; McKellar 2020"
+      ]
+    ],
+    "sign_map": {
+      "acetylcholine": 1,
+      "gaba": -1,
+      "glutamate": -1,
+      "histamine": -1,
+      "dopamine": 0,
+      "octopamine": 0,
+      "serotonin": 0
+    },
+    "min_weight": 5,
+    "peak_hz": 5.0,
+    "gain_sigma": 0.357,
+    "loom_state": "stationary"
+  },
+  "packages": {
+    "brian2": "2.10.1",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scipy": "1.18.1"
+  },
+  "supersedes": {
+    "file": "results/sugar_laterality/registration_v4.json",
+    "why": "Shiu-compatible simulator options (Gen 5 phase 1), off by default: flycns.model.SimOptions and load_graph(amines=...), used only by the phase-1 positive control (fit/shiu2024_phase1.py). Every default simulation is identical to generation 4's (scripts/fingerprint.py identity check: cloud runs 20 and 21, 55 of 55 jobs, 7,591 fingerprints equal). Criteria unchanged; every number is expected to equal generation 4's.",
+    "earlier": {
+      "file": "criteria.json",
+      "git_commit": "27d36e2"
+    }
+  },
+  "git_commit": "24ea400",
+  "code_uncommitted": false,
+  "registered_at": "2026-10-12T10:43:40"
+}
