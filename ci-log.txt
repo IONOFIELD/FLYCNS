@@ -1,0 +1,60 @@
+[fingerprint] check-modulators: fit/check_modulators.py
+======================================================================
+PART A: do the literature's state-signalling neurons exist in MaleCNS by name?
+======================================================================
+  FOUND   IPC / insulin-producing               26 cells,   6 types  ['IPC', 'M_ilPNm90', 'VL1_ilPN', 'VP1l+VP3_ilPN', 'VP1m+VP5_ilPN']
+  ABSENT  AKH / adipokinetic                     0 cells,   0 types  []
+  FOUND   octopaminergic VUM (SEZ-adjacent)     30 cells,  13 types  ['OA-AL2i1', 'OA-AL2i2', 'OA-AL2i3', 'OA-AL2i4', 'OA-VPM3']
+  FOUND   hugin                                  4 cells,   1 types  ['Hugin-RG']
+  FOUND   leucokinin                            12 cells,   1 types  ['LK']
+  FOUND   NPF / sNPF                             4 cells,   2 types  ['DNp29', 'NPFL1-I']
+  FOUND   allatostatin A                         2 cells,   1 types  ['AstA1']
+  FOUND   drosulfakinin                          6 cells,   2 types  ['DNp62', 'DSKMP3']
+  FOUND   SLC5A11 / CN nutrient sensor         328 cells,  27 types  ['EPG', 'ER1_a', 'ER1_b', 'ER1_c', 'ER2_a']
+  FOUND   clock (reference, known present)      46 cells,   8 types  ['5thsLNv_LNd6', 'DN1a', 'DN1pA', 'DN1pB', 'LNd_b']
+
+  monoamine cells by transmitter and whether any sit in the SEZ:
+    dopamine       396 cells, >50% SEZ:   0, >20% SEZ:   1, top ROIs ["b'L(L)", 'gL(L)', 'gL(R)']
+    octopamine     101 cells, >50% SEZ:   0, >20% SEZ:   2, top ROIs ['ANm', 'EB', 'WTct(UTct-T2)(L)']
+    serotonin       48 cells, >50% SEZ:  10, >20% SEZ:  10, top ROIs ['GNG', 'ANm', 'FB']
+
+======================================================================
+PART B: TH-VUM-shaped candidates among untyped GNG bodies
+======================================================================
+  midline bodies with >50% SEZ synapses and >=200 synapses: 1088
+  of those, output-dominated (pre_frac > 0.7): 900
+                type    instance    consensusNt    predictedNt dominant_roi  sez_frac  out_w  in_w  pre_frac
+bodyId                                                                                                      
+513781          ENS5         NaN        unclear      serotonin          PRW      0.93  835.0   0.0      1.00
+110922           NaN         NaN  acetylcholine  acetylcholine       FLA(L)      0.71  709.0   0.0      1.00
+357238889       ENS4         NaN        unclear  acetylcholine          PRW      0.96  571.0   0.0      1.00
+117841           NaN         NaN      glutamate      glutamate       FLA(R)      0.90  424.0   0.0      1.00
+422978         JO-FV     JO-FV_R  acetylcholine  acetylcholine          GNG      0.97  388.0   0.0      1.00
+220334            BM        BM_L  acetylcholine  acetylcholine          GNG      0.98  358.0   0.0      1.00
+149047           NaN         NaN  acetylcholine  acetylcholine          SAD      0.72  352.0   0.0      1.00
+536630           NaN         NaN  acetylcholine  acetylcholine          GNG      1.00  335.0   0.0      1.00
+211937357      JO-CM     JO-CM_L  acetylcholine  acetylcholine          SAD      0.99  296.0   0.0      1.00
+789003564     JO-EV5    JO-EV5_R  acetylcholine  acetylcholine          SAD      1.00  258.0   0.0      1.00
+796452146        NaN         NaN  acetylcholine  acetylcholine          GNG      0.91  254.0   0.0      1.00
+1015296890  JO-ED2_c  JO-ED2_c_R  acetylcholine  acetylcholine          SAD      0.99  240.0   0.0      1.00
+425481114        NaN         NaN  acetylcholine  acetylcholine       FLA(R)      0.51  239.0   0.0      1.00
+193486296        NaN         NaN  acetylcholine  acetylcholine          PRW      1.00  215.0   0.0      1.00
+821484380     JO-EV2    JO-EV2_L  acetylcholine  acetylcholine          SAD      0.98  213.0   0.0      1.00
+118359732      JO-CM     JO-CM_L  acetylcholine  acetylcholine          SAD      1.00  205.0   0.0      1.00
+210817            BM        BM_L  acetylcholine  acetylcholine          GNG      0.94  204.0   0.0      1.00
+535512         JO-FV     JO-FV_R  acetylcholine  acetylcholine          GNG      0.99  202.0   0.0      1.00
+555234          ENS4         NaN        unclear      serotonin          PRW      0.90  969.0   5.0      0.99
+511976          ENS5         NaN        unclear      serotonin          PRW      0.89  902.0   5.0      0.99
+
+  of the output-dominated midline SEZ bodies, dopamine-predicted: 0
+
+  candidates that contact MN9's relays at all: 5
+    body 331473 type nan        pre_frac 0.98  -> MN9-inhibitory    107  -> MN9-excitatory     61
+    body 796452146 type nan        pre_frac 1.0  -> MN9-inhibitory      6  -> MN9-excitatory     25
+    body 521444 type CB4246     pre_frac 0.98  -> MN9-inhibitory      7  -> MN9-excitatory      0
+    body 84031 type ENS5       pre_frac 0.98  -> MN9-inhibitory      7  -> MN9-excitatory      0
+    body 236599764 type ENS4       pre_frac 0.99  -> MN9-inhibitory      0  -> MN9-excitatory      5
+
+wrote results\checks\modulator_checks.json
+[fingerprint] check-modulators: 0 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\check-modulators.jsonl
+[fingerprint] check-modulators: no simulation step was fingerprinted
