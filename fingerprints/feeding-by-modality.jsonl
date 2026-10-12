@@ -1,0 +1,2 @@
+{"argv": ["feeding_by_modality.py", "1"], "env": {"FLYCNS_ALLOW_DIRTY": "1"}, "kind": "proc"}
+{"argv": ["benchmarks/feeding_by_modality.py", "1"], "code": 1, "kind": "exit"}

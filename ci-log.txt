@@ -1,0 +1,8 @@
+[fingerprint] feeding-by-modality: benchmarks/feeding_by_modality.py 1
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! feeding_by_modality: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! the criteria in the code differ from the registered ones
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test.
+[fingerprint] feeding-by-modality: nothing was fingerprinted
+[fingerprint] feeding-by-modality: 0 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\feeding-by-modality.jsonl; exited non-zero: ['benchmarks/feeding_by_modality.py 1']
