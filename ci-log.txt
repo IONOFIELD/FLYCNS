@@ -1,0 +1,14 @@
+--- a1_shuffle2
+[phase1] a1_shuffle2 22/25 done (1213 s)
+[phase1] a1_shuffle2 23/25 done (1273 s)
+[phase1] a1_shuffle2 24/25 done (1333 s)
+[phase1] a1_shuffle2 25/25 done (1396 s)
+[phase1] a1_shuffle2: 25 runs in 1396.1 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1\arms\a1_shuffle2.json
+
+--- a1_shuffle3
+[phase1] a1_shuffle3 22/25 done (1213 s)
+[phase1] a1_shuffle3 23/25 done (1273 s)
+[phase1] a1_shuffle3 24/25 done (1334 s)
+[phase1] a1_shuffle3 25/25 done (1396 s)
+[phase1] a1_shuffle3: 25 runs in 1396.4 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1\arms\a1_shuffle3.json
+
