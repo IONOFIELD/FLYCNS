@@ -1,0 +1,143 @@
+[fingerprint] flight-graded: benchmarks/flight_snpp16_graded.py 20
+[registry] flight_snpp16_graded: registered (version 5, model 39d9aee1ca3b, commit 2cae86d)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! flight_snpp16_graded: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! results\flight_snpp16_graded\registration_v5.json is not committed (or differs from the commit): a registration must be committed before the run it governs
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! flight_snpp16_graded: RUNNING ON UNCOMMITTED CODE (FLYCNS_ALLOW_DIRTY=1)
+! 11 code file(s) differ from commit 2cae86d: D results/a2_registered/criteria.json, D results/a2_robustness/criteria.json, D results/dnp13_control/criteria.json, D results/feeding_by_modality/criteria.json, D results/flight_snpp16_graded/criteria.json, D results/flight_snpp16_robustness/criteria.json, D results/gustatory_signed_map/criteria.json, D results/null_strict/criteria.json ...
+! The report is stamped dirty and must not be quoted as a registered result.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+criteria registered at commit 2cae86d; this run at 2cae86d
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+SNpp16: 13 cells | SNpp07: 12 cells | DVMn 1a-c 6
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+k= 1 | DVMn   0.00 Hz (draws 0.0/0.0/0.0/0.0/0.0; 0/5 in band) | steer  0.00 | b1  0.00 | DLMn 0.00 | CNS 0.000 | 179s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+k= 2 | DVMn   0.00 Hz (draws 0.0/0.0/0.0/0.0/0.0; 0/5 in band) | steer  0.00 | b1  0.00 | DLMn 0.00 | CNS 0.001 | 251s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+k= 3 | DVMn   2.36 Hz (draws 0.0/1.7/1.7/8.4/0.0; 1/5 in band) | steer  0.29 | b1  0.00 | DLMn 0.00 | CNS 0.002 | 323s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+k= 4 | DVMn   1.01 Hz (draws 3.4/1.7/0.0/0.0/0.0; 1/5 in band) | steer  0.65 | b1  0.00 | DLMn 0.00 | CNS 0.003 | 395s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+k= 5 | DVMn   6.06 Hz (draws 1.7/6.7/8.4/8.4/5.0; 4/5 in band) | steer  0.72 | b1  0.00 | DLMn 0.00 | CNS 0.005 | 469s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+k= 6 | DVMn  10.10 Hz (draws 11.8/10.1/16.8/5.0/6.7; 4/5 in band) | steer  0.72 | b1  0.00 | DLMn 0.00 | CNS 0.008 | 542s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+k= 7 | DVMn  12.79 Hz (draws 18.5/15.2/10.1/11.8/8.4; 3/5 in band) | steer  0.00 | b1  0.00 | DLMn 0.00 | CNS 0.008 | 614s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+k= 8 | DVMn  15.15 Hz (draws 13.5/16.8/13.5/11.8/20.2; 1/5 in band) | steer  0.14 | b1  0.00 | DLMn 0.00 | CNS 0.011 | 687s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+k= 9 | DVMn  24.24 Hz (draws 32.0/23.6/20.2/25.2/20.2; 0/5 in band) | steer  0.07 | b1  0.00 | DLMn 0.00 | CNS 0.012 | 759s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+k=10 | DVMn  26.93 Hz (draws 25.2/16.8/37.0/30.3/25.2; 0/5 in band) | steer  0.14 | b1  0.00 | DLMn 0.00 | CNS 0.015 | 834s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+k=11 | DVMn  33.33 Hz (draws 35.4/37.0/35.4/25.2/33.7; 0/5 in band) | steer  0.14 | b1  0.00 | DLMn 0.00 | CNS 0.018 | 909s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+k=12 | DVMn  39.39 Hz (draws 38.7/38.7/40.4/40.4/38.7; 0/5 in band) | steer  0.29 | b1  0.00 | DLMn 0.00 | CNS 0.020 | 984s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+k=13 | DVMn  44.44 Hz (draws 45.5/42.1/42.1/47.1/45.5; 0/5 in band) | steer  0.07 | b1  0.00 | DLMn 0.00 | CNS 0.023 | 1058s
+
+k* = 3 (smallest k with mean DVMn in band). Running rewired null at k*...
+null k=3 | DVMn 0.00 Hz | steer 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+
+SNpp07 alone (12 cells) | DVMn 12.34 | steer 3.61 | b1 0.00
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+SNpp16 k*=3 + SNpp07 | DVMn 32.66 Hz vs sum of parts 14.70 (ratio 2.22)
+
+CHECKS (criteria registered before the run)
+  FAIL  G1_graded
+  PASS  G2_in_band_window
+  PASS  G3_selective_at_k_star
+  PASS  G4_wiring_specific_at_k_star
+  FAIL  G5_reliable_at_k_star
+
+UNCERTAINTY (flycns/stats.py; three-way verdict on the 95% interval or per draw)
+  UNRESOLVED  G1_graded: all of 12 parts (every adjacent step of the mean DVMn >= -0.5 Hz; adjacent k use different cells and seeds, so each step is two independent arms)
+      parts: 7 PASS, 5 UNRESOLVED, 0 FAIL
+      PASS        bootstrap difference, independent draws, est 0 [0, 0] (mean DVMn at k=2 minus k=1)
+      PASS        bootstrap difference, independent draws, est 2.36 [0.337, 5.39] (mean DVMn at k=3 minus k=2)
+      UNRESOLVED  bootstrap difference, independent draws, est -1.35 [-4.71, 1.35] (mean DVMn at k=4 minus k=3)
+      PASS        bootstrap difference, independent draws, est 5.05 [2.36, 7.41] (mean DVMn at k=5 minus k=4)
+      PASS        bootstrap difference, independent draws, est 4.04 [0, 8.43] (mean DVMn at k=6 minus k=5)
+      UNRESOLVED  bootstrap difference, independent draws, est 2.69 [-2.02, 7.41] (mean DVMn at k=7 minus k=6)
+  PASS        G2_in_band_window: any of 13 parts (some k with DVMn in band per draw (the registered rule reads the mean over draws))
+      parts: 2 PASS, 1 UNRESOLVED, 10 FAIL
+      PASS        per-draw (4 of 5 in band; pass needs 4), draws [1.68, 6.73, 8.42, 8.42, 5.05] (DVMn at k=5)
+      PASS        per-draw (4 of 5 in band; pass needs 4), draws [11.78, 10.1, 16.83, 5.05, 6.73] (DVMn at k=6)
+      UNRESOLVED  per-draw (3 of 5 in band; pass needs 4), draws [18.52, 15.15, 10.1, 11.78, 8.42] (DVMn at k=7)
+  PASS        G3_selective_at_k_star: all of 3 parts (steering, b1 and DLMn c-f each below 1 Hz per draw (the check is strict; per_draw's edge is inclusive))
+      parts: 3 PASS, 0 UNRESOLVED, 0 FAIL
+      PASS        per-draw (4 of 5 in band; pass needs 4), draws [0.0, 0.0, 0.36, 0.0, 1.08] (steer at k*=3)
+      PASS        per-draw (5 of 5 in band; pass needs 4), draws [0.0, 0.0, 0.0, 0.0, 0.0] (b1 at k*=3)
+      PASS        per-draw (5 of 5 in band; pass needs 4), draws [0.0, 0.0, 0.0, 0.0, 0.0] (dlmn at k*=3)
+  PASS        G4_wiring_specific_at_k_star: per-draw (5 of 5 in band; pass needs 4), draws [0.0, 0.0, 0.0, 0.0, 0.0] (rewired null, DVMn at k*=3; the null fired 26 spikes outside the driven cells, so it can fail)
+  FAIL        G5_reliable_at_k_star: per-draw (1 of 5 in band; pass needs 4), draws [0.0, 1.68, 1.68, 8.42, 0.0] (DVMn at k*=3)
+
+BENCHMARK FAIL  -> results\flight_snpp16_graded\report.json
+[fingerprint] flight-graded: 78 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\flight-graded.jsonl
