@@ -197,11 +197,11 @@
   "under_measured_loom": {
     "n_trials": 6,
     "dnp31_spikes": 0,
-    "wing_motor_spikes": 0
+    "wing_motor_spikes": 34
   },
   "provenance": {
-    "written_at": "2026-10-11T19:53:33",
-    "git_commit": "b7eba83",
+    "written_at": "2026-10-12T04:55:06",
+    "git_commit": "47eb98e",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
