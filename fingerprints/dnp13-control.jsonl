@@ -1,0 +1,2 @@
+{"argv": ["dnp13_control.py", "2"], "env": {"FLYCNS_ALLOW_DIRTY": "1"}, "kind": "proc"}
+{"argv": ["benchmarks/dnp13_control.py", "2"], "code": 1, "kind": "exit"}
