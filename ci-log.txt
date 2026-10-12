@@ -1,0 +1,22 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+AstA receptor-expressing types present: ['L1', 'L2', 'L3', 'L4', 'L5', 'C2', 'Mi1', 'Mi15', 'Dm9', 'Tm2', 'TmY3', 'T2']
+Pm3 cells: 69; Pm3->Mi1 synapses: 18,394
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[flash_only] Mi1 0.013 spikes/cell/flash | L1 0.001 L2 0.000 Tm2 0.000 | CNS 0.1569 Hz | 162s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[flash_plus_Pm3_synaptic] Mi1 0.009 spikes/cell/flash | L1 0.001 L2 0.000 Tm2 0.000 | CNS 0.1565 Hz | 152s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[flash_plus_Pm3_AstA] Mi1 0.191 spikes/cell/flash | L1 0.070 L2 0.000 Tm2 0.000 | CNS 0.1739 Hz | 120s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+[AstA_minus_Mi1] Mi1 0.007 spikes/cell/flash | L1 0.056 L2 0.000 Tm2 0.000 | CNS 0.1697 Hz | 107s
+
+comparison: {
+ "Mi1_flash_only": 0.0135,
+ "Mi1_flash_plus_Pm3_synaptic": 0.0095,
+ "Mi1_flash_plus_Pm3_AstA": 0.1914,
+ "Mi1_receptor_knockdown": 0.007,
+ "Pm3_synaptic_effect": 0.704,
+ "AstA_effect_over_synaptic": 20.147,
+ "knockdown_returns_to_synaptic": 0.737,
+ "note": "published effect is an increase in the peak-to-trough dynamic range of a graded biphasic calcium response, blocked by AstA-R1 knockdown in Mi1; this is a spike-count analogue in a model with no graded compartment, reported and never scored"
+}
