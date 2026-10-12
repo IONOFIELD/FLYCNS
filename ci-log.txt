@@ -1,0 +1,61 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+taste drive ['aPhM2a', 'aPhM5', 'BM_Taste', 'claw_tpGRN', 'PhG1c']; control ['JO-FV']; 11 JO types
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.0  r=1.0  l=0.75  score 7/8  [E1 E2 E3 A1 A2 F2 S1    ]  GF hit 0.83 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.013 | 366s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.0  r=1.0  l=1.0   score 7/8  [E1 E2 E3 A1 A2 F2 S1    ]  GF hit 1.00 per 1.42 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.013 | 373s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.0  r=1.0  l=1.5   score 4/8  [E2 E3 A1 S1             ]  GF hit 1.00 per 3.67 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.08 pop 0.055 | 292s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.0  r=1.5  l=0.75  score 7/8  [E1 E2 E3 A1 A2 F2 S1    ]  GF hit 0.83 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.026 | 310s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.0  r=1.5  l=1.0   score 6/8  [E2 E3 A1 A2 F2 S1       ]  GF hit 1.00 per 2.42 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.020 | 287s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.0  r=1.5  l=1.5   score 3/8  [E2 E3 A1                ]  GF hit 1.00 per 4.33 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.25 pop 0.067 | 285s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.5  r=1.0  l=0.75  score 7/8  [E1 E2 E3 A1 A2 F2 S1    ]  GF hit 0.83 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.023 | 279s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.5  r=1.0  l=1.0   score 7/8  [E1 E2 E3 A1 A2 F2 S1    ]  GF hit 1.00 per 1.42 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.022 | 283s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.5  r=1.0  l=1.5   score 3/8  [E2 E3 A1                ]  GF hit 1.00 per 3.67 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.67 pop 0.066 | 278s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.5  r=1.5  l=0.75  score 7/8  [E1 E2 E3 A1 A2 F2 S1    ]  GF hit 0.83 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.039 | 277s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.5  r=1.5  l=1.0   score 6/8  [E2 E3 A1 A2 F2 S1       ]  GF hit 1.00 per 2.42 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.031 | 289s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=1.5  r=1.5  l=1.5   score 3/8  [E2 E3 A1                ]  GF hit 1.00 per 4.33 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.58 pop 0.079 | 299s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=2.0  r=1.0  l=0.75  score 7/8  [E1 E2 E3 A1 A2 F2 S1    ]  GF hit 0.83 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.034 | 279s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=2.0  r=1.0  l=1.0   score 7/8  [E1 E2 E3 A1 A2 F2 S1    ]  GF hit 1.00 per 1.42 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.17 pop 0.032 | 278s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=2.0  r=1.0  l=1.5   score 3/8  [E2 E3 A1                ]  GF hit 1.00 per 3.67 | JO hit 0.00 | MN9 taste 0.00 ctrl 1.00 pop 0.075 | 280s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=2.0  r=1.5  l=0.75  score 6/8  [E1 E2 E3 A1 A2 S1       ]  GF hit 0.83 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.055 | 280s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=2.0  r=1.5  l=1.0   score 6/8  [E2 E3 A1 A2 F2 S1       ]  GF hit 1.00 per 2.42 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.046 | 282s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=2.0  r=1.5  l=1.5   score 3/8  [E2 E3 A1                ]  GF hit 1.00 per 4.33 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.83 pop 0.092 | 279s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=3.0  r=1.0  l=0.75  score 6/8  [E1 E2 E3 A1 A2 S1       ]  GF hit 0.83 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.055 | 287s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=3.0  r=1.0  l=1.0   score 5/8  [E1 E2 E3 A1 A2          ]  GF hit 1.00 per 1.42 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.58 pop 0.053 | 280s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=3.0  r=1.0  l=1.5   score 3/8  [E2 E3 A1                ]  GF hit 1.00 per 3.67 | JO hit 0.00 | MN9 taste 0.00 ctrl 1.50 pop 0.123 | 284s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=3.0  r=1.5  l=0.75  score 6/8  [E1 E2 E3 A1 A2 S1       ]  GF hit 0.83 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.079 | 281s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=3.0  r=1.5  l=1.0   score 4/8  [E2 E3 A1 A2             ]  GF hit 1.00 per 2.42 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.50 pop 0.070 | 279s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+gains s=3.0  r=1.5  l=1.5   score 4/8  [E2 E3 A1 A2             ]  GF hit 1.00 per 4.33 | JO hit 0.00 | MN9 taste 0.00 ctrl 1.50 pop 0.126 | 306s
+
+best: sensory 1.0 relay 1.0 local 1.0  score 7/8   (117 min total)
+ sensory  relay  local  score  chk_E1  chk_E2  chk_E3  chk_A1  chk_A2  chk_F1  chk_F2  chk_S1
+     1.0    1.0   1.00      7    True    True    True    True    True   False    True    True
+     1.0    1.0   0.75      7    True    True    True    True    True   False    True    True
+     1.5    1.0   1.00      7    True    True    True    True    True   False    True    True
+     1.0    1.5   0.75      7    True    True    True    True    True   False    True    True
+     1.5    1.0   0.75      7    True    True    True    True    True   False    True    True
+     2.0    1.0   1.00      7    True    True    True    True    True   False    True    True
+     1.5    1.5   0.75      7    True    True    True    True    True   False    True    True
+     2.0    1.0   0.75      7    True    True    True    True    True   False    True    True
