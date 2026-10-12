@@ -295,18 +295,18 @@
     }
   },
   "registration": {
-    "file": "results/gustatory_signed_map/registration_v3.json",
-    "version": 3,
-    "supersedes": "results/gustatory_signed_map/registration.json",
-    "git_commit": "a94769d",
-    "model_hash": "6937df88fe20f89d1d65db3e5f9dce5fd7f04ee6e0eef9eccdc8f8e17297aa83",
-    "registered_at": "2026-10-11T21:41:40",
+    "file": "results/gustatory_signed_map/registration_v4.json",
+    "version": 4,
+    "supersedes": "results/gustatory_signed_map/registration_v3.json",
+    "git_commit": "7851c7c",
+    "model_hash": "2bccbfaf8a38b40765c22c3ce1900d4317a35362a8c3c90d5c02430a66949ed2",
+    "registered_at": "2026-10-12T03:48:24",
     "matches": true,
     "problems": []
   },
   "provenance": {
-    "written_at": "2026-10-12T05:07:11",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T10:58:53",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -341,7 +341,7 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"
