@@ -50,7 +50,7 @@
       "ttmn_lag_ms": 0.9000000000001052,
       "psi_per_cell": 1.225,
       "ttmn_to_gf_ratio": 1.0,
-      "wall_s": 380.8,
+      "wall_s": 327.8,
       "per_trial": {
         "gf": [
           1.0,
@@ -325,7 +325,7 @@
       "ttmn_lag_ms": NaN,
       "psi_per_cell": 0.0,
       "ttmn_to_gf_ratio": 0.0,
-      "wall_s": 377.1,
+      "wall_s": 321.0,
       "per_trial": {
         "gf": [
           1.0,
@@ -600,7 +600,7 @@
       "ttmn_lag_ms": NaN,
       "psi_per_cell": 0.0,
       "ttmn_to_gf_ratio": NaN,
-      "wall_s": 457.2,
+      "wall_s": 374.2,
       "per_trial": {
         "gf": [
           0.0,
@@ -984,20 +984,20 @@
     }
   },
   "registration": {
-    "file": "results/gf_escape/registration_v4.json",
-    "version": 4,
-    "supersedes": "results/gf_escape/registration_v3.json",
-    "git_commit": "7851c7c",
-    "model_hash": "1efac44c552b83c01c1a9133ea78af7f644f239168c8c1052045721d23a42281",
-    "registered_at": "2026-10-12T03:48:17",
+    "file": "results/gf_escape/registration_v5.json",
+    "version": 5,
+    "supersedes": "results/gf_escape/registration_v4.json",
+    "git_commit": "24ea400",
+    "model_hash": "3a46de677c72e429bd9a4686ccc7c2f9c9962957bacd84dc862fb1b783179db7",
+    "registered_at": "2026-10-12T10:43:30",
     "matches": false,
     "problems": [
       "model settings overridden: FLYCNS_SEED=1, FLYCNS_SIGNFLIP=0.05"
     ]
   },
   "provenance": {
-    "written_at": "2026-10-12T11:28:42",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T19:32:25",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
