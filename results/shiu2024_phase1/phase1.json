@@ -1,0 +1,1877 @@
+{
+  "benchmark": "shiu2024_phase1",
+  "criteria": {
+    "question": "does the flycns simulator, set to Shiu et al. 2024's choices, reproduce their model's outputs on their own FlyWire v630 data (A1); and does the male CNS drive MN9 under the same choices (M1)?",
+    "sources": {
+      "preregistered": {
+        "file": "results/shiu2024_a0/registration_v4.json",
+        "git_commit": "2f9b1b6",
+        "registered_at": "2026-10-12T06:30:21",
+        "criteria": {
+          "question": "does Shiu et al. 2024's own code, on its own released data and in its own package versions, reproduce its released sugar -> MN9 output when run here?",
+          "reference": {
+            "repository": "https://github.com/philshiu/Drosophila_brain_model",
+            "commit": "91bdd1e7dcf193f3e7ca5a8933497fcef63b7960",
+            "licence": "MIT",
+            "sha256": {
+              "2023_03_23_completeness_630_final.csv": "e6b71e17671a9bdb05f55e4bc6774640a1418cb7a05125e0fc994ad40f9bfdfb",
+              "2023_03_23_connectivity_630_final.parquet": "94db8c650533bc36ffa3223f2e62325d5648b8d6bd31c3a4e1c804628c7557b3",
+              "results/example/sugarR_100Hz.parquet": "93722ec03c3faa5a85790d77ed16bdd7f1e38a7c847ed0bc3af3dc2e4d0c3d34",
+              "model.py": "fc45837d7122c6ce2a7f3f2f23c515992e4b232aadb919efabb72337fac88e4e",
+              "utils.py": "f378cf0b464f2ac5e1daf3609ba25fd51c7e34f294846281707ffe006c3e9ef1",
+              "figures.ipynb": "33cd73c0b4b4a291c51b7bab639c4fa28978e49e111ff0d6adbca5687addb84c",
+              "environment_full.yml": "402fcef4968c99397b0e908b3323ab9e6ef86af5583e46e6427f96f3d1091adf"
+            },
+            "published": {
+              "contra_mean_hz": 67.03,
+              "contra_sd_hz": 6.71,
+              "ipsi_mean_hz": 48.63,
+              "grn_mean_hz": 99.0,
+              "neurons_active": 404,
+              "file": "results/example/sugarR_100Hz.parquet"
+            }
+          },
+          "environment": {
+            "python": "3.10",
+            "packages": "scripts/shiu2024_run_reference.py PINNED (environment_full.yml versions, from PyPI)",
+            "runner": "GitHub windows-latest",
+            "seeds": "none (their code sets none)"
+          },
+          "protocol": {
+            "stimulus": "the 21 sugar GRNs of figures.ipynb (first neu_sugar list) at 100 Hz (their r_poi)",
+            "trials": 30,
+            "trial_s": 1.0,
+            "code": "their run_exp, unmodified, n_proc = all cores",
+            "readout": "spikes per trial of MN9 720575940660219265 (contralateral) and 720575940645521262"
+          },
+          "checks": {
+            "A0_S1_mn9_contra_magnitude": {
+              "band": [
+                -6.7,
+                6.7
+              ],
+              "rule": "the 95% percentile-bootstrap interval (flycns.stats.bootstrap_diff, seed 0) of our contralateral MN9 mean minus the published 30 trials' mean lies within +/-6.7 Hz: PASS; wholly outside: FAIL; else UNRESOLVED"
+            },
+            "A0_S2_mn9_reliability": {
+              "rule": "contralateral MN9 fires in at least 29 of 30 trials (a count, no interval)"
+            },
+            "A0_S3_laterality": {
+              "bands": [
+                [
+                  0.0,
+                  null
+                ],
+                [
+                  -4.86,
+                  4.86
+                ]
+              ],
+              "rule": "BOTH parts: contralateral minus ipsilateral per trial, 95% bootstrap interval above 0; our ipsilateral mean minus the published one, 95% bootstrap interval within +/-4.86 Hz"
+            }
+          },
+          "reported": [
+            "GRN mean rate (published 99.0 Hz)",
+            "neurons active (published 404)",
+            "package versions and engine"
+          ],
+          "decision": "A0 passes only if all three checks PASS; then phase 1 continues with A1 and M1 after review",
+          "preregistered_phase1": {
+            "data": "FlyWire v630 from the pinned reference repository (PINS); sugar, bitter and MN9 ids from its figures.ipynb; the per-neuron sign is the repository's Excitatory column (Shiu's rule: GABA and glutamate inhibitory; acetylcholine and the amines excitatory), mapped onto graph.SIGN_MAP labels",
+            "a1_settings": {
+              "reset": "v and g reset at a spike; g frozen while refractory",
+              "stimulation": "stimulated cells stay in the network; Poisson input of 250 x w_syn per event, refractory 0",
+              "min_weight": 1,
+              "w_scale": 1.0,
+              "amines": "excitatory (the repository's sign column)",
+              "adaptation": "none",
+              "electrical": false,
+              "peptides": false,
+              "dt_ms": 0.1,
+              "trial_ms": 1000,
+              "trials": 30
+            },
+            "checks": {
+              "S1_sugar_mn9_magnitude": "sugar GRNs (21 ids) at 100 Hz, 30 trials: the 95% bootstrap interval of (our contralateral MN9 mean - the published 30 trials' mean) lies within +/-6.7 Hz",
+              "S2_reliability": "contralateral MN9 fires (>= 1 spike) in at least 29 of 30 trials",
+              "S3_laterality": "BOTH: contralateral minus ipsilateral (paired per trial) above 0, AND ipsilateral within +/-4.86 Hz of the published 48.63 Hz (two samples)",
+              "S4_calibration_reproduced": "MN9 at 100 Hz divided by the maximum of the MN9 means at 50, 100, 150 and 200 Hz (30 trials each), 95% bootstrap interval within [0.7, 0.9] (the paper: W_syn chosen so that 100 Hz gives 'roughly 80% of maximal MN9 firing')",
+              "S5_bitter_suppression": "sugar GRNs at 100 Hz plus bitter GRNs (21 ids, figures.ipynb) at 0, 50, 100, 150 and 200 Hz, 30 trials each. PASS if BOTH: the 95% bootstrap interval of MN9(sugar 100 + bitter 100) - MN9(sugar 100 + bitter 0) lies below 0, AND the 95% bootstrap interval of the Spearman rank correlation between bitter rate and per-trial contralateral MN9 rate (150 trials) lies below 0. FAIL if either interval lies wholly at or above 0; UNRESOLVED otherwise. Qualitative, from the paper's text. If the authors' archived Fig 3a values become available, a quantitative S5b is registered separately before it is scored; S5 is never changed",
+              "S6_wiring_control": "100 weight shuffles keeping the global weight distribution (as the paper), 1 trial each, sugar at 100 Hz. A shuffle 'activates MN9' if its contralateral MN9 rate reaches T = 51.4 Hz. Derivation: T is the 1st percentile of a normal fit to the 30 released real-wiring trials (mean 67.03, SD 6.71 Hz; their minimum is 53 Hz), i.e. a rate the real wiring reaches in 99% of trials. PASS if at most 5 of 100 shuffles activate MN9 (the paper: 1 of 100; if the true probability were 1%, 6 or more of 100 would occur with probability below 0.001); FAIL otherwise",
+              "M1_male_mn9": "MaleCNS under the A1 settings, the sugar set and MN9 readout of flycns check F3 (LB3b and LB3c at 100 Hz), 30 trials: MN9 'responds' if the 95% bootstrap interval of its rate lies above 0.5 Hz (the F3 band)"
+            },
+            "ladder": "L1-L6, reported and not scored: from A1, one setting switched to its flycns value at a time (reset, stimulation, connection floor 5, w_scale 0.4, motor adaptation), then all together",
+            "decision_rule": "A0 fails: the reference does not reproduce here; stop. A0 passes and A1 fails: flycns differs beyond the listed settings; bisect first. A1 passes and M1 responds: the male MN9 zero is caused by flycns settings (the ladder names which). A1 passes and M1 does not respond: the male zero is wiring or annotation, not the simulator"
+          }
+        }
+      },
+      "addendum": {
+        "file": "results/shiu2024_phase1_addendum/registration_v4.json",
+        "git_commit": "e406749",
+        "registered_at": "2026-10-12T07:48:22",
+        "criteria": {
+          "adds_to": "results/shiu2024_a0/ preregistered_phase1 (unchanged)",
+          "a1_integration": {
+            "value": "exact (Brian2 method 'linear', as Shiu et al.'s model.py)",
+            "why": "the approved phase-1 plan lists it as A1 setting 8; the registered a1_settings omitted it; found before any A1 code existed",
+            "ladder": "Le: A1 with Euler integration (flycns's value), reported and not scored; L6 (all settings at their flycns values) includes Euler"
+          },
+          "m1_connection_floor": {
+            "value": 5,
+            "why": "the MaleCNS data hold no connection below 5 synapses (scripts/fetch_malecns.py queries weight >= 5)",
+            "other_settings": "every other A1 setting, exact integration included",
+            "reading": "if M1 does not respond and L3 (A1 at floor 5) loses MN9, a MaleCNS fetch down to 1 synapse comes before any conclusion of 'wiring or annotation'"
+          },
+          "m1_unknown_transmitter": "flycns's handling (outputs dropped); the count of such neurons is reported with M1",
+          "decision_rule": "unchanged"
+        }
+      },
+      "s4b": {
+        "file": "results/shiu2024_s4b/registration_v4.json",
+        "git_commit": "acb97e0",
+        "registered_at": "2026-10-12T07:30:19",
+        "criteria": {
+          "question": "does flycns in Shiu-compatible settings reproduce the authors' published sugar dose curve?",
+          "reference": {
+            "archive": "Edmond doi:10.17617/3.CZODIW v3, results.zip",
+            "zip_bytes": 4499610373,
+            "zip_md5": "f6f2e314821fa6a4196214e3b2b14bc4",
+            "extractor": "scripts/extract_shiu_archive.py @ ff2dc9a",
+            "files_sha256": {
+              "shiu_archive_mn9.csv": "076ca67fc5eed1a2f590fe2c84c8b77373337be8f89ed615ec6bc6e5016f8355",
+              "shiu_archive_manifest.json": "2e20cbc34f97c267d4ec887ea0d5c03f95f1721fd5d2494a1325955f5bcb427e"
+            },
+            "source_files": [
+              "results/figure_1/data/sugarR_50Hz.parquet",
+              "results/figure_1/data/sugarR_100Hz.parquet",
+              "results/figure_1/data/sugarR_150Hz.parquet",
+              "results/figure_1/data/sugarR_200Hz.parquet"
+            ],
+            "readout": "MN9 720575940660219265, contralateral; spikes per 1-s trial, 30 trials"
+          },
+          "relation_to_S4": "separate; S4 (pre-registered in results/shiu2024_a0/) is unchanged and scores UNRESOLVED on the authors' own Fig 1 output (0.705, 95% interval 0.686-0.724)",
+          "protocol": {
+            "settings": "A1 (results/shiu2024_a0/ preregistered_phase1.a1_settings)",
+            "sugar_hz": [
+              50,
+              100,
+              150,
+              200
+            ],
+            "bitter_hz": 0,
+            "trials_per_point": 30,
+            "reuse": "S4's runs (sugar 50, 100, 150 and 200 Hz); no new arms"
+          },
+          "checks": {
+            "S4b_dose_curve_matches_published": {
+              "bands": [
+                [
+                  -6.7,
+                  6.7
+                ],
+                [
+                  -6.7,
+                  6.7
+                ],
+                [
+                  -6.7,
+                  6.7
+                ],
+                [
+                  -6.7,
+                  6.7
+                ]
+              ],
+              "rule": "at each of sugar 50, 100, 150 and 200 Hz, the 95% bootstrap interval (two samples of 30 trials) of our contralateral MN9 mean minus the published mean lies within +/-6.7 Hz: PASS if all 4 do; FAIL if any lies wholly outside; UNRESOLVED otherwise",
+              "margin_derivation": "S5b's: 10% of the published sugar-alone rate (67.0 Hz), as an absolute margin"
+            }
+          }
+        }
+      },
+      "s5b": {
+        "file": "results/shiu2024_s5b/registration_v4.json",
+        "git_commit": "e0be161",
+        "registered_at": "2026-10-12T07:13:58",
+        "criteria": {
+          "question": "does flycns in Shiu-compatible settings reproduce the authors' published bitter suppression curve?",
+          "reference": {
+            "archive": "Edmond doi:10.17617/3.CZODIW v3, results.zip",
+            "zip_bytes": 4499610373,
+            "zip_md5": "f6f2e314821fa6a4196214e3b2b14bc4",
+            "extractor": "scripts/extract_shiu_archive.py @ ff2dc9a",
+            "files_sha256": {
+              "shiu_archive_mn9.csv": "076ca67fc5eed1a2f590fe2c84c8b77373337be8f89ed615ec6bc6e5016f8355",
+              "shiu_archive_manifest.json": "2e20cbc34f97c267d4ec887ea0d5c03f95f1721fd5d2494a1325955f5bcb427e"
+            },
+            "readout": "MN9 720575940660219265, contralateral; spikes per 1-s trial, 30 trials"
+          },
+          "relation_to_S5": "separate; S5 (qualitative, pre-registered in results/shiu2024_a0/) is unchanged",
+          "protocol": {
+            "settings": "A1 (results/shiu2024_a0/ preregistered_phase1.a1_settings)",
+            "sugar_hz": 100,
+            "bitter_hz": [
+              0,
+              20,
+              40,
+              60,
+              80,
+              100,
+              120,
+              200
+            ],
+            "trials_per_point": 30,
+            "reuse": "bitter 0, 100 and 200 Hz are S5's runs; 20, 40, 60, 80 and 120 Hz are new arms"
+          },
+          "checks": {
+            "S5b_bitter_curve_matches_published": {
+              "bands": [
+                [
+                  -6.7,
+                  6.7
+                ],
+                [
+                  -6.7,
+                  6.7
+                ],
+                [
+                  -6.7,
+                  6.7
+                ],
+                [
+                  -6.7,
+                  6.7
+                ],
+                [
+                  -6.7,
+                  6.7
+                ],
+                [
+                  -6.7,
+                  6.7
+                ],
+                [
+                  -6.7,
+                  6.7
+                ],
+                [
+                  -6.7,
+                  6.7
+                ]
+              ],
+              "rule": "at each of the 8 bitter rates, the 95% bootstrap interval (two samples of 30 trials) of our contralateral MN9 mean minus the published mean lies within +/-6.7 Hz: PASS if all 8 do; FAIL if any lies wholly outside; UNRESOLVED otherwise",
+              "margin_derivation": "10% of the published sugar-alone rate (67.0 Hz), the S1 scale, as an absolute margin at every point"
+            }
+          }
+        }
+      }
+    },
+    "implementation": {
+      "a1_settings": {
+        "reset": "v_and_g",
+        "stimulation": "kick",
+        "integration": "exact",
+        "adaptation": false,
+        "w_scale": 1.0,
+        "floor": 1,
+        "electrical": false,
+        "peptides": false,
+        "dt_ms": 0.1,
+        "trial_ms": 1000,
+        "trials": 30,
+        "stim_kick_mV": 68.75,
+        "note": "flycns.model.SimOptions(reset='v_and_g', stimulation='kick', integration='exact', adaptation=False); LIFParams(w_scale=1.0); every connection of the repository (floor 1); sign = its Excitatory column; electrical synapses off; peptides off"
+      },
+      "data": {
+        "flywire": "the repository's completeness table (every neuron, its root id) and connectivity table (pre, post, synapse count, Excitatory sign), verified against the sha256 of the A0 registration; sugar and bitter GRNs: the neu_sugar and neu_bitter lists of figures.ipynb; the two MN9s are labelled superclass cb_motor (they are the cells flycns's motor adaptation would act on; ladder L5); no other cell is labelled",
+        "malecns": "data/ as pinned by data/MANIFEST.json, load_graph(min_weight=5, amines='excitatory'); sugar: every LB3b and LB3c cell; MN9: every cell of type MN9"
+      },
+      "arms": {
+        "a1_sugar50": {
+          "seed": 1,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 50,
+          "bitter_hz": 0
+        },
+        "a1_sugar100": {
+          "seed": 2,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 0
+        },
+        "a1_sugar150": {
+          "seed": 3,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 150,
+          "bitter_hz": 0
+        },
+        "a1_sugar200": {
+          "seed": 4,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 200,
+          "bitter_hz": 0
+        },
+        "a1_sugar100_bitter20": {
+          "seed": 5,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 20
+        },
+        "a1_sugar100_bitter40": {
+          "seed": 6,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 40
+        },
+        "a1_sugar100_bitter50": {
+          "seed": 7,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 50
+        },
+        "a1_sugar100_bitter60": {
+          "seed": 8,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 60
+        },
+        "a1_sugar100_bitter80": {
+          "seed": 9,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 80
+        },
+        "a1_sugar100_bitter100": {
+          "seed": 10,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 100
+        },
+        "a1_sugar100_bitter120": {
+          "seed": 11,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 120
+        },
+        "a1_sugar100_bitter150": {
+          "seed": 12,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 150
+        },
+        "a1_sugar100_bitter200": {
+          "seed": 13,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 200
+        },
+        "a1_shuffle0": {
+          "seed": 14,
+          "trials": 1,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 0,
+          "kind": "shuffle",
+          "shuffles": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24
+          ]
+        },
+        "a1_shuffle1": {
+          "seed": 15,
+          "trials": 1,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 0,
+          "kind": "shuffle",
+          "shuffles": [
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49
+          ]
+        },
+        "a1_shuffle2": {
+          "seed": 16,
+          "trials": 1,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 0,
+          "kind": "shuffle",
+          "shuffles": [
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74
+          ]
+        },
+        "a1_shuffle3": {
+          "seed": 17,
+          "trials": 1,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 0,
+          "kind": "shuffle",
+          "shuffles": [
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99
+          ]
+        },
+        "L1_reset": {
+          "seed": 18,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 0
+        },
+        "L2_stimulation": {
+          "seed": 19,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "source",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 0
+        },
+        "L3_floor5": {
+          "seed": 20,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 5
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 0
+        },
+        "L4_wscale04": {
+          "seed": 21,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 0.4,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 0
+        },
+        "L5_adaptation": {
+          "seed": 22,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": true,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 0
+        },
+        "Le_euler": {
+          "seed": 23,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "euler",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 1
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 0
+        },
+        "L6_all": {
+          "seed": 24,
+          "trials": 30,
+          "data": "flywire",
+          "settings": {
+            "reset": "v",
+            "stimulation": "source",
+            "integration": "euler",
+            "adaptation": true,
+            "w_scale": 0.4,
+            "floor": 5
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 0
+        },
+        "m1_male": {
+          "seed": 25,
+          "trials": 30,
+          "data": "malecns",
+          "settings": {
+            "reset": "v_and_g",
+            "stimulation": "kick",
+            "integration": "exact",
+            "adaptation": false,
+            "w_scale": 1.0,
+            "floor": 5
+          },
+          "sugar_hz": 100,
+          "bitter_hz": 0
+        }
+      },
+      "parts": {
+        "p1-dose-a": [
+          "a1_sugar50",
+          "a1_sugar100"
+        ],
+        "p1-dose-b": [
+          "a1_sugar150",
+          "a1_sugar200"
+        ],
+        "p1-bitter-a": [
+          "a1_sugar100_bitter20",
+          "a1_sugar100_bitter40"
+        ],
+        "p1-bitter-b": [
+          "a1_sugar100_bitter50",
+          "a1_sugar100_bitter60"
+        ],
+        "p1-bitter-c": [
+          "a1_sugar100_bitter80",
+          "a1_sugar100_bitter100"
+        ],
+        "p1-bitter-d": [
+          "a1_sugar100_bitter120",
+          "a1_sugar100_bitter150"
+        ],
+        "p1-bitter-e": [
+          "a1_sugar100_bitter200"
+        ],
+        "p1-shuffle-a": [
+          "a1_shuffle0",
+          "a1_shuffle1"
+        ],
+        "p1-shuffle-b": [
+          "a1_shuffle2",
+          "a1_shuffle3"
+        ],
+        "p1-ladder-a": [
+          "L1_reset",
+          "L2_stimulation"
+        ],
+        "p1-ladder-b": [
+          "L3_floor5",
+          "L4_wscale04"
+        ],
+        "p1-ladder-c": [
+          "L5_adaptation",
+          "Le_euler"
+        ],
+        "p1-ladder-d": [
+          "L6_all"
+        ],
+        "p1-m1": [
+          "m1_male"
+        ]
+      },
+      "trial": "restore the stored initial state, set the Poisson rates (sugar GRNs, bitter GRNs), run 1000 ms; spikes counted per neuron; one network per arm, built once; seeds 1, 2, ... in arm order; the random stream runs on across trials (Brian2 restore keeps it)",
+      "shuffle": "S6: per shuffle k (0-99), the signed per-connection weights of the recurrent network are permuted among the existing connections (numpy default_rng(10000 + k)), keeping the global weight distribution; one 1000 ms trial at sugar 100 Hz; contralateral MN9 rate",
+      "readouts": {
+        "mn9_contra": 720575940660219265,
+        "mn9_ipsi": 720575940645521262,
+        "m1": "mean spikes per MN9 cell per second, per trial"
+      },
+      "intervals": "flycns.stats: percentile bootstrap, 2,000 resamples, seed 0; multi-arm statistics resample every arm on its own",
+      "published": {
+        "s1_s3": "results/example/sugarR_100Hz.parquet of the reference repository (as A0)",
+        "s4b": "the S4b registration's reference values",
+        "s5b": "the S5b registration's reference values"
+      }
+    },
+    "checks": {
+      "S1_sugar_mn9_magnitude": {
+        "band": [
+          -6.7,
+          6.7
+        ],
+        "arm": "a1_sugar100"
+      },
+      "S2_reliability": {
+        "rule": "contralateral MN9 fires in >= 29 of 30 trials",
+        "arm": "a1_sugar100"
+      },
+      "S3_laterality": {
+        "bands": [
+          [
+            0.0,
+            null
+          ],
+          [
+            -4.86,
+            4.86
+          ]
+        ],
+        "arm": "a1_sugar100"
+      },
+      "S4_calibration_reproduced": {
+        "band": [
+          0.7,
+          0.9
+        ],
+        "arms": [
+          "a1_sugar50",
+          "a1_sugar100",
+          "a1_sugar150",
+          "a1_sugar200"
+        ],
+        "note": "the authors' own Fig 1 output also scores UNRESOLVED here (S4b)"
+      },
+      "S4b_dose_curve_matches_published": {
+        "bands": [
+          [
+            -6.7,
+            6.7
+          ],
+          [
+            -6.7,
+            6.7
+          ],
+          [
+            -6.7,
+            6.7
+          ],
+          [
+            -6.7,
+            6.7
+          ]
+        ],
+        "arms": [
+          "a1_sugar50",
+          "a1_sugar100",
+          "a1_sugar150",
+          "a1_sugar200"
+        ]
+      },
+      "S5_bitter_suppression": {
+        "bands": [
+          [
+            0.0,
+            null
+          ],
+          [
+            0.0,
+            null
+          ]
+        ],
+        "arms": [
+          "a1_sugar100",
+          "a1_sugar100_bitter50",
+          "a1_sugar100_bitter100",
+          "a1_sugar100_bitter150",
+          "a1_sugar100_bitter200"
+        ],
+        "scored_as": "suppression = MN9(sugar 100) - MN9(sugar 100 + bitter 100), and minus the Spearman rho of per-trial MN9 against bitter rate (150 trials): both intervals must lie above 0 (lower edge exclusive), i.e. the registered 'below 0'; FAIL if either lies wholly at or below it"
+      },
+      "S5b_bitter_curve_matches_published": {
+        "bands": [
+          [
+            -6.7,
+            6.7
+          ],
+          [
+            -6.7,
+            6.7
+          ],
+          [
+            -6.7,
+            6.7
+          ],
+          [
+            -6.7,
+            6.7
+          ],
+          [
+            -6.7,
+            6.7
+          ],
+          [
+            -6.7,
+            6.7
+          ],
+          [
+            -6.7,
+            6.7
+          ],
+          [
+            -6.7,
+            6.7
+          ]
+        ],
+        "arms": [
+          "a1_sugar100",
+          "a1_sugar100_bitter20",
+          "a1_sugar100_bitter40",
+          "a1_sugar100_bitter60",
+          "a1_sugar100_bitter80",
+          "a1_sugar100_bitter100",
+          "a1_sugar100_bitter120",
+          "a1_sugar100_bitter200"
+        ]
+      },
+      "S6_wiring_control": {
+        "rule": "at most 5 of 100 shuffles reach 51.4 Hz contralateral MN9",
+        "arms": [
+          "a1_shuffle0",
+          "a1_shuffle1",
+          "a1_shuffle2",
+          "a1_shuffle3"
+        ]
+      },
+      "M1_male_mn9": {
+        "band": [
+          0.5,
+          null
+        ],
+        "arm": "m1_male",
+        "scored_as": "PASS = responds (interval above 0.5 Hz, lower edge exclusive); FAIL = does not"
+      }
+    },
+    "a1_definition": {
+      "counted": [
+        "S1_sugar_mn9_magnitude",
+        "S2_reliability",
+        "S3_laterality",
+        "S4b_dose_curve_matches_published",
+        "S5_bitter_suppression",
+        "S5b_bitter_curve_matches_published",
+        "S6_wiring_control"
+      ],
+      "principle": "reference-calibrated: a check counts towards A1 only if the reference model (Shiu et al.'s own code, or its released output) passes it under the same procedure. A check the reference itself cannot pass cannot tell the two simulators apart",
+      "reference": {
+        "S1_S2_S3": "A0 passed all three (reference run 1, results/shiu2024_a0/a0.json)",
+        "S4": "the reference's own Fig 1 output scores 0.705, 95% interval 0.686-0.724: UNRESOLVED, so S4 does not count; it is scored and reported",
+        "S4b_S5b": "the reference's released output is the comparison itself",
+        "S5": "the reference's released output passes on the rates it has (bitter 0, 100, 200 Hz; 50 and 150 Hz were not released): suppression 63.0 Hz (61.2 to 64.8), minus rho 0.946 (0.925 to 0.962)",
+        "S6": "no released shuffle output. If A1's S6 FAILs, the reference's own code runs the same 100 shuffles (scripts/shiu2024_run_shuffles.py: the same permutation of the same weight array, in file order, one 1 s trial each, sugar 100 Hz, its own run settings); S6 then counts only if the reference passes it"
+      },
+      "outcome": "PASSES if every counted check PASSes; FAILS if any counted check FAILs; UNRESOLVED otherwise",
+      "extension": "once only, if A1 or M1 is UNRESOLVED: every arm feeding an UNRESOLVED counted check (for a check made of parts, the arms feeding its UNRESOLVED parts), and M1's arm if M1 is UNRESOLVED, runs 30 more trials as <arm>_ext (seed 100 + the arm's seed); the trials are pooled, every check is scored once more on the pooled arms, and that outcome stands. No further extension; an outcome still UNRESOLVED means the decision rule does not decide, and the phase stops for review. Only if A1 FAILS is M1 not extended (the rule then says: bisect first)",
+      "feeds": {
+        "S1_sugar_mn9_magnitude": [
+          "a1_sugar100"
+        ],
+        "S3_laterality": [
+          "a1_sugar100"
+        ],
+        "S4b_dose_curve_matches_published": [
+          "a1_sugar50",
+          "a1_sugar100",
+          "a1_sugar150",
+          "a1_sugar200"
+        ],
+        "S5_bitter_suppression": [
+          "a1_sugar100",
+          "a1_sugar100_bitter50",
+          "a1_sugar100_bitter100",
+          "a1_sugar100_bitter150",
+          "a1_sugar100_bitter200"
+        ],
+        "S5b_bitter_curve_matches_published": [
+          "a1_sugar100",
+          "a1_sugar100_bitter20",
+          "a1_sugar100_bitter40",
+          "a1_sugar100_bitter60",
+          "a1_sugar100_bitter80",
+          "a1_sugar100_bitter100",
+          "a1_sugar100_bitter120",
+          "a1_sugar100_bitter200"
+        ],
+        "M1_male_mn9": [
+          "m1_male"
+        ]
+      },
+      "part_feeds": {
+        "S3_laterality": [
+          [
+            "a1_sugar100"
+          ],
+          [
+            "a1_sugar100"
+          ]
+        ],
+        "S4b_dose_curve_matches_published": [
+          [
+            "a1_sugar50"
+          ],
+          [
+            "a1_sugar100"
+          ],
+          [
+            "a1_sugar150"
+          ],
+          [
+            "a1_sugar200"
+          ]
+        ],
+        "S5_bitter_suppression": [
+          [
+            "a1_sugar100",
+            "a1_sugar100_bitter100"
+          ],
+          [
+            "a1_sugar100",
+            "a1_sugar100_bitter50",
+            "a1_sugar100_bitter100",
+            "a1_sugar100_bitter150",
+            "a1_sugar100_bitter200"
+          ]
+        ],
+        "S5b_bitter_curve_matches_published": [
+          [
+            "a1_sugar100"
+          ],
+          [
+            "a1_sugar100_bitter20"
+          ],
+          [
+            "a1_sugar100_bitter40"
+          ],
+          [
+            "a1_sugar100_bitter60"
+          ],
+          [
+            "a1_sugar100_bitter80"
+          ],
+          [
+            "a1_sugar100_bitter100"
+          ],
+          [
+            "a1_sugar100_bitter120"
+          ],
+          [
+            "a1_sugar100_bitter200"
+          ]
+        ]
+      }
+    },
+    "ladder": "reported, not scored: each rung's contralateral MN9 at sugar 100 Hz, and its difference from A1's",
+    "decision_rule": "A0 fails: the reference does not reproduce here; stop. A0 passes and A1 fails: flycns differs beyond the listed settings; bisect first. A1 passes and M1 responds: the male MN9 zero is caused by flycns settings (the ladder names which). A1 passes and M1 does not respond: the male zero is wiring or annotation, not the simulator"
+  },
+  "stage": "first",
+  "status": "final",
+  "uncertainty": {
+    "S1_sugar_mn9_magnitude": {
+      "estimate": 1.2999999999999972,
+      "ci95": [
+        -1.6666666666666576,
+        4.200000000000003
+      ],
+      "band": [
+        -6.7,
+        6.7
+      ],
+      "method": "bootstrap, two samples (30 and 30 trials)",
+      "verdict": "PASS",
+      "n": 30,
+      "note": "our contralateral MN9 mean minus the published one, Hz"
+    },
+    "S2_reliability": {
+      "estimate": 30.0,
+      "ci95": null,
+      "band": null,
+      "method": "count: of the arm's first 30 trials, those with a contralateral MN9 spike; at least 29 required",
+      "verdict": "PASS"
+    },
+    "S3_laterality": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 2 parts",
+      "parts": [
+        {
+          "estimate": 17.933333333333334,
+          "ci95": [
+            15.8,
+            19.933333333333334
+          ],
+          "band": [
+            0.0,
+            null
+          ],
+          "method": "bootstrap",
+          "verdict": "PASS",
+          "band_lower_exclusive": true,
+          "n": 30,
+          "note": "contralateral minus ipsilateral, paired, Hz"
+        },
+        {
+          "estimate": 1.7666666666666657,
+          "ci95": [
+            -0.567500000000003,
+            4.067499999999998
+          ],
+          "band": [
+            -4.86,
+            4.86
+          ],
+          "method": "bootstrap, two samples (30 and 30 trials)",
+          "verdict": "PASS",
+          "n": 30,
+          "note": "our ipsilateral MN9 mean minus the published one, Hz"
+        }
+      ],
+      "verdict": "PASS",
+      "note": "laterality, and the ipsilateral magnitude"
+    },
+    "S4_calibration_reproduced": {
+      "estimate": 0.7228490832157969,
+      "ci95": [
+        0.6997885459977163,
+        0.7453333795310509
+      ],
+      "band": [
+        0.7,
+        0.9
+      ],
+      "method": "bootstrap, each of the 4 arms resampled",
+      "verdict": "UNRESOLVED",
+      "n": 120,
+      "note": "MN9(100 Hz) / max of the MN9 means at 50-200 Hz; does not count towards A1 (the reference's own output: 0.705, UNRESOLVED)"
+    },
+    "S4b_dose_curve_matches_published": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 4 parts",
+      "parts": [
+        {
+          "estimate": -1.8999999999999986,
+          "ci95": [
+            -5.066666666666666,
+            0.9666666666666651
+          ],
+          "band": [
+            -6.7,
+            6.7
+          ],
+          "method": "bootstrap, two samples (30 and 30 trials)",
+          "verdict": "PASS",
+          "n": 30,
+          "note": "sugar 50 Hz: ours minus published, Hz"
+        },
+        {
+          "estimate": 2.6333333333333258,
+          "ci95": [
+            0.46666666666666823,
+            4.733333333333334
+          ],
+          "band": [
+            -6.7,
+            6.7
+          ],
+          "method": "bootstrap, two samples (30 and 30 trials)",
+          "verdict": "PASS",
+          "n": 30,
+          "note": "sugar 100 Hz: ours minus published, Hz"
+        },
+        {
+          "estimate": -1.0333333333333314,
+          "ci95": [
+            -3.6666666666666576,
+            1.5666666666666629
+          ],
+          "band": [
+            -6.7,
+            6.7
+          ],
+          "method": "bootstrap, two samples (30 and 30 trials)",
+          "verdict": "PASS",
+          "n": 30,
+          "note": "sugar 150 Hz: ours minus published, Hz"
+        },
+        {
+          "estimate": 1.2999999999999972,
+          "ci95": [
+            -1.0675000000000099,
+            3.766666666666666
+          ],
+          "band": [
+            -6.7,
+            6.7
+          ],
+          "method": "bootstrap, two samples (30 and 30 trials)",
+          "verdict": "PASS",
+          "n": 30,
+          "note": "sugar 200 Hz: ours minus published, Hz"
+        }
+      ],
+      "verdict": "PASS",
+      "note": "the published dose curve, point by point"
+    },
+    "S5_bitter_suppression": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 2 parts",
+      "parts": [
+        {
+          "estimate": 63.93333333333333,
+          "ci95": [
+            62.00000000000001,
+            65.90083333333334
+          ],
+          "band": [
+            0.0,
+            null
+          ],
+          "method": "bootstrap, two samples",
+          "verdict": "PASS",
+          "band_lower_exclusive": true,
+          "n": 60,
+          "note": "suppression: MN9(sugar 100) - MN9(sugar 100 + bitter 100), Hz"
+        },
+        {
+          "estimate": 0.9549346501897839,
+          "ci95": [
+            0.9441557820811802,
+            0.9625110474123343
+          ],
+          "band": [
+            0.0,
+            null
+          ],
+          "method": "bootstrap, each of the 5 arms resampled",
+          "verdict": "PASS",
+          "band_lower_exclusive": true,
+          "n": 150,
+          "note": "minus the Spearman rho of per-trial MN9 against bitter rate (0-200 Hz)"
+        }
+      ],
+      "verdict": "PASS",
+      "note": "registered: both intervals below 0, scored here on their negatives (above 0)"
+    },
+    "S5b_bitter_curve_matches_published": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 8 parts",
+      "parts": [
+        {
+          "estimate": 1.36666666666666,
+          "ci95": [
+            -0.9675000000000018,
+            3.5675000000000057
+          ],
+          "band": [
+            -6.7,
+            6.7
+          ],
+          "method": "bootstrap, two samples (30 and 30 trials)",
+          "verdict": "PASS",
+          "n": 30,
+          "note": "bitter 0 Hz: ours minus published, Hz"
+        },
+        {
+          "estimate": 0.06666666666666288,
+          "ci95": [
+            -2.4666666666666615,
+            2.56666666666667
+          ],
+          "band": [
+            -6.7,
+            6.7
+          ],
+          "method": "bootstrap, two samples (30 and 30 trials)",
+          "verdict": "PASS",
+          "n": 30,
+          "note": "bitter 20 Hz: ours minus published, Hz"
+        },
+        {
+          "estimate": 1.1666666666666643,
+          "ci95": [
+            -2.3333333333333286,
+            4.599999999999994
+          ],
+          "band": [
+            -6.7,
+            6.7
+          ],
+          "method": "bootstrap, two samples (30 and 30 trials)",
+          "verdict": "PASS",
+          "n": 30,
+          "note": "bitter 40 Hz: ours minus published, Hz"
+        },
+        {
+          "estimate": 0.43333333333333357,
+          "ci95": [
+            -2.533333333333335,
+            3.333333333333332
+          ],
+          "band": [
+            -6.7,
+            6.7
+          ],
+          "method": "bootstrap, two samples (30 and 30 trials)",
+          "verdict": "PASS",
+          "n": 30,
+          "note": "bitter 60 Hz: ours minus published, Hz"
+        },
+        {
+          "estimate": 1.9000000000000004,
+          "ci95": [
+            -0.5999999999999996,
+            4.333333333333334
+          ],
+          "band": [
+            -6.7,
+            6.7
+          ],
+          "method": "bootstrap, two samples (30 and 30 trials)",
+          "verdict": "PASS",
+          "n": 30,
+          "note": "bitter 80 Hz: ours minus published, Hz"
+        },
+        {
+          "estimate": 0.43333333333333357,
+          "ci95": [
+            -0.8666666666666663,
+            1.6666666666666665
+          ],
+          "band": [
+            -6.7,
+            6.7
+          ],
+          "method": "bootstrap, two samples (30 and 30 trials)",
+          "verdict": "PASS",
+          "n": 30,
+          "note": "bitter 100 Hz: ours minus published, Hz"
+        },
+        {
+          "estimate": -0.43333333333333335,
+          "ci95": [
+            -1.2333333333333334,
+            0.30083333333332885
+          ],
+          "band": [
+            -6.7,
+            6.7
+          ],
+          "method": "bootstrap, two samples (30 and 30 trials)",
+          "verdict": "PASS",
+          "n": 30,
+          "note": "bitter 120 Hz: ours minus published, Hz"
+        },
+        {
+          "estimate": 0.03333333333333333,
+          "ci95": [
+            -0.06666666666666668,
+            0.13416666666666213
+          ],
+          "band": [
+            -6.7,
+            6.7
+          ],
+          "method": "bootstrap, two samples (30 and 30 trials)",
+          "verdict": "PASS",
+          "n": 30,
+          "note": "bitter 200 Hz: ours minus published, Hz"
+        }
+      ],
+      "verdict": "PASS",
+      "note": "the published bitter curve, point by point"
+    },
+    "S6_wiring_control": {
+      "estimate": 0.0,
+      "ci95": null,
+      "band": null,
+      "method": "count: shuffles reaching 51.4 Hz, of 100; at most 5 allowed",
+      "verdict": "PASS"
+    },
+    "M1_male_mn9": {
+      "estimate": 21.466666666666665,
+      "ci95": [
+        19.833333333333332,
+        23.183333333333334
+      ],
+      "band": [
+        0.5,
+        null
+      ],
+      "method": "bootstrap",
+      "verdict": "PASS",
+      "band_lower_exclusive": true,
+      "n": 30,
+      "note": "MaleCNS MN9 rate (mean of its cells), Hz; PASS = responds"
+    }
+  },
+  "checks": {
+    "S1_sugar_mn9_magnitude": true,
+    "S2_reliability": true,
+    "S3_laterality": true,
+    "S4_calibration_reproduced": false,
+    "S4b_dose_curve_matches_published": true,
+    "S5_bitter_suppression": true,
+    "S5b_bitter_curve_matches_published": true,
+    "S6_wiring_control": true,
+    "M1_male_mn9": true
+  },
+  "a1": "PASSES",
+  "a1_counted": [
+    "S1_sugar_mn9_magnitude",
+    "S2_reliability",
+    "S3_laterality",
+    "S4b_dose_curve_matches_published",
+    "S5_bitter_suppression",
+    "S5b_bitter_curve_matches_published",
+    "S6_wiring_control"
+  ],
+  "m1": "PASS",
+  "outcome": "A1 passes and M1 responds: the male MN9 zero is caused by flycns settings (the ladder names which)",
+  "extension": null,
+  "reported": {
+    "a1_sugar100": {
+      "mn9_contra_hz": 68.33333333333333,
+      "mn9_ipsi_hz": 50.4,
+      "published_contra_hz": 67.03333333333333,
+      "published_ipsi_hz": 48.63333333333333,
+      "grn_mean_hz": 99.22063492063492,
+      "neurons_active": 357.9
+    },
+    "dose": {
+      "50": [
+        17.533333333333335,
+        19.433333333333334
+      ],
+      "100": [
+        68.33333333333333,
+        65.7
+      ],
+      "150": [
+        82.63333333333334,
+        83.66666666666667
+      ],
+      "200": [
+        94.53333333333333,
+        93.23333333333333
+      ]
+    },
+    "bitter": {
+      "0": [
+        68.33333333333333,
+        66.96666666666667
+      ],
+      "20": [
+        57.766666666666666,
+        57.7
+      ],
+      "40": [
+        46.43333333333333,
+        45.266666666666666
+      ],
+      "50": [
+        38.233333333333334,
+        null
+      ],
+      "60": [
+        29.633333333333333,
+        29.2
+      ],
+      "80": [
+        13.633333333333333,
+        11.733333333333333
+      ],
+      "100": [
+        4.4,
+        3.966666666666667
+      ],
+      "120": [
+        1.0666666666666667,
+        1.5
+      ],
+      "150": [
+        0.16666666666666666,
+        null
+      ],
+      "200": [
+        0.06666666666666667,
+        0.03333333333333333
+      ]
+    },
+    "shuffles_mn9_contra_hz": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "reference_s6": null,
+    "m1_mn9_hz": [
+      16.5,
+      17.5,
+      17.5,
+      31.5,
+      19.0,
+      13.0,
+      26.5,
+      18.5,
+      29.0,
+      30.0,
+      21.0,
+      17.5,
+      18.0,
+      17.5,
+      21.5,
+      25.5,
+      24.5,
+      26.0,
+      20.5,
+      20.0,
+      28.5,
+      22.0,
+      18.0,
+      25.0,
+      17.0,
+      23.0,
+      25.0,
+      16.5,
+      18.0,
+      20.0
+    ],
+    "m1_unknown_transmitter": {
+      "edges": 110136,
+      "synapses": 1405114,
+      "silent_presynaptic": 7508
+    },
+    "ladder": {
+      "L1_reset": {
+        "switched": [
+          "reset"
+        ],
+        "mn9_contra_hz": [
+          231.8,
+          222.76666666666668,
+          240.36666666666667
+        ],
+        "minus_a1": [
+          163.4666666666667,
+          154.36666666666667,
+          172.03500000000003
+        ],
+        "fired_trials": 30,
+        "trials": 30
+      },
+      "L2_stimulation": {
+        "switched": [
+          "stimulation"
+        ],
+        "mn9_contra_hz": [
+          67.7,
+          66.06666666666666,
+          69.33333333333333
+        ],
+        "minus_a1": [
+          -0.6333333333333258,
+          -3.0999999999999943,
+          1.7666666666666657
+        ],
+        "fired_trials": 30,
+        "trials": 30
+      },
+      "L3_floor5": {
+        "switched": [
+          "floor"
+        ],
+        "mn9_contra_hz": [
+          61.8,
+          59.666666666666664,
+          63.733333333333334
+        ],
+        "minus_a1": [
+          -6.533333333333331,
+          -9.366666666666674,
+          -3.9000000000000057
+        ],
+        "fired_trials": 30,
+        "trials": 30
+      },
+      "L4_wscale04": {
+        "switched": [
+          "w_scale"
+        ],
+        "mn9_contra_hz": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "minus_a1": [
+          -68.33333333333333,
+          -70.1,
+          -66.63333333333334
+        ],
+        "fired_trials": 0,
+        "trials": 30
+      },
+      "L5_adaptation": {
+        "switched": [
+          "adaptation"
+        ],
+        "mn9_contra_hz": [
+          37.93333333333333,
+          36.96666666666667,
+          38.934166666666655
+        ],
+        "minus_a1": [
+          -30.4,
+          -32.43333333333334,
+          -28.366666666666667
+        ],
+        "fired_trials": 30,
+        "trials": 30
+      },
+      "Le_euler": {
+        "switched": [
+          "integration"
+        ],
+        "mn9_contra_hz": [
+          66.93333333333334,
+          65.4,
+          68.50083333333333
+        ],
+        "minus_a1": [
+          -1.3999999999999915,
+          -3.8333333333333286,
+          1.0
+        ],
+        "fired_trials": 30,
+        "trials": 30
+      },
+      "L6_all": {
+        "switched": [
+          "reset",
+          "stimulation",
+          "floor",
+          "w_scale",
+          "adaptation",
+          "integration"
+        ],
+        "mn9_contra_hz": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "minus_a1": [
+          -68.33333333333333,
+          -70.1,
+          -66.63333333333334
+        ],
+        "fired_trials": 0,
+        "trials": 30
+      }
+    },
+    "wall_s": {
+      "a1_sugar50": 1384.7,
+      "a1_sugar100": 1382.8,
+      "a1_sugar150": 1055.9,
+      "a1_sugar200": 1056.8,
+      "a1_sugar100_bitter20": 1586.6,
+      "a1_sugar100_bitter40": 1590.0,
+      "a1_sugar100_bitter50": 1588.6,
+      "a1_sugar100_bitter60": 1594.0,
+      "a1_sugar100_bitter80": 793.4,
+      "a1_sugar100_bitter100": 792.7,
+      "a1_sugar100_bitter120": 1596.5,
+      "a1_sugar100_bitter150": 1593.3,
+      "a1_sugar100_bitter200": 1421.9,
+      "a1_shuffle0": 1009.2,
+      "a1_shuffle1": 1010.8,
+      "a1_shuffle2": 1396.1,
+      "a1_shuffle3": 1396.4,
+      "L1_reset": 1566.1,
+      "L2_stimulation": 1578.4,
+      "L3_floor5": 1115.4,
+      "L4_wscale04": 1134.6,
+      "L5_adaptation": 1443.6,
+      "Le_euler": 464.7,
+      "L6_all": 383.6,
+      "m1_male": 1848.6
+    }
+  },
+  "registration": {
+    "file": "results/shiu2024_phase1/registration_v5.json",
+    "version": 5,
+    "supersedes": null,
+    "git_commit": "24ea400",
+    "model_hash": "1e1bb7c3d79260114b0ad90fded7f3ec3d5740f664fba48bf11ec7625743111e",
+    "registered_at": "2026-10-12T10:44:08",
+    "matches": true,
+    "problems": []
+  },
+  "provenance": {
+    "written_at": "2026-10-12T11:33:15",
+    "git_commit": "c525b28",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.3",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "not used",
+    "platform": "linux",
+    "machine": "x86_64",
+    "float_dtype": "float64"
+  }
+}
