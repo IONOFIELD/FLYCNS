@@ -1,11 +1,11 @@
 {
-  "b_adapt_mV": 10,
+  "b_adapt_mV": 45,
   "n_trials": 40,
   "rule": "smallest b with C1-C4",
   "constraints": "von Reyn 2014: 1-2 spikes/loom, probabilistic; Tanouye & Wyman 1980 relay",
   "provenance": {
-    "written_at": "2026-10-11T20:25:25",
-    "git_commit": "b7eba83",
+    "written_at": "2026-10-12T04:07:22",
+    "git_commit": "77d3726",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
