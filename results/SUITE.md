@@ -68,20 +68,20 @@ effective chemical kick per synapse: 0.1100 mV (Shiu 2024 unitary 0.275 mV x Mal
 | feeding_by_modality | F2_sugar_ratio_exceeds_bitter | PASS | 0.675; point | structural | - |
 | feeding_by_modality | F3_sugar_drives_mn9_at_100hz | FAIL | 0 [0, 0] in [0.5, inf] | independent | - |
 | feeding_by_modality | F4_bitter_below_sugar_at_100hz | FAIL | 0 [0, 0] in (0, inf] | independent | - |
-| flight_loop | L1a_DVMn_2_to_12_hz | UNRESOLVED | 0.4 in [2, 12]; per-draw (2 of 5 in band; pass needs 4) | calibrated | - |
-| flight_loop | L1b_DLMn_cf_2_to_12_hz | FAIL | 0 in [2, 12]; per-draw (0 of 5 in band; pass needs 4) | independent | - |
-| flight_loop | L2_b1_0.5_to_1.2_spikes_per_wingbeat | FAIL | 0 in [101, 242]; per-draw (0 of 5 in band; pass needs 4) | independent | - |
-| flight_loop | L3_leg_mn_not_entrained | PASS | 1 in [-inf, 20.2]; per-draw (5 of 5 in band; pass needs 4) | independent | - |
-| flight_loop | L4_steering_specific_vs_null | PASS | 1 in [5, inf]; per-draw (5 of 5 in band; pass needs 4) | control | - |
+| flight_loop | L1a_DVMn_2_to_12_hz | UNRESOLVED | draws 3.37, 0, 6.65, 0, 0; band [2, 12]; 2 of 5 draws in band, pass needs 4 | calibrated | - |
+| flight_loop | L1b_DLMn_cf_2_to_12_hz | FAIL | draws 0, 0, 0, 0, 0; band [2, 12]; 0 of 5 draws in band, pass needs 4 | independent | - |
+| flight_loop | L2_b1_0.5_to_1.2_spikes_per_wingbeat | FAIL | draws 49.7, 55.3, 55.5, 87.6, 14.6; band [101, 242]; 0 of 5 draws in band, pass needs 4 | independent | - |
+| flight_loop | L3_leg_mn_not_entrained | PASS | draws 0.658, 0.231, 0, 0.137, 0; band [-inf, 20.2]; 5 of 5 draws in band, pass needs 4 | independent | - |
+| flight_loop | L4_steering_specific_vs_null | PASS | draws 94.7, 89.7, 62.9, 76.9, 34.3; band [5, inf]; 5 of 5 draws in band, pass needs 4 | control | - |
 | flight_loop | L5_DLMn_cf_2_to_12_hz_with_DNg02 | FAIL | -; any of 4 parts | independent | - |
 | flight_loop | L6_DVMn_still_in_band_with_DNg02 | SKIP | - | reported | - |
-| flight_snpp16 | N1_snpp16_sufficient_dvmn_in_band | FAIL | 0 in [2, 12]; per-draw (0 of 3 in band; pass needs 3) | independent | - |
-| flight_snpp16 | N2_snpp16_necessary_dvmn_below_2hz | FAIL | 0 in [-inf, 2]; per-draw (0 of 3 in band; pass needs 3) | independent | - |
+| flight_snpp16 | N1_snpp16_sufficient_dvmn_in_band | FAIL | draws 59.6, 59.6, 59.5; band [2, 12]; 0 of 3 draws in band, pass needs 3 | independent | - |
+| flight_snpp16 | N2_snpp16_necessary_dvmn_below_2hz | FAIL | draws 39, 38.5, 38.5; band [-inf, 2]; 0 of 3 draws in band, pass needs 3 | independent | - |
 | flight_snpp16_graded | G1_graded | UNRESOLVED | -; all of 12 parts | independent | - |
 | flight_snpp16_graded | G2_in_band_window | PASS | -; any of 13 parts | independent | - |
 | flight_snpp16_graded | G3_selective_at_k_star | PASS | -; all of 3 parts | independent | - |
-| flight_snpp16_graded | G4_wiring_specific_at_k_star | PASS | 1 in [-inf, 1]; per-draw (5 of 5 in band; pass needs 4) | control | - |
-| flight_snpp16_graded | G5_reliable_at_k_star | FAIL | 0.2 in [2, 12]; per-draw (1 of 5 in band; pass needs 4) | independent | - |
+| flight_snpp16_graded | G4_wiring_specific_at_k_star | PASS | draws 0, 0, 0, 0, 0; band [-inf, 1]; 5 of 5 draws in band, pass needs 4 | control | - |
+| flight_snpp16_graded | G5_reliable_at_k_star | FAIL | draws 0, 1.68, 1.6, 9.34, 0; band [2, 12]; 1 of 5 draws in band, pass needs 4 | independent | - |
 | flight_snpp16_robustness | R1_survives_transmitter_uncertainty | FAIL | -; all of 4 parts | robustness | - |
 | flight_snpp16_robustness | R2_selectivity_holds_across_cord_params | FAIL | -; all of 7 parts | robustness | - |
 | flight_snpp16_robustness | R3_replicates_with_fresh_draws | FAIL | -; all of 2 parts | robustness | - |
@@ -114,31 +114,31 @@ Declared deviations from the raw connectome: see each results/*/provenance.md an
 ## Report provenance
 | benchmark | written | commit | data (neurons / edges) | env overrides |
 |---|---|---|---|---|
-| a2_contact_em | 2026-10-12T05:42:11 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| a2_contact_em_flip | 2026-10-12T05:54:04 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| a2_registered | 2026-10-12T05:35:31 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| a2_robustness | 2026-10-12T07:53:36 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| auditory | 2026-10-12T05:59:27 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| dnp13_control | 2026-10-12T05:47:20 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| feeding | 2026-10-12T06:10:52 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| feeding_by_modality | 2026-10-12T05:08:10 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_loop | 2026-10-12T06:12:47 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_snpp16 | 2026-10-12T06:29:24 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_snpp16_graded | 2026-10-12T06:35:32 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| flight_snpp16_robustness | 2026-10-12T05:58:53 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| gf_escape | 2026-10-12T05:10:32 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| gustatory_signed_map | 2026-10-12T05:07:11 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| null_dc_auditory | 2026-10-12T07:12:24 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| null_dc_escape | 2026-10-12T07:13:47 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| null_dc_song | 2026-10-12T06:28:32 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| null_strict | 2026-10-12T06:40:00 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| pc1_song | 2026-10-12T05:12:39 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| peptide_asta | 2026-10-12T05:23:30 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| select_wscale | 2026-10-12T05:59:44 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
-| sugar_laterality | 2026-10-12T04:53:19 | 47eb98e | 06ea0afb48c414ad / becf568580708ba9 | - |
+| a2_contact_em | 2026-10-12T13:10:05 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| a2_contact_em_flip | 2026-10-12T11:49:33 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| a2_registered | 2026-10-12T12:36:40 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| a2_robustness | 2026-10-12T13:56:27 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| auditory | 2026-10-12T12:05:37 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| dnp13_control | 2026-10-12T12:57:57 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| feeding | 2026-10-12T12:17:10 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| feeding_by_modality | 2026-10-12T11:06:29 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| flight_loop | 2026-10-12T12:50:41 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| flight_snpp16 | 2026-10-12T11:58:55 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| flight_snpp16_graded | 2026-10-12T11:39:35 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| flight_snpp16_robustness | 2026-10-12T12:49:56 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| gf_escape | 2026-10-12T11:16:20 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| gustatory_signed_map | 2026-10-12T10:58:53 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| null_dc_auditory | 2026-10-12T12:46:34 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| null_dc_escape | 2026-10-12T13:08:52 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| null_dc_song | 2026-10-12T13:38:59 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| null_strict | 2026-10-12T12:46:32 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| pc1_song | 2026-10-12T11:22:12 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| peptide_asta | 2026-10-12T11:26:44 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| select_wscale | 2026-10-12T12:27:48 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| sugar_laterality | 2026-10-12T12:48:29 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
 
 ## Citation check: 49/49 tags resolve in REFERENCES.md
 
 ## Stamp inventory
-111 of 111 result files carry a stamp (commits: 47eb98e x111); 0 flagged, 0 unstamped.
+111 of 111 result files carry a stamp (commits: bd631a2 x111); 0 flagged, 0 unstamped.
 - exempt: results/turner2022/ (input extraction from 22 GB of Turner et al. 2022 imaging; its output is a model input, hashed into every report's loom_input stamp)

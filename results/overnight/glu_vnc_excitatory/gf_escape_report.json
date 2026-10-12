@@ -50,7 +50,7 @@
       "ttmn_lag_ms": 0.9000000000000128,
       "psi_per_cell": 1.1875,
       "ttmn_to_gf_ratio": 1.0,
-      "wall_s": 268.9,
+      "wall_s": 195.9,
       "per_trial": {
         "gf": [
           2.5,
@@ -325,7 +325,7 @@
       "ttmn_lag_ms": NaN,
       "psi_per_cell": 0.0,
       "ttmn_to_gf_ratio": 0.0,
-      "wall_s": 266.3,
+      "wall_s": 182.6,
       "per_trial": {
         "gf": [
           2.5,
@@ -600,7 +600,7 @@
       "ttmn_lag_ms": NaN,
       "psi_per_cell": 0.0,
       "ttmn_to_gf_ratio": NaN,
-      "wall_s": 293.4,
+      "wall_s": 214.8,
       "per_trial": {
         "gf": [
           0.0,
@@ -984,20 +984,20 @@
     }
   },
   "registration": {
-    "file": "results/gf_escape/registration_v3.json",
-    "version": 3,
-    "supersedes": "results/gf_escape/registration.json",
-    "git_commit": "a94769d",
-    "model_hash": "41609c34cf9cf89ee2d4cd7e5f41dea36246347ea6c6e02179941e0dcba3da4e",
-    "registered_at": "2026-10-11T21:41:33",
+    "file": "results/gf_escape/registration_v4.json",
+    "version": 4,
+    "supersedes": "results/gf_escape/registration_v3.json",
+    "git_commit": "7851c7c",
+    "model_hash": "1efac44c552b83c01c1a9133ea78af7f644f239168c8c1052045721d23a42281",
+    "registered_at": "2026-10-12T03:48:17",
     "matches": false,
     "problems": [
       "model settings overridden: FLYCNS_GLU_VNC=excitatory"
     ]
   },
   "provenance": {
-    "written_at": "2026-10-12T05:29:39",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T11:50:12",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -1040,7 +1040,7 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"

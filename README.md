@@ -36,7 +36,7 @@ circuit by circuit, including where the wiring alone is not enough.
 - **Built to be used and to last.** Every result is traceable to its code, data and settings, and
   automated checks run on every change.
 
-**Headline result, after the refrozen model's registered rerun (generation 3, 12 October 2026).** The
+**Headline result, after the refrozen model's registered rerun (generation 3, 12 October 2026; reproduced number for number under generation 4, run 18).** The
 result that used to lead this page does not survive. With each escape neuron's sound input
 calibrated on its own ear afferents (before, one side got several times the other's), a sound
 makes the escape neuron LESS likely to fire for a faint visual threat (from 30% to 17% of trials): the

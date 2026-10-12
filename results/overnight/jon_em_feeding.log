@@ -50,7 +50,7 @@ ALL gustatory arm (42 types, every tastant at once) at 50 Hz -> MN9 0.00 spikes/
 sugar drive: 140 neurons, 69 inferred left
 [graph] JON -> GF as EM annotates it (em): 679 chemical synapses kept; no electrical coupling
    structural 2-hop drive from left afferents: MN9-L 25,650 vs MN9-R 350; functional contra dominant -> does NOT match wiring
-F1 left sugar 100 Hz: MN9 ipsi 0.00, contra 0.00 spikes/cell  [31s]
+F1 left sugar 100 Hz: MN9 ipsi 0.00, contra 0.00 spikes/cell  [56s]
 F3 skipped: no bitter GRN type resolved
 [graph] JON -> GF as EM annotates it (em): 679 chemical synapses kept; no electrical coupling
 F4 DNge062 50 Hz -> MN9 1.83

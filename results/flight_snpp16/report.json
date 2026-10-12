@@ -136,18 +136,18 @@
     "prediction": "silencing SNpp16 in a flying fly should suppress DVM motor neuron activity; the model's DVMn output under proprioceptive drive is set by this one wing campaniform type"
   },
   "registration": {
-    "file": "results/flight_snpp16/registration_v3.json",
-    "version": 3,
-    "supersedes": "results/flight_snpp16/registration.json",
-    "git_commit": "a94769d",
-    "model_hash": "bb818608e50085cc8e5fe02227a9935318606191e20fc1179aed02c3ba27e715",
-    "registered_at": "2026-10-11T21:41:55",
+    "file": "results/flight_snpp16/registration_v4.json",
+    "version": 4,
+    "supersedes": "results/flight_snpp16/registration_v3.json",
+    "git_commit": "7851c7c",
+    "model_hash": "6646924f59b67bf4f2e1c4608d6d1cbb2b0002e5ccaf3693991064f4aa48c350",
+    "registered_at": "2026-10-12T03:48:39",
     "matches": true,
     "problems": []
   },
   "provenance": {
-    "written_at": "2026-10-12T06:29:24",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T11:58:55",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -182,7 +182,7 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"

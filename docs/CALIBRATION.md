@@ -99,6 +99,8 @@ the generation-3 freeze:
 - **Two frozen code comments corrected** (the errata listed above).
 - **Expected:** every number of generation 3 reproduces exactly; the generation-4 run is scored as a
   replication of run 14, not as a new result.
+- **Result (run 18, 58 jobs at `bd631a2`):** reproduced. Every report is numerically identical to run
+  14's; grid tables differ only in run time; 61 of 61 suite rows give the same verdict.
 
 Values that are **measured, not chosen**:
 - **Single-neuron parameters:** Shiu et al. 2024.

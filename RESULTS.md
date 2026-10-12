@@ -37,6 +37,30 @@ superseded by its registered tests.)
 
 ---
 
+## 12 October 2026: generation 4, a hygiene refreeze; every number of run 14 reproduced (run 18)
+
+**What changed** (docs/CALIBRATION.md, "Generation 4, phase 0"): no parameter. The input data were re-pinned
+without the legacy `sign` column (the fetch's own sign table, which the model never read; one
+transmitter-to-sign table remains, `flycns/graph.py` SIGN_MAP); `flycns/integrity.py` joined the hashed
+model files; two frozen code comments were corrected; the suite table now lists per-draw values.
+The model was frozen at `7851c7c`; 20 `registration_v4.json` files were committed at `bd631a2` before
+any result. Run 18 (58 jobs) ran at `bd631a2`.
+
+**Result: every number of generation 3 reproduces.** Compared file by file with run 14: all 88 JSON
+result files are numerically identical (only provenance, registration stamps and run times differ); the six
+grid tables differ only in their wall-time column; the HDF5 exports are byte-identical; all 61 rows of
+the suite table give the same verdict and role. 29 of 53 checks pass, 6 unresolved; independent 5 of
+19. Every scored report says `registration.matches: true`; 111 of 111 result files carry the stamp
+of `bd631a2`. (The robustness battery's reports are perturbations by design and are not registered
+results, as before.)
+
+**One plumbing fault, no data lost.** The core job ran 109 minutes and was marked failed at its last
+step: its own push of the results branch failed, and the script discarded git's message, so the cause
+is unknown. The workflow's backup step pushed the same commit 11 seconds later. The script now shows
+git's message, retries once, and tests the push before any long run.
+
+---
+
 ## 12 October 2026: generation 3, the model refrozen and every test re-registered (run 14)
 
 **What changed, and why** (docs/CALIBRATION.md, "Refrozen 11 October 2026"):
