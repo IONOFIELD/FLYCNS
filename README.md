@@ -126,8 +126,8 @@ Most independent checks fail or are unresolved (`results/SUITE.md`, RESULTS.md).
 
 The Windows files (`setup.cmd`, `fly.cmd`) are thin launchers; the work is done by `scripts/setup.py` and
 `fly.py`, which run on Linux and macOS too. **Tested on Linux** (Python 3.13, 12 October 2026: a fresh
-clone passes `python3 scripts/setup.py --check`, the whole toy regression, 87 of 87). **Not yet tested on
-macOS.** You need git, Python 3.10 to 3.13, and for the faster compiled engine a C++ compiler (`g++` on
+clone of this version passes `python3 scripts/setup.py --check`, the whole toy regression, 91 of 91).
+**Not yet tested on macOS.** You need git, Python 3.10 to 3.13, and for the faster compiled engine a C++ compiler (`g++` on
 Linux, e.g. `sudo apt install g++`; `xcode-select --install` on macOS). Without one, the pure-Python
 engine runs with identical results, about 4 times slower.
 
