@@ -200,8 +200,8 @@
     "wing_motor_spikes": 34
   },
   "provenance": {
-    "written_at": "2026-10-12T11:09:50",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T18:14:37",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
