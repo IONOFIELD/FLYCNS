@@ -15,7 +15,10 @@ What it proves, and what not: identical fingerprints mean identical simulations 
 arm of every job (same network, same state after every step, same spikes). Later trials run the same code with
 the same random-number stream, so a difference there would need code that behaves differently by trial number;
 the full rerun, run alongside, still catches that. Scores are not compared here (a few trials give no
-meaningful score), and registration checks are relaxed (FLYCNS_ALLOW_DIRTY=1) so reduced runs are allowed.
+meaningful score), and registration checks are relaxed (FLYCNS_ALLOW_DIRTY=1) so reduced runs are allowed. The
+version-1 registrations (results/*/criteria.json) record trial counts and refuse any other count whatever the
+setting, so they are set aside for the job and put back afterwards; the reduced runs' own criteria files are
+discarded. Nothing here is a result: run it in a throwaway checkout (the cloud does).
 """
 import ast
 import json
@@ -109,6 +112,23 @@ def run(job, out):
     base.update(FPRINT_LOG=str(out), FLYCNS_ALLOW_DIRTY="1",
                 PYTHONPATH=os.pathsep.join([str(HOOK)] + [p for p in [os.environ.get("PYTHONPATH")] if p]))
     failed = []
+    aside = sorted((ROOT / "results").glob("*/criteria.json"))
+    for f in aside:
+        f.rename(f.with_name("criteria.json.fp-aside"))
+    try:
+        _run_all(job, out, base, failed)
+    finally:
+        for f in aside:
+            f.unlink(missing_ok=True)                           # a reduced run's own criteria, discarded
+            f.with_name("criteria.json.fp-aside").rename(f)
+    n = sum(1 for line in out.read_text(encoding="utf-8").splitlines() if '"kind": "run"' in line) if out.exists() else 0
+    print(f"[fingerprint] {job}: {n} simulation steps fingerprinted -> {out}"
+          + (f"; exited non-zero: {failed}" if failed else ""))
+    if not n:     # structural checks never simulate; compare shows the count for every job either way
+        print(f"[fingerprint] {job}: no simulation step was fingerprinted")
+
+
+def _run_all(job, out, base, failed):
     for argv, extra in commands(job):
         print(f"[fingerprint] {job}: {' '.join(argv)}" + (f"  ({', '.join(f'{k}={v}' for k, v in extra.items())})"
                                                            if extra else ""), flush=True)
@@ -117,11 +137,6 @@ def run(job, out):
             f.write(json.dumps(dict(kind="exit", argv=argv, code=code), sort_keys=True) + "\n")
         if code != 0:
             failed.append(" ".join(argv))
-    n = sum(1 for line in out.read_text(encoding="utf-8").splitlines() if '"kind": "run"' in line) if out.exists() else 0
-    print(f"[fingerprint] {job}: {n} simulation steps fingerprinted -> {out}"
-          + (f"; exited non-zero: {failed}" if failed else ""))
-    if not n:
-        raise SystemExit(f"[fingerprint] {job}: nothing was fingerprinted")
 
 
 def _load(f):
