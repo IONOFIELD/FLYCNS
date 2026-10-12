@@ -11,6 +11,8 @@
 *.lock text eol=lf
 *.yml text eol=lf
 *.cff text eol=lf
+# Published reference values, stored byte-for-byte as received (their sha256 is pinned in a registration).
+reference-data/** -text
 *.parquet binary
 *.h5 binary
 *.feather binary
