@@ -124,6 +124,13 @@ the generation-3 freeze:
   (0.705, 95% interval 0.686-0.724). S4 is kept as registered and reported; S4b
   (`results/shiu2024_s4b/`) tests the published dose curve point by point.
 - **Expected:** every number of generation 4 reproduces exactly.
+- **Errata found by the independent review of phase 1** (frozen text, to be corrected with the next model
+  change): `flycns/model.py`'s SimOptions note says a PoissonInput "can add two events in one 0.1 ms step";
+  with N=1 Brian2 draws at most one event per step, so the two inputs are equivalent. The phase-1
+  pre-registration calls M1's 0.5 Hz threshold "the F3 band"; F3's band is 0.5 spikes per cell per 200 ms
+  pulse (about 2-2.5 Hz). Neither changes a verdict (M1's interval starts at 19.8 Hz). "S4 cannot pass even
+  for a perfect reproduction" is too strong: the reference is UNRESOLVED on S4 (its interval straddles 0.7),
+  and S4's verdict on A1 depends on the bootstrap seed (0.723, lower edge 0.6998 at seed 0).
 
 Values that are **measured, not chosen**:
 - **Single-neuron parameters:** Shiu et al. 2024.
