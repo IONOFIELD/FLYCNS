@@ -1,0 +1,14 @@
+--- L3_floor5
+[phase1] L3_floor5 27/30 done (1009 s)
+[phase1] L3_floor5 28/30 done (1044 s)
+[phase1] L3_floor5 29/30 done (1080 s)
+[phase1] L3_floor5 30/30 done (1115 s)
+[phase1] L3_floor5: 30 runs in 1115.4 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1\arms\L3_floor5.json
+
+--- L4_wscale04
+[phase1] L4_wscale04 27/30 done (1027 s)
+[phase1] L4_wscale04 28/30 done (1064 s)
+[phase1] L4_wscale04 29/30 done (1100 s)
+[phase1] L4_wscale04 30/30 done (1135 s)
+[phase1] L4_wscale04: 30 runs in 1134.6 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1\arms\L4_wscale04.json
+
