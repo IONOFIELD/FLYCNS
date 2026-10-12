@@ -107,10 +107,10 @@
     },
     "n_trials": 10
   },
-  "wall_s": 1741.5,
+  "wall_s": 1754.8,
   "provenance": {
-    "written_at": "2026-10-12T06:40:00",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T12:46:32",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -130,7 +130,7 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"
@@ -169,12 +169,12 @@
     }
   },
   "registration": {
-    "file": "results/null_strict/registration_v3.json",
-    "version": 3,
-    "supersedes": "results/null_strict/registration.json",
-    "git_commit": "a94769d",
-    "model_hash": "429f5cd3bc80e92b75a56c64b051dc0acb17138e66be0d95d15907d23641410a",
-    "registered_at": "2026-10-11T21:41:48",
+    "file": "results/null_strict/registration_v4.json",
+    "version": 4,
+    "supersedes": "results/null_strict/registration_v3.json",
+    "git_commit": "7851c7c",
+    "model_hash": "b32498cea813d7b76a06a5d4827f596064743a0606005869fff8ebffcea0c622",
+    "registered_at": "2026-10-12T03:48:32",
     "matches": true,
     "problems": []
   }
