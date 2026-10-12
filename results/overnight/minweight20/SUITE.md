@@ -74,8 +74,8 @@ Declared deviations from the raw connectome: see each results/*/provenance.md an
 ## Report provenance
 | benchmark | written | commit | data (neurons / edges) | env overrides |
 |---|---|---|---|---|
-| auditory | 2026-10-12T11:56:20 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | {'FLYCNS_MIN_WEIGHT': '20'} |
-| feeding | 2026-10-12T12:05:55 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | {'FLYCNS_MIN_WEIGHT': '20'} |
-| gf_escape | 2026-10-12T11:15:05 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | {'FLYCNS_MIN_WEIGHT': '20'} |
+| auditory | 2026-10-12T20:22:45 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | {'FLYCNS_MIN_WEIGHT': '20'} |
+| feeding | 2026-10-12T20:32:21 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | {'FLYCNS_MIN_WEIGHT': '20'} |
+| gf_escape | 2026-10-12T19:41:20 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | {'FLYCNS_MIN_WEIGHT': '20'} |
 
 ## Citation check: 49/49 tags resolve in REFERENCES.md
