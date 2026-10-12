@@ -1,0 +1,38 @@
+{
+  "edges.parquet": {
+    "had_sign": true,
+    "digest_without_sign": "f08e90783d6b6420da7ef3c0de438a44a4686604ee11ab47c9af6f52ed4e22a8",
+    "rows": 6287789,
+    "columns": [
+      "nt",
+      "post",
+      "pre",
+      "weight"
+    ],
+    "sums": {
+      "post": "11517611213871",
+      "pre": "18683378936444",
+      "weight": "90297299"
+    }
+  },
+  "edges_nt.parquet": {
+    "had_sign": true,
+    "digest_without_sign": "53db371d0fbda2425dabb1e8d7d511bad66109f9f0a0eb0d935a7e49b35f0536",
+    "rows": 6287789,
+    "columns": [
+      "nt",
+      "nt_agree",
+      "nt_conf",
+      "post",
+      "pre",
+      "weight"
+    ],
+    "sums": {
+      "nt_agree": 5796598.921814,
+      "nt_conf": 5719571.37964,
+      "post": "11517611213871",
+      "pre": "18683378936444",
+      "weight": "90297299"
+    }
+  }
+}
