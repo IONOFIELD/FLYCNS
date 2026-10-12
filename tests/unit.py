@@ -1100,9 +1100,24 @@ def t_review_push_failure_reason(tmp):
     finally:
         os.chdir(here)
     said = out.getvalue()
+    # the pre-run dry-run push never collides with a branch already on the remote (independent review,
+    # 12 October 2026: a fixed probe name made every run refuse once a divergent branch of that name existed)
+    other = tmp / "rp_other"
+    subprocess.run(["git", "init", "-q", "-b", "x", str(other)], check=True)
+    (other / "b.txt").write_text("b", encoding="utf-8")
+    subprocess.run([*g, "add", "-A"], cwd=other, check=True)
+    subprocess.run([*g, "commit", "-qm", "other"], cwd=other, check=True)
+    hook.unlink()
+    subprocess.run(["git", "push", "-q", str(remote), "HEAD:refs/heads/review/push-check"], cwd=other, check=True)
+    try:
+        os.chdir(work)
+        url, why = rb.confirm_remote()
+    finally:
+        os.chdir(here)
     ok = (pushed is False and "refused-by-test-hook" in said and "attempt 1 of 2" in said
-          and "attempt 2 of 2" in said)
-    return ok, ("refused push reported with git's message, tried twice" if ok else f"pushed {pushed} said {said!r}")
+          and "attempt 2 of 2" in said and why is None)
+    return ok, ("refused push reported with git's message, tried twice; the pre-run dry run ignores existing "
+                "branches" if ok else f"pushed {pushed} said {said!r} confirm_remote {why!r}")
 
 
 def t_menu_guards(tmp):

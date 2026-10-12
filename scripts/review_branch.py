@@ -13,6 +13,7 @@ through a pull request that someone has looked at.
 Your own branch is never pushed and never gets the result commits. After a run, open the pull request
 the script prints, merge it, and update (menu option 51 updates first; or `git pull`).
 """
+import os
 import re
 import subprocess
 import time
@@ -42,7 +43,8 @@ def confirm_remote(remote=REMOTE):
     r = git("ls-remote", "--heads", remote)
     if r.returncode != 0:
         return None, f"the remote {remote} ({url}) does not answer: {_why(r)}"
-    r = git("push", "--dry-run", "-q", remote, "HEAD:refs/heads/review/push-check")
+    probe = f"review/push-check-{time.strftime('%Y%m%d-%H%M%S')}-{os.getpid()}"   # a name no branch has
+    r = git("push", "--dry-run", "-q", remote, f"HEAD:refs/heads/{probe}")
     if r.returncode != 0:
         return None, f"the remote {remote} ({url}) answers but would refuse the results: {_why(r)}"
     return url, None
