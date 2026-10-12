@@ -1,0 +1,321 @@
+[fingerprint] battery-dt005: benchmarks/gf_escape.py 2 data  (FLYCNS_SEED=0, FLYCNS_SIGNFLIP=0, FLYCNS_WSCALE=0.4, FLYCNS_RUN_TAG=dt005, FLYCNS_DT_MS=0.05)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! gf_escape: runs, but is NOT the registered result
+! model settings overridden: FLYCNS_DT_MS=0.05
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+!   FLYCNS_DT_MS=0.05
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+
+  loom  ->  LC4/LPLC2 (lobula)  ==chem==>  GF (DNp01)  ==gap 0.8ms==>  TTMn  ->  jump
+                                                 \==gap 0.8ms==>  PSI  ->  DLMn (wing)
+  [brain] ........................................ neck ........ [VNC]
+loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09); peak rate 5.0 Hz; gain sigma 0.357
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  per trial GF/TTMn spikes: 4/4 4/4
+  raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
+  t0  DNp01  .........||......|.|..........
+  t0  TTMn   ..........#......|.|..........
+  t0  CNS    .13444454543445433221.........   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  .......|.|..||................
+  t1  TTMn   ........||..||................
+  t1  CNS    .3455444545555554332..........   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 2 stimulus windows):
+  efferent_ascending     ######################################## 0.500
+  visual_centrifugal     ###########                              0.139
+  vnc_efferent           ######                                   0.085
+  vnc_motor              ###                                      0.044
+  descending_neuron      ###                                      0.042
+  cb_intrinsic           #                                        0.020
+  ascending_neuron       #                                        0.014
+  vnc_intrinsic                                                   0.001
+  ol_intrinsic                                                    0.000
+[real_electrical] GF 2.00/cell hit 1.00 (95% CI 0.34-1.00) lat 35.4 ms | TTMn 2.00/cell lag 0.85 ms | pop 0.0051 Hz | 109.0s
+  per trial GF/TTMn spikes: 4/0 4/0
+  raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
+  t0  DNp01  .........||......|.|..........
+  t0  TTMn   ..............................
+  t0  CNS    .13444454543445432211.........   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  .......|.|..||................
+  t1  TTMn   ..............................
+  t1  CNS    .3455444545555554332..........   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 2 stimulus windows):
+  efferent_ascending     ######################################## 0.500
+  visual_centrifugal     ###########                              0.139
+  descending_neuron      ###                                      0.042
+  vnc_motor              ##                                       0.033
+  cb_intrinsic           #                                        0.020
+  ascending_neuron       #                                        0.014
+  vnc_intrinsic                                                   0.001
+  ol_intrinsic                                                    0.000
+[real_chemical_only] GF 2.00/cell hit 1.00 (95% CI 0.34-1.00) lat 34.9 ms | TTMn 0.00/cell lag nan ms | pop 0.0050 Hz | 95.2s
+  per trial GF/TTMn spikes: 0/0 0/0
+  raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
+  t0  DNp01  ..............................
+  t0  TTMn   ..............................
+  t0  CNS    ...............1..............   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  ..............................
+  t1  TTMn   ..............................
+  t1  CNS    ..........1...................   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 2 stimulus windows):
+  visual_projection      ######################################## 0.000
+  cb_intrinsic           ########                                 0.000
+[rewired_null] GF 0.00/cell hit 0.00 (95% CI 0.00-0.66) lat nan ms | TTMn 0.00/cell lag nan ms | pop 0.0000 Hz | 117.1s
+
+CHECKS
+  PASS  gf_spikes_per_response_1_to_2
+  PASS  gf_response_prob_0.5_to_1
+  PASS  gf_latency_10_60ms
+  PASS  ttmn_one_to_one
+  PASS  ttmn_lag_0.5_1.5ms
+  PASS  cns_quiet
+  PASS  electrical_necessary
+  PASS  null_silent
+
+UNCERTAINTY (95% interval; PASS only if the whole interval lies in the band)
+  PASS        gf_spikes_per_response_1_to_2: 2 [2, 2] band [1, 2] (bootstrap)
+  UNRESOLVED  gf_response_prob_0.5_to_1: 1 [0.3424, 1] band [0.5, 1] (wilson)
+  PASS        gf_latency_10_60ms: 35.35 [31.4, 39.3] band [10, 60] (bootstrap)
+  PASS        ttmn_one_to_one: 1 [1, 1] band [0.8, 1.2] (bootstrap (ratio of sums))
+  PASS        ttmn_lag_0.5_1.5ms: 0.85 [0.85, 0.85] band [0.5, 1.5] (bootstrap)
+  PASS        cns_quiet: 0.005076 (point)
+  PASS        electrical_necessary: -0.2 [-0.2, -0.2] band [-, 0] (bootstrap (two independent arms))
+  UNRESOLVED  null_silent: 0 [0, 0.6576] band [-, 0.1] (wilson)
+
+BENCHMARK PASS  -> results\gf_escape/report.json
+[fingerprint] battery-dt005: benchmarks/auditory.py 2 data  (FLYCNS_SEED=0, FLYCNS_SIGNFLIP=0, FLYCNS_WSCALE=0.4, FLYCNS_RUN_TAG=dt005, FLYCNS_DT_MS=0.05)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! auditory: runs, but is NOT the registered result
+! model settings overridden: FLYCNS_DT_MS=0.05
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+!   FLYCNS_DT_MS=0.05
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+
+  sound ->  JO-A/JO-B (antenna)  ==gap (calibrated 3 mV)==>  GF (DNp01)   subthreshold alone
+  loom  ->  LC4/LPLC2            ==chem=====================>  GF          summates -> spike
+auditory JO types (11, 105 neurons): ['JO-A1', 'JO-A2', 'JO-A3', 'JO-A4', 'JO-B1_a', 'JO-B1_b', 'JO-B1_c', 'JO-B2', 'JO-B3', 'JO-CA1', 'JO-CA2']
+wind/gravity control types (28): ['JO-A4', 'JO-B1_a', 'JO-B1_b', 'JO-B1_c', 'JO-B2', 'JO-B3']...
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
+  t0  DNp01  .........................
+  t0  CNS    ..12233432222.221........   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  .........................
+  t1  CNS    ..13443112211222.1.......   (log2 spikes/bin, 9 = flood)
+
+[cal_loom_gain_0.4] GF 0.00/cell hit 0.00 lat nan ms depol 3.01 mV | CNS 0.0010 Hz | 48.0s
+  calibration: loom gain 0.4 -> GF hit 0.00, depol 3.01 mV
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
+  t0  DNp01  .........|...............
+  t0  CNS    ..1323234331232221.......   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  .........................
+  t1  CNS    ..24433123223344321......   (log2 spikes/bin, 9 = flood)
+
+[cal_loom_gain_0.6] GF 0.25/cell hit 0.50 lat 36.2 ms depol 5.71 mV | CNS 0.0016 Hz | 65.6s
+  calibration: loom gain 0.6 -> GF hit 0.50, depol 5.71 mV
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
+  t0  DNp01  ...............|.........
+  t0  CNS    ..3344333343444421.......   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  ..............|..........
+  t1  CNS    .2445334333444321........   (log2 spikes/bin, 9 = flood)
+
+[cal_loom_gain_0.8] GF 0.50/cell hit 1.00 lat 60.3 ms depol 6.06 mV | CNS 0.0027 Hz | 40.3s
+  calibration: loom gain 0.8 -> GF hit 1.00, depol 6.06 mV
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
+  t0  DNp01  ........|....|...........
+  t0  CNS    .13354444444445431.......   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  .............#...........
+  t1  CNS    .13445444444553321.......   (log2 spikes/bin, 9 = flood)
+
+[cal_loom_gain_1.0] GF 1.00/cell hit 1.00 lat 42.9 ms depol 6.97 mV | CNS 0.0037 Hz | 41.6s
+  calibration: loom gain 1.0 -> GF hit 1.00, depol 6.97 mV
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
+  t0  DNp01  ....|.|........|..|......
+  t0  CNS    .245454444455555433.1....   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  ..........||..|..........
+  t1  CNS    .35444555555544421.......   (log2 spikes/bin, 9 = flood)
+
+[cal_loom_gain_1.3] GF 1.75/cell hit 1.00 lat 29.2 ms depol 6.98 mV | CNS 0.0058 Hz | 40.1s
+  calibration: loom gain 1.3 -> GF hit 1.00, depol 6.98 mV
+A2 working point: loom gain 0.4
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
+  t0  DNp01  .........................
+  t0  CNS    .2344444554554453211.....   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  .........................
+  t1  CNS    .244444434445554421......   (log2 spikes/bin, 9 = flood)
+
+[A1_jo_alone_electrical] GF 0.00/cell hit 0.00 lat nan ms depol 1.63 mV | CNS 0.0045 Hz | 43.9s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
+  t0  DNp01  .........................
+  t0  CNS    .2344444554554453211.....   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  .........................
+  t1  CNS    .244444434445554421......   (log2 spikes/bin, 9 = flood)
+
+[A3_jo_alone_no_electrical_no_mixed_edges] GF 0.00/cell hit 0.00 lat nan ms depol 0.22 mV | CNS 0.0045 Hz | 40.8s
+  raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
+  t0  DNp01  ...|......|..............
+  t0  CNS    .2344444554554453311.....   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  ..|......................
+  t1  CNS    .244444444445554421......   (log2 spikes/bin, 9 = flood)
+
+[ref_jo_alone_chem_only_EM_as_annotated] GF 0.75/cell hit 1.00 lat 13.1 ms depol 3.70 mV | CNS 0.0046 Hz | 40.3s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
+  t0  DNp01  .........................
+  t0  CNS    ..11223332333211.........   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  .........................
+  t1  CNS    ..234222232331221........   (log2 spikes/bin, 9 = flood)
+
+[subthreshold_loom_alone] GF 0.00/cell hit 0.00 lat nan ms depol 2.77 mV | CNS 0.0010 Hz | 41.6s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
+  t0  DNp01  .........................
+  t0  CNS    .244454555554454421......   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  .........................
+  t1  CNS    .24554555555544431.......   (log2 spikes/bin, 9 = flood)
+
+[A2_loom_plus_jo] GF 0.00/cell hit 0.00 lat nan ms depol 2.27 mV | CNS 0.0056 Hz | 43.0s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
+  t0  DNp01  .........................
+  t0  CNS    ...1.1.21322.2221........   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  .........................
+  t1  CNS    ..1223322211121..........   (log2 spikes/bin, 9 = flood)
+
+[A4_jo_rewired_null_chem] GF 0.00/cell hit 0.00 lat nan ms depol 0.00 mV | CNS 0.0005 Hz | 40.0s
+A2 by summation alone: 0.00 -> predicted 0.00, observed 0.00; residual +0.00 (95% CI +0.00 to +0.00)
+A2 (reported, 2 trials/arm): loom alone 0.00 -> with JO 0.00; difference +0.00 (95% CI -0.66 to +0.66) -> UNRESOLVED
+
+CHECKS
+  PASS  A1_jo_alone_mostly_subthreshold
+  REPORTED  A2_jo_effect_on_near_threshold_loom_REPORTED
+  PASS  A3_declared_pairs_carry_jo_drive
+  PASS  A4_null_silent
+  PASS  A5_cns_quiet
+
+UNCERTAINTY (95% interval; PASS only if the whole interval lies in the band)
+  UNRESOLVED  A1_jo_alone_mostly_subthreshold: 0 [0, 0.6576] band [-, 0.3] (wilson)
+  PASS        A3_declared_pairs_carry_jo_drive: - (all of 2 parts)
+      PASS        1.63 [1.453, 1.807] band [0.5, -] (bootstrap)
+      PASS        -0.5971 [-0.8256, -0.3686] band [-, 0] (bootstrap (two independent arms))
+  UNRESOLVED  A4_null_silent: - (all of 2 parts)
+      UNRESOLVED  0 [0, 0.6576] band [-, 0.1] (wilson)
+      PASS        0 [0, 0] band [-, 0.5] (bootstrap)
+  PASS        A5_cns_quiet: 0.005588 (point)
+
+BENCHMARK PASS  -> results\auditory/report.json
+[fingerprint] battery-dt005: benchmarks/feeding.py 1 data  (FLYCNS_SEED=0, FLYCNS_SIGNFLIP=0, FLYCNS_WSCALE=0.4, FLYCNS_RUN_TAG=dt005, FLYCNS_DT_MS=0.05)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! feeding: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! the criteria in the code differ from the registered ones
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! feeding: runs, but is NOT the registered result
+! model settings overridden: FLYCNS_DT_MS=0.05
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+!   FLYCNS_DT_MS=0.05
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+
+  taste ->  gustatory afferents (MxLbN, aPhN)  ==chem==>  SEZ interneurons (GNG...)  ==chem==>  MN9  ->  proboscis
+  wind  ->  JO-FV (control)      must NOT reach MN9
+second-order (Shiu names) absent; using MN9's top EXCITATORY input types: ['DNge062', 'GNG120', 'GNG117', 'GNG108']
+sensory afferents onto MN9 excitatory inputs (>=50 syn): ['LN-DN1', 'BM', 'GNG654']
+sugar GRN candidates: NONE FOUND
+bitter GRN candidates: NONE FOUND
+second-order present: ['DNge062', 'GNG120', 'GNG117', 'GNG108']  missing: ['Fdg', 'Clavicle', 'Zorro', 'Rattle', 'Phantom', 'Bract', 'Roundup', 'Usnea', 'Cleaver']
+motor present: ['MN9', 'MN6', 'MN8']  missing: ['MN11']
+gustatory afferents by subclass (labellar bristle, taste peg, pharyngeal sensillum): 42 types
+WARNING: no sugar-specific GRN type in this annotation; driving taste-region afferents ['aPhM2a', 'aPhM5', 'PhG1c', 'claw_tpGRN', 'LB3a', 'LB3b', 'LB3c', 'LB3d'] (F3 bitter test skipped; F1/F2/F5 test taste -> MN9 wiring)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+F2 sugar  10 Hz -> MN9 0.00 spikes/cell, CNS 0.0005 Hz
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+F2 sugar  25 Hz -> MN9 0.00 spikes/cell, CNS 0.0022 Hz
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    .34345455445445545555655552....   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 1 stimulus windows):
+  descending_neuron      ######################################## 0.075
+  cb_motor               ##############################           0.057
+  cb_intrinsic           ############                             0.024
+  ascending_neuron       ############                             0.023
+  vnc_motor              #                                        0.003
+  vnc_intrinsic                                                   0.000
+F2 sugar  50 Hz -> MN9 0.00 spikes/cell, CNS 0.0068 Hz
+  outside-SEZ rate 0.0007 Hz | recruited motor mean 7.5 Hz | 2 of 43 cb_motor types active: ['MN2Da', 'MN2Db']
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+F2 sugar 100 Hz -> MN9 1.00 spikes/cell, CNS 0.0250 Hz
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+F2 sugar 200 Hz -> MN9 2.00 spikes/cell, CNS 0.0734 Hz
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+ALL gustatory arm (42 types, every tastant at once) at 50 Hz -> MN9 0.00 spikes/cell (reported, not scored; expected ~0)
+sugar drive: 140 neurons, 69 inferred left
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+   structural 2-hop drive from left afferents: MN9-L 25,650 vs MN9-R 350; functional ipsi dominant -> matches wiring
+F1 left sugar 200 Hz: MN9 ipsi 7.00, contra 0.00 spikes/cell  [35s]
+F3 skipped: no bitter GRN type resolved
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+F4 DNge062 50 Hz -> MN9 3.50
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+F4 GNG120 50 Hz -> MN9 2.50
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+F4 GNG117 50 Hz -> MN9 1.50
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+F4 GNG108 50 Hz -> MN9 2.50
+F5 rewired null -> MN9 0.00
+
+mechanism: taste -> MN9 in MaleCNS is disinhibitory; a silent network cannot express that, and no uniform manipulation restores it with specificity. Reproducing feeding needs cell-specific spontaneous activity, i.e. the state-dependent modulation this model omits (cf. Shiu et al. 2024, which reported the same limitation for inhibitory neurons at 0 Hz baseline).
+
+CHECKS
+  PASS  F2b_extra_SEZ_quiet
+  PASS  F2c_motor_rate_physiological
+  SKIP  F2_dose_response_REPORTED
+  PASS  F1_laterality_matches_wiring
+  SKIP  F1_shiu_contralateral_bias
+  SKIP  F3_bitter_suppresses
+  SKIP  F4_second_order_sufficient
+  SKIP  F5_null_silent
+UNCERTAINTY (95% intervals, flycns/stats.py: PASS only if the whole interval lies in the band)
+  PASS        F2b_extra_SEZ_quiet: 0.000735 [0.000735, 0.000735] in [-inf, 0.02] (bootstrap)
+  PASS        F2c_motor_rate_physiological: 7.5 [7.5, 7.5] in (0, 100] (bootstrap)
+  PASS        F1_laterality_matches_wiring: 7 [7, 7] in (0, inf] (bootstrap)
+
+BENCHMARK PASS  -> results\feeding/report.json
+[fingerprint] battery-dt005: 106 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\battery-dt005.jsonl
