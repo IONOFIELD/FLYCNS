@@ -1073,6 +1073,38 @@ def t_review_branch(tmp):
                 f"refused {refused} stay {stay} heads {heads} main {main_log}")
 
 
+def t_review_push_failure_reason(tmp):
+    """A refused push says why (git's own message) and is tried once more; run 18's core job lost its
+    reason because the message was discarded."""
+    if not shutil.which("git"):
+        return True, "git not installed; not exercised"
+    import contextlib
+    import io
+    rb = _scripts_module("review_branch")
+    g = ["git", "-c", "user.name=t", "-c", "user.email=t@t", "-c", "commit.gpgsign=false"]
+    remote, work = tmp / "rp_remote.git", tmp / "rp_work"
+    subprocess.run(["git", "init", "-q", "--bare", str(remote)], check=True)
+    hook = remote / "hooks" / "pre-receive"
+    hook.write_text("#!/bin/sh\necho 'refused-by-test-hook' >&2\nexit 1\n", encoding="utf-8")
+    hook.chmod(0o755)
+    subprocess.run(["git", "init", "-q", "-b", "review/x", str(work)], check=True)
+    (work / "a.txt").write_text("a", encoding="utf-8")
+    subprocess.run([*g, "add", "-A"], cwd=work, check=True)
+    subprocess.run([*g, "commit", "-qm", "base"], cwd=work, check=True)
+    subprocess.run(["git", "remote", "add", "origin", str(remote)], cwd=work, check=True)
+    here, out = os.getcwd(), io.StringIO()
+    try:
+        os.chdir(work)
+        with contextlib.redirect_stdout(out):
+            pushed = rb.push_review("review/x", retry_after_s=0)
+    finally:
+        os.chdir(here)
+    said = out.getvalue()
+    ok = (pushed is False and "refused-by-test-hook" in said and "attempt 1 of 2" in said
+          and "attempt 2 of 2" in said)
+    return ok, ("refused push reported with git's message, tried twice" if ok else f"pushed {pushed} said {said!r}")
+
+
 def t_menu_guards(tmp):
     """Menu option 5 runs only a script in benchmarks/ named without a path; menu option 21 unpacks a zip
     only inside its destination (absolute paths, drive letters, '..' and links refused)."""
@@ -1171,6 +1203,7 @@ def run_all():
                          ("registration freezes the model", lambda: t_registry_freezes_model(tmp)),
                          ("a refrozen model registers a new generation", lambda: t_registry_generations(tmp)),
                          ("results go to a review branch only", lambda: t_review_branch(tmp)),
+                         ("a refused push says why", lambda: t_review_push_failure_reason(tmp)),
                          ("menu input guards", lambda: t_menu_guards(tmp)),
                          ("token file is private", lambda: t_token_private(tmp)),
                          ("messages use neutral wording", t_neutral_wording)]:
