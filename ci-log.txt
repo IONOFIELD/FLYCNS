@@ -1,0 +1,8 @@
+[fingerprint] flight-graded: benchmarks/flight_snpp16_graded.py 20
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! flight_snpp16_graded: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! the criteria in the code differ from the registered ones
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test. Delete it deliberately only if the design has genuinely changed.
+[fingerprint] flight-graded: 0 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\flight-graded.jsonl; exited non-zero: ['benchmarks/flight_snpp16_graded.py 20']
+[fingerprint] flight-graded: nothing was fingerprinted
