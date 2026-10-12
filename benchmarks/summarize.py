@@ -11,7 +11,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from flycns import LIFParams
 from flycns.calibration import role
-from flycns.integrity import PLUMBING
+from flycns.integrity import PLUMBING, is_registration_name
 
 rows, stamps, flags = [], {}, {}
 counts, passed_by_role, unresolved_by_role = Counter(), Counter(), Counter()
@@ -178,7 +178,7 @@ if missing:
 # in the file (a "provenance" key) or beside it (<file>.stamp.json, flycns/bench.py stamp)
 EXEMPT = {"results/turner2022": "input extraction from 22 GB of Turner et al. 2022 imaging; its output is a "
                                 "model input, hashed into every report's loom_input stamp"}
-NOT_RESULTS = {"criteria.json", "registration.json", "progress.json"}   # registrations and in-progress state
+NOT_RESULTS = {"progress.json"}   # in-progress state; registrations (integrity.is_registration_name) are not results either
 
 
 def file_stamp(f):
@@ -194,7 +194,7 @@ def file_stamp(f):
 
 if not only:
     files = sorted(f for f in Path("results").rglob("*") if f.suffix in (".json", ".csv", ".h5")
-                   and f.name not in NOT_RESULTS and not f.name.endswith(".stamp.json")
+                   and f.name not in NOT_RESULTS and not is_registration_name(f.name) and not f.name.endswith(".stamp.json")
                    and not any(f.as_posix().startswith(e + "/") for e in EXEMPT))
     unstamped, flagged, commits = [], [], Counter()
     for f in files:

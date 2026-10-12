@@ -19,6 +19,14 @@ registration that names the one it supersedes. The registration is written by
 which records it and exits before any data is loaded, so registrations can be committed before any
 result exists. Every check's band must equal the band its criteria state: verify_bands() refuses a
 report whose scoring used a different number.
+
+Generations. A committed registration is never edited or deleted (flycns/integrity.py
+registration_history), so a refrozen model is registered under a new file name, one per generation:
+version 2 is results/<benchmark>/registration.json, version N >= 3 is registration_vN.json. Only the
+current generation's file governs a run; each new file names the one it supersedes and why
+(GENERATION_NOTE), and the older files stay committed as the record of what was registered before.
+  version 2  frozen 11 October 2026 at b7eba83 (run 12)
+  version 3  refrozen 11 October 2026: GENERATION_NOTE
 """
 import datetime
 import hashlib
@@ -29,8 +37,12 @@ from pathlib import Path
 
 from .integrity import PLUMBING, ROOT, _box, _git, allow_dirty, git_state, overrides
 
-NAME = "registration.json"
-VERSION = 2
+VERSION = 3
+NAME = "registration.json" if VERSION == 2 else f"registration_v{VERSION}.json"
+GENERATION_NOTE = ("model refrozen: the JON -> GF compound potential is calibrated per giant fiber on its own coupled "
+                   "afferents (run 12 measured 3.65 and 0.73 mV for a 3 mV target); w_scale 0.3 -> 0.4, the value the "
+                   "registered benchmark-blind rule selects (fit/select_wscale.py); the giant fiber adaptation refit "
+                   "under both (benchmarks/fit_gf_adapt.py). Criteria unchanged.")
 # Files that define the model and its inputs, and the role table (relabelling a failed independent check
 # after the fact is a design change). Not listed, by design: the guard and reporting code (registry.py,
 # integrity.py, benchmarks/summarize.py) and the display and platform code (ascii.py, windows.py). None of
@@ -98,8 +110,18 @@ def path(label):
     return ROOT / "results" / label / NAME
 
 
+def _older(label):
+    """The newest registration of an earlier generation for this benchmark, if any (repo-relative)."""
+    d = ROOT / "results" / label
+    names = [f"registration_v{v}.json" for v in range(VERSION - 1, 2, -1)] + ["registration.json", "criteria.json"]
+    for n in names:
+        if (d / n).exists():
+            return f"results/{label}/{n}"
+    return None
+
+
 def register(label, criteria, scripts=(), supersedes=None):
-    """Load or write this benchmark's version 2 registration and return its criteria. Call it before any
+    """Load or write this benchmark's current-generation registration and return it. Call it before any
     data is loaded. Refuses on changed criteria or a changed model (unless FLYCNS_ALLOW_DIRTY=1).
     With FLYCNS_REGISTER_ONLY=1 it writes the registration (if absent) and exits."""
     f = path(label)
@@ -115,9 +137,11 @@ def register(label, criteria, scripts=(), supersedes=None):
             raise SystemExit(f"[registry] {label}: refusing to register on uncommitted code "
                              f"({', '.join(st['dirty_files'][:6])}); commit first")
         f.parent.mkdir(parents=True, exist_ok=True)
+        older = _older(label)
         rec = dict(version=VERSION, benchmark=label, criteria=crit, model=state, values=_declared_values(),
                    packages=_versions(),
-                   supersedes=supersedes, git_commit=st["commit"], code_uncommitted=not st["clean"],
+                   supersedes=(dict(file=older, why=GENERATION_NOTE, earlier=supersedes) if older else supersedes),
+                   git_commit=st["commit"], code_uncommitted=not st["clean"],
                    registered_at=datetime.datetime.now().isoformat(timespec="seconds"))
         f.write_text(json.dumps(rec, indent=2) + "\n", encoding="utf-8")
         print(f"[registry] {label}: registered (version {VERSION}, model {state['hash'][:12]}, commit {st['commit']})")
@@ -161,6 +185,7 @@ def stamp(reg):
     """What a report records about the registration it was scored under."""
     bands = reg.get("_band_mismatches") or []
     return dict(file=f"results/{reg['benchmark']}/{NAME}", version=reg.get("version"),
+                supersedes=(reg.get("supersedes") or {}).get("file") if isinstance(reg.get("supersedes"), dict) else None,
                 git_commit=reg.get("git_commit"), model_hash=reg["model"]["hash"],
                 registered_at=reg.get("registered_at"), matches=bool(reg.get("_matches")) and not bands,
                 problems=(reg.get("_problems") or []) + (reg.get("_caveats") or []) + bands)

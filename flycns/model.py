@@ -1,9 +1,10 @@
 """
 Connectome-constrained LIF network in Brian2.
 
-Effective chemical kick per synapse = w_syn_mV * w_scale = 0.275 * 0.3 = 0.0825 mV.
-0.275 mV is Shiu et al. 2024's unitary weight on FlyWire; 0.3 is the MaleCNS
-rescale found by sweep (VNC + hubs make the raw value unstable).
+Effective chemical kick per synapse = w_syn_mV * w_scale = 0.275 * 0.4 = 0.11 mV.
+0.275 mV is Shiu et al. 2024's unitary weight on FlyWire (itself fitted to a behaviour, not measured);
+0.4 is the MaleCNS rescale chosen by a registered, benchmark-blind rule (fit/select_wscale.py; the raw
+value runs away once the nerve cord is included). Until 11 October 2026 the declared value was 0.3.
 
 Neuron:  dv/dt = (V_rest - v + g + I_gap - a)/tau_m ; dg/dt = -g/tau_syn ;
          da/dt = -a/tau_adapt ; on spike a += b_adapt (0 for all but overridden types)
@@ -34,7 +35,7 @@ class LIFParams:
     tau_syn_ms: float = 5.0
     refractory_ms: float = 2.2
     w_syn_mV: float = 0.275          # Shiu et al. 2024 per-synapse kick
-    w_scale: float = float(os.environ.get("FLYCNS_WSCALE", "0.3"))   # chosen on MaleCNS; see docs/CALIBRATION.md
+    w_scale: float = float(os.environ.get("FLYCNS_WSCALE", "0.4"))   # fit/select_wscale.py; see docs/CALIBRATION.md
     tau_adapt_ms: float = 100.0
     gap_delay_ms: float = 0.8        # Tanouye & Wyman 1980
     chem_delay_ms: float = 1.8       # Shiu et al. 2024

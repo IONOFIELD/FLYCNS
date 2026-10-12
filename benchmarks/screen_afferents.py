@@ -10,7 +10,7 @@ strongest driver to find suppressors (bitter-like). Results are a table, not
 an annotation: modality is inferred from wiring + dynamics only.
 
 Run:  python benchmarks/screen_afferents.py [n_trials] [data_dir] [hz] [w_scale]
-      e.g. 3 data 200 0.3   (rate test)     3 data 50 1.0   (Shiu gain test)
+      e.g. 3 data 200 0.4   (rate test)     3 data 50 1.0   (Shiu gain test)
       python benchmarks/screen_afferents.py 3 data 50 0.5 aPhM2a,aPhM5,TPMN1   (subset)
 Writes results/feeding/afferent_screen.csv and prints suggested drive sets.
 """
@@ -26,7 +26,7 @@ from flycns.bench import pulse_protocol, readout_rates, stamp
 N_TRIALS = int(sys.argv[1]) if len(sys.argv) > 1 else 3
 DATA = sys.argv[2] if len(sys.argv) > 2 else "data"
 HZ = float(sys.argv[3]) if len(sys.argv) > 3 else 50          # drive rate
-W_SCALE = float(sys.argv[4]) if len(sys.argv) > 4 else 0.3    # diagnostic only; suite uses 0.3
+W_SCALE = float(sys.argv[4]) if len(sys.argv) > 4 else LIFParams().w_scale    # diagnostic only
 ONLY = sys.argv[5].split(",") if len(sys.argv) > 5 else None     # restrict to these types
 MIN_N, WINDOW = 4, 250
 OUT = Path("results/feeding"); OUT.mkdir(parents=True, exist_ok=True)

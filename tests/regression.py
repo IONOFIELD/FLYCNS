@@ -44,6 +44,8 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from flycns.integrity import is_registration_name  # noqa: E402
 RUNS = [  # (label, argv relative to the copy, extra env, sentinel substring or None)
     ("audit", ["fit/audit_stimuli.py", "testdata"], {}, None),
     ("gf_escape", ["benchmarks/gf_escape.py", "2", "testdata"], {}, "BENCHMARK PASS"),
@@ -138,7 +140,7 @@ def _flatten(obj, prefix=""):
 def _reports(work):
     """Report files under results/ with their modification times (stamps and registrations excluded)."""
     return {f: f.stat().st_mtime_ns for f in (work / "results").rglob("*.json")
-            if not f.name.endswith(".stamp.json") and f.name not in ("criteria.json", "registration.json", "progress.json")}
+            if not f.name.endswith(".stamp.json") and f.name != "progress.json" and not is_registration_name(f.name)}
 
 
 def _same(a, b):

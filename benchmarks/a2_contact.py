@@ -11,7 +11,7 @@ Everything else is the registered A2 protocol (benchmarks/auditory.py, A2-only m
 calibrated per run on its own seeds, 120 trials per arm, independent seeds for the two arms, the
 Newcombe interval on the difference in giant fiber response probability.
 
-Checks (registered in results/a2_contact_<variant>/registration.json before the run):
+Checks (registered in results/a2_contact_<variant>/ before the run; flycns/registry.py names the file):
   em       C1_em_facilitation      BOTH: sound alone stays subthreshold (giant fiber response probability to
                                    sound alone, Wilson 95% interval, at or below 0.3, as A1 asks of the declared
                                    model and as the literature reports qualitatively: Pezier et al. 2016), AND

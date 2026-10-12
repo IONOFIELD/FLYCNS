@@ -2,7 +2,7 @@
 Class-wise synaptic gain fit.
 
 One network per candidate gain set (sensory, relay, local) on top of the shared
-w_scale = 0.3. Stimulus sets are swapped with store/restore, so each candidate
+declared w_scale (LIFParams). Stimulus sets are swapped with store/restore, so each candidate
 costs one build (~50 s) plus a few short protocols. Each candidate is scored on
 quick versions of all three benchmarks plus a specificity control:
 

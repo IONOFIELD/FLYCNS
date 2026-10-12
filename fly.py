@@ -124,7 +124,7 @@ while True:
     elif c == "8": run("benchmarks/fit_gf_adapt.py", ask("trials (40 or more)", "40"))
     elif c == "9": run("benchmarks/fit_regional.py", ask("trials", "6"))
     elif c == "10":
-        run("benchmarks/screen_afferents.py", ask("trials", "3"), "data", ask("rate Hz", "50"), ask("w_scale", "0.3"))
+        run("benchmarks/screen_afferents.py", ask("trials", "3"), "data", ask("rate Hz", "50"), ask("w_scale", "0.4"))
     elif c == "11":
         run("viz/explore.py", "--sez", ask("SEZ gain", "2.0"))
     elif c == "12":

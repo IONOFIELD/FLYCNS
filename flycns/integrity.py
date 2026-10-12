@@ -23,6 +23,7 @@ import datetime
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -32,7 +33,13 @@ ROOT = Path(__file__).resolve().parents[1]
 MODEL_INPUTS = ("data/loom_tuning_measured.json",)
 # A registration (results/<test>/criteria.json) is code once committed: editing or deleting it is a change
 # to the test. A new, untracked one is a registration being written and is checked by require_clean.
-REGISTRATIONS = ["results/*/criteria.json", "results/*/registration.json"]
+REGISTRATIONS = ["results/*/criteria.json", "results/*/registration.json", "results/*/registration_v*.json"]
+_REGISTRATION_NAME = re.compile(r"^(criteria|registration(_v\d+)?)\.json$")
+
+
+def is_registration_name(name):
+    """criteria.json (version 1), registration.json (version 2) or registration_vN.json (version N >= 3)."""
+    return bool(_REGISTRATION_NAME.match(name))
 CODE_PATHSPECS = ["*.py", "*.cmd", "requirements*.txt", "requirements*.lock", *MODEL_INPUTS, *REGISTRATIONS]
 NOT_CODE_PREFIXES = ("results/", "data/", "testdata/")
 # must be present; the transmitter table is optional (only the targeted sign flip reads it). The ROI table
@@ -48,7 +55,7 @@ CACHE = ".fingerprints.json"      # no longer read or written (2026-10-11); kept
 PLUMBING = {"FLYCNS_RUN_TAG", "FLYCNS_AUDITORY_OUT", "FLYCNS_A2_TRIALS",
             "FLYCNS_CODEGEN", "FLYCNS_EXPECT_ENGINE"}   # engine: same equations, recorded as `engine`
 # A setting equal to its declared default changes nothing and is not an override.
-DEFAULTS = {"FLYCNS_ALLOW_DIRTY": "0", "FLYCNS_SEED": "0", "FLYCNS_SIGNFLIP": "0", "FLYCNS_SIGNFLIP_TARGETED": "0", "FLYCNS_WSCALE": "0.3",
+DEFAULTS = {"FLYCNS_ALLOW_DIRTY": "0", "FLYCNS_SEED": "0", "FLYCNS_SIGNFLIP": "0", "FLYCNS_SIGNFLIP_TARGETED": "0", "FLYCNS_WSCALE": "0.4",
             "FLYCNS_PEPTIDE": "0", "FLYCNS_NULL": "global", "FLYCNS_MIN_WEIGHT": "5", "FLYCNS_PEAK_HZ": "5.0",
             "FLYCNS_LOOM_STATE": "stationary", "FLYCNS_BASELINE_DEPOL": "0", "FLYCNS_BASELINE_NOISE": "0",
             "FLYCNS_JON": "electrical", "FLYCNS_JON_MV": "3", "FLYCNS_GLU_VNC": "inhibitory", "FLYCNS_DT_MS": "0.1"}
@@ -79,7 +86,7 @@ def git_state():
         if " -> " in path:
             path = path.split(" -> ", 1)[1]
         code = line[:2].strip() or "?"
-        registration = path.startswith("results/") and path.endswith(("/criteria.json", "/registration.json"))
+        registration = path.startswith("results/") and is_registration_name(path.rsplit("/", 1)[-1])
         if path in MODEL_INPUTS or not path.startswith(NOT_CODE_PREFIXES) or (registration and code != "??"):
             dirty.append(f"{code} {path}")
     return dict(is_repo=True, commit=commit.strip(), dirty_files=dirty, clean=not dirty)
@@ -92,15 +99,19 @@ def allow_dirty():
 def registration_history(label):
     """Problems with a registered test's registration files in git history: a registration must be
     committed once and never edited or deleted (a deleted-and-rewritten file would silently re-register,
-    and a deleted one would register afresh). Checks the version 1 criteria.json and the version 2
-    registration.json (flycns/registry.py). Returns a list of problems; empty when fine or when there is
-    no history to check (shallow clone)."""
+    and a deleted one would register afresh). Checks the version 1 criteria.json, the version 2
+    registration.json and every registration_vN.json, on disk or ever committed (flycns/registry.py).
+    Returns a list of problems; empty when fine or when there is no history to check (shallow clone)."""
     _, shallow = _git("rev-parse", "--is-shallow-repository")
     if shallow.strip() == "true":
         print(f"[integrity] {label}: shallow clone, so the registration history cannot be checked", flush=True)
         return []
     problems = []
-    for name in ("criteria.json", "registration.json"):
+    d = ROOT / "results" / label
+    _, ever = _git("log", "--diff-filter=A", "--name-only", "--format=", "--", f"results/{label}/registration_v*.json")
+    names = {"criteria.json", "registration.json"} | {f.name for f in d.glob("registration_v*.json")} \
+        | {x.rsplit("/", 1)[-1] for x in ever.split()}
+    for name in sorted(n for n in names if is_registration_name(n)):
         path = f"results/{label}/{name}"
         _, log = _git("log", "--format=%h", "--", path)
         _, deleted = _git("log", "--format=%h", "--diff-filter=D", "--", path)
