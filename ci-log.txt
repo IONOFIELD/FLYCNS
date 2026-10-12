@@ -1,0 +1,36 @@
+[fingerprint] dnp13-control: benchmarks/dnp13_control.py 2
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! dnp13_control: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! the criteria in the code differ from the registered ones
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+DNp13 input: 9,101 excitatory vs 7,307 inhibitory synapses
+strongest excitatory input types: {'SIP108m': 870, 'PVLP204m': 720, 'SIP109m': 698, 'SIP110m_a': 338, 'AVLP713m': 270}
+rule picks best_input = SIP108m
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! dnp13_control: RUNNING ON UNCOMMITTED CODE (FLYCNS_ALLOW_DIRTY=1)
+! 11 code file(s) differ from commit caf6c85: D results/a2_registered/criteria.json, D results/a2_robustness/criteria.json, D results/dnp13_control/criteria.json, D results/feeding_by_modality/criteria.json, D results/flight_snpp16_graded/criteria.json, D results/flight_snpp16_robustness/criteria.json, D results/gustatory_signed_map/criteria.json, D results/null_strict/criteria.json ...
+! The report is stamped dirty and must not be quoted as a registered result.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+criteria registered at commit caf6c85; this run at caf6c85
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  best_input  ['SIP108m']                              (  4 cells) | DNp13 20.25  pMP2  0.00  pIP10  1.00 | static DNp13 +1.16e-01 pMP2 +1.52e-02 | 98s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  pC1_1b      ['pC1_1b']                               (  2 cells) | DNp13  0.50  pMP2  0.00  pIP10  0.00 | static DNp13 +1.56e-02 pMP2 +2.19e-04 | 100s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  LC10a       ['LC10a']                                (275 cells) | DNp13  0.00  pMP2  0.00  pIP10  0.50 | static DNp13 +1.38e-02 pMP2 +5.71e-03 | 32s
+
+CHECKS (criteria registered before the run)
+  PASS  D1_dnp13_reachable
+  PASS  D2_pc1_1b_sine_choice
+UNCERTAINTY (95% intervals, flycns/stats.py: PASS only if the whole interval lies in the band)
+  PASS        D1_dnp13_reachable: 20.2 [18, 22.5] in [0.5, inf] (bootstrap)
+  PASS        D2_pc1_1b_sine_choice: PASS 0.5 [0.5, 0.5] in [0.5, inf] (bootstrap); PASS 0.5 [0.5, 0.5] in (0, inf] (bootstrap)
+VERDICT: pulse/sine choice real in both directions; song result strengthened
+wrote results\dnp13_control\report.json
+[fingerprint] dnp13-control: 15 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\dnp13-control.jsonl
