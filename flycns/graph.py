@@ -201,13 +201,13 @@ PEPTIDE_MODULATION = [
 # GF fires 1 to 2 spikes per loom regardless of input strength
 # (von Reyn et al. 2014; Ache et al. 2019): spike-triggered adaptation.
 INTRINSIC_OVERRIDES = [
-    ("DNp01", "b_adapt_mV", 10.0, "all-or-none GF response; von Reyn 2014; Ache 2019. Fitted by pre-stated rule "
+    ("DNp01", "b_adapt_mV", 45.0, "all-or-none GF response; von Reyn 2014; Ache 2019. Fitted by pre-stated rule "
                                   "(smallest value giving 1-2 spikes/response, <=2 on the strongest gain quartile, "
                                   "P(response) 0.5-1, TTMn relay intact; benchmarks/fit_gf_adapt.py at >=40 trials). "
-                                  "10 mV under the measured stationary loom input (refit 2026-10-10, 40 trials; the "
-                                  "strong-quartile constraint holds at 1.95, close to its limit of 2). Earlier 30 mV "
-                                  "was fitted under the all-trials input; a 15 mV value came from an undersampled "
-                                  "20-trial fit. 0 mV gives up to 7 spikes per loom."),
+                                  "45 mV at w_scale 0.4 with the per-GF JON calibration (refit 2026-10-11, cloud run 13, "
+                                  "40 trials; the strong-quartile constraint holds at exactly 2.0, its limit; 30 mV gives "
+                                  "2.75). Before: 10 mV at w_scale 0.3 (2026-10-10), 30 mV under the all-trials loom "
+                                  "input, 15 mV from an undersampled 20-trial fit. 0 mV gives up to 10 spikes per loom."),
     # superclass-level: sustained fly motor neuron firing stays well under 100 Hz
     # (leg MNs, Azevedo et al. 2020; proboscis MNs, McKellar et al. 2020). Without
     # adaptation the LIF motor pool pins at the 450 Hz refractory ceiling.
@@ -390,30 +390,35 @@ def electrical_pairs(neurons):
         pres = pd.concat([_match(meta, e[0]) for e in entries])
         spk, src = entries[0][1], "; ".join(sorted({e[2] for e in entries}))
         posts = _match(meta, post_t)
-        g_gap = G_GAP_RELAY
-        if isinstance(spk, dict):
-            # steady-state summed depolarization = n_pre * rate * spikelet * tau_m.
-            # Count the neurons that will actually converge on ONE post cell.
-            sided = pres["somaSide"].isin(["L", "R"])
-            if ipsi and sided.any():
-                n_conv = pres[sided].groupby("somaSide").size().mean() + (~sided).sum()
-            else:
-                n_conv = len(pres)
-            n_conv = max(float(n_conv), 1.0)
-            # Summed spikelets n * rate * A, decaying with the post cell's effective time constant. The
-            # population's coupling loads the post cell by n_conv * g_gap = G_GAP_RELAY (model.py: as I_gap
-            # from simulated partners, as g_shunt from stimulus sources), shortening that constant to
-            # tau / (1 + G_GAP_RELAY); the factor keeps the target potential exact under that load.
-            spk = spk["compound_mV"] * (1 + G_GAP_RELAY) / (n_conv * spk["at_hz"] * TAU_M_S)
-            g_gap = G_GAP_RELAY / n_conv
-        assert np.isfinite(spk) and np.isfinite(g_gap), f"bad electrical calibration for {post_t}"
+        links = []
         for b, row in pres.iterrows():
             cand = posts[posts["somaSide"] == row["somaSide"]] if ipsi else posts
             if not len(cand):
                 cand = posts
-            for q in cand.index:
-                pairs.append(dict(pre=b, post=q, pre_type=row["type"], post_type=post_t,
-                                  spikelet_mV=float(spk), g_gap=float(g_gap), source=src))
+            links += [(b, row["type"], q) for q in cand.index]
+        if isinstance(spk, dict):
+            # A compound potential is calibrated PER POST CELL, on the partners actually coupled to that
+            # cell. Steady-state summed depolarisation of one post cell = n_post * rate * spikelet * tau,
+            # where n_post counts that cell's own partners. They load it by n_post * g_gap = G_GAP_RELAY
+            # (model.py: as I_gap from simulated partners, as g_shunt from stimulus sources), shortening
+            # tau_m to tau_m / (1 + G_GAP_RELAY); the factor (1 + G_GAP_RELAY) keeps the target exact
+            # under that load. Until 11 October 2026 one value, from the mean partner count per side, was
+            # given to every post cell, so the giant fiber with more afferents on its side got more than
+            # the target and the other less (run 12: 3.65 and 0.73 mV for a 3 mV target).
+            n_post = {}
+            for _, _, q in links:
+                n_post[q] = n_post.get(q, 0) + 1
+            for b, pt, q in links:
+                n = float(n_post[q])
+                s = spk["compound_mV"] * (1 + G_GAP_RELAY) / (n * spk["at_hz"] * TAU_M_S)
+                g = G_GAP_RELAY / n
+                assert np.isfinite(s) and np.isfinite(g), f"bad electrical calibration for {post_t}"
+                pairs.append(dict(pre=b, post=q, pre_type=pt, post_type=post_t,
+                                  spikelet_mV=float(s), g_gap=float(g), source=src))
+        else:
+            assert np.isfinite(spk), f"bad electrical spikelet for {post_t}"
+            pairs += [dict(pre=b, post=q, pre_type=pt, post_type=post_t, spikelet_mV=float(spk),
+                           g_gap=float(G_GAP_RELAY), source=src) for b, pt, q in links]
     return pd.DataFrame(pairs, columns=["pre", "post", "pre_type", "post_type", "spikelet_mV", "g_gap", "source"])
 
 

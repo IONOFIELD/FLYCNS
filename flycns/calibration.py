@@ -27,7 +27,7 @@ CHECK_ROLES = {
         "gf_latency_10_60ms": (IND, "not a fit target"),
         "ttmn_one_to_one": (CON, "9 mV GF->TTMn spikelet chosen so one GF spike is suprathreshold (1:1 relay, Tanouye & Wyman 1980)"),
         "ttmn_lag_0.5_1.5ms": (CON, "gap-junction delay 0.8 ms entered from Tanouye & Wyman 1980"),
-        "cns_quiet": (CAL, "global weight scale w_scale was chosen partly on population rate (scripts/legacy/sweep.py)"),
+        "cns_quiet": (CAL, "global weight scale w_scale was chosen on whole-CNS rate under a blind sensory drive (fit/select_wscale.py)"),
         "electrical_necessary": (CTL, "ablation of the declared electrical synapses"),
         "null_silent": (CTL, "degree-preserving rewired null"),
     },
@@ -36,7 +36,7 @@ CHECK_ROLES = {
         "A1_jo_alone_mostly_subthreshold": (CAL, "JON->GF coupling calibrated to a 3 mV subthreshold compound potential (value untraced)"),
         "A3_declared_pairs_carry_jo_drive": (CTL, "ablation of the declared mixed synapse"),
         "A4_null_silent": (CTL, "rewired null; note it removes the declared pathway as A3 does, so it cannot fail where A3 passes"),
-        "A5_cns_quiet": (CAL, "w_scale was chosen partly on population rate under auditory drive"),
+        "A5_cns_quiet": (CAL, "w_scale was chosen on whole-CNS rate (fit/select_wscale.py), as the largest value that stays quiet"),
     },
     "a2_registered": {
         "A2R_facilitation": (CON, "the working-point rule parks loom-alone GF within ~2 mV of threshold and sound adds a hand-set, "
@@ -55,7 +55,7 @@ CHECK_ROLES = {
         "F1_shiu_contralateral_bias": (IND, "not applicable to this drive; tested in sugar_laterality"),
         "F2_dose_response_REPORTED": (IND, "reported, not scored"),
         "F3_bitter_suppresses": (IND, "not a fit target; scored only when a bitter GRN type resolves"),
-        "F2b_extra_SEZ_quiet": (CAL, "w_scale was chosen partly on population rate"),
+        "F2b_extra_SEZ_quiet": (CAL, "w_scale was chosen on whole-CNS rate (fit/select_wscale.py)"),
         "F2c_motor_rate_physiological": (CON, "cb_motor adaptation (10 mV) entered to keep sustained motor rates under 100 Hz"),
         "F4_second_order_sufficient": (IND, "scored only with Shiu's cell names; with the fallback (MN9's own strongest inputs) it is reported, not scored"),
         "F5_null_silent": (CTL, "rewired null; scored only when the real network responds (MN9 >= 0.5 at 50 Hz)"),

@@ -18,17 +18,17 @@
     }
   },
   "a2": {
-    "loom_gain": 0.6,
+    "loom_gain": 0.4,
     "n_trials_per_arm": 120,
-    "loom_alone_hit": 0.13333333333333333,
+    "loom_alone_hit": 0.10833333333333334,
     "loom_plus_jo_hit": 0.0,
-    "difference": -0.13333333333333333,
+    "difference": -0.10833333333333334,
     "difference_ci95": [
-      -0.20564949366548352,
-      -0.07485906523719502
+      -0.17655508005273887,
+      -0.054561163544281074
     ],
-    "loom_alone_depol_mV": 4.565542846585602,
-    "loom_plus_jo_depol_mV": 0.36928846785988717,
+    "loom_alone_depol_mV": 4.101080426768587,
+    "loom_plus_jo_depol_mV": 0.2626108179911681,
     "mode": "A2 only",
     "seeds": {
       "loom_alone": 0,
@@ -39,20 +39,20 @@
   },
   "construction": {
     "sound_potential_mV": [
-      0.0015903881191540847,
-      0.00018379911636063896
+      0.0009379161399753144,
+      0.00023963502647443845
     ],
     "sound_arm": "A2_sound_alone",
     "sound_alone_hit": 0.0,
     "gap_mV": 7.0,
     "jon_mode": "em_flip",
-    "loom_alone_hit": 0.13333333333333333,
-    "predicted_hit_by_summation": 0.13333333333333333,
+    "loom_alone_hit": 0.10833333333333334,
+    "predicted_hit_by_summation": 0.10833333333333334,
     "observed_hit": 0.0,
-    "residual": -0.13333333333333333,
+    "residual": -0.10833333333333334,
     "residual_ci95": [
-      -0.191875,
-      -0.075
+      -0.16666666666666666,
+      -0.058333333333333334
     ],
     "note": "residual = observed loom+sound response probability minus the probability predicted by adding each giant fiber's measured sound-alone peak depolarisation to its loom-alone peak, per trial; percentile bootstrap resampling the loom-alone, loom+sound and sound-alone trials; peaks at different times over-predict summation, so the residual is biased low"
   },
@@ -60,31 +60,31 @@
     "gains": [
       {
         "gain": 0.4,
-        "hit": 0.0,
-        "depol_mV": 3.1450841694411844
+        "hit": 0.075,
+        "depol_mV": 4.008887208034567
       },
       {
         "gain": 0.6,
-        "hit": 0.2,
-        "depol_mV": 4.382392965339336
+        "hit": 0.375,
+        "depol_mV": 5.081092248463285
       },
       {
         "gain": 0.8,
-        "hit": 0.525,
-        "depol_mV": 5.641885364985905
+        "hit": 0.85,
+        "depol_mV": 6.350539055283022
       },
       {
         "gain": 1.0,
-        "hit": 0.8,
-        "depol_mV": 6.373361814493078
+        "hit": 1.0,
+        "depol_mV": 6.815403300094968
       },
       {
         "gain": 1.3,
-        "hit": 0.975,
-        "depol_mV": 6.9382236188735025
+        "hit": 1.0,
+        "depol_mV": 6.949846393580344
       }
     ],
-    "chosen_gain": 0.6,
+    "chosen_gain": 0.4,
     "rule": "largest gain with GF hit <= 0.3 and depol >= 2 mV"
   },
   "checks": {
@@ -92,10 +92,10 @@
   },
   "uncertainty": {
     "C2_flip_no_facilitation": {
-      "estimate": -0.13333333333333333,
+      "estimate": -0.10833333333333334,
       "ci95": [
-        -0.20564949366548352,
-        -0.07485906523719502
+        -0.17655508005273887,
+        -0.054561163544281074
       ],
       "band": [
         null,
@@ -107,18 +107,19 @@
     }
   },
   "registration": {
-    "file": "results/a2_contact_em_flip/registration.json",
-    "version": 2,
-    "git_commit": "4c39a8f",
-    "model_hash": "5aebc5fd7f41e7c0d6a5c63d1affa89afb5d125357c9b6ce6db8e4182b2d3750",
-    "registered_at": "2026-10-11T12:41:25",
+    "file": "results/a2_contact_em_flip/registration_v3.json",
+    "version": 3,
+    "supersedes": "results/a2_contact_em_flip/registration.json",
+    "git_commit": "a94769d",
+    "model_hash": "2a30b3ca2d036e0701ca7a7f8121cb11d8579fbca65106c1a75a98ad209eacc1",
+    "registered_at": "2026-10-11T21:42:03",
     "matches": true,
     "problems": []
   },
-  "wall_s": 1946.5,
+  "wall_s": 3646.5,
   "provenance": {
-    "written_at": "2026-10-11T20:32:31",
-    "git_commit": "b7eba83",
+    "written_at": "2026-10-12T05:54:04",
+    "git_commit": "47eb98e",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

@@ -1,0 +1,122 @@
+{
+  "benchmark": "jon_calibration",
+  "target_mV": 3.0,
+  "rate_hz": 150,
+  "pulse_ms": 60,
+  "plateau_window_ms": 30,
+  "tau_eff_ms": 16.666666666666668,
+  "charging_factor": 0.9195780582811564,
+  "expected_plateau_mV": 2.758734174843469,
+  "tolerance": 0.1,
+  "n_trials": 40,
+  "jo_types": [
+    "JO-A1",
+    "JO-A2",
+    "JO-A3",
+    "JO-A4",
+    "JO-B1_a",
+    "JO-B1_b",
+    "JO-B1_c",
+    "JO-B2",
+    "JO-B3",
+    "JO-CA1",
+    "JO-CA2"
+  ],
+  "giant_fibers": [
+    {
+      "bodyId": 10001,
+      "side": "R",
+      "n_coupled_afferents": 6,
+      "afferent_types": [
+        "JO-B1_a",
+        "JO-B1_c"
+      ],
+      "spikelet_mV": [
+        0.2
+      ],
+      "coupling_load": 0.19999999999999998,
+      "predicted_steady_mV": 3.0,
+      "electrical": {
+        "plateau_mV": 2.7770212566123957,
+        "peak_mV": 3.5816550697716307,
+        "fired_trials": 0
+      },
+      "network": {
+        "plateau_mV": -20.825029421821803,
+        "peak_mV": 1.506532324920189,
+        "fired_trials": 0
+      },
+      "verdict": "PASS"
+    },
+    {
+      "bodyId": 10010,
+      "side": "L",
+      "n_coupled_afferents": 21,
+      "afferent_types": [
+        "JO-B1_a",
+        "JO-B1_c"
+      ],
+      "spikelet_mV": [
+        0.057142857
+      ],
+      "coupling_load": 0.19999999999999998,
+      "predicted_steady_mV": 2.9999999925,
+      "electrical": {
+        "plateau_mV": 2.7212239556372766,
+        "peak_mV": 3.1792714059518126,
+        "fired_trials": 0
+      },
+      "network": {
+        "plateau_mV": -9.57229661133537,
+        "peak_mV": 2.4635551869222634,
+        "fired_trials": 1
+      },
+      "verdict": "PASS"
+    }
+  ],
+  "rule": "PASS if every giant fiber's electrical-only plateau (last 30 ms of a 60 ms pulse, mean over trials) is within 10% of target x the mean charging factor over that window (tau_eff = tau_m / (1 + G_GAP_RELAY), gap-junction delay included); the network arm is reported, not scored",
+  "verdict": "PASS",
+  "provenance": {
+    "written_at": "2026-10-12T05:52:21",
+    "git_commit": "47eb98e",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "cython",
+    "platform": "win32",
+    "machine": "AMD64",
+    "float_dtype": "float64",
+    "graph": {
+      "data_dir": "data",
+      "min_weight": 5,
+      "n_neurons": 176422,
+      "n_signed_edges": 6127738,
+      "n_signed_synapses": 88316807,
+      "n_dropped_unsigned_edges": 160051,
+      "n_dropped_unsigned_synapses": 1980492,
+      "n_silent_presynaptic": 8020,
+      "edges_nt_used": false,
+      "glu_vnc": "inhibitory",
+      "n_glu_vnc_flipped": 0,
+      "jon_mode": "electrical",
+      "jon_compound_mv": 3.0
+    },
+    "data": {
+      "dir": "data",
+      "digests": {
+        "neurons.parquet": "06ea0afb48c414ad",
+        "edges.parquet": "becf568580708ba9",
+        "roi_membership.parquet": "5fce5c5d54e45570"
+      },
+      "manifest": "match"
+    }
+  }
+}

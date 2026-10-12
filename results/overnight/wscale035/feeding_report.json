@@ -89,7 +89,7 @@
       "MN9_ipsi_L": 0.0,
       "MN9_contra_R": 0.0,
       "pop_rate_hz": 0.008303103371765708,
-      "wall_s": 54.8,
+      "wall_s": 53.1,
       "structural_2hop_L": 25650.0,
       "structural_2hop_R": 350.0,
       "MN9_ipsi_L_per_trial": [
@@ -210,19 +210,20 @@
     }
   },
   "registration": {
-    "file": "results/feeding/registration.json",
-    "version": 2,
-    "git_commit": "4c39a8f",
-    "model_hash": "9c9cedf1fe8474ba9fdcc36203b2966ae107a14ca741c552c3958309a502fa14",
-    "registered_at": "2026-10-11T12:41:00",
+    "file": "results/feeding/registration_v3.json",
+    "version": 3,
+    "supersedes": "results/feeding/registration.json",
+    "git_commit": "a94769d",
+    "model_hash": "44a27c3afe68f464a8720ad0c267c5f8fb884f984921c90b85d6f5e251b6b2a5",
+    "registered_at": "2026-10-11T21:41:36",
     "matches": false,
     "problems": [
       "model settings overridden: FLYCNS_WSCALE=0.35"
     ]
   },
   "provenance": {
-    "written_at": "2026-10-11T22:20:46",
-    "git_commit": "b7eba83",
+    "written_at": "2026-10-12T06:21:06",
+    "git_commit": "47eb98e",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

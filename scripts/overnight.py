@@ -20,7 +20,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from flycns.integrity import preserved  # noqa: E402
+from flycns.integrity import DEFAULTS, preserved  # noqa: E402
 from flycns.windows import console, keep_awake  # noqa: E402
 
 console()
@@ -30,30 +30,34 @@ PY = sys.executable
 BENCHES = {"gf_escape": "40", "auditory": "40", "feeding": "6"}   # trials, as in the canonical suite (run_all.py)
 RES = Path("results")
 
-# tag, seed, random sign-flip fraction, weight scale, extra settings
+# tag, seed, random sign-flip fraction, weight scale, extra settings. W0 is the declared weight scale; the
+# weight-scale arms sit around it: 0.30 (the value declared until 11 October 2026, so a result that holds at
+# W0 but not there shows it depends on sitting next to the runaway transition), 0.35, and 0.45 (between W0
+# and 0.5, where the blind selection found the network runs away).
+W0 = float(DEFAULTS["FLYCNS_WSCALE"])
 RUNS = [
-    ("seed1", 1, 0, 0.3, {}),
-    ("seed2", 2, 0, 0.3, {}),
-    ("signflip05_a", 0, 0.05, 0.3, {}),
-    ("signflip05_b", 1, 0.05, 0.3, {}),
-    ("signflip10", 0, 0.10, 0.3, {}),
-    ("wscale025", 0, 0, 0.25, {}),
+    ("seed1", 1, 0, W0, {}),
+    ("seed2", 2, 0, W0, {}),
+    ("signflip05_a", 0, 0.05, W0, {}),
+    ("signflip05_b", 1, 0.05, W0, {}),
+    ("signflip10", 0, 0.10, W0, {}),
+    ("wscale030", 0, 0, 0.30, {}),
     ("wscale035", 0, 0, 0.35, {}),
-    ("wscale040", 0, 0, 0.40, {}),
+    ("wscale045", 0, 0, 0.45, {}),
     # targeted perturbation: only the neurons the transmitter classifier is unsure about
-    ("signflip_targeted", 0, 0, 0.3, {"FLYCNS_SIGNFLIP_TARGETED": "1"}),
+    ("signflip_targeted", 0, 0, W0, {"FLYCNS_SIGNFLIP_TARGETED": "1"}),
     # connection-size threshold: stricter than the default 5 synapses (the fetch keeps nothing below 5,
     # so a looser threshold is impossible and graph.py refuses one)
-    ("minweight10", 0, 0, 0.3, {"FLYCNS_MIN_WEIGHT": "10"}),
-    ("minweight20", 0, 0, 0.3, {"FLYCNS_MIN_WEIGHT": "20"}),
+    ("minweight10", 0, 0, W0, {"FLYCNS_MIN_WEIGHT": "10"}),
+    ("minweight20", 0, 0, W0, {"FLYCNS_MIN_WEIGHT": "20"}),
     # stricter null: shuffle targets only within the same superclass (flycns/graph.py rewire_null)
-    ("null_superclass", 0, 0, 0.3, {"FLYCNS_NULL": "superclass"}),
+    ("null_superclass", 0, 0, W0, {"FLYCNS_NULL": "superclass"}),
     # audit 2026-10-11: glutamate from nerve-cord neurons onto non-motor targets made excitatory (gap 10);
     # half the time step, as a numerics check (the 0.9 ms TTMn lag is 0.8 ms delay + one step);
     # the JON -> GF contact as EM annotates it, chemical with no calibrated coupling (gap 1)
-    ("glu_vnc_excitatory", 0, 0, 0.3, {"FLYCNS_GLU_VNC": "excitatory"}),
-    ("dt005", 0, 0, 0.3, {"FLYCNS_DT_MS": "0.05"}),
-    ("jon_em", 0, 0, 0.3, {"FLYCNS_JON": "em"}),
+    ("glu_vnc_excitatory", 0, 0, W0, {"FLYCNS_GLU_VNC": "excitatory"}),
+    ("dt005", 0, 0, W0, {"FLYCNS_DT_MS": "0.05"}),
+    ("jon_em", 0, 0, W0, {"FLYCNS_JON": "em"}),
 ]
 
 

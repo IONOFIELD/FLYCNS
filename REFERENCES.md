@@ -112,6 +112,10 @@ search could read are used; values that exist only in figures are marked as not 
 - **Herrera-Valdez et al. 2013** — *J Comput Neurosci* 34:211–229. doi:10.1007/s10827-012-0416-6. Flight motor neuron MN5: R_in 97 ± 31 MΩ, V_rest −67.8 mV.
 - **Hafez et al. 2023** — *eLife* 12:e77578. doi:10.7554/eLife.77578. MBON-α3: τ_m 16.1 ± 4.9 ms (Table 1), the only central τ_m found.
 
+## Synaptic strength anchors (w_scale, docs/CALIBRATION.md)
+- **Kazama & Wilson 2008** — Kazama H, Wilson RI. Homeostatic matching and nonlinear amplification at identified central synapses. *Neuron* 58:401–413 (2008). doi:10.1016/j.neuron.2008.02.030. ORN → PN unitary EPSPs of about 5 mV (as summarised by Tobin et al. 2017).
+- **Tobin et al. 2017** — Tobin WF, Wilson RI, Lee WCA. Wiring variations that enable and constrain neural computation in a sensory microcircuit. *eLife* 6:e24838 (2017). doi:10.7554/eLife.24838. About 23 EM synapses per unitary ORN → PN connection; somatic uEPSP scales with synapse count. With Kazama & Wilson 2008: about 0.22 mV per synapse, about 12 times the model's peak PSP per synapse at w_scale 0.4.
+
 ## Statistics
 - **Newcombe 1998** — Newcombe RG. Interval estimation for the difference between independent proportions: comparison of eleven methods. *Stat Med* 17:873-890 (1998). doi:10.1002/(SICI)1097-0258(19980430)17:8<873::AID-SIM779>3.0.CO;2-I. Method 10 (Wilson-score hybrid) gives the A2 and RA2 confidence intervals.
 

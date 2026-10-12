@@ -293,7 +293,7 @@ def t_refuse_overrides():
     bad = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True, encoding="utf-8",
                          errors="replace", env={**base, "FLYCNS_WSCALE": "0.5"})
     fine = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True, encoding="utf-8",
-                          errors="replace", env={**base, "FLYCNS_WSCALE": "0.3", "FLYCNS_CODEGEN": "numpy"})
+                          errors="replace", env={**base, "FLYCNS_WSCALE": "0.4", "FLYCNS_CODEGEN": "numpy"})
     waived = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True, encoding="utf-8",
                             errors="replace", env={**base, "FLYCNS_ALLOW_DIRTY": "1"})
     ok = (bad.returncode != 0 and "FLYCNS_WSCALE=0.5" in bad.stderr and "RAN" in fine.stdout
@@ -588,10 +588,9 @@ def t_registrations_never_changed():
         return True, "SKIPPED: shallow clone (no history to check)"
     bad, n = [], 0
     # every registration ever added, including any later deleted (a deleted one could register afresh)
-    _, added = git("log", "--diff-filter=A", "--name-only", "--format=", "--", "results/*/criteria.json",
-                   "results/*/registration.json")
-    ever = sorted({ROOT / x for x in added.split()} | set((ROOT / "results").glob("*/criteria.json"))
-                  | set((ROOT / "results").glob("*/registration.json")))
+    from flycns.integrity import REGISTRATIONS
+    _, added = git("log", "--diff-filter=A", "--name-only", "--format=", "--", *REGISTRATIONS)
+    ever = sorted({ROOT / x for x in added.split()} | {f for g in REGISTRATIONS for f in ROOT.glob(g)})
     for f in ever:
         rel = f.relative_to(ROOT).as_posix()
         if not f.exists():
@@ -676,7 +675,7 @@ def t_side_inference_precedence():
 def t_electrical_pairs_by_side():
     """An ipsilateral electrical synapse joins each sided partner to the post cell(s) on its own side only;
     an unsided partner, or one with no post cell on its side, reaches every post cell. The compound
-    calibration counts the mean population per side."""
+    calibration counts each post cell's OWN partners, so every post cell gets the target potential."""
     from flycns.graph import electrical_pairs
     rows = [dict(bodyId=1, type="DNp01", somaSide="L"), dict(bodyId=2, type="DNp01", somaSide="R")]
     rows += [dict(bodyId=10 + i, type="JO-B1_a", somaSide="L") for i in range(4)]
@@ -692,32 +691,43 @@ def t_electrical_pairs_by_side():
         and by_pre[30] == {1, 2}
     ttmn = p[p.post_type == "TTMn"].groupby("pre")["post"].apply(set).to_dict()
     fallback_ok = ttmn == {1: {40}, 2: {40}}
-    # n_conv = mean per side (4 left, 2 right -> 3) + 1 unsided = 4; spikelet = 3 mV*1.2/(4*150 Hz*20 ms)
-    spk = jo.spikelet_mV.iloc[0]
-    calib_ok = abs(spk - 3.0 * 1.2 / (4 * 150 * 0.020)) < 1e-9
+    # per post cell: the left GF has 4 left + 1 unsided = 5 partners, the right GF 2 right + 1 unsided = 3;
+    # spikelet = 3 mV * 1.2 / (n * 150 Hz * 20 ms), coupling 0.2 / n, so each GF's load sums to 0.2
+    spk = jo.groupby("post")["spikelet_mV"].agg(["min", "max"])
+    gg = jo.groupby("post")["g_gap"].sum()
+    want = {1: 3.0 * 1.2 / (5 * 150 * 0.020), 2: 3.0 * 1.2 / (3 * 150 * 0.020)}
+    calib_ok = all(abs(spk.loc[q, "min"] - w) < 1e-9 and abs(spk.loc[q, "max"] - w) < 1e-9 for q, w in want.items()) \
+        and all(abs(gg.loc[q] - 0.2) < 1e-12 for q in (1, 2))
     ok = side_ok and fallback_ok and calib_ok
     return ok, (f"sided partners stay on their side, unsided reach both, no same-side post falls back to all; "
-                f"spikelet {spk:.3f} mV for n_conv 4" if ok else f"sides {by_pre}, TTMn {ttmn}, spikelet {spk}")
+                f"spikelet {spk.loc[1, 'min']:.3f} mV on the GF with 5 partners, {spk.loc[2, 'min']:.3f} mV on the one "
+                f"with 3; each GF's coupling load is 0.2" if ok else f"sides {by_pre}, TTMn {ttmn}, spikelet {spk}, load {gg}")
 
 
 def t_compound_potential_hits_its_target():
-    """Ear afferents on one side, all firing at 150 Hz (Poisson), depolarise their giant fiber by the
-    declared 3 mV compound potential, within 10%."""
+    """Ear afferents all firing at 150 Hz (Poisson) depolarise EACH giant fiber by the declared 3 mV
+    compound potential, within 10%, although the two sides have very different afferent counts (8 left,
+    2 right, as unequal as the connectome's sides can be; run 12 gave 3.65 and 0.73 mV under the earlier
+    shared calibration)."""
     from brian2 import mV
     from flycns import CNSModel, LIFParams
-    k = 8
-    rows = [dict(bodyId=1, type="DNp01", superclass="descending_neuron", somaSide="L")]
-    rows += [dict(bodyId=10 + i, type="JO-B1_a", superclass="cb_sensory", somaSide="L") for i in range(k)]
+    k = {"L": 8, "R": 2}
+    rows = [dict(bodyId=1, type="DNp01", superclass="descending_neuron", somaSide="L"),
+            dict(bodyId=2, type="DNp01", superclass="descending_neuron", somaSide="R")]
+    rows += [dict(bodyId=10 + i, type="JO-B1_a", superclass="cb_sensory", somaSide="L") for i in range(k["L"])]
+    rows += [dict(bodyId=30 + i, type="JO-B1_c", superclass="cb_sensory", somaSide="R") for i in range(k["R"])]
     rows += [dict(bodyId=99, type="dummy", superclass="central", somaSide="L")]
     neurons = pd.DataFrame(rows)
-    edges = pd.DataFrame(dict(pre=[99], post=[1], weight=[5], nt=["acetylcholine"], sign=[1.0]))
-    m = CNSModel(neurons, edges, ["JO-B1_a"], LIFParams(), electrical=True, monitor_types=("DNp01",))
+    edges = pd.DataFrame(dict(pre=[99, 99], post=[1, 2], weight=[5, 5], nt=["acetylcholine"] * 2, sign=[1.0, 1.0]))
+    m = CNSModel(neurons, edges, ["JO-B1_a", "JO-B1_c"], LIFParams(), electrical=True, monitor_types=("DNp01",))
     m.set_stim_rates(np.full(len(m.stim), 150.0))
     m.run(1500)
-    v = np.asarray(m.vmon.v / mV)[0]
-    dep = float(v[len(v) // 3:].mean() - LIFParams().v_rest_mV)
-    ok = abs(dep - 3.0) <= 0.3
-    return ok, f"{k} afferents at 150 Hz: giant fiber {dep:.2f} mV above rest (target 3.0 +/- 0.3)"
+    v = np.asarray(m.vmon.v / mV)
+    ids = list(m.vmon_ids)
+    dep = {s: float(v[ids.index(b)][v.shape[1] // 3:].mean() - LIFParams().v_rest_mV) for s, b in (("L", 1), ("R", 2))}
+    ok = all(abs(d - 3.0) <= 0.3 for d in dep.values())
+    return ok, (f"{k['L']} left and {k['R']} right afferents at 150 Hz: left GF {dep['L']:.2f} mV, right GF "
+                f"{dep['R']:.2f} mV above rest (target 3.0 +/- 0.3 each)")
 
 
 def t_audit_refuses_missing_partner(tmp):
@@ -910,7 +920,7 @@ print("RAN", json.dumps(registry.stamp(reg)))
 
 
 def t_registry_freezes_model(tmp):
-    """A version 2 registration is written before any result (register-only), then refuses to score
+    """A registration (the current generation) is written before any result (register-only), then refuses to score
     when the model code, the benchmark script (where its thresholds live) or a scored band differs."""
     if not shutil.which("git"):
         return True, "git not installed; registry not exercised"
@@ -927,7 +937,8 @@ def t_registry_freezes_model(tmp):
                               encoding="utf-8", errors="replace", env={**env, **e})
     unregistered = run()                                  # no registration yet: refused, nothing scored
     reg_only = run(FLYCNS_REGISTER_ONLY="1")
-    wrote = (r / "results/probe/registration.json").exists() and "RAN" not in reg_only.stdout
+    from flycns.registry import NAME
+    wrote = (r / "results/probe" / NAME).exists() and "RAN" not in reg_only.stdout
     uncommitted = run()                                   # written but not committed: refused
     subprocess.run([*g, "add", "-A"], cwd=r, check=True); subprocess.run([*g, "commit", "-qm", "register"], cwd=r, check=True)
     ok_run = run()
@@ -955,6 +966,47 @@ def t_registry_freezes_model(tmp):
                 f"perturbed {perturbed.stdout[-120:]!r}; "
                 f"wrote {wrote}; ok {ok_run.stdout[-120:]!r} {ok_run.stderr[-160:]!r}; band {bad_band.returncode}; "
                 f"model {model_changed.returncode} {model_changed.stderr[-160:]!r}; thresh {thresh_changed.returncode}")
+
+
+def t_registry_generations(tmp):
+    """A refrozen model registers under a new file (registration_vN.json) that names the committed one it
+    supersedes; the older file is left byte for byte, the run is scored under the new one, and deleting a
+    committed registration of any generation is caught by the history check."""
+    if not shutil.which("git"):
+        return True, "git not installed; registry not exercised"
+    from flycns.registry import NAME, VERSION
+    if VERSION < 3:
+        return True, "SKIPPED: only one generation"
+    g = ["git", "-c", "user.name=t", "-c", "user.email=t@t", "-c", "commit.gpgsign=false"]
+    env = {k: v for k, v in os.environ.items() if not k.startswith("FLYCNS_")}
+    r = tmp / "reggen"
+    shutil.copytree(ROOT / "flycns", r / "flycns", ignore=shutil.ignore_patterns("__pycache__"))
+    (r / "probe.py").write_text(_PROBE, encoding="utf-8")
+    old = r / "results/probe/registration.json"
+    old.parent.mkdir(parents=True)
+    old.write_text('{"version": 2, "benchmark": "probe", "note": "an earlier generation"}\n', encoding="utf-8")
+    subprocess.run(["git", "init", "-q"], cwd=r, check=True)
+    subprocess.run([*g, "add", "-A"], cwd=r, check=True); subprocess.run([*g, "commit", "-qm", "v2"], cwd=r, check=True)
+    before = old.read_bytes()
+
+    def run(*a, **e):
+        return subprocess.run([sys.executable, *a], cwd=r, capture_output=True, text=True,
+                              encoding="utf-8", errors="replace", env={**env, **e})
+    run("probe.py", FLYCNS_REGISTER_ONLY="1")
+    new = r / "results/probe" / NAME
+    rec = json.loads(new.read_text(encoding="utf-8")) if new.exists() else {}
+    sup = rec.get("supersedes") or {}
+    subprocess.run([*g, "add", "-A"], cwd=r, check=True); subprocess.run([*g, "commit", "-qm", "v3"], cwd=r, check=True)
+    scored = run("probe.py")
+    new.unlink()
+    subprocess.run([*g, "commit", "-qam", "delete v3"], cwd=r, check=True)
+    hist = run("-c", "from flycns.integrity import registration_history as h; print(h('probe'))")
+    ok = (rec.get("version") == VERSION and sup.get("file") == "results/probe/registration.json" and bool(sup.get("why"))
+          and old.read_bytes() == before and "RAN" in scored.stdout and f'"file": "results/probe/{NAME}"' in scored.stdout
+          and f"{NAME} was registered and then deleted" in hist.stdout)
+    return ok, (f"{NAME} supersedes the committed registration.json, which is unchanged; the run is scored under "
+                f"{NAME}; a deleted {NAME} is caught" if ok else
+                f"rec {rec.get('version')} {sup}; scored {scored.stdout[-200:]!r} {scored.stderr[-200:]!r}; hist {hist.stdout!r}")
 
 def run_all():
     out = []
@@ -998,7 +1050,8 @@ def run_all():
                          ("degree-corrected null invariants", lambda: t_degree_corrected_null(tmp)),
                          ("JON -> GF contact modes", t_jon_contact_modes),
                          ("nerve-cord glutamate option", lambda: t_vnc_glutamate_option(tmp)),
-                         ("registration freezes the model", lambda: t_registry_freezes_model(tmp))]:
+                         ("registration freezes the model", lambda: t_registry_freezes_model(tmp)),
+                         ("a refrozen model registers a new generation", lambda: t_registry_generations(tmp))]:
             try:
                 ok, msg = fn()
             except (Exception, SystemExit) as ex:  # a crashing or exiting check is a failing check

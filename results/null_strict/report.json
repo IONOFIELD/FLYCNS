@@ -12,16 +12,16 @@
   },
   "escape": {
     "null_gf_hit": 0.0,
-    "null_pop_rate_hz": 2.0288582360871126e-06,
-    "real_gf_hit": 0.575,
-    "real_pop_rate_hz": 0.0038503671604461225
+    "null_pop_rate_hz": 2.2723212244175664e-05,
+    "real_gf_hit": 0.8,
+    "real_pop_rate_hz": 0.006162048234643779
   },
   "pc1": {
     "null": {
       "pMP2": 0.0,
       "DNp13": 0.0,
       "pIP10": 0.0,
-      "cns_hz": 0.00011087756599793082,
+      "cns_hz": 0.00038918025665273713,
       "per_trial": {
         "pMP2": [
           0.0,
@@ -62,20 +62,20 @@
       }
     },
     "real": {
-      "pMP2": 8.15,
+      "pMP2": 8.35,
       "DNp13": 0.0,
-      "pIP10": 5.7,
-      "cns_hz": 0.011883857523658224,
+      "pIP10": 5.25,
+      "cns_hz": 0.019172948712362196,
       "per_trial": {
         "pMP2": [
           10.0,
           7.0,
-          7.5,
+          7.0,
           6.5,
-          8.0,
-          8.0,
-          8.5,
           7.5,
+          9.0,
+          10.0,
+          8.0,
           10.0,
           8.5
         ],
@@ -92,25 +92,25 @@
           0.0
         ],
         "pIP10": [
-          7.5,
-          6.0,
-          5.5,
+          7.0,
           5.0,
           4.5,
-          6.0,
-          5.5,
+          4.0,
+          4.5,
+          6.5,
           5.0,
-          7.0,
+          4.5,
+          6.5,
           5.0
         ]
       }
     },
     "n_trials": 10
   },
-  "wall_s": 1762.9,
+  "wall_s": 1741.5,
   "provenance": {
-    "written_at": "2026-10-11T21:43:01",
-    "git_commit": "b7eba83",
+    "written_at": "2026-10-12T06:40:00",
+    "git_commit": "47eb98e",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -150,7 +150,7 @@
       "method": "wilson",
       "verdict": "PASS",
       "n": 40,
-      "note": "GF hit on the superclass null: 0 of 40 trials (Wilson). The superclass null is nearly silent on the real data (whole-CNS rate here: null 2.029e-06 Hz vs real 0.00385 Hz, see the report), so a silent readout on it says little about wiring specificity; the degree-corrected null distribution (benchmarks/null_distribution.py) is the informative version."
+      "note": "GF hit on the superclass null: 0 of 40 trials (Wilson). The superclass null is nearly silent on the real data (whole-CNS rate here: null 2.272e-05 Hz vs real 0.006162 Hz, see the report), so a silent readout on it says little about wiring specificity; the degree-corrected null distribution (benchmarks/null_distribution.py) is the informative version."
     },
     "S2_pc1_null_silent_superclass": {
       "estimate": 0.0,
@@ -165,15 +165,16 @@
       "method": "bootstrap",
       "verdict": "PASS",
       "n": 10,
-      "note": "pMP2 per pulse under pC1_14a at 100 Hz on the superclass null, bootstrap over pulses. The superclass null is nearly silent on the real data (whole-CNS rate here: null 0.0001109 Hz vs real 0.01188 Hz, see the report), so a silent readout on it says little about wiring specificity; the degree-corrected null distribution (benchmarks/null_distribution.py) is the informative version."
+      "note": "pMP2 per pulse under pC1_14a at 100 Hz on the superclass null, bootstrap over pulses. The superclass null is nearly silent on the real data (whole-CNS rate here: null 0.0003892 Hz vs real 0.01917 Hz, see the report), so a silent readout on it says little about wiring specificity; the degree-corrected null distribution (benchmarks/null_distribution.py) is the informative version."
     }
   },
   "registration": {
-    "file": "results/null_strict/registration.json",
-    "version": 2,
-    "git_commit": "4c39a8f",
-    "model_hash": "f2be9db1f4f29e0cb155e94f11524403d72bdf24c2d1f1f4ff8152f3d2d660d8",
-    "registered_at": "2026-10-11T12:41:11",
+    "file": "results/null_strict/registration_v3.json",
+    "version": 3,
+    "supersedes": "results/null_strict/registration.json",
+    "git_commit": "a94769d",
+    "model_hash": "429f5cd3bc80e92b75a56c64b051dc0acb17138e66be0d95d15907d23641410a",
+    "registered_at": "2026-10-11T21:41:48",
     "matches": true,
     "problems": []
   }
