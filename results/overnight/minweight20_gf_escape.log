@@ -14,48 +14,55 @@
   [brain] ........................................ neck ........ [VNC]
 loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09); peak rate 5.0 Hz; gain sigma 0.357
 [graph] removed 626 EM chemical synapses on declared mixed pairs (modelled as electrical)
-  per trial GF/TTMn spikes: 1/1 0/0 1/1 2/2 0/0 2/2 7/7 2/2 0/0 0/0 0/0 0/0 0/0 1/1 0/0 0/0 0/0 0/0 1/1 3/3 0/0 4/4 1/1 2/2 1/1 1/1 0/0 0/0 2/2 1/1 0/0 0/0 1/1 0/0 1/1 2/2 0/0 1/1 0/0 6/6
+  per trial GF/TTMn spikes: 3/3 2/2 4/4 2/2 0/0 4/4 5/5 4/4 0/0 1/1 1/1 3/3 0/0 2/2 0/0 1/1 1/1 2/2 4/4 4/4 1/1 4/4 1/1 2/2 2/2 4/4 0/0 0/0 2/2 3/3 0/0 1/1 1/1 2/2 5/5 4/4 0/0 2/2 2/2 6/6
   raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
-  t0  DNp01  ........|.....................
-  t0  TTMn   ........|.....................
-  t0  CNS    .13344444343343421............   (log2 spikes/bin, 9 = flood)
+  t0  DNp01  .......|.....|....|...........
+  t0  TTMn   .......|.....|.....|..........
+  t0  CNS    .23454444444344433122.........   (log2 spikes/bin, 9 = flood)
 
-  t1  DNp01  ..............................
-  t1  TTMn   ..............................
-  t1  CNS    .234433334343331..............   (log2 spikes/bin, 9 = flood)
+  t1  DNp01  ..............||..............
+  t1  TTMn   ..............||..............
+  t1  CNS    .2354333434444432.1...........   (log2 spikes/bin, 9 = flood)
 
-  t2  DNp01  ...........|..................
-  t2  TTMn   ...........|..................
-  t2  CNS    ..334443444443322.............   (log2 spikes/bin, 9 = flood)
+  t2  DNp01  .......#..|.....|.............
+  t2  TTMn   .......||.|.....|.............
+  t2  CNS    .14545554444444443321.........   (log2 spikes/bin, 9 = flood)
 
   region activity (spikes per neuron over 40 stimulus windows):
-  visual_centrifugal     ######################################## 1.870
-  vnc_efferent           #########                                0.457
-  cb_intrinsic           ####                                     0.220
-  descending_neuron      #                                        0.079
-  vnc_motor              #                                        0.068
+  efferent_ascending     ######################################## 3.250
+  visual_centrifugal     #############################            2.358
+  vnc_efferent           ###########                              0.904
+  descending_neuron      ####                                     0.333
+  cb_intrinsic           ###                                      0.313
+  vnc_motor              ##                                       0.222
+  ascending_neuron                                                0.064
+  vnc_intrinsic                                                   0.004
   visual_projection                                               0.000
-[real_electrical] GF 0.54/cell hit 0.53 (95% CI 0.37-0.67) lat 40.1 ms | TTMn 0.54/cell lag 0.90 ms | pop 0.0037 Hz | 166.6s
-  per trial GF/TTMn spikes: 1/0 0/0 2/0 2/0 0/0 2/0 7/0 2/0 0/0 0/0 1/0 1/0 0/0 1/0 0/0 0/0 1/0 1/0 1/0 3/0 1/0 4/0 1/0 2/0 2/0 1/0 0/0 0/0 2/0 1/0 1/0 1/0 1/0 1/0 1/0 2/0 0/0 1/0 0/0 7/0
+[real_electrical] GF 1.06/cell hit 0.80 (95% CI 0.65-0.90) lat 35.5 ms | TTMn 1.06/cell lag 0.90 ms | pop 0.0055 Hz | 279.5s
+  per trial GF/TTMn spikes: 3/0 2/0 4/0 2/0 0/0 4/0 5/0 4/0 0/0 1/0 1/0 3/0 0/0 2/0 0/0 1/0 1/0 2/0 4/0 4/0 1/0 4/0 1/0 2/0 2/0 4/0 0/0 0/0 2/0 3/0 0/0 1/0 1/0 2/0 5/0 4/0 0/0 2/0 2/0 6/0
   raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
-  t0  DNp01  .......|......................
+  t0  DNp01  ......|......|.....|..........
   t0  TTMn   ..............................
-  t0  CNS    .13344443343343421............   (log2 spikes/bin, 9 = flood)
+  t0  CNS    .23454444444344433122.........   (log2 spikes/bin, 9 = flood)
 
-  t1  DNp01  ..............................
+  t1  DNp01  ..............||..............
   t1  TTMn   ..............................
-  t1  CNS    .234433334343331..............   (log2 spikes/bin, 9 = flood)
+  t1  CNS    .2354333434444332.1...........   (log2 spikes/bin, 9 = flood)
 
-  t2  DNp01  ..........||..................
+  t2  DNp01  .......#..|.....|.............
   t2  TTMn   ..............................
-  t2  CNS    ..334443444443322.............   (log2 spikes/bin, 9 = flood)
+  t2  CNS    .14545544444444443321.........   (log2 spikes/bin, 9 = flood)
 
   region activity (spikes per neuron over 40 stimulus windows):
-  visual_centrifugal     ######################################## 1.870
-  cb_intrinsic           ####                                     0.220
-  descending_neuron      #                                        0.087
+  efferent_ascending     ######################################## 3.250
+  visual_centrifugal     #############################            2.358
+  descending_neuron      ####                                     0.333
+  cb_intrinsic           ###                                      0.313
+  vnc_motor              #                                        0.088
+  ascending_neuron                                                0.064
+  vnc_intrinsic                                                   0.004
   visual_projection                                               0.000
-[real_chemical_only] GF 0.68/cell hit 0.72 (95% CI 0.57-0.84) lat 38.7 ms | TTMn 0.00/cell lag nan ms | pop 0.0037 Hz | 161.0s
+[real_chemical_only] GF 1.06/cell hit 0.80 (95% CI 0.65-0.90) lat 34.5 ms | TTMn 0.00/cell lag nan ms | pop 0.0054 Hz | 269.1s
   per trial GF/TTMn spikes: 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0
   raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
   t0  DNp01  ..............................
@@ -68,13 +75,14 @@ loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pa
 
   t2  DNp01  ..............................
   t2  TTMn   ..............................
-  t2  CNS    ....1........1................   (log2 spikes/bin, 9 = flood)
+  t2  CNS    ...1....1....1................   (log2 spikes/bin, 9 = flood)
 
   region activity (spikes per neuron over 40 stimulus windows):
-  visual_projection      ######################################## 0.000
-  cb_intrinsic           ###########################              0.000
-  ol_intrinsic           ###                                      0.000
-[rewired_null] GF 0.00/cell hit 0.00 (95% CI -0.00-0.09) lat nan ms | TTMn 0.00/cell lag nan ms | pop 0.0000 Hz | 182.3s
+  cb_intrinsic           ######################################## 0.001
+  visual_projection      ###########################              0.001
+  ol_intrinsic           #########                                0.000
+  vnc_intrinsic          ###                                      0.000
+[rewired_null] GF 0.00/cell hit 0.00 (95% CI -0.00-0.09) lat nan ms | TTMn 0.00/cell lag nan ms | pop 0.0000 Hz | 295.6s
 
 CHECKS
   PASS  gf_spikes_per_response_1_to_2
@@ -87,13 +95,13 @@ CHECKS
   PASS  null_silent
 
 UNCERTAINTY (95% interval; PASS only if the whole interval lies in the band)
-  PASS        gf_spikes_per_response_1_to_2: 1.286 [1.048, 1.595] band [1, 2] (bootstrap)
-  UNRESOLVED  gf_response_prob_0.5_to_1: 0.525 [0.375, 0.6706] band [0.5, 1] (wilson)
-  PASS        gf_latency_10_60ms: 40.05 [34.77, 45.38] band [10, 60] (bootstrap)
+  PASS        gf_spikes_per_response_1_to_2: 1.453 [1.266, 1.656] band [1, 2] (bootstrap)
+  PASS        gf_response_prob_0.5_to_1: 0.8 [0.6524, 0.895] band [0.5, 1] (wilson)
+  PASS        gf_latency_10_60ms: 35.45 [31.21, 39.95] band [10, 60] (bootstrap)
   PASS        ttmn_one_to_one: 1 [1, 1] band [0.8, 1.2] (bootstrap (ratio of sums))
   PASS        ttmn_lag_0.5_1.5ms: 0.9 [0.9, 0.9] band [0.5, 1.5] (bootstrap)
-  PASS        cns_quiet: 0.003729 (point)
-  PASS        electrical_necessary: -0.05375 [-0.08125, -0.03125] band [-, 0] (bootstrap (two independent arms))
+  PASS        cns_quiet: 0.005513 (point)
+  PASS        electrical_necessary: -0.1062 [-0.1325, -0.08125] band [-, 0] (bootstrap (two independent arms))
   PASS        null_silent: 0 [0, 0.08762] band [-, 0.1] (wilson)
 
 BENCHMARK PASS  -> results\gf_escape/report.json
