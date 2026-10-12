@@ -1,0 +1,61 @@
+[fingerprint] pc1-song: benchmarks/pc1_song.py 2
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! pc1_song: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! the criteria in the code differ from the registered ones
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+pC1/pC1x types present (49): ['pC1_10a', 'pC1_10b', 'pC1_10c', 'pC1_10d', 'pC1_11a', 'pC1_11b', 'pC1_12a', 'pC1_12b', 'pC1_13a', 'pC1_13b', 'pC1_13c', 'pC1_14a', 'pC1_14b', 'pC1_15a', 'pC1_15b', 'pC1_15c', 'pC1_16a', 'pC1_16b', 'pC1_17a', 'pC1_17b', 'pC1_18a', 'pC1_18b', 'pC1_19', 'pC1_1a', 'pC1_1b', 'pC1_2a', 'pC1_2a/2b', 'pC1_2b', 'pC1_2c', 'pC1_3a', 'pC1_3b', 'pC1_3c', 'pC1_4a', 'pC1_4b', 'pC1_5a', 'pC1_5b', 'pC1_6a', 'pC1_6b', 'pC1_7a', 'pC1_7b', 'pC1_8a', 'pC1_8b', 'pC1_8c', 'pC1_9a', 'pC1_9b', 'pC1x_a', 'pC1x_b', 'pC1x_c', 'pC1x_d']
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! pc1_song: RUNNING ON UNCOMMITTED CODE (FLYCNS_ALLOW_DIRTY=1)
+! 11 code file(s) differ from commit caf6c85: D results/a2_registered/criteria.json, D results/a2_robustness/criteria.json, D results/dnp13_control/criteria.json, D results/feeding_by_modality/criteria.json, D results/flight_snpp16_graded/criteria.json, D results/flight_snpp16_robustness/criteria.json, D results/gustatory_signed_map/criteria.json, D results/null_strict/criteria.json ...
+! The report is stamped dirty and must not be quoted as a registered result.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+criteria registered at commit caf6c85; this run at caf6c85
+
+static signed influence (cumulative hops 1-4):
+  pC1_14a    (  6 cells) pMP2 +1.32e-01  DNp13 +9.25e-03  pIP10 +5.98e-02
+  pC1_13_14  ( 10 cells) pMP2 +1.77e-01  DNp13 +1.38e-02  pIP10 +7.30e-02
+  pC1_15_16  ( 20 cells) pMP2 -2.91e-02  DNp13 -1.52e-02  pIP10 +1.45e-02
+  P1a        ( 12 cells) pMP2 +2.10e-03  DNp13 +8.88e-03  pIP10 +4.64e-03
+  pC1_17     (  8 cells) pMP2 +9.69e-04  DNp13 +1.02e-02  pIP10 +5.67e-03
+
+dynamic (spikes per cell per 200 ms pulse):
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  pC1_14a       50 Hz | pMP2  3.50  DNp13  0.00  pIP10  2.50 | CNS 0.0088 Hz | 67s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  pC1_14a      100 Hz | pMP2  8.50  DNp13  0.00  pIP10  6.00 | CNS 0.0160 Hz | 56s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  pC1_13_14     50 Hz | pMP2  3.50  DNp13  0.00  pIP10  1.75 | CNS 0.0087 Hz | 18s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  pC1_13_14    100 Hz | pMP2 11.00  DNp13  0.00  pIP10  6.25 | CNS 0.0178 Hz | 18s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  pC1_15_16     50 Hz | pMP2  0.00  DNp13  0.00  pIP10  1.25 | CNS 0.0028 Hz | 18s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  pC1_15_16    100 Hz | pMP2  0.00  DNp13  0.00  pIP10  2.25 | CNS 0.0089 Hz | 18s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  P1a           50 Hz | pMP2  0.00  DNp13  0.00  pIP10  0.00 | CNS 0.0006 Hz | 18s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  P1a          100 Hz | pMP2  0.00  DNp13  0.00  pIP10  0.00 | CNS 0.0071 Hz | 17s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  pC1_17        50 Hz | pMP2  0.00  DNp13  0.00  pIP10  0.25 | CNS 0.0006 Hz | 18s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  pC1_17       100 Hz | pMP2  0.00  DNp13  0.00  pIP10  0.25 | CNS 0.0031 Hz | 17s
+  null pC1_14a 100 Hz | pMP2  0.00  DNp13  0.00  pIP10  0.00
+
+CHECKS (criteria registered before the run)
+  PASS  P1_pc1_14a_pulse_over_sine
+  PASS  P2_pc1_13_14_pulse_over_sine
+  PASS  P3_14a_exceeds_15_16_on_pulse
+  PASS  P4_null_silent
+UNCERTAINTY (95% intervals, flycns/stats.py: PASS only if the whole interval lies in the band)
+  UNRESOLVED  P1_pc1_14a_pulse_over_sine: PASS 8.5 [7, 10] in [0.5, inf] (bootstrap); UNRESOLVED 8.5 (not scorable as designed): DNp13 is silent in every arm (0 spikes in every pulse of every group and rate on the real network), so 'pMP2 > DNp13' adds nothing to 'pMP2 >= 0.5' and cannot show a pulse-over-sine choice; benchmarks/dnp13_control.py tests whether DNp13 is reachable
+  UNRESOLVED  P2_pc1_13_14_pulse_over_sine: PASS 11 [10.5, 11.5] in [0.5, inf] (bootstrap); UNRESOLVED 11 (not scorable as designed): DNp13 is silent in every arm (0 spikes in every pulse of every group and rate on the real network), so 'pMP2 > DNp13' adds nothing to 'pMP2 >= 0.5' and cannot show a pulse-over-sine choice; benchmarks/dnp13_control.py tests whether DNp13 is reachable
+  PASS        P3_14a_exceeds_15_16_on_pulse: 8.5 [7, 10] in (0, inf] (bootstrap)
+  PASS        P4_null_silent: 0 [0, 0] in [-inf, 0.1] (bootstrap)
+wrote results\pc1_song\report.json
+[fingerprint] pc1-song: 55 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\pc1-song.jsonl
