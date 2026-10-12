@@ -18,206 +18,156 @@
     {
       "gain": 0.4,
       "n": 100,
-      "k_alone": 0,
-      "k_sound": 13,
-      "p_alone": 0.0,
-      "p_sound": 0.13,
-      "difference": 0.13,
+      "k_alone": 6,
+      "k_sound": 10,
+      "p_alone": 0.06,
+      "p_sound": 0.1,
+      "difference": 0.04000000000000001,
       "ci": [
-        0.0658328568414162,
-        0.2098052189480988
+        -0.03873751089240339,
+        0.12104476643767766
       ],
       "near_threshold": true,
-      "facilitation": true,
-      "depol_alone_mV": 2.908603006718337
+      "facilitation": false,
+      "depol_alone_mV": 3.8025582122403527
     },
     {
       "gain": 0.5,
       "n": 100,
-      "k_alone": 0,
-      "k_sound": 22,
-      "p_alone": 0.0,
-      "p_sound": 0.22,
-      "difference": 0.22,
+      "k_alone": 16,
+      "k_sound": 13,
+      "p_alone": 0.16,
+      "p_sound": 0.13,
+      "difference": -0.03,
       "ci": [
-        0.14083579335953522,
-        0.31070534715000303
+        -0.12919271716153963,
+        0.0692750547757092
       ],
       "near_threshold": true,
-      "facilitation": true,
-      "depol_alone_mV": 3.519096279398962
+      "facilitation": false,
+      "depol_alone_mV": 4.495113649358234
     },
     {
       "gain": 0.6,
       "n": 100,
-      "k_alone": 0,
-      "k_sound": 31,
-      "p_alone": 0.0,
-      "p_sound": 0.31,
-      "difference": 0.31,
+      "k_alone": 31,
+      "k_sound": 17,
+      "p_alone": 0.31,
+      "p_sound": 0.17,
+      "difference": -0.13999999999999999,
       "ci": [
-        0.21985470678741065,
-        0.40626239477955695
+        -0.253997421514487,
+        -0.021405319054698516
       ],
-      "near_threshold": true,
-      "facilitation": true,
-      "depol_alone_mV": 4.128959270555259
+      "near_threshold": false,
+      "facilitation": false,
+      "depol_alone_mV": 5.108680205093507
     },
     {
       "gain": 0.7,
       "n": 100,
-      "k_alone": 10,
-      "k_sound": 39,
-      "p_alone": 0.1,
-      "p_sound": 0.39,
-      "difference": 0.29000000000000004,
+      "k_alone": 49,
+      "k_sound": 27,
+      "p_alone": 0.49,
+      "p_sound": 0.27,
+      "difference": -0.21999999999999997,
       "ci": [
-        0.17337914233008106,
-        0.39771687612521495
+        -0.343663017087798,
+        -0.08557171936795366
       ],
-      "near_threshold": true,
-      "facilitation": true,
-      "depol_alone_mV": 4.651013258938145
+      "near_threshold": false,
+      "facilitation": false,
+      "depol_alone_mV": 5.65956196270217
     },
     {
       "gain": 0.8,
       "n": 100,
-      "k_alone": 18,
-      "k_sound": 50,
-      "p_alone": 0.18,
-      "p_sound": 0.5,
-      "difference": 0.32,
+      "k_alone": 80,
+      "k_sound": 41,
+      "p_alone": 0.8,
+      "p_sound": 0.41,
+      "difference": -0.39000000000000007,
       "ci": [
-        0.1905344835792031,
-        0.43496754318666403
+        -0.503053006275494,
+        -0.2577408269592289
       ],
-      "near_threshold": true,
-      "facilitation": true,
-      "depol_alone_mV": 5.163817064906652
+      "near_threshold": false,
+      "facilitation": false,
+      "depol_alone_mV": 6.175332641376534
     }
   ],
-  "n_qualifying": 5,
+  "n_qualifying": 2,
   "checks": {
-    "RA2_facilitation_at_every_near_threshold_gain": true
+    "RA2_facilitation_at_every_near_threshold_gain": false
   },
-  "wall_s": 10521,
+  "wall_s": 10614,
   "uncertainty": {
     "RA2_facilitation_at_every_near_threshold_gain": {
       "estimate": null,
       "ci95": null,
       "band": null,
-      "method": "all of 6 parts",
+      "method": "all of 3 parts",
       "parts": [
         {
-          "estimate": 5.0,
+          "estimate": 2.0,
           "ci95": null,
           "band": null,
           "method": "point",
-          "verdict": "PASS",
+          "verdict": "FAIL",
           "note": "number of grid gains that qualify as near-threshold (loom-alone GF probability <= 0.3 on the point estimate, the registered definition); at least 3 must qualify. A count under a registered definition, scored on its value, not resampled"
         },
         {
-          "estimate": 0.13,
+          "estimate": 0.04000000000000001,
           "ci95": [
-            0.0658328568414162,
-            0.2098052189480988
+            -0.03873751089240339,
+            0.12104476643767766
           ],
           "band": [
             0,
             null
           ],
           "method": "newcombe (as registered)",
-          "verdict": "PASS",
+          "verdict": "UNRESOLVED",
           "band_lower_exclusive": true,
           "n": 100,
           "note": "gain 0.4: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 recomputed from counts (n per arm)",
           "gain": 0.4
         },
         {
-          "estimate": 0.22,
+          "estimate": -0.03,
           "ci95": [
-            0.14083579335953522,
-            0.31070534715000303
+            -0.12919271716153963,
+            0.0692750547757092
           ],
           "band": [
             0,
             null
           ],
           "method": "newcombe (as registered)",
-          "verdict": "PASS",
+          "verdict": "UNRESOLVED",
           "band_lower_exclusive": true,
           "n": 100,
           "note": "gain 0.5: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 recomputed from counts (n per arm)",
           "gain": 0.5
-        },
-        {
-          "estimate": 0.31,
-          "ci95": [
-            0.21985470678741065,
-            0.40626239477955695
-          ],
-          "band": [
-            0,
-            null
-          ],
-          "method": "newcombe (as registered)",
-          "verdict": "PASS",
-          "band_lower_exclusive": true,
-          "n": 100,
-          "note": "gain 0.6: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 recomputed from counts (n per arm)",
-          "gain": 0.6
-        },
-        {
-          "estimate": 0.29000000000000004,
-          "ci95": [
-            0.17337914233008106,
-            0.39771687612521495
-          ],
-          "band": [
-            0,
-            null
-          ],
-          "method": "newcombe (as registered)",
-          "verdict": "PASS",
-          "band_lower_exclusive": true,
-          "n": 100,
-          "note": "gain 0.7: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 recomputed from counts (n per arm)",
-          "gain": 0.7
-        },
-        {
-          "estimate": 0.32,
-          "ci95": [
-            0.1905344835792031,
-            0.43496754318666403
-          ],
-          "band": [
-            0,
-            null
-          ],
-          "method": "newcombe (as registered)",
-          "verdict": "PASS",
-          "band_lower_exclusive": true,
-          "n": 100,
-          "note": "gain 0.8: P(GF|loom+sound) - P(GF|loom), Newcombe 1998 method 10 recomputed from counts (n per arm)",
-          "gain": 0.8
         }
       ],
-      "verdict": "PASS",
+      "verdict": "FAIL",
       "note": "RA2 as registered: >= 3 near-threshold gains, and at every one the 95% CI on the difference lies above zero"
     }
   },
   "registration": {
-    "file": "results/a2_robustness/registration.json",
-    "version": 2,
-    "git_commit": "4c39a8f",
-    "model_hash": "b4d8895c47c2f378139ceb9760a73360bf0c8459f1b967c8772c542ac1464e8a",
-    "registered_at": "2026-10-11T12:41:14",
+    "file": "results/a2_robustness/registration_v3.json",
+    "version": 3,
+    "supersedes": "results/a2_robustness/registration.json",
+    "git_commit": "a94769d",
+    "model_hash": "c2787de1551c2b64a34292c58be0a79e6199bbbc5bc8626e0e3e885ecd8f40e1",
+    "registered_at": "2026-10-11T21:41:52",
     "matches": true,
     "problems": []
   },
   "provenance": {
-    "written_at": "2026-10-11T22:48:03",
-    "git_commit": "b7eba83",
+    "written_at": "2026-10-12T07:53:36",
+    "git_commit": "47eb98e",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
