@@ -1,0 +1,16 @@
+[fingerprint] check-jon-calibration: fit/check_jon_calibration.py 4
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+sound alone: 11 JO types at 150 Hz, 60 ms pulses, 4 trials; target 3.0 mV steady state, 2.76 mV expected over the plateau window (charging factor 0.920)
+  [electrical only] GF 10001 (R): plateau 2.72 mV, peak 3.71 mV, fired on 0/4 trials
+  [electrical only] GF 10010 (L): plateau 2.76 mV, peak 3.22 mV, fired on 0/4 trials
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  [network] GF 10001 (R): plateau -18.75 mV, peak 1.46 mV, fired on 0/4 trials
+  [network] GF 10010 (L): plateau -4.25 mV, peak 3.41 mV, fired on 0/4 trials
+
+PASS: GF 10001 (R) 6 afferents, plateau 2.72 mV (want 2.76); GF 10010 (L) 21 afferents, plateau 2.76 mV (want 2.76)
+[fingerprint] check-jon-calibration: 18 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\check-jon-calibration.jsonl
