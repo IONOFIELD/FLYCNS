@@ -3,6 +3,10 @@ name: real-data rerun
 # repository secret NEUPRINT_TOKEN. Start them by pushing a branch:
 #   rerun/<label>             every rerun listed in RERUNS below
 #   rerun/<label>--a+b        only the named ones, e.g. rerun/2026-10-11--flight-robustness+core
+#   fingerprint/<label>[--a+b]  the identity check (scripts/fingerprint.py): every rerun with a few trials,
+#                 recording a fingerprint of every simulation; each job pushes fingerprints/<job>.jsonl to
+#                 fingerprint-out/<run number>/<job>. Compare two such runs with scripts/fingerprint.py compare.
+#                 Use one long-lived branch (e.g. fingerprint/gate) so its data cache is reused.
 #
 #   data          setup.cmd as a user runs it: environment, connectome from neuPrint (about 6 minutes),
 #                 checked against the committed data/MANIFEST.json. The tables (never the manifest)
@@ -13,7 +17,7 @@ name: real-data rerun
 #                 the maintainer has reviewed and merged it.
 on:
   push:
-    branches: ["rerun/**"]
+    branches: ["rerun/**", "fingerprint/**"]
 
 permissions:
   contents: read       # jobs that push their own rerun-out branch ask for write themselves
@@ -102,6 +106,11 @@ jobs:
           $bad = @($only | Where-Object { $_ -notin $all.name })
           if ($bad) { Write-Host "::error title=rerun::unknown: $($bad -join ', '). Choose from: $($all.name -join ', ')"; exit 1 }
           $sel = @($all | Where-Object { if ($only) { $_.name -in $only } else { -not $_.manual } })
+          if ("${{ github.ref_name }}".StartsWith("fingerprint/")) {
+            # identity check: the same jobs, each reduced to a few trials with fingerprints recorded
+            $sel = @($sel | Where-Object { -not $_.manual } | ForEach-Object {
+              [pscustomobject]@{ name = $_.name; run = "scripts/fingerprint.py run $($_.name)"; nt = [bool]$_.nt; fp = $true } })
+          }
           "matrix=" + (ConvertTo-Json -Compress -Depth 4 @{ include = $sel }) >> $env:GITHUB_OUTPUT
           "nt=" + ([bool]@($sel | Where-Object nt).Count).ToString().ToLower() >> $env:GITHUB_OUTPUT
           Write-Host "::notice title=rerun::$($sel.Count) rerun(s): $($sel.name -join ', ')"
@@ -214,6 +223,7 @@ jobs:
       - shell: cmd
         run: setup.cmd
       - name: own branch (scripts that commit and push, like menu 51 and the battery, push here)
+        if: ${{ !matrix.fp }}
         shell: pwsh
         run: |
           git config --global user.name "flycns rerun"; git config --global user.email "flycns-rerun@users.noreply.github.com"
@@ -233,8 +243,18 @@ jobs:
           }
           $done = (Get-Content ci-log.txt | Select-String "PASS|FAIL|checks pass|done:" | Select-Object -Last 3) -join " | "
           Write-Host "::notice title=${{ matrix.name }}::$done"
+      - name: push fingerprints to fingerprint-out/${{ github.run_number }}/${{ matrix.name }}
+        if: ${{ always() && matrix.fp }}
+        shell: pwsh
+        run: |
+          git config user.name "flycns fingerprint"; git config user.email "flycns-fingerprint@users.noreply.github.com"
+          git checkout -q -B "fingerprint-out/${{ github.run_number }}/${{ matrix.name }}"
+          if (Test-Path fingerprints) { git add -f -- fingerprints }
+          if (Test-Path ci-log.txt) { git add -f -- ci-log.txt }
+          git commit -qm "identity check: ${{ matrix.name }} (Actions run ${{ github.run_id }})"
+          git push -q -f origin "HEAD:refs/heads/fingerprint-out/${{ github.run_number }}/${{ matrix.name }}"
       - name: push results to rerun-out/${{ github.run_number }}/${{ matrix.name }}
-        if: always()
+        if: ${{ always() && !matrix.fp }}
         shell: pwsh
         run: |
           git add -A -- results

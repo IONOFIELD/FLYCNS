@@ -1133,6 +1133,66 @@ def t_token_private(tmp):
     return ok, ("only the current user has access; nothing inherited" if ok else f"icacls: {out.strip()[:300]}")
 
 
+_FP_RUN = """
+import sys, json, hashlib, numpy as np
+sys.path.insert(0, sys.argv[1])
+from flycns import CNSModel, LIFParams, load_graph
+neurons, edges = load_graph(sys.argv[2])
+m = CNSModel(neurons, edges, ["LC4", "LPLC2"], LIFParams(w_scale=float(sys.argv[3])), electrical=True)
+m.store()
+for k in range(2):
+    m.restore()
+    m.set_stim_rates(np.full(len(m.stim), 40.0))
+    m.run(100)
+    m.run(50)
+f = m.spike_frame().sort_values(["t_ms", "bodyId"])
+print(json.dumps(dict(n=len(f), h=hashlib.sha256(f[["t_ms", "bodyId"]].to_numpy().tobytes()).hexdigest())))
+"""
+
+
+def t_identity_check(tmp):
+    """The identity check (scripts/fingerprint.py): its hook gives the same fingerprints twice, changes no
+    simulated spike, and tells a weight scale differing in the 7th digit apart (through the neuron state even
+    where no spike moves); and every job of the cloud rerun has a reduced command whose script exists."""
+    d = tmp / "idcheck"; d.mkdir()
+    subprocess.run([sys.executable, str(ROOT / "scripts/make_testdata.py")], cwd=d, capture_output=True, check=True)
+    base = {k: v for k, v in os.environ.items() if not k.startswith("FLYCNS_") or k == "FLYCNS_CODEGEN"}
+    logs, outs = [], []
+    for k, (w, hook) in enumerate((("0.4", True), ("0.4", True), ("0.4000001", True), ("0.4", False))):
+        log = d / f"fp{k}.jsonl"
+        env = dict(base, **({"FPRINT_LOG": str(log), "PYTHONPATH": str(ROOT / "scripts" / "fingerprint")} if hook else {}))
+        r = subprocess.run([sys.executable, "-c", _FP_RUN, str(ROOT), str(d / "testdata"), w], cwd=d,
+                           capture_output=True, text=True, encoding="utf-8", errors="replace", env=env)
+        if r.returncode != 0:
+            return False, r.stderr.strip()[-300:]
+        outs.append(json.loads(r.stdout.strip().splitlines()[-1]))
+        logs.append([json.loads(x) for x in log.read_text(encoding="utf-8").splitlines()] if hook else [])
+    runs = [[x for x in lg if x["kind"] == "run"] for lg in logs[:3]]
+    same_twice = logs[0] == logs[1] and len(runs[0]) == 4 and any(x["kind"] == "net" for x in logs[0])
+    unchanged = outs[0] == outs[3] and outs[0]["n"] > 0
+    told_apart = [x["state"] for x in runs[0]] != [x["state"] for x in runs[2]]
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("flycns_fingerprint", ROOT / "scripts" / "fingerprint.py")
+    fp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(fp)
+    wf = (ROOT / ".github/workflows/rerun.yml").read_text(encoding="utf-8")
+    jobs = re.findall(r'\{"name": "([^"]+)"[^}]*\}', wf.split("RERUNS: |", 1)[1].split("\n\n", 1)[0])
+    manual = set(re.findall(r'\{"name": "([^"]+)"[^}]*"manual": true', wf))
+    missing = []
+    for job in jobs:
+        if job in manual:
+            continue
+        try:
+            missing += [f"{job}: {c[0]}" for c, _ in fp.commands(job) if not (ROOT / c[0]).exists()]
+        except SystemExit as e:
+            missing.append(f"{job}: {e}")
+    ok = same_twice and unchanged and told_apart and not missing and len(jobs) > 40
+    return ok, (f"same fingerprints twice ({len(runs[0])} steps), spikes unchanged by the hook ({outs[0]['n']}), "
+                f"w_scale +1e-7 told apart; all {len(jobs) - len(manual)} rerun jobs have a reduced command" if ok else
+                f"same_twice {same_twice} unchanged {unchanged} ({outs[0]} vs {outs[3]}) told_apart {told_apart} "
+                f"missing {missing[:5]} jobs {len(jobs)}")
+
+
 def t_neutral_wording():
     """User-facing messages ask for help neutrally; none tells the user to send output to a named assistant."""
     bad = []
@@ -1187,6 +1247,7 @@ def run_all():
                          ("registration freezes the model", lambda: t_registry_freezes_model(tmp)),
                          ("a refrozen model registers a new generation", lambda: t_registry_generations(tmp)),
                          ("results go to a review branch only", lambda: t_review_branch(tmp)),
+                         ("identity check is exact and complete", lambda: t_identity_check(tmp)),
                          ("menu input guards", lambda: t_menu_guards(tmp)),
                          ("token file is private", lambda: t_token_private(tmp)),
                          ("messages use neutral wording", t_neutral_wording)]:

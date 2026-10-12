@@ -22,3 +22,4 @@ results/**/*.parquet
 results/**/*.html
 overnight*.log
 *.log
+fingerprints/
