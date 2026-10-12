@@ -3,15 +3,17 @@ Where menu 51 (scripts/canonical_rerun.py) and the robustness battery (scripts/o
 results they commit: a NEW review branch, never the branch you work on. A result reaches main only
 through a pull request that someone has looked at.
 
-  confirm_remote()        before any long run: the remote exists and answers; says where results go
+  confirm_remote()        before any long run: the remote exists, answers and would accept the push
+                          (a dry run); says where results go
   open_review_branch()    switch to review/<label>-<time> (or stay on a branch that already is one:
                           review/* here, rerun-out/* in the cloud rerun)
-  push_review()           push that branch, and only that branch
+  push_review()           push that branch, and only that branch (git's message shown on failure; one retry)
   close_review_branch()   switch back to the branch you were on
 
 Your own branch is never pushed and never gets the result commits. After a run, open the pull request
 the script prints, merge it, and update (menu option 51 updates first; or `git pull`).
 """
+import os
 import re
 import subprocess
 import time
@@ -24,16 +26,27 @@ def git(*args):
     return subprocess.run(["git", *args], capture_output=True, text=True, encoding="utf-8", errors="replace")
 
 
+def _why(r):
+    """git's own message, on one line (it says why a push or a fetch was refused)."""
+    return " ".join((r.stderr or r.stdout or "no message").split())[:300]
+
+
 def confirm_remote(remote=REMOTE):
-    """(url, None) if the remote is configured and reachable, else (None, why). Checked before a long run,
-    so an hour of simulation never ends in a push that cannot happen."""
+    """(url, None) if the remote is configured, answers and accepts a push from here, else (None, why).
+    Checked before a long run, so an hour of simulation never ends in a push that cannot happen. The push
+    check is a dry run (nothing is sent) to a new review branch name: it needs the same sign-in and write
+    access as the real push at the end."""
     r = git("remote", "get-url", remote)
     url = r.stdout.strip()
     if r.returncode != 0 or not url:
         return None, f"this checkout has no git remote named {remote!r}; results would have nowhere to go"
     r = git("ls-remote", "--heads", remote)
     if r.returncode != 0:
-        return None, f"the remote {remote} ({url}) does not answer: {(r.stderr or r.stdout).strip()[:200]}"
+        return None, f"the remote {remote} ({url}) does not answer: {_why(r)}"
+    probe = f"review/push-check-{time.strftime('%Y%m%d-%H%M%S')}-{os.getpid()}"   # a name no branch has
+    r = git("push", "--dry-run", "-q", remote, f"HEAD:refs/heads/{probe}")
+    if r.returncode != 0:
+        return None, f"the remote {remote} ({url}) answers but would refuse the results: {_why(r)}"
     return url, None
 
 
@@ -63,11 +76,19 @@ def open_review_branch(label):
     return name, back
 
 
-def push_review(branch, remote=REMOTE):
-    """Push the review branch (never any other). True on success."""
+def push_review(branch, remote=REMOTE, retry_after_s=15):
+    """Push the review branch (never any other). True on success. A failed push prints git's own message
+    and is tried once more (a connection that drops for a moment should not cost the run)."""
     if not is_review_branch(branch):
         raise ValueError(f"refusing to push {branch!r}: results go to a review branch only")
-    return git("push", "-q", "-u", remote, f"HEAD:refs/heads/{branch}").returncode == 0
+    for attempt in (1, 2):
+        r = git("push", "-q", "-u", remote, f"HEAD:refs/heads/{branch}")
+        if r.returncode == 0:
+            return True
+        print(f"  push of {branch} failed (attempt {attempt} of 2): {_why(r)}", flush=True)
+        if attempt == 1:
+            time.sleep(retry_after_s)
+    return False
 
 
 def close_review_branch(back):

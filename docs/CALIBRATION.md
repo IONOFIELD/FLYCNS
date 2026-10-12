@@ -99,6 +99,8 @@ the generation-3 freeze:
 - **Two frozen code comments corrected** (the errata listed above).
 - **Expected:** every number of generation 3 reproduces exactly; the generation-4 run is scored as a
   replication of run 14, not as a new result.
+- **Result (run 18, 58 jobs at `bd631a2`):** reproduced. Every result is numerically identical to run
+  14's apart from run times; 61 of 61 suite rows give the same verdict.
 
 **Generation 5, phase 1 (Shiu et al. 2024 positive control), 12 October 2026. No default changed.**
 - **New options, off by default:** `flycns.model.SimOptions` (reset of v and g with g frozen while

@@ -39,7 +39,7 @@ loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pa
   vnc_intrinsic                                                   0.010
   ol_intrinsic                                                    0.001
   visual_projection                                               0.000
-[real_electrical] GF 1.27/cell hit 0.80 (95% CI 0.65-0.90) lat 38.5 ms | TTMn 1.27/cell lag 0.90 ms | pop 0.0061 Hz | 321.8s
+[real_electrical] GF 1.27/cell hit 0.80 (95% CI 0.65-0.90) lat 38.5 ms | TTMn 1.27/cell lag 0.90 ms | pop 0.0061 Hz | 329.4s
   per trial GF/TTMn spikes: 5/0 2/0 4/0 4/0 0/0 4/0 5/0 4/0 0/0 1/0 1/0 3/0 0/0 2/0 0/0 2/0 2/0 3/0 4/0 5/0 0/0 5/0 1/0 4/0 4/0 4/0 1/0 0/0 2/0 4/0 0/0 2/0 2/0 3/0 5/0 3/0 0/0 2/0 3/0 6/0
   raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
   t0  DNp01  .......|.|..||.|..............
@@ -64,7 +64,7 @@ loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pa
   vnc_intrinsic                                                   0.010
   ol_intrinsic                                                    0.001
   visual_projection                                               0.000
-[real_chemical_only] GF 1.27/cell hit 0.80 (95% CI 0.65-0.90) lat 36.9 ms | TTMn 0.00/cell lag nan ms | pop 0.0060 Hz | 309.2s
+[real_chemical_only] GF 1.27/cell hit 0.80 (95% CI 0.65-0.90) lat 36.9 ms | TTMn 0.00/cell lag nan ms | pop 0.0060 Hz | 318.6s
   per trial GF/TTMn spikes: 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0
   raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
   t0  DNp01  ..............................
@@ -85,7 +85,7 @@ loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pa
   cb_intrinsic           ###                                      0.000
   vnc_intrinsic          #                                        0.000
   ol_intrinsic           #                                        0.000
-[rewired_null] GF 0.00/cell hit 0.00 (95% CI -0.00-0.09) lat nan ms | TTMn 0.00/cell lag nan ms | pop 0.0000 Hz | 343.1s
+[rewired_null] GF 0.00/cell hit 0.00 (95% CI -0.00-0.09) lat nan ms | TTMn 0.00/cell lag nan ms | pop 0.0000 Hz | 355.5s
 
 CHECKS
   PASS  gf_spikes_per_response_1_to_2

@@ -1089,6 +1089,53 @@ def t_review_branch(tmp):
                 f"refused {refused} stay {stay} heads {heads} main {main_log}")
 
 
+def t_review_push_failure_reason(tmp):
+    """A refused push says why (git's own message) and is tried once more; run 18's core job lost its
+    reason because the message was discarded."""
+    if not shutil.which("git"):
+        return True, "git not installed; not exercised"
+    import contextlib
+    import io
+    rb = _scripts_module("review_branch")
+    g = ["git", "-c", "user.name=t", "-c", "user.email=t@t", "-c", "commit.gpgsign=false"]
+    remote, work = tmp / "rp_remote.git", tmp / "rp_work"
+    subprocess.run(["git", "init", "-q", "--bare", str(remote)], check=True)
+    hook = remote / "hooks" / "pre-receive"
+    hook.write_text("#!/bin/sh\necho 'refused-by-test-hook' >&2\nexit 1\n", encoding="utf-8")
+    hook.chmod(0o755)
+    subprocess.run(["git", "init", "-q", "-b", "review/x", str(work)], check=True)
+    (work / "a.txt").write_text("a", encoding="utf-8")
+    subprocess.run([*g, "add", "-A"], cwd=work, check=True)
+    subprocess.run([*g, "commit", "-qm", "base"], cwd=work, check=True)
+    subprocess.run(["git", "remote", "add", "origin", str(remote)], cwd=work, check=True)
+    here, out = os.getcwd(), io.StringIO()
+    try:
+        os.chdir(work)
+        with contextlib.redirect_stdout(out):
+            pushed = rb.push_review("review/x", retry_after_s=0)
+    finally:
+        os.chdir(here)
+    said = out.getvalue()
+    # the pre-run dry-run push never collides with a branch already on the remote (independent review,
+    # 12 October 2026: a fixed probe name made every run refuse once a divergent branch of that name existed)
+    other = tmp / "rp_other"
+    subprocess.run(["git", "init", "-q", "-b", "x", str(other)], check=True)
+    (other / "b.txt").write_text("b", encoding="utf-8")
+    subprocess.run([*g, "add", "-A"], cwd=other, check=True)
+    subprocess.run([*g, "commit", "-qm", "other"], cwd=other, check=True)
+    hook.unlink()
+    subprocess.run(["git", "push", "-q", str(remote), "HEAD:refs/heads/review/push-check"], cwd=other, check=True)
+    try:
+        os.chdir(work)
+        url, why = rb.confirm_remote()
+    finally:
+        os.chdir(here)
+    ok = (pushed is False and "refused-by-test-hook" in said and "attempt 1 of 2" in said
+          and "attempt 2 of 2" in said and why is None)
+    return ok, ("refused push reported with git's message, tried twice; the pre-run dry run ignores existing "
+                "branches" if ok else f"pushed {pushed} said {said!r} confirm_remote {why!r}")
+
+
 def t_menu_guards(tmp):
     """Menu option 5 runs only a script in benchmarks/ named without a path; menu option 21 unpacks a zip
     only inside its destination (absolute paths, drive letters, '..' and links refused)."""
@@ -1284,6 +1331,7 @@ def run_all():
                          ("registration freezes the model", lambda: t_registry_freezes_model(tmp)),
                          ("a refrozen model registers a new generation", lambda: t_registry_generations(tmp)),
                          ("results go to a review branch only", lambda: t_review_branch(tmp)),
+                         ("a refused push says why", lambda: t_review_push_failure_reason(tmp)),
                          ("identity check is exact and complete", lambda: t_identity_check(tmp)),
                          ("phase-1 options, defaults unchanged", lambda: t_shiu_options(tmp)),
                          ("menu input guards", lambda: t_menu_guards(tmp)),

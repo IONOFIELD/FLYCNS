@@ -188,19 +188,19 @@
     }
   },
   "registration": {
-    "file": "results/null_dc_song/registration_v3.json",
-    "version": 3,
-    "supersedes": "results/null_dc_song/registration.json",
-    "git_commit": "a94769d",
-    "model_hash": "5983bbe073fe477befa8d3c46a9a4dab2fbccbadbded2e1bcb6639b7910519ee",
-    "registered_at": "2026-10-11T21:42:07",
+    "file": "results/null_dc_song/registration_v4.json",
+    "version": 4,
+    "supersedes": "results/null_dc_song/registration_v3.json",
+    "git_commit": "7851c7c",
+    "model_hash": "5e0e154cd563bd2d85fd890dad905439b18ce75b6d847f8e71cae2ff5a4e12a9",
+    "registered_at": "2026-10-12T03:48:50",
     "matches": true,
     "problems": []
   },
-  "wall_s": 4717.4,
+  "wall_s": 5886.4,
   "provenance": {
-    "written_at": "2026-10-12T06:28:32",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T13:38:59",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -240,7 +240,7 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"

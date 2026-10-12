@@ -360,8 +360,8 @@
     "L1_sugar_contralateral_bias": true
   },
   "provenance": {
-    "written_at": "2026-10-12T04:53:19",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T12:48:29",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -396,7 +396,7 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"
@@ -413,12 +413,12 @@
     }
   },
   "registration": {
-    "file": "results/sugar_laterality/registration_v3.json",
-    "version": 3,
-    "supersedes": "results/sugar_laterality/registration.json",
-    "git_commit": "a94769d",
-    "model_hash": "9d9fa47351b52f092deb1e9c47f2df3b2572e1d9cc7498cc6680e5695eda303b",
-    "registered_at": "2026-10-11T21:41:42",
+    "file": "results/sugar_laterality/registration_v4.json",
+    "version": 4,
+    "supersedes": "results/sugar_laterality/registration_v3.json",
+    "git_commit": "7851c7c",
+    "model_hash": "994272c93461317443b616fddf3a65060d2c49e27a4025a86860c1b7916820c5",
+    "registered_at": "2026-10-12T03:48:26",
     "matches": true,
     "problems": []
   }

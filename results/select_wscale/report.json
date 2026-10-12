@@ -107,10 +107,10 @@
   "n_eligible": 15757,
   "n_driven": 1575,
   "agrees_with_declared": true,
-  "wall_s": 293.9,
+  "wall_s": 383.7,
   "provenance": {
-    "written_at": "2026-10-12T05:59:44",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T12:27:48",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -150,7 +150,7 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"

@@ -36,7 +36,7 @@ circuit by circuit, including where the wiring alone is not enough.
 - **Built to be used and to last.** Every result is traceable to its code, data and settings, and
   automated checks run on every change.
 
-**Headline result, after the refrozen model's registered rerun (generation 3, 12 October 2026).** The
+**Headline result, after the refrozen model's registered rerun (generation 3, 12 October 2026; reproduced number for number under generation 4, run 18).** The
 result that used to lead this page does not survive. With each escape neuron's sound input
 calibrated on its own ear afferents (before, one side got several times the other's), a sound
 makes the escape neuron LESS likely to fire for a faint visual threat (from 30% to 17% of trials): the
@@ -126,7 +126,7 @@ Most independent checks fail or are unresolved (`results/SUITE.md`, RESULTS.md).
 
 The Windows files (`setup.cmd`, `fly.cmd`) are thin launchers; the work is done by `scripts/setup.py` and
 `fly.py`, which run on Linux and macOS too. **Tested on Linux** (Python 3.13, 12 October 2026: a fresh
-clone of this version passes `python3 scripts/setup.py --check`, the whole toy regression, 91 of 91).
+clone of this version passes `python3 scripts/setup.py --check`, the whole toy regression, 94 of 94).
 **Not yet tested on macOS.** You need git, Python 3.10 to 3.13, and for the faster compiled engine a C++ compiler (`g++` on
 Linux, e.g. `sudo apt install g++`; `xcode-select --install` on macOS). Without one, the pure-Python
 engine runs with identical results, about 4 times slower.

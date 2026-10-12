@@ -395,7 +395,7 @@
           ]
         ]
       },
-      "wall_s": 510.4,
+      "wall_s": 555.5,
       "n_trials": 40,
       "gf_depol_mV": 3.4093881520554534
     },
@@ -778,7 +778,7 @@
           ]
         ]
       },
-      "wall_s": 534.0,
+      "wall_s": 537.0,
       "n_trials": 40,
       "gf_depol_mV": 5.162679094395996
     },
@@ -1161,7 +1161,7 @@
           ]
         ]
       },
-      "wall_s": 517.8,
+      "wall_s": 525.3,
       "n_trials": 40,
       "gf_depol_mV": 6.222146566076267
     },
@@ -1544,7 +1544,7 @@
           ]
         ]
       },
-      "wall_s": 530.5,
+      "wall_s": 532.5,
       "n_trials": 40,
       "gf_depol_mV": 6.875576090376015
     },
@@ -1927,7 +1927,7 @@
           ]
         ]
       },
-      "wall_s": 504.4,
+      "wall_s": 534.6,
       "n_trials": 40,
       "gf_depol_mV": 6.97417657967396
     },
@@ -2341,7 +2341,7 @@
           ]
         ]
       },
-      "wall_s": 532.6,
+      "wall_s": 521.7,
       "n_trials": 40,
       "gf_depol_mV": 1.8469952930996996,
       "label": "A1_jo_alone_electrical"
@@ -2725,7 +2725,7 @@
           ]
         ]
       },
-      "wall_s": 496.5,
+      "wall_s": 503.7,
       "n_trials": 40,
       "gf_depol_mV": 0.25314152791284183
     },
@@ -3108,7 +3108,7 @@
           ]
         ]
       },
-      "wall_s": 497.6,
+      "wall_s": 505.3,
       "n_trials": 40,
       "gf_depol_mV": 3.707322307187753
     },
@@ -3491,7 +3491,7 @@
           ]
         ]
       },
-      "wall_s": 502.6,
+      "wall_s": 519.8,
       "n_trials": 40,
       "gf_depol_mV": 4.978098778745304
     },
@@ -3874,7 +3874,7 @@
           ]
         ]
       },
-      "wall_s": 513.4,
+      "wall_s": 522.5,
       "n_trials": 40,
       "gf_depol_mV": 3.1383284023209255
     },
@@ -4257,7 +4257,7 @@
           ]
         ]
       },
-      "wall_s": 515.8,
+      "wall_s": 537.6,
       "n_trials": 40,
       "gf_depol_mV": 0.0062944982574602015
     },
@@ -4426,20 +4426,20 @@
     }
   },
   "registration": {
-    "file": "results/auditory/registration_v3.json",
-    "version": 3,
-    "supersedes": "results/auditory/registration.json",
-    "git_commit": "a94769d",
-    "model_hash": "77b4177e93aed1b3fb3fcb608159a04b5c7725d6d4e59f97cfed5c9fce94545d",
-    "registered_at": "2026-10-11T21:41:35",
+    "file": "results/auditory/registration_v4.json",
+    "version": 4,
+    "supersedes": "results/auditory/registration_v3.json",
+    "git_commit": "7851c7c",
+    "model_hash": "3fd99071f3988cd332b33c073da69ac38184f917d44dc43acaafd532ead83918",
+    "registered_at": "2026-10-12T03:48:19",
     "matches": false,
     "problems": [
       "model settings overridden: FLYCNS_DT_MS=0.05"
     ]
   },
   "provenance": {
-    "written_at": "2026-10-12T07:59:26",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T14:57:07",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -4482,7 +4482,7 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"
