@@ -16,8 +16,8 @@
   },
   "n_trials": 6,
   "provenance": {
-    "written_at": "2026-10-12T11:25:56",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T19:13:33",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
