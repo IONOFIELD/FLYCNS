@@ -428,8 +428,8 @@
     "signature": "Marella 2012: single midline VUM, broad GNG arbor, nSyb-GFP labels all arbors (output-dominated). Candidates are ranked by that signature only; confirming identity needs NBLAST against the light-level template."
   },
   "provenance": {
-    "written_at": "2026-10-11T19:52:46",
-    "git_commit": "b7eba83",
+    "written_at": "2026-10-12T04:52:57",
+    "git_commit": "47eb98e",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
