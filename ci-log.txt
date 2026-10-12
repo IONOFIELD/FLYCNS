@@ -1,0 +1,12 @@
+criteria registered at commit cbc0cc5; this run at bd631a2
+working point: loom gain 0.6, 120 trials per arm
+loom alone      36/120 = 0.300  (95% CI 0.225 to 0.387)
+loom + sound    20/120 = 0.167  (95% CI 0.111 to 0.243)
+difference      -0.133  (95% CI -0.237 to -0.026)
+
+CHECK (criterion registered before the run)
+  FAIL  A2R_facilitation  -> FAIL suppression (contradicts Tootoonian 2012)
+UNCERTAINTY (95% interval, registered rule)
+  FAIL        A2R_facilitation: difference -0.1333 [-0.237, -0.02617] band (0, -) (newcombe (as registered))
+  FAIL        A2R2_beyond_summation: residual -0.6917 [-0.7833, -0.5417] band (0, -) (bootstrap)
+wrote results\a2_registered\report.json  (4498s)
