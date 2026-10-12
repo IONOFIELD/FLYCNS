@@ -1829,18 +1829,18 @@
     }
   },
   "registration": {
-    "file": "results/flight_snpp16_robustness/registration_v3.json",
-    "version": 3,
-    "supersedes": "results/flight_snpp16_robustness/registration.json",
-    "git_commit": "a94769d",
-    "model_hash": "439d4bfe4f8397672a46454bd9bc7e56c284b2cb017c49d9a433b97db5377734",
-    "registered_at": "2026-10-11T21:41:59",
+    "file": "results/flight_snpp16_robustness/registration_v4.json",
+    "version": 4,
+    "supersedes": "results/flight_snpp16_robustness/registration_v3.json",
+    "git_commit": "7851c7c",
+    "model_hash": "580109f8f8c8ffcc66e7fe50bd6bcc6b473b37793cd5e6de98bd8a4e1e0e5835",
+    "registered_at": "2026-10-12T03:48:43",
     "matches": true,
     "problems": []
   },
   "provenance": {
-    "written_at": "2026-10-12T05:58:53",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T12:49:56",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -1875,9 +1875,9 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570",
-        "edges_nt.parquet": "4bcc6084a7fde88b"
+        "edges_nt.parquet": "53db371d0fbda242"
       },
       "manifest": "match"
     }
