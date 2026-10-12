@@ -1,0 +1,95 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+gustatory afferent types (subclass): 42
+taste drive ['LB1a', 'LB1b', 'LB1c', 'LB1d', 'LB1e', 'LB2a', 'LB2b', 'LB2c', 'LB2d', 'LB3', 'LB3a', 'LB3b', 'LB3c', 'LB3d', 'LB4a', 'LB4b', 'PhG10', 'PhG11', 'PhG12', 'PhG13', 'PhG14', 'PhG15', 'PhG16', 'PhG1a', 'PhG1b', 'PhG1c', 'PhG2', 'PhG3', 'PhG4', 'PhG5', 'PhG6', 'PhG7', 'PhG8', 'PhG9', 'aPhM1', 'aPhM2a', 'aPhM2b', 'aPhM3', 'aPhM4', 'aPhM5', 'claw_tpGRN', 'dorsal_tpGRN']; control ['JO-FV']; 11 JO types
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+SEZ definition: anatomical (roiInfo, 4,606 SEZ-intrinsic neurons)
+  cb_motor types firing (spikes / n cells): MN2Da:9/2, MN2Db:8/2   [2 of 43 motor types active]
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    266665565565565555656556641....   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 6 stimulus windows):
+  ascending_neuron       ######################################## 0.304
+  cb_intrinsic           ################################         0.249
+  descending_neuron      #########################                0.194
+  cb_motor               #####################                    0.160
+  cb_endocrine           ##############                           0.108
+  vnc_intrinsic                                                   0.001
+SEZ gain 1.5  score 5/8  [E1 E2 E3 A1 F2          ]  GF hit 0.83 per 1.70 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.33 pop 0.016 (outside SEZ 0.0019) | 356s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  cb_motor types firing (spikes / n cells): MN2Da:10/2, MN2Db:7/2, CvN7:3/2, GNG641:3/2, PS348:2/2, CvN4:1/2, CvN5:1/2, GNG314:1/2   [9 of 43 motor types active]
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    26666565555556565555655565.....   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 6 stimulus windows):
+  cb_motor               ######################################## 0.330
+  ascending_neuron       ###################################      0.292
+  descending_neuron      ##############################           0.253
+  cb_intrinsic           ##############################           0.249
+  cb_endocrine           ###########################              0.231
+  vnc_motor              #######                                  0.061
+  vnc_intrinsic          #                                        0.014
+SEZ gain 1.75 score 5/8  [E1 E2 E3 A1 F2          ]  GF hit 0.83 per 1.70 | JO hit 0.00 | MN9 taste 0.08 ctrl 0.42 pop 0.017 (outside SEZ 0.0026) | 372s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  cb_motor types firing (spikes / n cells): MN2Da:12/2, GNG276:8/2, GNG641:8/2, GNG283:7/2, MN2Db:7/2, MN9:6/2, CvN7:6/2, GNG648:5/2   [20 of 43 motor types active]
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    26676656556566665555655665.....   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 6 stimulus windows):
+  cb_motor               ######################################## 0.925
+  descending_neuron      ####################                     0.465
+  ascending_neuron       #############                            0.313
+  cb_endocrine           #############                            0.308
+  cb_intrinsic           ###########                              0.270
+  efferent_ascending     ##########                               0.250
+  vnc_motor              ##########                               0.247
+  visual_centrifugal     ####                                     0.094
+  vnc_intrinsic          #                                        0.041
+  vnc_efferent                                                    0.011
+SEZ gain 2.0  score 5/8  [E1 E2 E3 A1 F2          ]  GF hit 0.83 per 1.70 | JO hit 0.00 | MN9 taste 0.50 ctrl 0.75 pop 0.020 (outside SEZ 0.0047) | 295s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  cb_motor types firing (spikes / n cells): GNG641:20/2, CvN7:14/2, MN2Da:14/2, PS348:13/2, GNG314:9/2, GNG653:9/2, GNG648:9/2, GNG276:8/2   [25 of 43 motor types active]
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    2667666656565656555666666665444   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 6 stimulus windows):
+  cb_motor               ######################################## 1.528
+  descending_neuron      ###############                          0.581
+  cb_endocrine           ###########                              0.431
+  vnc_motor              ##########                               0.412
+  ascending_neuron       ########                                 0.340
+  cb_intrinsic           #######                                  0.296
+  efferent_ascending     ######                                   0.250
+  visual_centrifugal     ##                                       0.096
+  vnc_intrinsic          #                                        0.074
+  vnc_efferent           #                                        0.053
+SEZ gain 2.25 score 6/8  [E1 E2 E3 A1 F1 F2       ]  GF hit 0.83 per 1.70 | JO hit 0.00 | MN9 taste 0.58 ctrl 1.08 pop 0.023 (outside SEZ 0.0067) | 306s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  cb_motor types firing (spikes / n cells): GNG641:26/2, CvN7:23/2, PS348:18/2, MN2Da:16/2, GNG648:14/2, GNG276:14/2, GNG314:13/2, CvN4:12/2   [27 of 43 motor types active]
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    2677776666676665555666567766531   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 6 stimulus windows):
+  cb_motor               ######################################## 2.368
+  descending_neuron      ############                             0.760
+  efferent_descending    ###########                              0.667
+  vnc_motor              ##########                               0.642
+  cb_endocrine           ########                                 0.523
+  ascending_neuron       ######                                   0.389
+  efferent_ascending     ######                                   0.375
+  cb_intrinsic           #####                                    0.323
+  visual_centrifugal     ##                                       0.163
+  vnc_intrinsic          #                                        0.115
+SEZ gain 2.5  score 6/8  [E1 E2 E3 A1 F1 F2       ]  GF hit 0.83 per 1.70 | JO hit 0.00 | MN9 taste 0.67 ctrl 1.08 pop 0.026 (outside SEZ 0.0093) | 325s
+
+best: SEZ gain 2.25  score 6/8   (28 min total)
+ sensory  relay  local  score  chk_E1  chk_E2  chk_E3  chk_A1  chk_A2  chk_F1  chk_F2  chk_S1
+     1.0    1.0   2.25      6    True    True    True    True   False    True    True   False
+     1.0    1.0   2.50      6    True    True    True    True   False    True    True   False
+     1.0    1.0   1.50      5    True    True    True    True   False   False    True   False
+     1.0    1.0   1.75      5    True    True    True    True   False   False    True   False
+     1.0    1.0   2.00      5    True    True    True    True   False   False    True   False
