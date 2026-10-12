@@ -1,0 +1,14 @@
+--- L1_reset
+[phase1] L1_reset 27/30 done (1393 s)
+[phase1] L1_reset 28/30 done (1451 s)
+[phase1] L1_reset 29/30 done (1509 s)
+[phase1] L1_reset 30/30 done (1566 s)
+[phase1] L1_reset: 30 runs in 1566.1 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1\arms\L1_reset.json
+
+--- L2_stimulation
+[phase1] L2_stimulation 27/30 done (1409 s)
+[phase1] L2_stimulation 28/30 done (1467 s)
+[phase1] L2_stimulation 29/30 done (1524 s)
+[phase1] L2_stimulation 30/30 done (1578 s)
+[phase1] L2_stimulation: 30 runs in 1578.4 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1\arms\L2_stimulation.json
+
