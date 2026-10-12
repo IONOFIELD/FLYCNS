@@ -1,0 +1,14 @@
+[fingerprint] a2-contact-em: benchmarks/a2_contact.py em 2
+[registry] a2_contact_em: registered (version 5, model 2abab01d8dcc, commit 2cae86d)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! a2_contact_em: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! results\a2_contact_em\registration_v5.json is not committed (or differs from the commit): a registration must be committed before the run it governs
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! a2_contact_em: RUNNING ON UNCOMMITTED CODE (FLYCNS_ALLOW_DIRTY=1)
+! 11 code file(s) differ from commit 2cae86d: D results/a2_registered/criteria.json, D results/a2_robustness/criteria.json, D results/dnp13_control/criteria.json, D results/feeding_by_modality/criteria.json, D results/flight_snpp16_graded/criteria.json, D results/flight_snpp16_robustness/criteria.json, D results/gustatory_signed_map/criteria.json, D results/null_strict/criteria.json ...
+! The report is stamped dirty and must not be quoted as a registered result.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+em: loom alone 0.000 -> with sound 1.000; difference +1.000 (95% CI +0.070 to +1.000)
+  FAIL  C1_em_facilitation
+[fingerprint] a2-contact-em: 496 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\a2-contact-em.jsonl
