@@ -1,0 +1,15 @@
+[fingerprint] pc1-song: benchmarks/pc1_song.py 2
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! pc1_song: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! the criteria in the code differ from the registered ones
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+pC1/pC1x types present (49): ['pC1_10a', 'pC1_10b', 'pC1_10c', 'pC1_10d', 'pC1_11a', 'pC1_11b', 'pC1_12a', 'pC1_12b', 'pC1_13a', 'pC1_13b', 'pC1_13c', 'pC1_14a', 'pC1_14b', 'pC1_15a', 'pC1_15b', 'pC1_15c', 'pC1_16a', 'pC1_16b', 'pC1_17a', 'pC1_17b', 'pC1_18a', 'pC1_18b', 'pC1_19', 'pC1_1a', 'pC1_1b', 'pC1_2a', 'pC1_2a/2b', 'pC1_2b', 'pC1_2c', 'pC1_3a', 'pC1_3b', 'pC1_3c', 'pC1_4a', 'pC1_4b', 'pC1_5a', 'pC1_5b', 'pC1_6a', 'pC1_6b', 'pC1_7a', 'pC1_7b', 'pC1_8a', 'pC1_8b', 'pC1_8c', 'pC1_9a', 'pC1_9b', 'pC1x_a', 'pC1x_b', 'pC1x_c', 'pC1x_d']
+criteria.json exists with DIFFERENT criteria; refusing to overwrite a registered test.
+[fingerprint] pc1-song: nothing was fingerprinted
+[fingerprint] pc1-song: 0 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\pc1-song.jsonl; exited non-zero: ['benchmarks/pc1_song.py 2']
