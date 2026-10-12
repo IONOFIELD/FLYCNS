@@ -1,0 +1,2 @@
+{"argv": ["gustatory_signed_map.py"], "env": {"FLYCNS_ALLOW_DIRTY": "1"}, "kind": "proc"}
+{"argv": ["benchmarks/gustatory_signed_map.py"], "code": 0, "kind": "exit"}
