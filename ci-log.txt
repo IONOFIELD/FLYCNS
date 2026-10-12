@@ -1,0 +1,22 @@
+[fingerprint] fit-baseline: benchmarks/fit_baseline.py 1
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+depol  0.0 mV noise  0.0 mV | spont  0.000 Hz | MN9 taste   0.00 ctrl  0.00 | GF 1.00/resp hit 1.00 | [S E]  125s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+depol  3.0 mV noise  1.0 mV | spont  1.786 Hz | MN9 taste   3.00 ctrl  3.00 | GF 0.00/resp hit 0.00 | [F Q]  291s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+depol  4.0 mV noise  1.5 mV | spont  5.765 Hz | MN9 taste   4.00 ctrl  2.00 | GF 0.00/resp hit 0.00 | [F]  233s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+depol  5.0 mV noise  1.5 mV | spont  9.050 Hz | MN9 taste   3.50 ctrl  1.50 | GF 0.00/resp hit 0.00 | [F]  230s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+depol  5.0 mV noise  2.5 mV | spont 14.765 Hz | MN9 taste   5.00 ctrl  5.50 | GF 0.00/resp hit 0.00 | [F]  237s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+depol  6.0 mV noise  2.0 mV | spont 16.039 Hz | MN9 taste   5.50 ctrl  2.00 | GF 0.00/resp hit 0.00 | [F]  246s
+
+satisfying F,S,E,Q: none
+[fingerprint] fit-baseline: 60 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\fit-baseline.jsonl
