@@ -1193,6 +1193,43 @@ def t_identity_check(tmp):
                 f"missing {missing[:5]} jobs {len(jobs)}")
 
 
+def t_shiu_options(tmp):
+    """The phase-1 options (flycns.model.SimOptions, load_graph amines) do what they say, and the defaults
+    build exactly the generation-4 network: same objects, equations, reset, method and size."""
+    from flycns import load_graph
+    from flycns.model import CNSModel, LIFParams, SimOptions
+    from flycns.graph import AMINES
+    d = tmp / "shiuopt"; d.mkdir()
+    subprocess.run([sys.executable, str(ROOT / "scripts/make_testdata.py")], cwd=d, capture_output=True, check=True)
+    neurons, edges = load_graph(str(d / "testdata"))
+    stim = ["Gr64f_sugar_GRN"]
+
+    def desc(m):
+        return ([type(o).__name__ for o in sorted(m.net.objects, key=lambda o: o.name)], str(m.G.equations),
+                str(m.G.event_codes), m.G.state_updater.method_choice, len(m.lif_ids))
+    plain = CNSModel(neurons, edges, stim, LIFParams(), electrical=True)
+    dflt = CNSModel(neurons, edges, stim, LIFParams(), electrical=True, options=SimOptions())
+    same = desc(plain) == desc(dflt) and plain.G.state_updater.method_choice == "euler"
+    a1 = CNSModel(neurons, edges, stim, LIFParams(w_scale=1.0), electrical=False,
+                  options=SimOptions(reset="v_and_g", stimulation="kick", integration="exact", adaptation=False))
+    sid = a1.stim["bodyId"].values
+    in_net = all(b in a1.lif_index.index for b in sid) and not any(b in plain.lif_index.index for b in sid)
+    ref0 = bool((np.asarray(a1.G.ref_i_[a1.lif_index[sid].values]) == 0).all())
+    g_frozen = any("dg/dt" in ln and "unless refractory" in ln for ln in str(a1.G.equations).splitlines())
+    exact = a1.G.state_updater.method_choice == "linear" and "g = 0*mV" in str(a1.G.event_codes)
+    no_adapt = not a1.overrides_applied and bool(plain.overrides_applied)
+    raw = pd.read_parquet(d / "testdata" / "edges.parquet")
+    n_amine = int(raw["nt"].str.lower().isin(AMINES).sum())
+    _, e_exc = load_graph(str(d / "testdata"), amines="excitatory")
+    amines_ok = len(e_exc) - len(edges) == n_amine
+    ok = same and in_net and ref0 and g_frozen and exact and no_adapt and amines_ok
+    return ok, (f"defaults build the generation-4 network; A1 options: stimulated cells in the network with "
+                f"refractory 0, g reset and frozen, exact integration, no adaptation; amines excitatory adds "
+                f"{n_amine} edges" if ok else
+                f"same {same} in_net {in_net} ref0 {ref0} g_frozen {g_frozen} exact {exact} no_adapt {no_adapt} "
+                f"amines {amines_ok} ({len(e_exc)} - {len(edges)} vs {n_amine})")
+
+
 def t_neutral_wording():
     """User-facing messages ask for help neutrally; none tells the user to send output to a named assistant."""
     bad = []
@@ -1248,6 +1285,7 @@ def run_all():
                          ("a refrozen model registers a new generation", lambda: t_registry_generations(tmp)),
                          ("results go to a review branch only", lambda: t_review_branch(tmp)),
                          ("identity check is exact and complete", lambda: t_identity_check(tmp)),
+                         ("phase-1 options, defaults unchanged", lambda: t_shiu_options(tmp)),
                          ("menu input guards", lambda: t_menu_guards(tmp)),
                          ("token file is private", lambda: t_token_private(tmp)),
                          ("messages use neutral wording", t_neutral_wording)]:

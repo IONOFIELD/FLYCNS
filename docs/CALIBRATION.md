@@ -100,6 +100,25 @@ the generation-3 freeze:
 - **Expected:** every number of generation 3 reproduces exactly; the generation-4 run is scored as a
   replication of run 14, not as a new result.
 
+**Generation 5, phase 1 (Shiu et al. 2024 positive control), 12 October 2026. No default changed.**
+- **New options, off by default:** `flycns.model.SimOptions` (reset of v and g with g frozen while
+  refractory; stimulated cells kept in the network and driven by 68.75 mV Poisson kicks with no refractory
+  period; exact integration; adaptation off) and `load_graph(amines="excitatory")`. They are used only by
+  the phase-1 control (`fit/shiu2024_phase1.py`: A1, the ladder, M1). Every default code path builds the
+  same Brian2 objects with the same equations as generation 4.
+- **Proof of identity:** the identity check (`scripts/fingerprint.py`): every job of the cloud rerun,
+  reduced to a few trials, fingerprinted on the generation-4 code (cloud run 19) and on this code; the
+  wired network, every neuron's state after every run step and every spike must match. The full rerun
+  under generation 5 runs alongside as the record.
+- **Phase-1 deviations, registered before any A1 or M1 code existed**
+  (`results/shiu2024_phase1_addendum/`): A1 uses exact integration (the approved plan's eighth setting,
+  omitted from the registered A1 settings), with Euler as an extra ladder step; M1 runs at a connection
+  floor of 5 because the MaleCNS data hold nothing below 5 synapses.
+- **S4 cannot pass even for the reference:** the authors' own Fig 1 output scores UNRESOLVED on it
+  (0.705, 95% interval 0.686-0.724). S4 is kept as registered and reported; S4b
+  (`results/shiu2024_s4b/`) tests the published dose curve point by point.
+- **Expected:** every number of generation 4 reproduces exactly.
+
 Values that are **measured, not chosen**:
 - **Single-neuron parameters:** Shiu et al. 2024.
 - **Loom tuning amplitudes and trial-gain sigma:** extracted from Turner et al. 2022 imaging, stationary trials.
