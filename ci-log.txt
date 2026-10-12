@@ -1,0 +1,20 @@
+[fingerprint] null-dc-auditory: benchmarks/null_distribution.py auditory 2 2
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! null_dc_auditory: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! the criteria in the code differ from the registered ones
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+auditory: real network, 2 trials ...
+  real giant fiber peak depolarisation, mV: 3.6194; whole CNS 0.00493 Hz
+  null  1/2: 2.5111; whole CNS 0.00178 Hz (173s)
+  null  2/2: 3.7756; whole CNS 0.00176 Hz (205s)
+
+real 3.6194 vs null median 3.1434, max 3.7756 (percentile 0.50); null CNS 0.00177 Hz vs real 0.00493 Hz (active)
+  UNRESOLVED  N3_jo_gf_chemical_wiring_specific
+wrote results\null_dc_auditory\report.json
+[fingerprint] null-dc-auditory: 15 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\null-dc-auditory.jsonl
