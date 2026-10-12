@@ -77,8 +77,8 @@
   "rule": "PASS if every giant fiber's electrical-only plateau (last 30 ms of a 60 ms pulse, mean over trials) is within 10% of target x the mean charging factor over that window (tau_eff = tau_m / (1 + G_GAP_RELAY), gap-junction delay included); the network arm is reported, not scored",
   "verdict": "PASS",
   "provenance": {
-    "written_at": "2026-10-12T05:52:21",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T12:06:47",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -113,7 +113,7 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"
