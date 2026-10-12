@@ -40,14 +40,15 @@ superseded by its registered tests.)
 ## 12 October 2026: generation 3, the model refrozen and every test re-registered (run 14)
 
 **What changed, and why** (docs/CALIBRATION.md, "Refrozen 11 October 2026"):
-- **Each giant fiber's sound input is calibrated on its own afferents.** The connectome couples 21
-  auditory afferents to the left giant fiber and 6 to the right. One shared spikelet gave about 4.3
+- **Each giant fiber's sound input is calibrated on its own afferents.** The model couples 21 JO-B1
+  afferents to the left giant fiber and 6 to the right (by inferred soma side; EM cannot see gap
+  junctions). One shared spikelet gave about 4.3
   and 1.5 mV in steady state (run 12 measured peaks of 3.65 and 0.73 mV against a 3 mV target). Now
   `fit/check_jon_calibration.py` measures, with only the coupling acting, plateaus of 2.72 and 2.78 mV
   against the 2.76 mV a 60 ms pulse can reach: PASS on both.
 - **w_scale 0.3 → 0.4**, the value the registered benchmark-blind rule selects; the rule, rerun at the
   new code, gives the same grid and the same answer. This closes audit gap 6. It is not a measured
-  value: a measured per-synapse PSP (ORN → PN) is about 14 times the model's (CALIBRATION.md).
+  value: a measured per-synapse PSP (ORN → PN) is about 12 times the model's (CALIBRATION.md).
 - **GF adaptation 10 → 45 mV**, refit by its unchanged rule. The strongest-gain quartile sits exactly
   at its limit of 2.0 spikes.
 - **Registration generation 3.** The model was frozen at `a94769d`; 20 `registration_v3.json` files,
@@ -72,7 +73,7 @@ superseded by its registered tests.)
 | check | role | run 12 | run 14 |
 |---|---|---|---|
 | A2R_facilitation | construction | PASS +0.333 (+0.216 to +0.438) | **FAIL −0.133 (−0.237 to −0.026)** |
-| RA2 facilitation at every near-threshold gain | robustness | PASS | FAIL (gains 0.4, 0.5: +0.04, −0.03, both spanning 0) |
+| RA2 facilitation at every near-threshold gain | robustness | PASS | FAIL (only 2 gains qualify as near threshold, 3 required; at both, 0.4 and 0.5, the difference spans 0: UNRESOLVED) |
 | G5 SNpp16 reliable at k* | independent | PASS (4 of 5 draws) | **FAIL (1 of 5 draws)** |
 | L2 b1 spikes per wingbeat | independent | UNRESOLVED (3 of 5) | FAIL (0 of 5) |
 | R1 flight survives transmitter uncertainty | robustness | PASS | FAIL |
@@ -89,20 +90,30 @@ superseded by its registered tests.)
     −20.8 mV; `results/checks/jon_calibration.json`, network arm). Polysynaptic inhibition, not the
     calibrated coupling, dominates the giant fiber under sound.
   - This reverses a correction on the record ("sound suppresses" was withdrawn in September when 120
-    trials per arm showed facilitation). Both were outcomes of the model as it then stood; the
-    facilitation of run 12 rested on a calibration defect (the left giant fiber got about 4.3 mV).
+    trials per arm showed facilitation). Both were outcomes of the model as it then stood. Which of the
+    three changes removed run 12's facilitation is not isolated: the calibration defect (the left giant
+    fiber got about 4.3 mV), w_scale 0.3 and the 10 mV adaptation all changed together. The one arm
+    that bears on it, the 40-trial w_scale 0.30 battery arm under the new calibration and 45 mV, gives
+    0.25 → 0.25.
   - A2R2 (beyond summation): FAIL, residual −0.69 (−0.78 to −0.54). Adding each fiber's sound-alone
     peak (1.51 and 2.46 mV) to its loom-alone peak predicts 0.86; the model gives 0.17.
-  - The battery shows the sign is not stable across settings at 40 trials: loom alone → loom plus
-    sound is 0.25 → 0.25 at w_scale 0.30, 0.125 → 0.15 at 0.35, 0.275 → 0.15 at 0.40 (canonical), 0.075
-    → 0.10 at 0.45, 0.20 → 0.125 and 0.05 → 0.075 for seeds 1 and 2. Only the registered 120-trial arm
-    resolves it, and only at 0.4.
+  - The registered sweep (`a2_robustness`, 100 trials per arm, declared model) shows the suppression
+    grows with loom strength and is resolved wherever the loom is not near threshold: −0.14 (−0.25 to
+    −0.02) at gain 0.6, −0.22 (−0.34 to −0.09) at 0.7, −0.39 (−0.50 to −0.26) at 0.8. At the two
+    near-threshold gains it is unresolved (+0.04 at 0.4, −0.03 at 0.5).
+  - The 40-trial battery arms are too small to resolve it and vary in sign: 0.25 → 0.25 at w_scale
+    0.30, 0.125 → 0.15 at 0.35, 0.275 → 0.15 at 0.40 (canonical), 0.075 → 0.10 at 0.45, 0.20 → 0.125
+    and 0.05 → 0.075 for seeds 1 and 2.
 - **The ear-to-escape contact as EM annotates it still fires the giant fiber on sound alone (C1
   FAIL),** 40 of 40 sound-alone trials (95% interval 0.91 to 1.0); its facilitation part passes, +0.89
   (+0.82 to +0.94) over 120 trials per arm. The sign-inverted contact suppresses (C2 PASS, control).
-- **The SNpp16 upstroke result weakens.** It is still selective at its working point (G3 PASS) and
-  wiring-specific (G4, control), but it reaches the 2 to 12 Hz band in only 1 of 5 draws (G5 FAIL), and
-  no longer survives transmitter uncertainty (R1 FAIL). It held at 0.3; it does not at 0.4.
+- **The SNpp16 upstroke result weakens.** Its registered rule now picks a working point of 3 cells
+  (k* = 3; it was 5). There it is still selective (G3 PASS) and wiring-specific (G4, control), but it
+  reaches the 2 to 12 Hz band in only 1 of 5 draws (G5 FAIL). 5 cells would be in band in 5 of 5 draws,
+  but the registered rule picks the smallest size whose mean over the draws is in band (2.5 Hz at 3). R1 fails because its registered size, 7 cells, now
+  overshoots the band on the unflipped graph too (1 of 5 draws in band, flipped or not; selectivity
+  holds under the flip), so it no longer tests transmitter uncertainty; it does not show that the result
+  depends on a transmitter call. R3 (fresh draws) fails. G5 held at 0.3; it does not at 0.4.
 - **Unchanged:** escape latency 36.7 ms (32.3 to 41.4; independent PASS), the escape wiring control
   (real 0.80 against a null median of 0.10 over 20 draws), song P3, taste (F3, F4 still fail: no MN9
   response at 100 Hz), the stricter nulls, and the compiled and pure-Python engines (4,340 identical

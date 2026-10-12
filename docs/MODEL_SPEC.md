@@ -60,7 +60,7 @@ spike when v > V_thresh:   v ← V_reset ;  a ← a + b_adapt ;  refractory for 
 | tau_s | 5 ms | Shiu et al. 2024 |
 | t_ref | 2.2 ms | Shiu et al. 2024 |
 | tau_a | 100 ms | declared |
-| b_adapt | 0, except GF (DNp01) 10 mV and central-brain motor neurons (superclass cb_motor) 10 mV | docs/CALIBRATION.md |
+| b_adapt | 0, except GF (DNp01) 45 mV (10 mV before generation 3) and central-brain motor neurons (superclass cb_motor) 10 mV | docs/CALIBRATION.md |
 
 ## 3. Chemical synapse
 
