@@ -395,7 +395,7 @@
           ]
         ]
       },
-      "wall_s": 272.0,
+      "wall_s": 196.2,
       "n_trials": 40,
       "gf_depol_mV": 4.008887208034567
     },
@@ -778,7 +778,7 @@
           ]
         ]
       },
-      "wall_s": 268.7,
+      "wall_s": 194.6,
       "n_trials": 40,
       "gf_depol_mV": 5.081092248463285
     },
@@ -1161,7 +1161,7 @@
           ]
         ]
       },
-      "wall_s": 224.9,
+      "wall_s": 155.0,
       "n_trials": 40,
       "gf_depol_mV": 6.350539055283022
     },
@@ -1544,7 +1544,7 @@
           ]
         ]
       },
-      "wall_s": 223.2,
+      "wall_s": 155.1,
       "n_trials": 40,
       "gf_depol_mV": 6.815403300094968
     },
@@ -1927,7 +1927,7 @@
           ]
         ]
       },
-      "wall_s": 224.0,
+      "wall_s": 156.8,
       "n_trials": 40,
       "gf_depol_mV": 6.949846393580344
     },
@@ -3061,7 +3061,7 @@
           ]
         ]
       },
-      "wall_s": 734.8,
+      "wall_s": 519.7,
       "n_trials": 120,
       "gf_depol_mV": 4.101080426768587
     },
@@ -4164,7 +4164,7 @@
           ]
         ]
       },
-      "wall_s": 762.6,
+      "wall_s": 561.9,
       "n_trials": 120,
       "gf_depol_mV": 3.989009003665486
     },
@@ -4567,7 +4567,7 @@
           ]
         ]
       },
-      "wall_s": 221.4,
+      "wall_s": 161.6,
       "n_trials": 40,
       "gf_depol_mV": 3.633673220278274,
       "label": "A2_sound_alone"
@@ -4594,8 +4594,8 @@
   },
   "checks": {},
   "provenance": {
-    "written_at": "2026-10-12T05:42:10",
-    "git_commit": "47eb98e",
+    "written_at": "2026-10-12T13:10:04",
+    "git_commit": "bd631a2",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -4640,7 +4640,7 @@
       "dir": "data",
       "digests": {
         "neurons.parquet": "06ea0afb48c414ad",
-        "edges.parquet": "becf568580708ba9",
+        "edges.parquet": "f08e90783d6b6420",
         "roi_membership.parquet": "5fce5c5d54e45570"
       },
       "manifest": "match"
