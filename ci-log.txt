@@ -1,0 +1,24 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+  sugar              34 cells | L  17 R  17 | no explicit side (excluded) 0
+  bitter             38 cells | L  19 R  19 | no explicit side (excluded) 0
+  old_mixed_proxy   140 cells | L  69 R  71 | no explicit side (excluded) 0
+criteria registered at commit 27d36e2; this run at 65ce101
+
+cumulative influence on MN9 (hops 1-5)          ipsi          contra     bias
+  sugar            signed   L afferents   +4.989e-04   +1.670e-03   contra/ipsi 3.35  CONTRALATERAL
+  sugar            signed   R afferents   +8.099e-04   +1.405e-03   contra/ipsi 1.73  CONTRALATERAL
+  sugar            unsigned L afferents   +4.919e-03   +5.607e-03   contra/ipsi 1.14  CONTRALATERAL
+  sugar            unsigned R afferents   +6.355e-03   +5.587e-03   contra/ipsi 0.88
+  bitter           signed   L afferents   -8.649e-05   +1.083e-04   not both positive
+  bitter           signed   R afferents   +2.423e-04   -5.353e-04   not both positive
+  bitter           unsigned L afferents   +3.831e-03   +4.106e-03   contra/ipsi 1.07
+  bitter           unsigned R afferents   +3.422e-03   +3.658e-03   contra/ipsi 1.07
+  old_mixed_proxy  signed   L afferents   +5.911e-04   +3.496e-03   contra/ipsi 5.91  CONTRALATERAL
+  old_mixed_proxy  signed   R afferents   +1.985e-03   +2.653e-03   contra/ipsi 1.34  CONTRALATERAL
+  old_mixed_proxy  unsigned L afferents   +3.019e-02   +3.076e-02   contra/ipsi 1.02
+  old_mixed_proxy  unsigned R afferents   +3.471e-02   +3.158e-02   contra/ipsi 0.91
+
+CHECK (criterion registered before the run)
+  PASS  L1_sugar_contralateral_bias
+UNCERTAINTY (flycns/stats.py): PASS  L1_sugar_contralateral_bias: 1.7349626892139418 (point; graph arithmetic, no sampling)
+wrote results\sugar_laterality\report.json
