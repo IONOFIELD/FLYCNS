@@ -31,40 +31,40 @@
     "roi_membership.parquet"
   ],
   "real": {
-    "readout": 0.575,
+    "readout": 0.8,
     "per_trial": [
       1,
-      0,
       1,
-      1,
-      0,
-      1,
-      1,
-      1,
-      0,
-      0,
-      0,
-      1,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
       1,
       1,
       0,
       1,
       1,
       1,
-      1,
-      0,
-      0,
       0,
       1,
       1,
+      1,
+      0,
+      1,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
       0,
       0,
+      1,
+      1,
+      0,
+      1,
       1,
       1,
       1,
@@ -74,91 +74,91 @@
       1,
       1
     ],
-    "cns_hz": 0.0038503671604461225
+    "cns_hz": 0.006162048234643779
   },
   "null": [
     {
       "readout": 0.0,
-      "cns_hz": 0.0038568595068016014
+      "cns_hz": 0.006041939827067422
     },
     {
-      "readout": 0.3,
-      "cns_hz": 0.003790718728305161
-    },
-    {
-      "readout": 0.025,
-      "cns_hz": 0.004018762394041353
-    },
-    {
-      "readout": 0.125,
-      "cns_hz": 0.004171738305042322
-    },
-    {
-      "readout": 0.0,
-      "cns_hz": 0.004317816098040593
+      "readout": 0.55,
+      "cns_hz": 0.006713491903212256
     },
     {
       "readout": 0.025,
-      "cns_hz": 0.004609971684037137
+      "cns_hz": 0.006693609092498602
+    },
+    {
+      "readout": 0.275,
+      "cns_hz": 0.007262095170250211
+    },
+    {
+      "readout": 0.075,
+      "cns_hz": 0.006997532056264452
     },
     {
       "readout": 0.1,
-      "cns_hz": 0.005196311714266313
+      "cns_hz": 0.008453846498127781
     },
     {
-      "readout": 0.15,
-      "cns_hz": 0.004039862519696659
+      "readout": 0.2,
+      "cns_hz": 0.010043659811925643
+    },
+    {
+      "readout": 0.4,
+      "cns_hz": 0.007349741846049174
+    },
+    {
+      "readout": 0.075,
+      "cns_hz": 0.011054031213497024
     },
     {
       "readout": 0.05,
-      "cns_hz": 0.005774130539903923
+      "cns_hz": 0.006702536068737386
     },
     {
-      "readout": 0.0,
-      "cns_hz": 0.004244371429894239
+      "readout": 0.1,
+      "cns_hz": 0.00593359879726037
     },
     {
-      "readout": 0.075,
-      "cns_hz": 0.0035987887391713204
-    },
-    {
-      "readout": 0.225,
-      "cns_hz": 0.005199152115796834
-    },
-    {
-      "readout": 0.0,
-      "cns_hz": 0.0051094765817617845
-    },
-    {
-      "readout": 0.05,
-      "cns_hz": 0.0038889154669317777
-    },
-    {
-      "readout": 0.0,
-      "cns_hz": 0.0037878783267746396
-    },
-    {
-      "readout": 0.075,
-      "cns_hz": 0.004773091886218541
-    },
-    {
-      "readout": 0.075,
-      "cns_hz": 0.004750774445621583
-    },
-    {
-      "readout": 0.075,
-      "cns_hz": 0.004489863276460781
-    },
-    {
-      "readout": 0.0,
-      "cns_hz": 0.006057359149661683
+      "readout": 0.5,
+      "cns_hz": 0.008868950893231205
     },
     {
       "readout": 0.025,
-      "cns_hz": 0.003928681088359085
+      "cns_hz": 0.008714757667288584
+    },
+    {
+      "readout": 0.1,
+      "cns_hz": 0.006784096169828087
+    },
+    {
+      "readout": 0.0,
+      "cns_hz": 0.00595713355279898
+    },
+    {
+      "readout": 0.225,
+      "cns_hz": 0.00835483821620673
+    },
+    {
+      "readout": 0.175,
+      "cns_hz": 0.0077989310595188615
+    },
+    {
+      "readout": 0.15,
+      "cns_hz": 0.007506775473522317
+    },
+    {
+      "readout": 0.05,
+      "cns_hz": 0.011786854808371688
+    },
+    {
+      "readout": 0.075,
+      "cns_hz": 0.006384816868966144
     }
   ],
-  "null_cns_hz_median": 0.004281093763967417,
+  "null_cns_hz_median": 0.007305918508149692,
   "null_alive": true,
   "alive_rule": "median null whole-CNS rate >= 0.1 x real",
   "checks": {
@@ -166,50 +166,51 @@
   },
   "uncertainty": {
     "N1_escape_gf_wiring_specific": {
-      "estimate": 0.575,
+      "estimate": 0.8,
       "ci95": null,
       "band": null,
       "method": "null percentile over 20 draws",
       "percentile": 1.0,
       "null_draws": [
         0.0,
-        0.3,
+        0.55,
         0.025,
-        0.125,
-        0.0,
+        0.275,
+        0.075,
+        0.1,
+        0.2,
+        0.4,
+        0.075,
+        0.05,
+        0.1,
+        0.5,
         0.025,
         0.1,
+        0.0,
+        0.225,
+        0.175,
         0.15,
         0.05,
-        0.0,
-        0.075,
-        0.225,
-        0.0,
-        0.05,
-        0.0,
-        0.075,
-        0.075,
-        0.075,
-        0.0,
-        0.025
+        0.075
       ],
       "null_alive": true,
       "verdict": "PASS"
     }
   },
   "registration": {
-    "file": "results/null_dc_escape/registration.json",
-    "version": 2,
-    "git_commit": "4c39a8f",
-    "model_hash": "b4158ed0a2137d02f66b1c67c39d6b0e569b116e80b7a28b9d2bf24508e24d46",
-    "registered_at": "2026-10-11T12:41:27",
+    "file": "results/null_dc_escape/registration_v3.json",
+    "version": 3,
+    "supersedes": "results/null_dc_escape/registration.json",
+    "git_commit": "a94769d",
+    "model_hash": "5983bbe073fe477befa8d3c46a9a4dab2fbccbadbded2e1bcb6639b7910519ee",
+    "registered_at": "2026-10-11T21:42:05",
     "matches": true,
     "problems": []
   },
-  "wall_s": 4554.4,
+  "wall_s": 4934.0,
   "provenance": {
-    "written_at": "2026-10-11T21:33:40",
-    "git_commit": "b7eba83",
+    "written_at": "2026-10-12T07:13:47",
+    "git_commit": "47eb98e",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

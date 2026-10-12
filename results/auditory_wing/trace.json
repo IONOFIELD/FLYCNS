@@ -134,12 +134,12 @@
     "n_trials": 6,
     "dn_spikes": {
       "DNp02": 0,
-      "DNp06": 0,
+      "DNp06": 5,
       "DNp11": 0,
-      "DNg108": 0,
-      "DNp01": 7
+      "DNg108": 7,
+      "DNp01": 20
     },
-    "wing_motor_spikes": 0,
+    "wing_motor_spikes": 34,
     "note": "nothing downstream of GF fires under physiological loom drive, so a multisensory test at the wing motor output would compare zero against zero; fourth circuit blocked by the absence of cell-specific spontaneous activity"
   },
   "conclusion": "The ear-to-flight route in MaleCNS v1.0 is four hops (auditory JO afferents -> SAD/WED relays -> DNp02/DNp06/DNp11/DNg108 -> VNC premotor interneurons -> wing motor neurons) and runs through descending neurons shared with the visual escape system rather than a dedicated auditory channel: all four are loom-dominated by 3x to 32x in two-hop signed input. The giant fiber does not participate (6 synapses onto the premotor pool), consistent with its role in the jump rather than steering. The model cannot test the pathway because none of those descending neurons, and no wing motor neuron, fires under measured loom drive.",
@@ -152,8 +152,8 @@
     "Turner MH, Krieger A, Pang MM, Clandinin TR (2022). Visual and motor signatures of locomotion dynamically shape a population code for feature detection in Drosophila. eLife 11:e82587. Source of the measured loom amplitudes used for the drive here."
   ],
   "provenance": {
-    "written_at": "2026-10-11T19:54:31",
-    "git_commit": "b7eba83",
+    "written_at": "2026-10-12T05:51:17",
+    "git_commit": "47eb98e",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

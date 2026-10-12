@@ -28,77 +28,84 @@
     "MN9_sugar_50Hz_per_trial": [
       0.0,
       0.0,
-      0.0,
+      0.5,
       0.0,
       0.0,
       0.0
     ],
-    "F2b_nonSEZ_rate_hz": 0.00018623616706364373,
-    "F2c_motor_mean_hz": 2.222222222222222,
+    "F2b_nonSEZ_rate_hz": 0.002935670107134805,
+    "F2c_motor_mean_hz": 3.888888888888888,
     "motor_types_active": {
-      "MN2Db": 7,
-      "MN2Da": 1
+      "MN2Db": 19,
+      "MN11D": 17,
+      "MN2Da": 15,
+      "MNx01": 13,
+      "GNG648": 6,
+      "MN10": 5,
+      "MN11V": 3,
+      "GNG641": 2,
+      "MN9": 1
     },
     "F2b_nonSEZ_rate_hz_per_pulse": [
-      0.00020583997412297467,
-      0.0001470285529449819,
-      0.00017643426353397828,
-      0.00020583997412297467,
-      0.00017643426353397828,
-      0.00020583997412297467
+      0.001999588320051754,
+      0.001852559767106772,
+      0.00617519922368924,
+      0.0028817596377216453,
+      0.0020583997412297467,
+      0.0026465139530096743
     ],
     "ALL_gustatory_50Hz": {
       "n_types": 42,
       "MN9_spikes_per_cell": 0.0,
-      "pop_rate_hz": 0.009228144968038653
+      "pop_rate_hz": 0.020887753611205217
     },
     "F2_dose": [
       {
         "sugar_hz": 10,
         "MN9_spikes_per_cell": 0.0,
-        "pop_rate_hz": 6.772224256859775e-05
+        "pop_rate_hz": 0.0006594007829047675
       },
       {
         "sugar_hz": 25,
         "MN9_spikes_per_cell": 0.0,
-        "pop_rate_hz": 0.0010033584885821192
+        "pop_rate_hz": 0.004594419508995921
       },
       {
         "sugar_hz": 50,
-        "MN9_spikes_per_cell": 0.0,
-        "pop_rate_hz": 0.004330659195834014
+        "MN9_spikes_per_cell": 0.08333333333333333,
+        "pop_rate_hz": 0.015576115790777481
       },
       {
         "sugar_hz": 100,
-        "MN9_spikes_per_cell": 0.0,
-        "pop_rate_hz": 0.0140327615259247
+        "MN9_spikes_per_cell": 2.0833333333333335,
+        "pop_rate_hz": 0.07391704559934632
       },
       {
         "sugar_hz": 200,
-        "MN9_spikes_per_cell": 0.0,
-        "pop_rate_hz": 0.03894207164122183
+        "MN9_spikes_per_cell": 2.75,
+        "pop_rate_hz": 0.1398090054543138
       }
     ],
     "F2_reported": {
       "monotonic": true,
-      "max_mn9": 0.0,
+      "max_mn9": 2.75,
       "note": "reported, not scored: MN9 firing from afferent drive requires a mechanism the model lacks (see mechanism.json)"
     },
     "F1_left_sugar": {
       "rate_hz": 100.0,
-      "MN9_ipsi_L": 0.0,
+      "MN9_ipsi_L": 1.1666666666666667,
       "MN9_contra_R": 0.0,
-      "pop_rate_hz": 0.0042308579962592385,
-      "wall_s": 53.8,
+      "pop_rate_hz": 0.01634601075892575,
+      "wall_s": 56.7,
       "structural_2hop_L": 25650.0,
       "structural_2hop_R": 350.0,
       "MN9_ipsi_L_per_trial": [
+        1.0,
+        3.0,
         0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
+        1.0,
+        1.0,
+        1.0
       ],
       "MN9_contra_R_per_trial": [
         0.0,
@@ -111,49 +118,49 @@
       "note": "Shiu 2024 contralateral prediction concerns labellar sugar GRNs; tested separately with LB3b/LB3c in benchmarks/sugar_laterality.py"
     },
     "F4_sufficiency": {
-      "DNge062": 1.0833333333333333,
-      "GNG120": 0.9166666666666666,
-      "GNG117": 0.6666666666666666,
-      "GNG108": 0.75
+      "DNge062": 2.25,
+      "GNG120": 1.5833333333333333,
+      "GNG117": 0.25,
+      "GNG108": 1.9166666666666667
     },
     "F4_sufficiency_per_trial": {
       "DNge062": [
-        1.5,
-        1.5,
-        1.0,
-        1.0,
-        1.0,
-        0.5
+        2.5,
+        3.0,
+        2.5,
+        2.0,
+        2.0,
+        1.5
       ],
       "GNG120": [
+        2.0,
+        2.0,
+        2.0,
         1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        0.5
+        1.5,
+        1.0
       ],
       "GNG117": [
-        1.0,
-        1.0,
-        0.5,
-        0.5,
-        0.5,
-        0.5
+        1.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
       ],
       "GNG108": [
+        3.0,
+        2.0,
+        2.0,
         1.0,
-        1.0,
-        1.0,
-        0.0,
-        1.0,
-        0.5
+        2.0,
+        1.5
       ]
     },
     "F4_mode": "fallback: MN9's top direct excitatory inputs (not scored)",
     "F5_null": {
       "MN9": 0.0,
-      "MN9_real_50Hz": 0.0,
+      "MN9_real_50Hz": 0.08333333333333333,
       "MN9_per_trial": [
         0.0,
         0.0,
@@ -168,7 +175,7 @@
     "F2b_extra_SEZ_quiet": true,
     "F2c_motor_rate_physiological": true,
     "F2_dose_response_REPORTED": null,
-    "F1_laterality_matches_wiring": null,
+    "F1_laterality_matches_wiring": true,
     "F1_shiu_contralateral_bias": null,
     "F3_bitter_suppresses": null,
     "F4_second_order_sufficient": null,
@@ -178,10 +185,10 @@
   "mechanism": "taste -> MN9 in MaleCNS is disinhibitory; a silent network cannot express that, and no uniform manipulation restores it with specificity. Reproducing feeding needs cell-specific spontaneous activity, i.e. the state-dependent modulation this model omits (cf. Shiu et al. 2024, which reported the same limitation for inhibitory neurons at 0 Hz baseline).",
   "uncertainty": {
     "F2b_extra_SEZ_quiet": {
-      "estimate": 0.00018623616706364373,
+      "estimate": 0.002935670107134806,
       "ci95": [
-        0.00016663236000431282,
-        0.00020093902235814194
+        0.0020582772174356258,
+        0.004278530890698973
       ],
       "band": [
         null,
@@ -193,10 +200,10 @@
       "note": "outside-SEZ spikes per neuron per second of drive in each 200 ms pulse (sugar at 50 Hz), bootstrap over pulses"
     },
     "F2c_motor_rate_physiological": {
-      "estimate": 2.222222222222222,
+      "estimate": 3.8888888888888884,
       "ci95": [
-        2.222222222222222,
-        4.999999999999999
+        3.2499999999999996,
+        8.0891544117647
       ],
       "band": [
         0,
@@ -207,29 +214,46 @@
       "band_lower_exclusive": true,
       "n": 6,
       "note": "mean rate of the recruited cb_motor cells (sugar at 50 Hz), bootstrap over pulses; a cell counts as recruited if it fires in the resampled pulses, as in the readout"
+    },
+    "F1_laterality_matches_wiring": {
+      "estimate": 1.1666666666666667,
+      "ci95": [
+        0.5,
+        2.0
+      ],
+      "band": [
+        0,
+        null
+      ],
+      "method": "bootstrap",
+      "verdict": "PASS",
+      "band_lower_exclusive": true,
+      "n": 6,
+      "note": "(MN9-R minus MN9-L) x structural sign (-1, graph arithmetic, fixed), paired per pulse in one simulation, bootstrap over pulses: positive means the functional laterality matches wiring"
     }
   },
   "registration": {
-    "file": "results/feeding/registration.json",
-    "version": 2,
-    "git_commit": "4c39a8f",
-    "model_hash": "9c9cedf1fe8474ba9fdcc36203b2966ae107a14ca741c552c3958309a502fa14",
-    "registered_at": "2026-10-11T12:41:00",
+    "file": "results/feeding/registration_v3.json",
+    "version": 3,
+    "supersedes": "results/feeding/registration.json",
+    "git_commit": "a94769d",
+    "model_hash": "44a27c3afe68f464a8720ad0c267c5f8fb884f984921c90b85d6f5e251b6b2a5",
+    "registered_at": "2026-10-11T21:41:36",
     "matches": false,
     "problems": [
-      "model settings overridden: FLYCNS_WSCALE=0.25"
+      "model settings overridden: FLYCNS_WSCALE=0.45"
     ]
   },
   "provenance": {
-    "written_at": "2026-10-11T21:05:37",
-    "git_commit": "b7eba83",
+    "written_at": "2026-10-12T06:10:10",
+    "git_commit": "47eb98e",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
     "allow_dirty": false,
     "env": {
-      "FLYCNS_RUN_TAG": "wscale025",
-      "FLYCNS_WSCALE": "0.25"
+      "FLYCNS_RUN_TAG": "wscale045",
+      "FLYCNS_WSCALE": "0.45"
     },
     "python": "3.12.10",
     "versions": {

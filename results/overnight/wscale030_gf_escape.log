@@ -1,0 +1,103 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! gf_escape: runs, but is NOT the registered result
+! model settings overridden: FLYCNS_WSCALE=0.3
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_WSCALE=0.3
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+
+  loom  ->  LC4/LPLC2 (lobula)  ==chem==>  GF (DNp01)  ==gap 0.8ms==>  TTMn  ->  jump
+                                                 \==gap 0.8ms==>  PSI  ->  DLMn (wing)
+  [brain] ........................................ neck ........ [VNC]
+loom tuning source: MEASURED (stationary trials, 13 series): Turner, Krieger, Pang & Clandinin 2022, eLife 11:e82587; Dryad doi:10.5061/dryad.h44j0zpp8 (21 flies, extracted 2026-09-09); peak rate 5.0 Hz; gain sigma 0.357
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  per trial GF/TTMn spikes: 1/1 0/0 2/2 1/1 0/0 2/2 2/2 2/2 0/0 0/0 1/1 1/1 0/0 0/0 0/0 0/0 1/1 0/0 1/1 2/2 0/0 2/2 1/1 2/2 2/2 0/0 0/0 0/0 1/1 1/1 0/0 1/1 1/1 2/2 2/2 2/2 0/0 1/1 2/2 4/4
+  raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
+  t0  DNp01  ........|.....................
+  t0  TTMn   ........|.....................
+  t0  CNS    .1334444444234442.............   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  ..............................
+  t1  TTMn   ..............................
+  t1  CNS    .2344334343443322.............   (log2 spikes/bin, 9 = flood)
+
+  t2  DNp01  ..........#...................
+  t2  TTMn   ..........||..................
+  t2  CNS    ..34544444444443..............   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 40 stimulus windows):
+  visual_centrifugal     ######################################## 2.048
+  vnc_efferent           ########                                 0.426
+  cb_intrinsic           ####                                     0.250
+  efferent_ascending     ####                                     0.250
+  descending_neuron      #                                        0.097
+  vnc_motor              #                                        0.057
+  ascending_neuron                                                0.003
+  visual_projection                                               0.000
+  ol_intrinsic                                                    0.000
+[real_electrical] GF 0.50/cell hit 0.62 (95% CI 0.47-0.76) lat 40.9 ms | TTMn 0.50/cell lag 0.90 ms | pop 0.0038 Hz | 331.5s
+  per trial GF/TTMn spikes: 1/0 0/0 2/0 1/0 0/0 2/0 2/0 2/0 0/0 0/0 1/0 1/0 0/0 1/0 0/0 0/0 1/0 0/0 1/0 2/0 1/0 2/0 1/0 2/0 2/0 0/0 0/0 0/0 1/0 1/0 0/0 1/0 1/0 2/0 2/0 2/0 0/0 1/0 2/0 4/0
+  raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
+  t0  DNp01  .......|......................
+  t0  TTMn   ..............................
+  t0  CNS    .1334444444234442.............   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  ..............................
+  t1  TTMn   ..............................
+  t1  CNS    .2344334343443322.............   (log2 spikes/bin, 9 = flood)
+
+  t2  DNp01  ..........#...................
+  t2  TTMn   ..............................
+  t2  CNS    ..34544444444443..............   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 40 stimulus windows):
+  visual_centrifugal     ######################################## 2.048
+  cb_intrinsic           ####                                     0.250
+  efferent_ascending     ####                                     0.250
+  descending_neuron      #                                        0.099
+  ascending_neuron                                                0.003
+  visual_projection                                               0.000
+  ol_intrinsic                                                    0.000
+[real_chemical_only] GF 0.53/cell hit 0.68 (95% CI 0.52-0.80) lat 37.9 ms | TTMn 0.00/cell lag nan ms | pop 0.0038 Hz | 322.2s
+  per trial GF/TTMn spikes: 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0 0/0
+  raster: 4 ms/char, 120 ms from onset   (| spike, # multiple)
+  t0  DNp01  ..............................
+  t0  TTMn   ..............................
+  t0  CNS    ..............................   (log2 spikes/bin, 9 = flood)
+
+  t1  DNp01  ..............................
+  t1  TTMn   ..............................
+  t1  CNS    ..............................   (log2 spikes/bin, 9 = flood)
+
+  t2  DNp01  ..............................
+  t2  TTMn   ..............................
+  t2  CNS    ..............................   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 40 stimulus windows):
+  cb_intrinsic           ######################################## 0.000
+[rewired_null] GF 0.00/cell hit 0.00 (95% CI -0.00-0.09) lat nan ms | TTMn 0.00/cell lag nan ms | pop 0.0000 Hz | 350.3s
+
+CHECKS
+  PASS  gf_spikes_per_response_1_to_2
+  PASS  gf_response_prob_0.5_to_1
+  PASS  gf_latency_10_60ms
+  PASS  ttmn_one_to_one
+  PASS  ttmn_lag_0.5_1.5ms
+  PASS  cns_quiet
+  PASS  electrical_necessary
+  PASS  null_silent
+
+UNCERTAINTY (95% interval; PASS only if the whole interval lies in the band)
+  PASS        gf_spikes_per_response_1_to_2: 1.04 [1, 1.12] band [1, 2] (bootstrap)
+  UNRESOLVED  gf_response_prob_0.5_to_1: 0.625 [0.4703, 0.7578] band [0.5, 1] (wilson)
+  PASS        gf_latency_10_60ms: 40.92 [35.72, 45.99] band [10, 60] (bootstrap)
+  PASS        ttmn_one_to_one: 1 [1, 1] band [0.8, 1.2] (bootstrap (ratio of sums))
+  PASS        ttmn_lag_0.5_1.5ms: 0.9 [0.9, 0.9] band [0.5, 1.5] (bootstrap)
+  PASS        cns_quiet: 0.003827 (point)
+  PASS        electrical_necessary: -0.05 [-0.065, -0.03625] band [-, 0] (bootstrap (two independent arms))
+  PASS        null_silent: 0 [0, 0.08762] band [-, 0.1] (wilson)
+
+BENCHMARK PASS  -> results\gf_escape/report.json

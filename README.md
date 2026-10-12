@@ -29,30 +29,32 @@ circuit by circuit, including where the wiring alone is not enough.
   and a hash of every model file. Each check carries a 95% interval, a score per random draw, or a
   percentile against shuffled wiring; checks that only count over the wiring are scored on their
   value. A check passes only if its whole interval, or the required share of draws, lies inside its
-  band. Failures stay on the record next to the successes: at present 32 of
-  53 checks pass and 8 are unresolved. Of the 19 that count as independent tests of the model,
-  6 pass, 9 fail and 4 are unresolved (`results/SUITE.md`). Checks guaranteed by a chosen value, or
+  band. Failures stay on the record next to the successes: at present 29 of
+  53 checks pass and 6 are unresolved. Of the 19 that count as independent tests of the model,
+  5 pass, 11 fail and 3 are unresolved (`results/SUITE.md`). Checks guaranteed by a chosen value, or
   that only count over the wiring, are labelled as such and not counted as tests.
 - **Built to be used and to last.** Every result is traceable to its code, data and settings, and
   automated checks run on every change.
 
-**Headline result, after the audit's registered rerun (12 October 2026).** The result that used to
-lead this page does not survive its own registered tests. A sound does make the escape neuron more
-likely to fire for a faint visual threat (from 18% to 51% of trials). But the facilitation is smaller
-than adding the two inputs predicts, so it shows nothing beyond arithmetic. And with the ear-to-escape
-contact modelled as the connectome annotates it, sound alone fires the escape neuron on every trial,
-which recordings do not show. (That last outcome could be seen in an earlier reference run before the
-test was registered, so it is not a blind prediction; the same test's facilitation part passes.)
+**Headline result, after the refrozen model's registered rerun (generation 3, 12 October 2026).** The
+result that used to lead this page does not survive. With each escape neuron's sound input
+calibrated on its own ear afferents (before, one side got several times the other's), a sound
+makes the escape neuron LESS likely to fire for a faint visual threat (from 30% to 17% of trials): the
+network's polysynaptic inhibition outweighs the calibrated ear contact. Across the robustness
+settings the effect is small and changes sign, so the model does not settle whether sound helps or
+hinders escape. With the ear-to-escape contact modelled as the connectome annotates it, sound alone
+fires the escape neuron on every trial, which recordings do not show. (That outcome could be seen in an
+earlier reference run before the test was registered, so it is not a blind prediction.)
 
 Two results do hold as registered:
 - **Escape needs its specific wiring.** This is a control, not a test of a prediction. Shuffle the
   connectome while keeping each cell's class, neuropil and input strength, and the network stays as
   active as the real one. Yet in 20 such shuffles the escape neuron never responds as often as with
   the real wiring.
-- **One wing sensor drives the upstroke motor neurons.** SNpp16 drives them selectively, in 4 of 5
-  random draws, at a working point chosen by a pre-registered rule from the same sweep. Its
-  replication with fresh draws is unresolved. Its selectivity does not survive faster nerve-cord
-  membranes or a smaller threshold gap.
+- **One wing sensor selectively drives the upstroke motor neurons,** at a working point chosen by a
+  pre-registered rule from the same sweep (SNpp16, G3). It weakened with the refreeze: it reaches the
+  2 to 12 Hz band in only 1 of 5 random draws (was 4 of 5), fails its fresh-draw replication, and no
+  longer survives transmitter uncertainty or faster nerve-cord membranes.
 
 Most independent checks fail or are unresolved (`results/SUITE.md`, RESULTS.md).
 
@@ -148,9 +150,14 @@ What this repository adds:
 **Corrections on the record** (details in RESULTS.md):
 - An ipsilateral feeding bias (8 September) was an unsigned count; with sign it is contralateral.
 - A regional SEZ gain of 2.0 was an artefact of naming the SEZ by cell type; the gain is retired.
-- "Sound suppresses the escape response" was withdrawn; at 120 trials per arm sound facilitates it.
+- "Sound suppresses the escape response" was withdrawn in September (at 120 trials per arm sound
+  facilitated it), and is back under generation 3: the facilitation rested on the calibration defect.
 - The brainsets export could not be read by the real loader; it is now built and reloaded with it.
-- GF adaptation of 15 mV was an undersampled fit (the current value is 10 mV, refit in October 2026).
+- GF adaptation of 15 mV was an undersampled fit (10 mV at w_scale 0.3; 45 mV since the generation 3 refit).
+- The two escape neurons got different sound inputs (3.65 and 0.73 mV for a 3 mV target): one value
+  served both sides. Each is now calibrated on its own afferents (generation 3).
+- The synaptic scale 0.3 had no recoverable derivation; it is now 0.4, the value a registered rule
+  blind to every benchmark selects. Neither is measured (docs/CALIBRATION.md).
 - Escape is the calibration circuit, not a test. The escape and feeding reports committed in
   September came from a perturbed run.
 - The loom input was all-trials, not stationary as documented. Every loom result was rerun.

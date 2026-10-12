@@ -10,9 +10,9 @@
   "metric_std_across_sweep": {
     "E_spikes": 0.0,
     "E_prob": 0.0,
-    "E_relay": 0.2444,
-    "E_lag": 7.4155,
-    "E_quiet": 0.0
+    "E_relay": 0.222,
+    "E_lag": 7.1309,
+    "E_quiet": 0.0004
   },
   "cord_superclasses": [
     "vnc_motor",
@@ -23,8 +23,8 @@
   "interpretation": "checks that never fail across a 8x range of cord tau_m, a 4-10 mV threshold range and a 5x refractory range do not rest on cord single-neuron parameters",
   "n_trials": 20,
   "provenance": {
-    "written_at": "2026-10-11T20:21:03",
-    "git_commit": "b7eba83",
+    "written_at": "2026-10-12T06:18:18",
+    "git_commit": "47eb98e",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
