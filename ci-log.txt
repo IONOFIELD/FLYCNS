@@ -1,0 +1,9 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+running 10 looms on the cython engine ...
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  4,340 spikes, hash 43eb49b34ac0cc7d
+running 10 looms on the numpy engine ...
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  4,340 spikes, hash 43eb49b34ac0cc7d
+
+IDENTICAL: compiled 4,340 vs pure-Python 4,340 spikes
