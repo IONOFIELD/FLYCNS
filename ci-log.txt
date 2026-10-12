@@ -1,0 +1,27 @@
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+auditory: real network, 40 trials ...
+  real giant fiber peak depolarisation, mV: 3.6450; whole CNS 0.00659 Hz
+  null  1/20: 1.9450; whole CNS 0.00270 Hz (647s)
+  null  2/20: 2.8176; whole CNS 0.00250 Hz (916s)
+  null  3/20: 4.1174; whole CNS 0.00223 Hz (1186s)
+  null  4/20: 1.4223; whole CNS 0.00253 Hz (1476s)
+  null  5/20: 3.9115; whole CNS 0.00239 Hz (1749s)
+  null  6/20: 2.6582; whole CNS 0.00241 Hz (2010s)
+  null  7/20: 3.5272; whole CNS 0.00241 Hz (2277s)
+  null  8/20: 0.6157; whole CNS 0.00231 Hz (2537s)
+  null  9/20: 0.1159; whole CNS 0.00227 Hz (2801s)
+  null 10/20: 0.0768; whole CNS 0.00218 Hz (3067s)
+  null 11/20: 3.5354; whole CNS 0.00238 Hz (3329s)
+  null 12/20: 2.9143; whole CNS 0.00252 Hz (3595s)
+  null 13/20: 0.9586; whole CNS 0.00306 Hz (3858s)
+  null 14/20: 3.3716; whole CNS 0.00219 Hz (4118s)
+  null 15/20: 3.3971; whole CNS 0.00259 Hz (4388s)
+  null 16/20: 1.1629; whole CNS 0.00228 Hz (4649s)
+  null 17/20: 1.6943; whole CNS 0.00262 Hz (4912s)
+  null 18/20: 1.7291; whole CNS 0.00329 Hz (5186s)
+  null 19/20: 0.7371; whole CNS 0.00230 Hz (5448s)
+  null 20/20: 3.4959; whole CNS 0.00196 Hz (5708s)
+
+real 3.6450 vs null median 2.3016, max 4.1174 (percentile 0.90); null CNS 0.00240 Hz vs real 0.00659 Hz (active)
+  UNRESOLVED  N3_jo_gf_chemical_wiring_specific
+wrote results\null_dc_auditory\report.json
