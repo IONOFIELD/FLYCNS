@@ -1,0 +1,88 @@
+[fingerprint] fit-regional: benchmarks/fit_regional.py 1
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+gustatory afferent types (subclass): 42
+taste drive ['LB1a', 'LB1b', 'LB1c', 'LB1d', 'LB1e', 'LB2a', 'LB2b', 'LB2c', 'LB2d', 'LB3', 'LB3a', 'LB3b', 'LB3c', 'LB3d', 'LB4a', 'LB4b', 'PhG10', 'PhG11', 'PhG12', 'PhG13', 'PhG14', 'PhG15', 'PhG16', 'PhG1a', 'PhG1b', 'PhG1c', 'PhG2', 'PhG3', 'PhG4', 'PhG5', 'PhG6', 'PhG7', 'PhG8', 'PhG9', 'aPhM1', 'aPhM2a', 'aPhM2b', 'aPhM3', 'aPhM4', 'aPhM5', 'claw_tpGRN', 'dorsal_tpGRN']; control ['JO-FV']; 11 JO types
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+SEZ definition: anatomical (roiInfo, 4,606 SEZ-intrinsic neurons)
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    15556555556566565665555565.....   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 1 stimulus windows):
+  ascending_neuron       ######################################## 0.052
+  cb_intrinsic           ###############################          0.041
+  descending_neuron      #################                        0.023
+SEZ gain 1.5  score 6/8  [E1 E2 E3 A1 F2 S1       ]  GF hit 1.00 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.00 pop 0.011 (outside SEZ 0.0012) | 100s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    155566555565665565666555651....   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 1 stimulus windows):
+  ascending_neuron       ######################################## 0.050
+  cb_intrinsic           ################################         0.041
+  descending_neuron      ################                         0.021
+  vnc_intrinsic                                                   0.000
+SEZ gain 1.75 score 5/8  [E1 E2 E3 A1 F2          ]  GF hit 1.00 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 0.50 pop 0.011 (outside SEZ 0.0012) | 90s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  cb_motor types firing (spikes / n cells): GNG641:3/2, CvN7:3/2, PS348:3/2, GNG276:2/2, GNG314:2/2, CvN4:1/2, CvN5:1/2, GNG283:1/2   [10 of 43 motor types active]
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    155566555565565566656666753431.   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 1 stimulus windows):
+  cb_motor               ######################################## 0.208
+  descending_neuron      ##########                               0.053
+  ascending_neuron       #########                                0.049
+  vnc_motor              ########                                 0.044
+  cb_intrinsic           ########                                 0.042
+  cb_endocrine           #####                                    0.031
+  vnc_intrinsic          #                                        0.010
+SEZ gain 2.0  score 5/8  [E1 E2 E3 A1 F2          ]  GF hit 1.00 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 1.00 pop 0.013 (outside SEZ 0.0028) | 46s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  cb_motor types firing (spikes / n cells): CvN7:3/2, PS348:3/2, GNG641:3/2, GNG653:2/2, CvN4:1/2, CvN5:1/2, GNG276:1/2, GNG314:1/2   [11 of 43 motor types active]
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    1555655555565666566566566533566   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 1 stimulus windows):
+  cb_motor               ######################################## 0.198
+  ascending_neuron       ##########                               0.054
+  descending_neuron      ##########                               0.054
+  cb_intrinsic           #########                                0.045
+  vnc_motor              ########                                 0.041
+  cb_endocrine           ######                                   0.031
+  vnc_intrinsic          #                                        0.006
+SEZ gain 2.25 score 5/8  [E1 E2 E3 A1 F2          ]  GF hit 1.00 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 1.00 pop 0.013 (outside SEZ 0.0030) | 48s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  cb_motor types firing (spikes / n cells): GNG641:5/2, CvN7:4/2, PS348:3/2, GNG653:2/2, GNG314:2/2, GNG276:2/2, GNG283:1/2, CvN5:1/2   [14 of 43 motor types active]
+  raster: 8 ms/char, 250 ms from onset   (| spike, # multiple)
+  t0  MN9    ...............................
+  t0  CNS    1555655556655666666656556644566   (log2 spikes/bin, 9 = flood)
+
+  region activity (spikes per neuron over 1 stimulus windows):
+  cb_motor               ######################################## 0.292
+  descending_neuron      ########                                 0.065
+  ascending_neuron       ########                                 0.061
+  vnc_motor              #######                                  0.056
+  cb_intrinsic           ######                                   0.046
+  cb_endocrine           ######                                   0.046
+  vnc_intrinsic          #                                        0.009
+  visual_centrifugal                                              0.002
+  visual_projection                                               0.000
+  ol_intrinsic                                                    0.000
+SEZ gain 2.5  score 5/8  [E1 E2 E3 A1 F2          ]  GF hit 1.00 per 1.00 | JO hit 0.00 | MN9 taste 0.00 ctrl 1.50 pop 0.015 (outside SEZ 0.0038) | 45s
+
+best: SEZ gain 1.5  score 6/8   (5 min total)
+ sensory  relay  local  score  chk_E1  chk_E2  chk_E3  chk_A1  chk_A2  chk_F1  chk_F2  chk_S1
+     1.0    1.0   1.50      6    True    True    True    True   False   False    True    True
+     1.0    1.0   1.75      5    True    True    True    True   False   False    True   False
+     1.0    1.0   2.00      5    True    True    True    True   False   False    True   False
+     1.0    1.0   2.25      5    True    True    True    True   False   False    True   False
+     1.0    1.0   2.50      5    True    True    True    True   False   False    True   False
+[fingerprint] fit-regional: 90 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\fit-regional.jsonl
