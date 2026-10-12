@@ -1,0 +1,39 @@
+criteria registered at commit 4cfae84; this run at bd631a2
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+  sugar              34 cells  types ['LB3b', 'LB3c']
+  bitter             38 cells  types ['LB1a', 'LB1b', 'LB1c', 'LB1d']
+  water              17 cells  types ['LB3a']
+  aversive_salt      26 cells  types ['LB3d']
+  old_mixed_proxy   140 cells  types ['aPhM2a', 'aPhM5', 'PhG1c', 'claw_tpGRN', 'LB3a', 'LB3b', 'LB3c', 'LB3d']
+
+structural (signed):
+  sugar            exc    77 / inh   114  ratio  0.68 | h1 +0.0000 h2 -0.0000 h3 +0.0016 h4 +0.0022 h5 +0.0006
+  bitter           exc     0 / inh     6  ratio  0.00 | h1 +0.0000 h2 -0.0000 h3 -0.0001 h4 -0.0000 h5 -0.0001
+  water            exc    58 / inh     0  ratio 58.00 | h1 +0.0000 h2 +0.0000 h3 +0.0001 h4 +0.0005 h5 +0.0002
+  aversive_salt    exc   119 / inh    43  ratio  2.77 | h1 +0.0000 h2 +0.0000 h3 +0.0022 h4 +0.0018 h5 +0.0004
+  old_mixed_proxy  exc  1097 / inh  3333  ratio  0.33 | h1 +0.0000 h2 -0.0035 h3 +0.0032 h4 +0.0065 h5 +0.0025
+
+dynamic (declared parameter set):
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  sugar               50 Hz | MN9  0.00 spikes/cell/pulse | CNS 0.0008 Hz | 113s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  sugar              100 Hz | MN9  0.00 spikes/cell/pulse | CNS 0.0036 Hz | 112s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  bitter              50 Hz | MN9  0.00 spikes/cell/pulse | CNS 0.0013 Hz | 54s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  bitter             100 Hz | MN9  0.00 spikes/cell/pulse | CNS 0.0055 Hz | 53s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  old_mixed_proxy     50 Hz | MN9  0.00 spikes/cell/pulse | CNS 0.0112 Hz | 53s
+[graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
+  old_mixed_proxy    100 Hz | MN9  0.42 spikes/cell/pulse | CNS 0.0403 Hz | 55s
+
+F1 VERDICT: STRENGTHEN: the feeding negative holds with a correctly assigned sugar drive
+CHECKS (criteria registered before the run)
+  PASS  F2_sugar_ratio_exceeds_bitter
+  FAIL  F3_sugar_drives_mn9_at_100hz
+  FAIL  F4_bitter_below_sugar_at_100hz
+UNCERTAINTY (95% intervals, flycns/stats.py: PASS only if the whole interval lies in the band)
+  PASS        F2_sugar_ratio_exceeds_bitter: 0.675 (point)
+  FAIL        F3_sugar_drives_mn9_at_100hz: 0 [0, 0] in [0.5, inf] (bootstrap)
+  FAIL        F4_bitter_below_sugar_at_100hz: 0 [0, 0] in (0, inf] (bootstrap)
+wrote results\feeding_by_modality\report.json
