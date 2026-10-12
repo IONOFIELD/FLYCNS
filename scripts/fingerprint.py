@@ -152,7 +152,11 @@ def compare(a_dir, b_dir):
         if not fa.exists() or not fb.exists():
             bad.append(f"{job}: missing in {'A' if not fa.exists() else 'B'}")
             continue
-        ra, rb = _load(fa), _load(fb)
+        # compared: every simulation record (net, run) and every command's exit code, in order. The "proc"
+        # records only label processes: a script that imports the model earlier on one version (for example
+        # while writing a registration that the other version already has) logs its label at another
+        # place, with every simulation unchanged, so labels are not compared.
+        ra, rb = [r for r in _load(fa) if r["kind"] != "proc"], [r for r in _load(fb) if r["kind"] != "proc"]
         na = sum(r["kind"] in ("net", "run") for r in ra)
         total += na
         first = next((k for k, (x, y) in enumerate(zip(ra, rb)) if x != y), None)
@@ -163,8 +167,8 @@ def compare(a_dir, b_dir):
             first = min(len(ra), len(rb))
         x = ra[first] if first < len(ra) else "<end>"
         y = rb[first] if first < len(rb) else "<end>"
-        bad.append(f"{job}: first difference at line {first + 1} of {len(ra)}/{len(rb)}:\n      A {x}\n      B {y}")
-        print(f"  DIFFERENT {job:<28} (line {first + 1})")
+        bad.append(f"{job}: first difference at record {first + 1} of {len(ra)}/{len(rb)}:\n      A {x}\n      B {y}")
+        print(f"  DIFFERENT {job:<28} (record {first + 1})")
     print(f"\n{len(jobs) - len(bad)} of {len(jobs)} jobs identical; {total} fingerprints compared")
     for b in bad:
         print("  " + b)
