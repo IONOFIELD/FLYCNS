@@ -1,0 +1,8 @@
+[fingerprint] a2-contact-em-flip: benchmarks/a2_contact.py em_flip 2
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! a2_contact_em_flip: REGISTRATION DOES NOT MATCH (FLYCNS_ALLOW_DIRTY=1); not a registered result
+! the criteria in the code differ from the registered ones
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+em_flip: loom alone 0.000 -> with sound 0.000; difference +0.000 (95% CI -0.658 to +0.658)
+  UNRESOLVED  C2_flip_no_facilitation
+[fingerprint] a2-contact-em-flip: 496 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\a2-contact-em-flip.jsonl
