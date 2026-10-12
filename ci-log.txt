@@ -1,0 +1,43 @@
+[fingerprint] diagnose-feeding: benchmarks/diagnose_feeding.py
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! SETTINGS OVERRIDDEN BY ENVIRONMENT (not the declared parameter set):
+!   FLYCNS_ALLOW_DIRTY=1
+! These are stamped into the report. Unset them for a canonical run.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[graph] 176,422 neurons, 6,127,738 signed edges (dropped 160,051 unknown-NT pairs and modulatory amines)
+
+NET EXCITATORY onto MN9 (sugar-like candidates):
+                influence  n_pre    per_neuron  n_type             nt
+type                                                                 
+LN-DN1            27397.0      2  13698.500000       2  acetylcholine
+BM                18466.0      6   3077.666667      69  acetylcholine
+SNppxx              435.0      1    435.000000      80  acetylcholine
+SApp06,SApp15       406.0      1    406.000000      37  acetylcholine
+aPhM2b              328.0      2    164.000000       2  acetylcholine
+LB3b                221.0      2    110.500000      11  acetylcholine
+LB3a                426.0      4    106.500000      17  acetylcholine
+LB3d                618.0      6    103.000000      26  acetylcholine
+BM_Vt_PoOc          255.0      6     42.500000       8  acetylcholine
+BM_MaPa              84.0      2     42.000000      15  acetylcholine
+ENS1                140.0      4     35.000000       6  acetylcholine
+BM_vOcci_vPoOr      140.0      4     35.000000      26  acetylcholine
+
+NET INHIBITORY onto MN9 (bitter-like candidates):
+          influence  n_pre    per_neuron  n_type             nt
+type                                                           
+SNxx19      -1160.0      5   -232.000000      14  acetylcholine
+JO-FV       -1071.0      4   -267.750000      70  acetylcholine
+TPMN2       -4198.0     11   -381.636364      12  acetylcholine
+PhG2        -1724.0      4   -431.000000       4  acetylcholine
+JO-FD1       -867.0      2   -433.500000       4  acetylcholine
+BM_Vib      -1499.0      3   -499.666667      22  acetylcholine
+ENS2        -2382.0      4   -595.500000       4  acetylcholine
+aPhM4       -4306.0      2  -2153.000000       2  acetylcholine
+aPhM2a     -16023.0      5  -3204.600000       5  acetylcholine
+aPhM5      -13615.0      4  -3403.750000       4  acetylcholine
+GNG654     -10407.0      2  -5203.500000       2  acetylcholine
+BM_Taste  -385614.0     37 -10422.000000      40  acetylcholine
+
+suggested drive:  python benchmarks/feeding.py 6 data BM,SNppxx,SApp06,SApp15,LB3b,LB3a,LB3d SNxx19,JO-FV,TPMN2,BM_Vib,aPhM2a,BM_Taste
+[fingerprint] diagnose-feeding: 0 simulation steps fingerprinted -> D:\a\FLYCNS\FLYCNS\fingerprints\diagnose-feeding.jsonl
+[fingerprint] diagnose-feeding: no simulation step was fingerprinted
