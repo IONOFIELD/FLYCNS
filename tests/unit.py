@@ -528,24 +528,40 @@ def t_seed_reaches_the_model(tmp):
 
 DATA_TABLE_NAMES = {"neurons.parquet", "edges.parquet", "roi_membership.parquet", "edges_nt.parquet"}
 RESULT_TABLE_NAMES = {"cascade_links.parquet", "cascade_sites.parquet", "spikes_real.parquet"}   # written under results/
+REFERENCE_RUN_TABLE_NAMES = {"A0_sugarR_100Hz.parquet"}   # written by the A0 reference run under reference-runs/
+
+
+def _reference_pins():
+    """Tables of the published reference model (Shiu et al. 2024): read in the authors' own repository, not
+    flycns inputs, so they are pinned by sha256 in fit/shiu2024_reference.py (PINS), not in data/MANIFEST.json."""
+    import ast
+    tree = ast.parse((ROOT / "fit/shiu2024_reference.py").read_text(encoding="utf-8"))
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and any(getattr(t, "id", None) == "PINS" for t in node.targets):
+            return {Path(k).name: v for k, v in ast.literal_eval(node.value).items()}
+    return {}
 
 
 def t_manifest_pins_every_input_table():
-    """Every parquet table the code reads is either pinned in data/MANIFEST.json or a result the code
-    itself writes under results/. A new input table must be pinned before any result can rest on it."""
+    """Every parquet table the code reads is either pinned in data/MANIFEST.json, a result the code itself
+    writes under results/, or a table of the published reference model pinned by sha256 in
+    fit/shiu2024_reference.py (or written by its run). A new input table must be pinned before any result can
+    rest on it. Name templates in prose (Sugar_Bitter_<s>_Hz_<b>_Hz.parquet) are not table names."""
     import re
     names = set()
     for top in ("benchmarks", "fit", "scripts", "flycns", "viz"):
         for f in (ROOT / top).rglob("*.py"):
             if "legacy" not in f.parts:
-                names |= set(re.findall(r"([A-Za-z0-9_]+\.parquet)", f.read_text(encoding="utf-8")))
+                names |= set(re.findall(r"(?<![>A-Za-z0-9_])([A-Za-z0-9_]+\.parquet)", f.read_text(encoding="utf-8")))
     names.discard("pyarrow.parquet")
-    unknown = names - DATA_TABLE_NAMES - RESULT_TABLE_NAMES
+    reference = {n for n, h in _reference_pins().items() if n.endswith(".parquet") and len(h) == 64}
+    unknown = names - DATA_TABLE_NAMES - RESULT_TABLE_NAMES - reference - REFERENCE_RUN_TABLE_NAMES
     mf = ROOT / "data/MANIFEST.json"
     pinned = set(json.loads(mf.read_text(encoding="utf-8"))["files"]) if mf.exists() else set()
     unpinned = sorted(DATA_TABLE_NAMES - pinned)
     ok = not unknown and not unpinned
-    return ok, (f"all {len(DATA_TABLE_NAMES)} input tables pinned ({', '.join(sorted(DATA_TABLE_NAMES))})" if ok else
+    return ok, (f"all {len(DATA_TABLE_NAMES)} input tables pinned ({', '.join(sorted(DATA_TABLE_NAMES))}); "
+                f"{len(reference)} reference-model tables pinned by sha256 in fit/shiu2024_reference.py" if ok else
                 f"unclassified tables {sorted(unknown)}; not pinned in data/MANIFEST.json: {unpinned}")
 
 
