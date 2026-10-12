@@ -1,0 +1,138 @@
+{"argv": ["gf_escape.py", "2", "data"], "env": {"FLYCNS_ALLOW_DIRTY": "1", "FLYCNS_RUN_TAG": "wscale030", "FLYCNS_SEED": "0", "FLYCNS_SIGNFLIP": "0", "FLYCNS_WSCALE": "0.3"}, "kind": "proc"}
+{"h": "86c06adab702fae4e264a60f514042ba", "kind": "net", "model": 1, "n_objects": 6, "objects": ["NeuronGroup:neurongroup", "PoissonGroup:poissongroup", "SpikeMonitor:spikemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2"], "seq": 0}
+{"dur": 300.0, "kind": "run", "model": 1, "n_spikes": 0, "seq": 1, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "5c88ddf4389367f97d9945dcb97b45f1", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 1, "n_spikes": 217, "seq": 2, "spikes": "03e1281bc076f375068e64b3b4cf9e20", "state": "f0452a755284143b63aa0084e296d9b9", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 1, "n_spikes": 245, "seq": 3, "spikes": "08124c5fc0d3f32b7e628cd668567e6f", "state": "a50afc3909054b45901c8481eb3a0e3a", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 1, "n_spikes": 453, "seq": 4, "spikes": "477d205ab3a81d5add428866d949199d", "state": "47ec44b3b10df5f9a0c27021163573e8", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 1, "n_spikes": 460, "seq": 5, "spikes": "55f7a315009de232de19bdadd450daf8", "state": "c198deaac67236294dfe6b45c59cc889", "t_ms": 1020.0}
+{"h": "25545c7d1e36d2ed8d679a7a2acb6d68", "kind": "net", "model": 2, "n_objects": 5, "objects": ["NeuronGroup:neurongroup_1", "PoissonGroup:poissongroup_1", "SpikeMonitor:spikemonitor_1", "Synapses:synapses_3", "Synapses:synapses_4"], "seq": 5}
+{"dur": 300.0, "kind": "run", "model": 2, "n_spikes": 0, "seq": 6, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "66e2fc9cc2fe880970c53d590ed02bb8", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 2, "n_spikes": 215, "seq": 7, "spikes": "ad3569ad5e6a91bceec97335cfa87f25", "state": "3b9dac2afc0ca96f77d9e38b3b65c705", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 2, "n_spikes": 243, "seq": 8, "spikes": "7ba1d51de58342cd32b86705c58d08dc", "state": "c1ead434513470d3b3fa0d23ab650f8c", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 2, "n_spikes": 451, "seq": 9, "spikes": "ff77cc9ecb2be0c2ea72d14ecba12c35", "state": "67916886d2abc623e53216d2ffa5914c", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 2, "n_spikes": 458, "seq": 10, "spikes": "cecc5267cfbdc64b7d3133ed14ad4ba2", "state": "15df1fd265004c05c7b8759c04d70d4f", "t_ms": 1020.0}
+{"h": "8a526959580126ebcd85ec40bc268039", "kind": "net", "model": 3, "n_objects": 6, "objects": ["NeuronGroup:neurongroup_2", "PoissonGroup:poissongroup_2", "SpikeMonitor:spikemonitor_2", "Synapses:synapses_5", "Synapses:synapses_6", "Synapses:synapses_7"], "seq": 10}
+{"dur": 300.0, "kind": "run", "model": 3, "n_spikes": 0, "seq": 11, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "98ff2080da5df69b83b9afe3dd95280a", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 3, "n_spikes": 0, "seq": 12, "spikes": "27eb2926e24d5b1053f1e9d29924f7db", "state": "d43bd62ba004a1fbe102d8d4308fe557", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 3, "n_spikes": 0, "seq": 13, "spikes": "8862f896864473059cce9eb4c412ae68", "state": "d18976429dbe5bf6c1bac0bcf6085104", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 3, "n_spikes": 0, "seq": 14, "spikes": "d3739de4a5aeb3fff78bdd234e19461c", "state": "0257c8acac74801b141e1e8f3ddb41fc", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 3, "n_spikes": 0, "seq": 15, "spikes": "101952182df75728640b35779f47b3fa", "state": "0abc093abe1cc3c697776547a52134fc", "t_ms": 1020.0}
+{"argv": ["benchmarks/gf_escape.py", "2", "data"], "code": 0, "kind": "exit"}
+{"argv": ["auditory.py", "2", "data"], "env": {"FLYCNS_ALLOW_DIRTY": "1", "FLYCNS_RUN_TAG": "wscale030", "FLYCNS_SEED": "0", "FLYCNS_SIGNFLIP": "0", "FLYCNS_WSCALE": "0.3"}, "kind": "proc"}
+{"h": "36ed223a14b076d94794539b70562ceb", "kind": "net", "model": 1, "n_objects": 7, "objects": ["NeuronGroup:neurongroup", "PoissonGroup:poissongroup", "SpikeMonitor:spikemonitor", "StateMonitor:statemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2"], "seq": 0}
+{"dur": 300.0, "kind": "run", "model": 1, "n_spikes": 0, "seq": 1, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "0c8e832a4387c7171e4918841b9cd289", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 1, "n_spikes": 70, "seq": 2, "spikes": "31202cb6ff3974f0eb8f549107d6f842", "state": "96f48f8ac8d314b6a243ae1e97a43cba", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 1, "n_spikes": 72, "seq": 3, "spikes": "f0cdc5236e3946f88b5bbcfc98b13cfd", "state": "a11eec4e2a9357b7c4014518d1bbbf50", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 1, "n_spikes": 118, "seq": 4, "spikes": "c9e0d3077a4fae775ef6a1bdac19537c", "state": "1595794454dcd1b8e6440dad6bcc4be9", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 1, "n_spikes": 131, "seq": 5, "spikes": "641012102c0db5c38c6445478416f1b2", "state": "a64bda9bbce6b1780a1985f1dca10db8", "t_ms": 1020.0}
+{"h": "0da0d0736418168de66a83decba00450", "kind": "net", "model": 2, "n_objects": 7, "objects": ["NeuronGroup:neurongroup_1", "PoissonGroup:poissongroup_1", "SpikeMonitor:spikemonitor", "StateMonitor:statemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2"], "seq": 5}
+{"dur": 300.0, "kind": "run", "model": 2, "n_spikes": 0, "seq": 6, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "0dc86fa292ae906e86b56afa2e78235e", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 2, "n_spikes": 94, "seq": 7, "spikes": "ce8d033184a61100fca85071b52ba6f2", "state": "269fa03a11ac434b86879d4e8dfc6349", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 2, "n_spikes": 104, "seq": 8, "spikes": "4cd96bc5f21159a50b5e735b1c2e9204", "state": "4f54423b49ee7383dd8d8131df9fa0fc", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 2, "n_spikes": 173, "seq": 9, "spikes": "a32663f9e5ced0d921638741142bca8c", "state": "da544a338b0ded0ec2c991bab97e583a", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 2, "n_spikes": 180, "seq": 10, "spikes": "0940b45990e88b2660b8410568b6cff2", "state": "91847609fe2a0c874395f146dd4fb06b", "t_ms": 1020.0}
+{"h": "6329819e575effc9873e8807d8213068", "kind": "net", "model": 3, "n_objects": 7, "objects": ["NeuronGroup:neurongroup", "PoissonGroup:poissongroup", "SpikeMonitor:spikemonitor", "StateMonitor:statemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2"], "seq": 10}
+{"dur": 300.0, "kind": "run", "model": 3, "n_spikes": 0, "seq": 11, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "0c8e832a4387c7171e4918841b9cd289", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 3, "n_spikes": 137, "seq": 12, "spikes": "dc328022544c38254a064e6c1a5df666", "state": "fac989c80f4963f4404b420aaccf5c9c", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 3, "n_spikes": 143, "seq": 13, "spikes": "e329bf01691ab9f5a09024eb7cccae00", "state": "114b53a26285e34f8ada505060a4af52", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 3, "n_spikes": 277, "seq": 14, "spikes": "1b3f8afbe0d3b8ff14d62037c0b3a6f7", "state": "3545d63a5bac6fe93e7144941fb14a81", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 3, "n_spikes": 283, "seq": 15, "spikes": "fad6dfa66e6cce8cb5af7e4d7e931a4e", "state": "c40d8d4f7c630cbb2e8fc940267a686b", "t_ms": 1020.0}
+{"h": "0da0d0736418168de66a83decba00450", "kind": "net", "model": 4, "n_objects": 7, "objects": ["NeuronGroup:neurongroup_1", "PoissonGroup:poissongroup_1", "SpikeMonitor:spikemonitor", "StateMonitor:statemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2"], "seq": 15}
+{"dur": 300.0, "kind": "run", "model": 4, "n_spikes": 0, "seq": 16, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "0dc86fa292ae906e86b56afa2e78235e", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 4, "n_spikes": 201, "seq": 17, "spikes": "11f0decefedd63ed248b7644c78af912", "state": "4a29ca4b6d32c20f5cd96e003811c4f2", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 4, "n_spikes": 241, "seq": 18, "spikes": "01a97968c6b9d0cd30e8abcf277e9b73", "state": "77c279c53b79b0feeb21e79c3556287c", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 4, "n_spikes": 447, "seq": 19, "spikes": "a94683990426242a54986b70cb5a0f72", "state": "55187a1680e1ea6cbd68faa90c88ae22", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 4, "n_spikes": 461, "seq": 20, "spikes": "6667e5c0456b730f7566ee6e3255bdd2", "state": "4fde950d57308f0443b9179ac57825e0", "t_ms": 1020.0}
+{"h": "6329819e575effc9873e8807d8213068", "kind": "net", "model": 5, "n_objects": 7, "objects": ["NeuronGroup:neurongroup", "PoissonGroup:poissongroup", "SpikeMonitor:spikemonitor", "StateMonitor:statemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2"], "seq": 20}
+{"dur": 300.0, "kind": "run", "model": 5, "n_spikes": 0, "seq": 21, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "0c8e832a4387c7171e4918841b9cd289", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 5, "n_spikes": 288, "seq": 22, "spikes": "da556363de0702bd1e86eff2b4d6d161", "state": "91fe4b270b82acf811a922f9198f3a8e", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 5, "n_spikes": 302, "seq": 23, "spikes": "a7d9050345b57e29bd892a33046c6138", "state": "7624ae2df924e214c64447b342433756", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 5, "n_spikes": 636, "seq": 24, "spikes": "cc563031aaa1b541ef9f22d87df4b177", "state": "ba06790820f7a32059176fb0c36e5f12", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 5, "n_spikes": 651, "seq": 25, "spikes": "df28d4e8b6392bfc56d85364b6327e9f", "state": "ff02c2c75044d87e073b7c9315a30849", "t_ms": 1020.0}
+{"h": "abd6d3d82dd637e27cfccd7601eea7a7", "kind": "net", "model": 6, "n_objects": 8, "objects": ["NeuronGroup:neurongroup_1", "PoissonGroup:poissongroup_1", "SpikeMonitor:spikemonitor", "StateMonitor:statemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2", "Synapses:synapses_3"], "seq": 25}
+{"dur": 300.0, "kind": "run", "model": 6, "n_spikes": 0, "seq": 26, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "a2c0442566c4d247c1d7acdcc527d069", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 6, "n_spikes": 246, "seq": 27, "spikes": "8b5a3cb7357d7327d8475972bbc65188", "state": "0d95d220194d85c4fecc518f3994d03b", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 6, "n_spikes": 262, "seq": 28, "spikes": "510804b053e08852bf9c858e38ea73cd", "state": "d3743fa17c09d965c0d16487995c4296", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 6, "n_spikes": 471, "seq": 29, "spikes": "1bdae335ad07d39dc7dd0f148df3f565", "state": "9ac7aa45a5776df107d469200fb55570", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 6, "n_spikes": 487, "seq": 30, "spikes": "2b14c5fd99aacb1dedc04ce565c2d630", "state": "4928a1c9053456449c7252dcd577a816", "t_ms": 1020.0}
+{"h": "9be775fb22e52d55156d079dea73e3a8", "kind": "net", "model": 7, "n_objects": 6, "objects": ["NeuronGroup:neurongroup", "PoissonGroup:poissongroup", "SpikeMonitor:spikemonitor", "StateMonitor:statemonitor", "Synapses:synapses", "Synapses:synapses_1"], "seq": 30}
+{"dur": 300.0, "kind": "run", "model": 7, "n_spikes": 0, "seq": 31, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "f3161fc5bd3fc56d4385334fca656f81", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 7, "n_spikes": 246, "seq": 32, "spikes": "8b5a3cb7357d7327d8475972bbc65188", "state": "3d10a0b5fae32f4171431c42f84d634d", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 7, "n_spikes": 262, "seq": 33, "spikes": "510804b053e08852bf9c858e38ea73cd", "state": "c0286084186eece8f2ff8331d2325069", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 7, "n_spikes": 471, "seq": 34, "spikes": "1bdae335ad07d39dc7dd0f148df3f565", "state": "2eb3fc9797128d06f8c69a905e17f8c3", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 7, "n_spikes": 487, "seq": 35, "spikes": "2b14c5fd99aacb1dedc04ce565c2d630", "state": "50726e5a8c77c0ca44911b32aa3fd577", "t_ms": 1020.0}
+{"h": "adf34ac8b3f8149fc20bdfbde74ad98a", "kind": "net", "model": 8, "n_objects": 6, "objects": ["NeuronGroup:neurongroup_1", "PoissonGroup:poissongroup_1", "SpikeMonitor:spikemonitor", "StateMonitor:statemonitor", "Synapses:synapses", "Synapses:synapses_1"], "seq": 35}
+{"dur": 300.0, "kind": "run", "model": 8, "n_spikes": 0, "seq": 36, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "d492dd7e2485049785058e5f5dae76ce", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 8, "n_spikes": 248, "seq": 37, "spikes": "1f28a3f1f4654424ea094364aaeea5ab", "state": "b277aedb1f1f139a53a0635f11a4aef0", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 8, "n_spikes": 263, "seq": 38, "spikes": "bf696e0e27b4144de16a17817ac87d7a", "state": "957fa55e41cc484ca143ad62b2607d7c", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 8, "n_spikes": 473, "seq": 39, "spikes": "ced08505233f7437ac3ee5bd3efe6986", "state": "f8979aee15286c523531ce538f5ac0a5", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 8, "n_spikes": 489, "seq": 40, "spikes": "2117e635e4bb56992168e1e177b07a56", "state": "eec4793cb9cbbe55f65ca16dc2c9e72c", "t_ms": 1020.0}
+{"h": "6329819e575effc9873e8807d8213068", "kind": "net", "model": 9, "n_objects": 7, "objects": ["NeuronGroup:neurongroup", "PoissonGroup:poissongroup", "SpikeMonitor:spikemonitor", "StateMonitor:statemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2"], "seq": 40}
+{"dur": 300.0, "kind": "run", "model": 9, "n_spikes": 0, "seq": 41, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "0c8e832a4387c7171e4918841b9cd289", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 9, "n_spikes": 151, "seq": 42, "spikes": "8ef54f617492e69b88bccf4bcbda6b1c", "state": "ad9e909a57f69d83ab09c9e296a07537", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 9, "n_spikes": 157, "seq": 43, "spikes": "01c19b018201c086f96c196893b87f1b", "state": "012e0ed3db3f25b6cbf222cdd794ab8d", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 9, "n_spikes": 311, "seq": 44, "spikes": "aec83492b567136f70eda62bb2469413", "state": "48bd937a8dee72be3e07ff52d76e9bc5", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 9, "n_spikes": 315, "seq": 45, "spikes": "8c3232fdc6ad8814ac00a4e64a8353b8", "state": "0ed54e7c544c5696040683bb29b3d70f", "t_ms": 1020.0}
+{"h": "322e98892e6018811e5ab8b6cfd2dc8c", "kind": "net", "model": 10, "n_objects": 8, "objects": ["NeuronGroup:neurongroup_1", "PoissonGroup:poissongroup_1", "SpikeMonitor:spikemonitor", "StateMonitor:statemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2", "Synapses:synapses_3"], "seq": 45}
+{"dur": 300.0, "kind": "run", "model": 10, "n_spikes": 0, "seq": 46, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "881638cf99c9e438966e45f78edc79e4", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 10, "n_spikes": 331, "seq": 47, "spikes": "d32c35779953d3d8955a262b9093329e", "state": "6a978edbab5b2fb8607fb4f556ec3bcd", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 10, "n_spikes": 368, "seq": 48, "spikes": "e478744feb77e36fe2c275e3568aea05", "state": "94a4478c9836dffa07087b2d62f8a641", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 10, "n_spikes": 736, "seq": 49, "spikes": "669ce05246561871a0ce26ebff52c1b1", "state": "a168decff8116623f30f851576e1c627", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 10, "n_spikes": 773, "seq": 50, "spikes": "6697bbf95959c9c24261e83d037819d6", "state": "5156ba9617a6dbf0523e85212b3f27b3", "t_ms": 1020.0}
+{"h": "0c8d08b5d32bfb71112ad82d5c902941", "kind": "net", "model": 11, "n_objects": 6, "objects": ["NeuronGroup:neurongroup", "PoissonGroup:poissongroup", "SpikeMonitor:spikemonitor", "StateMonitor:statemonitor", "Synapses:synapses", "Synapses:synapses_1"], "seq": 50}
+{"dur": 300.0, "kind": "run", "model": 11, "n_spikes": 0, "seq": 51, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "51d7850cc1d80f185d27a547316b84f0", "t_ms": 300.0}
+{"dur": 60.0, "kind": "run", "model": 11, "n_spikes": 15, "seq": 52, "spikes": "d55a6970128be31eb9074666f3a97218", "state": "59e06ab5befe9a0b9162840898aa8564", "t_ms": 360.0}
+{"dur": 300.0, "kind": "run", "model": 11, "n_spikes": 15, "seq": 53, "spikes": "cf84587e313cc81747aea191582cba1e", "state": "f607283fdfb5962b70f5f5f2ded9e6c1", "t_ms": 660.0}
+{"dur": 60.0, "kind": "run", "model": 11, "n_spikes": 22, "seq": 54, "spikes": "7ab4c6d2af332c95c23ae0e7dd71237d", "state": "38f8f3bdd82a5c7d0cbabacba4fdb3ac", "t_ms": 720.0}
+{"dur": 300.0, "kind": "run", "model": 11, "n_spikes": 27, "seq": 55, "spikes": "a9482092ae676d5c3cfca9b27992ba9c", "state": "fa96aab0c3f6f1a4095475253ab27237", "t_ms": 1020.0}
+{"argv": ["benchmarks/auditory.py", "2", "data"], "code": 0, "kind": "exit"}
+{"argv": ["feeding.py", "1", "data"], "env": {"FLYCNS_ALLOW_DIRTY": "1", "FLYCNS_RUN_TAG": "wscale030", "FLYCNS_SEED": "0", "FLYCNS_SIGNFLIP": "0", "FLYCNS_WSCALE": "0.3"}, "kind": "proc"}
+{"h": "31f828050912bddb6ab6281754cedf53", "kind": "net", "model": 1, "n_objects": 6, "objects": ["NeuronGroup:neurongroup", "PoissonGroup:poissongroup", "SpikeMonitor:spikemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2"], "seq": 0}
+{"dur": 300.0, "kind": "run", "model": 1, "n_spikes": 0, "seq": 1, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "478b518dece5f4be8492200ef6d5bd2e", "t_ms": 300.0}
+{"dur": 200.0, "kind": "run", "model": 1, "n_spikes": 6, "seq": 2, "spikes": "7f6daaf6a4567dced46518995cb2d5f9", "state": "105680c3d5ccbf20dd716c01dfc75f28", "t_ms": 500.0}
+{"dur": 300.0, "kind": "run", "model": 1, "n_spikes": 6, "seq": 3, "spikes": "958358b658c411fb873d163a58534062", "state": "e611a0ea72128f8532e2979ac0f60723", "t_ms": 800.0}
+{"h": "f2d6e2422774fa6f1eed83ed50d098e7", "kind": "net", "model": 2, "n_objects": 6, "objects": ["NeuronGroup:neurongroup_1", "PoissonGroup:poissongroup_1", "SpikeMonitor:spikemonitor_1", "Synapses:synapses_3", "Synapses:synapses_4", "Synapses:synapses_5"], "seq": 3}
+{"dur": 300.0, "kind": "run", "model": 2, "n_spikes": 0, "seq": 4, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "f4971e61a5362ca5a8e9f56a82f12925", "t_ms": 300.0}
+{"dur": 200.0, "kind": "run", "model": 2, "n_spikes": 94, "seq": 5, "spikes": "a981885e4886dc536b5e1b4101094205", "state": "f89e8516231a7ff4dab63034fca831c7", "t_ms": 500.0}
+{"dur": 300.0, "kind": "run", "model": 2, "n_spikes": 100, "seq": 6, "spikes": "235169bb237c9e3bc5f62f390f93b619", "state": "def56571dd8faaad43cb3c9fe096cc90", "t_ms": 800.0}
+{"h": "a171c66d74728776683bcca8feeded68", "kind": "net", "model": 3, "n_objects": 6, "objects": ["NeuronGroup:neurongroup", "PoissonGroup:poissongroup", "SpikeMonitor:spikemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2"], "seq": 6}
+{"dur": 300.0, "kind": "run", "model": 3, "n_spikes": 0, "seq": 7, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "478b518dece5f4be8492200ef6d5bd2e", "t_ms": 300.0}
+{"dur": 200.0, "kind": "run", "model": 3, "n_spikes": 465, "seq": 8, "spikes": "9c6ace9694192f0c775d0fcfb256c1e2", "state": "13c2aa3dd229c1060dfc927e9a57474e", "t_ms": 500.0}
+{"dur": 300.0, "kind": "run", "model": 3, "n_spikes": 490, "seq": 9, "spikes": "1e90edcf299c3297e857bf970b39cf39", "state": "f25591a6e49045c925ec23cbd7acc1cf", "t_ms": 800.0}
+{"h": "f2d6e2422774fa6f1eed83ed50d098e7", "kind": "net", "model": 4, "n_objects": 6, "objects": ["NeuronGroup:neurongroup_1", "PoissonGroup:poissongroup_1", "SpikeMonitor:spikemonitor_1", "Synapses:synapses_3", "Synapses:synapses_4", "Synapses:synapses_5"], "seq": 9}
+{"dur": 300.0, "kind": "run", "model": 4, "n_spikes": 0, "seq": 10, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "f4971e61a5362ca5a8e9f56a82f12925", "t_ms": 300.0}
+{"dur": 200.0, "kind": "run", "model": 4, "n_spikes": 1633, "seq": 11, "spikes": "ed15046991a10827b23e31601d797209", "state": "9c7150ac5181ae55946924009f326e1e", "t_ms": 500.0}
+{"dur": 300.0, "kind": "run", "model": 4, "n_spikes": 1688, "seq": 12, "spikes": "f102b14d5e795f1def2f3a3bfae65c98", "state": "7651a0236cb7a5382c6ae9c8b8bb081d", "t_ms": 800.0}
+{"h": "a171c66d74728776683bcca8feeded68", "kind": "net", "model": 5, "n_objects": 6, "objects": ["NeuronGroup:neurongroup", "PoissonGroup:poissongroup", "SpikeMonitor:spikemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2"], "seq": 12}
+{"dur": 300.0, "kind": "run", "model": 5, "n_spikes": 0, "seq": 13, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "478b518dece5f4be8492200ef6d5bd2e", "t_ms": 300.0}
+{"dur": 200.0, "kind": "run", "model": 5, "n_spikes": 4821, "seq": 14, "spikes": "1dc506de934728624a0768dbf34717cf", "state": "a1942b0644328c2b152b01e5dc3f6d4f", "t_ms": 500.0}
+{"dur": 300.0, "kind": "run", "model": 5, "n_spikes": 4996, "seq": 15, "spikes": "498cd9046096487b0846462067ba5dc9", "state": "b29ebe76f9d69895bb40ccf692b99998", "t_ms": 800.0}
+{"h": "0a00954c75271fc26d2650e09644a1a6", "kind": "net", "model": 6, "n_objects": 6, "objects": ["NeuronGroup:neurongroup_1", "PoissonGroup:poissongroup_1", "SpikeMonitor:spikemonitor_1", "Synapses:synapses_3", "Synapses:synapses_4", "Synapses:synapses_5"], "seq": 15}
+{"dur": 300.0, "kind": "run", "model": 6, "n_spikes": 0, "seq": 16, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "d95ab0f2eec83a5d302de8bc97046f5a", "t_ms": 300.0}
+{"dur": 200.0, "kind": "run", "model": 6, "n_spikes": 1066, "seq": 17, "spikes": "0eb5bd01054a20a97dc2b637797988e3", "state": "c00242bc2c5a23ea93db65bb14a7f37f", "t_ms": 500.0}
+{"dur": 300.0, "kind": "run", "model": 6, "n_spikes": 1095, "seq": 18, "spikes": "319508d46089871a625de37c7c356878", "state": "ef3115b3603355c97682a132559c4fcc", "t_ms": 800.0}
+{"h": "a171c66d74728776683bcca8feeded68", "kind": "net", "model": 7, "n_objects": 6, "objects": ["NeuronGroup:neurongroup", "PoissonGroup:poissongroup", "SpikeMonitor:spikemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2"], "seq": 18}
+{"dur": 300.0, "kind": "run", "model": 7, "n_spikes": 0, "seq": 19, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "478b518dece5f4be8492200ef6d5bd2e", "t_ms": 300.0}
+{"dur": 200.0, "kind": "run", "model": 7, "n_spikes": 548, "seq": 20, "spikes": "7109a7adaca90848d2a0ffd2ffcf96a6", "state": "851238bfb192a542b268db197775b289", "t_ms": 500.0}
+{"dur": 300.0, "kind": "run", "model": 7, "n_spikes": 560, "seq": 21, "spikes": "6142ef16db98fffa03f32ec6065c1ddd", "state": "5347586989cde4ccc08c60f3b736776f", "t_ms": 800.0}
+{"h": "3e77334f25c4bfb488339d1d8f77fa1c", "kind": "net", "model": 8, "n_objects": 6, "objects": ["NeuronGroup:neurongroup_1", "PoissonGroup:poissongroup_1", "SpikeMonitor:spikemonitor_1", "Synapses:synapses_3", "Synapses:synapses_4", "Synapses:synapses_5"], "seq": 21}
+{"dur": 300.0, "kind": "run", "model": 8, "n_spikes": 0, "seq": 22, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "63ec776c531bb04a8452cde433eb6778", "t_ms": 300.0}
+{"dur": 200.0, "kind": "run", "model": 8, "n_spikes": 34, "seq": 23, "spikes": "791368dc82f4fb092b82cdab3f73f87c", "state": "0678970da206b7121d5a46e821db3ed7", "t_ms": 500.0}
+{"dur": 300.0, "kind": "run", "model": 8, "n_spikes": 34, "seq": 24, "spikes": "2e2ff6688788ede0c0e1d45c427147b1", "state": "ef2ef7ff779f71674241be4428cfdc9a", "t_ms": 800.0}
+{"h": "4a4fec10890d8791a938738ad6687ae9", "kind": "net", "model": 9, "n_objects": 6, "objects": ["NeuronGroup:neurongroup", "PoissonGroup:poissongroup", "SpikeMonitor:spikemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2"], "seq": 24}
+{"dur": 300.0, "kind": "run", "model": 9, "n_spikes": 0, "seq": 25, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "811fc814b64768be4ec0b24d7414d925", "t_ms": 300.0}
+{"dur": 200.0, "kind": "run", "model": 9, "n_spikes": 21, "seq": 26, "spikes": "a5f4db21f08f93965d34de73d98be3ee", "state": "8b1d83f51ac830b11bea9c1e68403e82", "t_ms": 500.0}
+{"dur": 300.0, "kind": "run", "model": 9, "n_spikes": 21, "seq": 27, "spikes": "9019bd3f355ca3fb3d537694cc7ccfcb", "state": "3f6f87694924f558e750ed41ddabb20a", "t_ms": 800.0}
+{"h": "f5913dee1b27f48898c729ce0582761e", "kind": "net", "model": 10, "n_objects": 6, "objects": ["NeuronGroup:neurongroup_1", "PoissonGroup:poissongroup_1", "SpikeMonitor:spikemonitor_1", "Synapses:synapses_3", "Synapses:synapses_4", "Synapses:synapses_5"], "seq": 27}
+{"dur": 300.0, "kind": "run", "model": 10, "n_spikes": 0, "seq": 28, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "96c442b6442527acae3ef677f3095e41", "t_ms": 300.0}
+{"dur": 200.0, "kind": "run", "model": 10, "n_spikes": 106, "seq": 29, "spikes": "dfea0269ad08cfe7591391d41d17cfe8", "state": "15fc8dee133adeb2086a99564460f8cb", "t_ms": 500.0}
+{"dur": 300.0, "kind": "run", "model": 10, "n_spikes": 106, "seq": 30, "spikes": "f0a9acde8ce2d261d960692b110c8ebe", "state": "a92d758b361f68cf501bdcf69181f002", "t_ms": 800.0}
+{"h": "d2801814b8204ed6e6cbaca4b39478e4", "kind": "net", "model": 11, "n_objects": 6, "objects": ["NeuronGroup:neurongroup", "PoissonGroup:poissongroup", "SpikeMonitor:spikemonitor", "Synapses:synapses", "Synapses:synapses_1", "Synapses:synapses_2"], "seq": 30}
+{"dur": 300.0, "kind": "run", "model": 11, "n_spikes": 0, "seq": 31, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "811fc814b64768be4ec0b24d7414d925", "t_ms": 300.0}
+{"dur": 200.0, "kind": "run", "model": 11, "n_spikes": 64, "seq": 32, "spikes": "ed226e9bacd4771faabfa6b69985ca26", "state": "ee8dddaf5c8901ab7aee5893f5639e18", "t_ms": 500.0}
+{"dur": 300.0, "kind": "run", "model": 11, "n_spikes": 64, "seq": 33, "spikes": "e7c15b265128db5e3978fecfb810ee5e", "state": "b1e5c3ce3460cf0b77c2360e5a29250f", "t_ms": 800.0}
+{"h": "00674ace8ee557749b3737c5752e7300", "kind": "net", "model": 12, "n_objects": 6, "objects": ["NeuronGroup:neurongroup_1", "PoissonGroup:poissongroup_1", "SpikeMonitor:spikemonitor_1", "Synapses:synapses_3", "Synapses:synapses_4", "Synapses:synapses_5"], "seq": 33}
+{"dur": 300.0, "kind": "run", "model": 12, "n_spikes": 0, "seq": 34, "spikes": "91efe037ca31eb3c262e22bf2def403f", "state": "a967a825e6f6f33b2a13e8f15fdf3d9c", "t_ms": 300.0}
+{"dur": 200.0, "kind": "run", "model": 12, "n_spikes": 39, "seq": 35, "spikes": "223ffac9451a484a320bc4ce79a0eb1d", "state": "5b33577ea922dd060fd98880e5e9829a", "t_ms": 500.0}
+{"dur": 300.0, "kind": "run", "model": 12, "n_spikes": 40, "seq": 36, "spikes": "b4c3fc964a124b446893ae685dd83218", "state": "e7ae238ae6431fa56732ada66b51524b", "t_ms": 800.0}
+{"argv": ["benchmarks/feeding.py", "1", "data"], "code": 0, "kind": "exit"}
