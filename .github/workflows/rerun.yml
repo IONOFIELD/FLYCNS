@@ -7,6 +7,9 @@ name: real-data rerun
 #                 p1-ext-a..d run the registered one-time extension, only when results/shiu2024_phase1/
 #                 extension.json (written by its scoring) is committed;
 #                 they clone Shiu et al.'s repository at SHIU_COMMIT (verified against the registration)
+#   p1b-*         phase 1b (fit/shiu2024_phase1b.py): manual, so name them, e.g.
+#                 rerun/gen5p1b--p1b-ladder-a+p1b-ladder-b+p1b-ladder-c+p1b-null-weightperm+p1b-null-dc;
+#                 only the two p1b-sw-fw-* jobs need the reference repository
 #   fingerprint/<label>[--a+b]  the identity check (scripts/fingerprint.py): every rerun with a few trials,
 #                 recording a fingerprint of every simulation; each job pushes fingerprints/<job>.jsonl to
 #                 fingerprint-out/<run number>/<job>. Compare two such runs with scripts/fingerprint.py compare.
@@ -111,7 +114,20 @@ env:
       {"name": "p1-ext-a",                  "run": "fit/shiu2024_phase1.py extension 0 4", "manual": true, "shiu": true},
       {"name": "p1-ext-b",                  "run": "fit/shiu2024_phase1.py extension 1 4", "manual": true, "shiu": true},
       {"name": "p1-ext-c",                  "run": "fit/shiu2024_phase1.py extension 2 4", "manual": true, "shiu": true},
-      {"name": "p1-ext-d",                  "run": "fit/shiu2024_phase1.py extension 3 4", "manual": true, "shiu": true}
+      {"name": "p1-ext-d",                  "run": "fit/shiu2024_phase1.py extension 3 4", "manual": true, "shiu": true},
+      {"name": "p1b-ladder-a",                      "run": "fit/shiu2024_phase1b.py part p1b-ladder-a", "manual": true},
+      {"name": "p1b-ladder-b",                      "run": "fit/shiu2024_phase1b.py part p1b-ladder-b", "manual": true},
+      {"name": "p1b-ladder-c",                      "run": "fit/shiu2024_phase1b.py part p1b-ladder-c", "manual": true},
+      {"name": "p1b-null-weightperm",               "run": "fit/shiu2024_phase1b.py part p1b-null-weightperm", "manual": true},
+      {"name": "p1b-null-dc",                       "run": "fit/shiu2024_phase1b.py part p1b-null-dc", "manual": true},
+      {"name": "p1b-sw-male-shiu-exc-sugar",        "run": "fit/shiu2024_phase1b.py part p1b-sw-male-shiu-exc-sugar", "manual": true},
+      {"name": "p1b-sw-male-shiu-exc-blind",        "run": "fit/shiu2024_phase1b.py part p1b-sw-male-shiu-exc-blind", "manual": true},
+      {"name": "p1b-sw-male-shiu-drop-sugar",       "run": "fit/shiu2024_phase1b.py part p1b-sw-male-shiu-drop-sugar", "manual": true},
+      {"name": "p1b-sw-male-shiu-drop-blind",       "run": "fit/shiu2024_phase1b.py part p1b-sw-male-shiu-drop-blind", "manual": true},
+      {"name": "p1b-sw-male-flycns-sugar",          "run": "fit/shiu2024_phase1b.py part p1b-sw-male-flycns-sugar", "manual": true},
+      {"name": "p1b-sw-male-flycns-blind",          "run": "fit/shiu2024_phase1b.py part p1b-sw-male-flycns-blind", "manual": true},
+      {"name": "p1b-sw-fw-shiu-sugar",              "run": "fit/shiu2024_phase1b.py part p1b-sw-fw-shiu-sugar", "manual": true, "shiu": true},
+      {"name": "p1b-sw-fw-shiu-blind",              "run": "fit/shiu2024_phase1b.py part p1b-sw-fw-shiu-blind", "manual": true, "shiu": true}
     ]
 
 jobs:
