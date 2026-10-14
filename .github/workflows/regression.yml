@@ -22,7 +22,7 @@ jobs:
     # Real errors only: syntax errors, undefined names, duplicate definitions. Style is not enforced.
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.12"
@@ -46,7 +46,7 @@ jobs:
           # a machine without the Microsoft C++ Build Tools: the pure-Python engine, end to end
           - { python: "3.12", deps: requirements.lock, engine: pure-Python, codegen: numpy, expect: numpy }
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0   # full history: staleness and registration-history checks need it
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
@@ -71,7 +71,7 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 150
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0   # full history: menu 51 commits, pulls and pushes like a maintainer's clone
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
