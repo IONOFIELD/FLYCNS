@@ -107,19 +107,19 @@
     }
   },
   "registration": {
-    "file": "results/a2_contact_em_flip/registration_v4.json",
-    "version": 4,
-    "supersedes": "results/a2_contact_em_flip/registration_v3.json",
-    "git_commit": "7851c7c",
-    "model_hash": "be38aa473975d8900cf1e1d78a637219d64e58dd9be4992a9916df8dd8a5b64b",
-    "registered_at": "2026-10-12T03:48:46",
+    "file": "results/a2_contact_em_flip/registration_v5.json",
+    "version": 5,
+    "supersedes": "results/a2_contact_em_flip/registration_v4.json",
+    "git_commit": "24ea400",
+    "model_hash": "2abab01d8dcca77fba69c810f135b18cfcf28dd8fe03133a0d67bc9258dc9627",
+    "registered_at": "2026-10-12T10:44:01",
     "matches": true,
     "problems": []
   },
-  "wall_s": 2991.7,
+  "wall_s": 3815.9,
   "provenance": {
-    "written_at": "2026-10-12T11:49:33",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T19:00:10",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

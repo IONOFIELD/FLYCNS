@@ -223,10 +223,17 @@ _LAST = {}   # the most recently loaded neuron table, for nulls that need cell a
 MIN_WEIGHT_DEFAULT = 5   # synapses per connection; FLYCNS_MIN_WEIGHT overrides (robustness battery)
 
 
-def load_graph(data_dir="data", min_weight=None):
+AMINES = ("dopamine", "octopamine", "serotonin")
+
+
+def load_graph(data_dir="data", min_weight=None, amines="dropped"):
+    """neurons, signed edges. amines: "dropped" (declared: modulatory, not modelled, as SIGN_MAP says) or
+    "excitatory" (Shiu et al. 2024's rule; used only by the phase-1 M1 arm, fit/shiu2024_phase1.py)."""
     import os
     from .integrity import announce_overrides, LOADED
     announce_overrides()
+    if amines not in ("dropped", "excitatory"):
+        raise SystemExit(f"[graph] amines={amines!r}; choose dropped or excitatory")
     if min_weight is None:
         min_weight = int(os.environ.get("FLYCNS_MIN_WEIGHT", MIN_WEIGHT_DEFAULT))
     neurons = pd.read_parquet(f"{data_dir}/neurons.parquet")
@@ -238,7 +245,7 @@ def load_graph(data_dir="data", min_weight=None):
         raise SystemExit(f"[graph] min_weight {min_weight} is below this dataset's floor of {floor} synapses "
                          f"(scripts/fetch_malecns.py keeps only connections >= {floor}); use {floor} or more")
     edges = edges[edges["weight"] >= min_weight].copy()
-    edges["sign"] = edges["nt"].str.lower().map(SIGN_MAP)
+    edges["sign"] = edges["nt"].str.lower().map(SIGN_MAP if amines == "dropped" else {**SIGN_MAP, **dict.fromkeys(AMINES, 1)})
     unsigned = edges["sign"].isna() | (edges["sign"] == 0)
     n_unknown, n_unknown_syn = int(unsigned.sum()), int(edges.loc[unsigned, "weight"].sum())
     # their presynaptic neurons keep their inputs but lose every output: count the silent sinks
@@ -287,7 +294,8 @@ def load_graph(data_dir="data", min_weight=None):
         print(f"[graph] VNC GLUTAMATE EXCITATORY: {n_glu:,} edges ({edges.loc[m, 'weight'].sum():,} synapses) "
               f"from nerve-cord neurons onto non-motor targets set to +1")
     print(f"[graph] {len(neurons):,} neurons, {len(edges):,} signed edges "
-          f"(dropped {n_unknown:,} unknown-NT pairs and modulatory amines)"
+          + (f"(dropped {n_unknown:,} unknown-NT pairs and modulatory amines)" if amines == "dropped" else
+             f"(dropped {n_unknown:,} unknown-NT pairs; amines EXCITATORY)")
           + (f", min_weight {min_weight}" if min_weight != MIN_WEIGHT_DEFAULT else ""))
     LOADED.clear()
     LOADED.update(data_dir=str(data_dir), min_weight=int(min_weight), n_neurons=int(len(neurons)),
@@ -295,6 +303,8 @@ def load_graph(data_dir="data", min_weight=None):
                   n_dropped_unsigned_edges=n_unknown, n_dropped_unsigned_synapses=n_unknown_syn,
                   n_silent_presynaptic=n_silent, edges_nt_used=used_nt, glu_vnc=glu_vnc,
                   n_glu_vnc_flipped=n_glu, jon_mode=jon_mode(), jon_compound_mv=jon_compound_mv())
+    if amines != "dropped":      # recorded only when set, so the declared model's provenance is as before
+        LOADED.update(amines=amines)
     _LAST["neurons"] = neurons
     return neurons, edges
 

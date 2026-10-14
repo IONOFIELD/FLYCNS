@@ -114,31 +114,32 @@ Declared deviations from the raw connectome: see each results/*/provenance.md an
 ## Report provenance
 | benchmark | written | commit | data (neurons / edges) | env overrides |
 |---|---|---|---|---|
-| a2_contact_em | 2026-10-12T13:10:05 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| a2_contact_em_flip | 2026-10-12T11:49:33 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| a2_registered | 2026-10-12T12:36:40 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| a2_robustness | 2026-10-12T13:56:27 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| auditory | 2026-10-12T12:05:37 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| dnp13_control | 2026-10-12T12:57:57 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| feeding | 2026-10-12T12:17:10 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| feeding_by_modality | 2026-10-12T11:06:29 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| flight_loop | 2026-10-12T12:50:41 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| flight_snpp16 | 2026-10-12T11:58:55 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| flight_snpp16_graded | 2026-10-12T11:39:35 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| flight_snpp16_robustness | 2026-10-12T12:49:56 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| gf_escape | 2026-10-12T11:16:20 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| gustatory_signed_map | 2026-10-12T10:58:53 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| null_dc_auditory | 2026-10-12T12:46:34 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| null_dc_escape | 2026-10-12T13:08:52 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| null_dc_song | 2026-10-12T13:38:59 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| null_strict | 2026-10-12T12:46:32 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| pc1_song | 2026-10-12T11:22:12 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| peptide_asta | 2026-10-12T11:26:44 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| select_wscale | 2026-10-12T12:27:48 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
-| sugar_laterality | 2026-10-12T12:48:29 | bd631a2 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| a2_contact_em | 2026-10-12T19:25:25 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| a2_contact_em_flip | 2026-10-12T19:00:10 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| a2_registered | 2026-10-12T19:52:48 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| a2_robustness | 2026-10-12T21:04:08 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| auditory | 2026-10-12T18:51:51 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| dnp13_control | 2026-10-12T19:42:14 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| feeding | 2026-10-12T19:01:20 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| feeding_by_modality | 2026-10-12T18:24:13 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| flight_loop | 2026-10-12T18:42:45 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| flight_snpp16 | 2026-10-12T19:48:44 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| flight_snpp16_graded | 2026-10-12T19:15:38 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| flight_snpp16_robustness | 2026-10-12T19:33:19 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| gf_escape | 2026-10-12T18:10:47 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| gustatory_signed_map | 2026-10-12T18:28:13 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| null_dc_auditory | 2026-10-12T21:19:16 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| null_dc_escape | 2026-10-12T21:00:35 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| null_dc_song | 2026-10-12T19:33:20 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| null_strict | 2026-10-12T19:25:02 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| pc1_song | 2026-10-12T18:27:48 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| peptide_asta | 2026-10-12T18:31:53 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| select_wscale | 2026-10-12T19:09:19 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
+| sugar_laterality | 2026-10-12T17:56:57 | 65ce101 | 06ea0afb48c414ad / f08e90783d6b6420 | - |
 
 ## Citation check: 49/49 tags resolve in REFERENCES.md
 
 ## Stamp inventory
-111 of 111 result files carry a stamp (commits: bd631a2 x111); 0 flagged, 0 unstamped.
+138 of 138 result files carry a stamp (commits: 65ce101 x136, a79bcf7 x1, c525b28 x1); 1 flagged, 0 unstamped.
+- flagged: results/shiu2024_a0/a0.json (STALE)
 - exempt: results/turner2022/ (input extraction from 22 GB of Turner et al. 2022 imaging; its output is a model input, hashed into every report's loom_input stamp)

@@ -43,7 +43,7 @@
     "A2R_facilitation": false,
     "A2R2_beyond_summation": false
   },
-  "wall_s": 4498,
+  "wall_s": 4510,
   "uncertainty": {
     "A2R_facilitation": {
       "estimate": -0.13333333333333333,
@@ -79,18 +79,18 @@
     }
   },
   "registration": {
-    "file": "results/a2_registered/registration_v4.json",
-    "version": 4,
-    "supersedes": "results/a2_registered/registration_v3.json",
-    "git_commit": "7851c7c",
-    "model_hash": "90ea4e5743721b774d100c4dcc1f84f2064e397982fc13b6647e721113145899",
-    "registered_at": "2026-10-12T03:48:34",
+    "file": "results/a2_registered/registration_v5.json",
+    "version": 5,
+    "supersedes": "results/a2_registered/registration_v4.json",
+    "git_commit": "24ea400",
+    "model_hash": "af4fa27860032d25657afb759a14635d712df0cf1fd3d59e63f91ac0e7206ed0",
+    "registered_at": "2026-10-12T10:43:48",
     "matches": true,
     "problems": []
   },
   "provenance": {
-    "written_at": "2026-10-12T12:36:40",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T19:52:48",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

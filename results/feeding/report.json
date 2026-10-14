@@ -91,7 +91,7 @@
       "MN9_ipsi_L": 0.0,
       "MN9_contra_R": 0.0,
       "pop_rate_hz": 0.01162862191473948,
-      "wall_s": 55.8,
+      "wall_s": 45.7,
       "structural_2hop_L": 25650.0,
       "structural_2hop_R": 350.0,
       "MN9_ipsi_L_per_trial": [
@@ -212,18 +212,18 @@
     }
   },
   "registration": {
-    "file": "results/feeding/registration_v4.json",
-    "version": 4,
-    "supersedes": "results/feeding/registration_v3.json",
-    "git_commit": "7851c7c",
-    "model_hash": "8e1f60c2678af2152e18b5c7ea4ed255940a059154a1a2e5dabb6d5d72471e37",
-    "registered_at": "2026-10-12T03:48:21",
+    "file": "results/feeding/registration_v5.json",
+    "version": 5,
+    "supersedes": "results/feeding/registration_v4.json",
+    "git_commit": "24ea400",
+    "model_hash": "1f446fa8755b2e67e08d570f335d05b3e2b8530c57667b2b67a85191ee461676",
+    "registered_at": "2026-10-12T10:43:34",
     "matches": true,
     "problems": []
   },
   "provenance": {
-    "written_at": "2026-10-12T12:17:10",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T19:01:20",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

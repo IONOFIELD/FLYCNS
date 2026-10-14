@@ -3,6 +3,14 @@ name: real-data rerun
 # repository secret NEUPRINT_TOKEN. Start them by pushing a branch:
 #   rerun/<label>             every rerun listed in RERUNS below
 #   rerun/<label>--a+b        only the named ones, e.g. rerun/2026-10-11--flight-robustness+core
+#   p1-*          phase 1 (fit/shiu2024_phase1.py): manual, so name them, e.g. rerun/gen5p1--p1-dose-a+p1-m1;
+#                 p1-ext-a..d run the registered one-time extension, only when results/shiu2024_phase1/
+#                 extension.json (written by its scoring) is committed;
+#                 they clone Shiu et al.'s repository at SHIU_COMMIT (verified against the registration)
+#   fingerprint/<label>[--a+b]  the identity check (scripts/fingerprint.py): every rerun with a few trials,
+#                 recording a fingerprint of every simulation; each job pushes fingerprints/<job>.jsonl to
+#                 fingerprint-out/<run number>/<job>. Compare two such runs with scripts/fingerprint.py compare.
+#                 Use one long-lived branch (e.g. fingerprint/gate) so its data cache is reused.
 #
 #   data          setup.cmd as a user runs it: environment, connectome from neuPrint (about 6 minutes),
 #                 checked against the committed data/MANIFEST.json. The tables (never the manifest)
@@ -13,7 +21,7 @@ name: real-data rerun
 #                 the maintainer has reviewed and merged it.
 on:
   push:
-    branches: ["rerun/**"]
+    branches: ["rerun/**", "fingerprint/**"]
 
 permissions:
   contents: read       # jobs that push their own rerun-out branch ask for write themselves
@@ -25,6 +33,7 @@ concurrency:
 env:
   PYTHONUTF8: "1"
   PYTHONUNBUFFERED: "1"
+  SHIU_COMMIT: 91bdd1e7dcf193f3e7ca5a8933497fcef63b7960
   # name: the job and its rerun-out branch; run: arguments to the environment's Python; nt: needs menu 24;
   # manual: runs only when named in the branch (pin-data rewrites data/MANIFEST.json for review)
   RERUNS: |
@@ -84,7 +93,25 @@ env:
       {"name": "battery-null_superclass",   "run": "scripts/overnight.py null_superclass"},
       {"name": "battery-glu_vnc_excitatory", "run": "scripts/overnight.py glu_vnc_excitatory"},
       {"name": "battery-dt005",             "run": "scripts/overnight.py dt005"},
-      {"name": "battery-jon_em",            "run": "scripts/overnight.py jon_em"}
+      {"name": "battery-jon_em",            "run": "scripts/overnight.py jon_em"},
+      {"name": "p1-dose-a",                 "run": "fit/shiu2024_phase1.py part p1-dose-a", "manual": true, "shiu": true},
+      {"name": "p1-dose-b",                 "run": "fit/shiu2024_phase1.py part p1-dose-b", "manual": true, "shiu": true},
+      {"name": "p1-bitter-a",               "run": "fit/shiu2024_phase1.py part p1-bitter-a", "manual": true, "shiu": true},
+      {"name": "p1-bitter-b",               "run": "fit/shiu2024_phase1.py part p1-bitter-b", "manual": true, "shiu": true},
+      {"name": "p1-bitter-c",               "run": "fit/shiu2024_phase1.py part p1-bitter-c", "manual": true, "shiu": true},
+      {"name": "p1-bitter-d",               "run": "fit/shiu2024_phase1.py part p1-bitter-d", "manual": true, "shiu": true},
+      {"name": "p1-bitter-e",               "run": "fit/shiu2024_phase1.py part p1-bitter-e", "manual": true, "shiu": true},
+      {"name": "p1-shuffle-a",              "run": "fit/shiu2024_phase1.py part p1-shuffle-a", "manual": true, "shiu": true},
+      {"name": "p1-shuffle-b",              "run": "fit/shiu2024_phase1.py part p1-shuffle-b", "manual": true, "shiu": true},
+      {"name": "p1-ladder-a",               "run": "fit/shiu2024_phase1.py part p1-ladder-a", "manual": true, "shiu": true},
+      {"name": "p1-ladder-b",               "run": "fit/shiu2024_phase1.py part p1-ladder-b", "manual": true, "shiu": true},
+      {"name": "p1-ladder-c",               "run": "fit/shiu2024_phase1.py part p1-ladder-c", "manual": true, "shiu": true},
+      {"name": "p1-ladder-d",               "run": "fit/shiu2024_phase1.py part p1-ladder-d", "manual": true, "shiu": true},
+      {"name": "p1-m1",                     "run": "fit/shiu2024_phase1.py part p1-m1", "manual": true, "shiu": true},
+      {"name": "p1-ext-a",                  "run": "fit/shiu2024_phase1.py extension 0 4", "manual": true, "shiu": true},
+      {"name": "p1-ext-b",                  "run": "fit/shiu2024_phase1.py extension 1 4", "manual": true, "shiu": true},
+      {"name": "p1-ext-c",                  "run": "fit/shiu2024_phase1.py extension 2 4", "manual": true, "shiu": true},
+      {"name": "p1-ext-d",                  "run": "fit/shiu2024_phase1.py extension 3 4", "manual": true, "shiu": true}
     ]
 
 jobs:
@@ -102,6 +129,11 @@ jobs:
           $bad = @($only | Where-Object { $_ -notin $all.name })
           if ($bad) { Write-Host "::error title=rerun::unknown: $($bad -join ', '). Choose from: $($all.name -join ', ')"; exit 1 }
           $sel = @($all | Where-Object { if ($only) { $_.name -in $only } else { -not $_.manual } })
+          if ("${{ github.ref_name }}".StartsWith("fingerprint/")) {
+            # identity check: the same jobs, each reduced to a few trials with fingerprints recorded
+            $sel = @($sel | Where-Object { -not $_.manual } | ForEach-Object {
+              [pscustomobject]@{ name = $_.name; run = "scripts/fingerprint.py run $($_.name)"; nt = [bool]$_.nt; fp = $true } })
+          }
           "matrix=" + (ConvertTo-Json -Compress -Depth 4 @{ include = $sel }) >> $env:GITHUB_OUTPUT
           "nt=" + ([bool]@($sel | Where-Object nt).Count).ToString().ToLower() >> $env:GITHUB_OUTPUT
           Write-Host "::notice title=rerun::$($sel.Count) rerun(s): $($sel.name -join ', ')"
@@ -213,7 +245,18 @@ jobs:
         with: { path: "data/edges_nt.parquet\nresults/nt_confidence.json", key: "${{ needs.transmitters.outputs.key }}", fail-on-cache-miss: true }
       - shell: cmd
         run: setup.cmd
+      - name: reference repository (phase 1; Shiu et al. 2024 at the registered commit, no line-ending conversion)
+        if: ${{ matrix.shiu }}
+        shell: pwsh
+        run: |
+          $ref = Join-Path $env:RUNNER_TEMP "shiu"
+          git -c core.autocrlf=false clone -q https://github.com/philshiu/Drosophila_brain_model $ref
+          if ($LASTEXITCODE) { exit 1 }
+          git -c core.autocrlf=false -C $ref checkout -q $env:SHIU_COMMIT
+          if ($LASTEXITCODE) { exit 1 }
+          "SHIU_REPO=$ref" >> $env:GITHUB_ENV
       - name: own branch (scripts that commit and push, like menu 51 and the battery, push here)
+        if: ${{ !matrix.fp }}
         shell: pwsh
         run: |
           git config --global user.name "flycns rerun"; git config --global user.email "flycns-rerun@users.noreply.github.com"
@@ -233,8 +276,18 @@ jobs:
           }
           $done = (Get-Content ci-log.txt | Select-String "PASS|FAIL|checks pass|done:" | Select-Object -Last 3) -join " | "
           Write-Host "::notice title=${{ matrix.name }}::$done"
+      - name: push fingerprints to fingerprint-out/${{ github.run_number }}/${{ matrix.name }}
+        if: ${{ always() && matrix.fp }}
+        shell: pwsh
+        run: |
+          git config user.name "flycns fingerprint"; git config user.email "flycns-fingerprint@users.noreply.github.com"
+          git checkout -q -B "fingerprint-out/${{ github.run_number }}/${{ matrix.name }}"
+          if (Test-Path fingerprints) { git add -f -- fingerprints }
+          if (Test-Path ci-log.txt) { git add -f -- ci-log.txt }
+          git commit -qm "identity check: ${{ matrix.name }} (Actions run ${{ github.run_id }})"
+          git push -q -f origin "HEAD:refs/heads/fingerprint-out/${{ github.run_number }}/${{ matrix.name }}"
       - name: push results to rerun-out/${{ github.run_number }}/${{ matrix.name }}
-        if: always()
+        if: ${{ always() && !matrix.fp }}
         shell: pwsh
         run: |
           git add -A -- results

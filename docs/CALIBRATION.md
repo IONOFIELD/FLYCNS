@@ -102,6 +102,36 @@ the generation-3 freeze:
 - **Result (run 18, 58 jobs at `bd631a2`):** reproduced. Every result is numerically identical to run
   14's apart from run times; 61 of 61 suite rows give the same verdict.
 
+**Generation 5, phase 1 (Shiu et al. 2024 positive control), 12 October 2026. No default changed.**
+- **New options, off by default:** `flycns.model.SimOptions` (reset of v and g with g frozen while
+  refractory; stimulated cells kept in the network and driven by 68.75 mV Poisson kicks with no refractory
+  period; exact integration; adaptation off) and `load_graph(amines="excitatory")`. They are used only by
+  the phase-1 control (`fit/shiu2024_phase1.py`: A1, the ladder, M1). Every default code path builds the
+  same Brian2 objects with the same equations as generation 4.
+- **Proof of identity:** the identity check (`scripts/fingerprint.py`): every job of the cloud rerun,
+  reduced to a few trials, fingerprinted on the generation-4 model (cloud run 20, `caf6c85`) and on the
+  generation-5 model (cloud run 21, `2cae86d`); the wired network, every neuron's state after every run
+  step, every spike and every exit code must match. **Result: 55 of 55 jobs identical, 7,591
+  fingerprints** (6 structural jobs simulate nothing). Outputs: branches `fingerprint-out/20/*` and
+  `fingerprint-out/21/*`. Run 19 used a first version of the tool that let six jobs stop before
+  simulating; it is superseded by run 20. The toy regression on the same model also passes, with all
+  13,892 golden toy values unchanged. The full rerun under generation 5 runs alongside as the record.
+- **Phase-1 deviations, registered before any A1 or M1 code existed**
+  (`results/shiu2024_phase1_addendum/`): A1 uses exact integration (the approved plan's eighth setting,
+  omitted from the registered A1 settings), with Euler as an extra ladder step; M1 runs at a connection
+  floor of 5 because the MaleCNS data hold nothing below 5 synapses.
+- **S4 cannot pass even for the reference:** the authors' own Fig 1 output scores UNRESOLVED on it
+  (0.705, 95% interval 0.686-0.724). S4 is kept as registered and reported; S4b
+  (`results/shiu2024_s4b/`) tests the published dose curve point by point.
+- **Expected:** every number of generation 4 reproduces exactly.
+- **Errata found by the independent review of phase 1** (frozen text, to be corrected with the next model
+  change): `flycns/model.py`'s SimOptions note says a PoissonInput "can add two events in one 0.1 ms step";
+  with N=1 Brian2 draws at most one event per step, so the two inputs are equivalent. The phase-1
+  pre-registration calls M1's 0.5 Hz threshold "the F3 band"; F3's band is 0.5 spikes per cell per 200 ms
+  pulse (about 2-2.5 Hz). Neither changes a verdict (M1's interval starts at 19.8 Hz). "S4 cannot pass even
+  for a perfect reproduction" is too strong: the reference is UNRESOLVED on S4 (its interval straddles 0.7),
+  and S4's verdict on A1 depends on the bootstrap seed (0.723, lower edge 0.6998 at seed 0).
+
 Values that are **measured, not chosen**:
 - **Single-neuron parameters:** Shiu et al. 2024.
 - **Loom tuning amplitudes and trial-gain sigma:** extracted from Turner et al. 2022 imaging, stationary trials.

@@ -21,7 +21,7 @@ wind/gravity control types (28): ['JO-A4', 'JO-B1_a', 'JO-B1_b', 'JO-B1_c', 'JO-
   t1  DNp01  .........................
   t1  CNS    ..2112322221112211.......   (log2 spikes/bin, 9 = flood)
 
-[cal_loom_gain_0.4] GF 0.04/cell hit 0.07 lat 50.7 ms depol 3.75 mV | CNS 0.0013 Hz | 264.6s
+[cal_loom_gain_0.4] GF 0.04/cell hit 0.07 lat 50.7 ms depol 3.75 mV | CNS 0.0013 Hz | 139.1s
   calibration: loom gain 0.4 -> GF hit 0.07, depol 3.75 mV
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
   raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
@@ -31,7 +31,7 @@ wind/gravity control types (28): ['JO-A4', 'JO-B1_a', 'JO-B1_b', 'JO-B1_c', 'JO-
   t1  DNp01  .........................
   t1  CNS    .13234233334333111.......   (log2 spikes/bin, 9 = flood)
 
-[cal_loom_gain_0.6] GF 0.15/cell hit 0.30 lat 35.8 ms depol 5.20 mV | CNS 0.0023 Hz | 300.5s
+[cal_loom_gain_0.6] GF 0.15/cell hit 0.30 lat 35.8 ms depol 5.20 mV | CNS 0.0023 Hz | 154.4s
   calibration: loom gain 0.6 -> GF hit 0.30, depol 5.20 mV
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
   raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
@@ -41,7 +41,7 @@ wind/gravity control types (28): ['JO-A4', 'JO-B1_a', 'JO-B1_b', 'JO-B1_c', 'JO-
   t1  DNp01  ...........|..|..........
   t1  CNS    ..234433343454431........   (log2 spikes/bin, 9 = flood)
 
-[cal_loom_gain_0.8] GF 0.60/cell hit 0.68 lat 42.3 ms depol 6.10 mV | CNS 0.0039 Hz | 271.9s
+[cal_loom_gain_0.8] GF 0.60/cell hit 0.68 lat 42.3 ms depol 6.10 mV | CNS 0.0039 Hz | 143.1s
   calibration: loom gain 0.8 -> GF hit 0.68, depol 6.10 mV
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
   raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
@@ -51,7 +51,7 @@ wind/gravity control types (28): ['JO-A4', 'JO-B1_a', 'JO-B1_b', 'JO-B1_c', 'JO-
   t1  DNp01  .............|||.........
   t1  CNS    .2454444444555442311.....   (log2 spikes/bin, 9 = flood)
 
-[cal_loom_gain_1.0] GF 1.21/cell hit 0.97 lat 46.4 ms depol 6.81 mV | CNS 0.0057 Hz | 282.7s
+[cal_loom_gain_1.0] GF 1.21/cell hit 0.97 lat 46.4 ms depol 6.81 mV | CNS 0.0057 Hz | 152.9s
   calibration: loom gain 1.0 -> GF hit 0.97, depol 6.81 mV
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
   raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
@@ -61,7 +61,7 @@ wind/gravity control types (28): ['JO-A4', 'JO-B1_a', 'JO-B1_b', 'JO-B1_c', 'JO-
   t1  DNp01  .........||.|||..........
   t1  CNS    .355544455555555432......   (log2 spikes/bin, 9 = flood)
 
-[cal_loom_gain_1.3] GF 2.01/cell hit 1.00 lat 33.1 ms depol 6.95 mV | CNS 0.0091 Hz | 279.5s
+[cal_loom_gain_1.3] GF 2.01/cell hit 1.00 lat 33.1 ms depol 6.95 mV | CNS 0.0091 Hz | 144.3s
   calibration: loom gain 1.3 -> GF hit 1.00, depol 6.95 mV
 A2 working point: loom gain 0.6
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
@@ -72,7 +72,7 @@ A2 working point: loom gain 0.6
   t1  DNp01  .........................
   t1  CNS    .244444555444444333.2....   (log2 spikes/bin, 9 = flood)
 
-[A1_jo_alone_electrical] GF 0.00/cell hit 0.00 lat nan ms depol 1.68 mV | CNS 0.0065 Hz | 299.7s
+[A1_jo_alone_electrical] GF 0.00/cell hit 0.00 lat nan ms depol 1.68 mV | CNS 0.0065 Hz | 158.2s
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
   raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
   t0  DNp01  .........................
@@ -81,7 +81,7 @@ A2 working point: loom gain 0.6
   t1  DNp01  .........................
   t1  CNS    .244444555444444333.2....   (log2 spikes/bin, 9 = flood)
 
-[A3_jo_alone_no_electrical_no_mixed_edges] GF 0.00/cell hit 0.00 lat nan ms depol 0.32 mV | CNS 0.0065 Hz | 272.7s
+[A3_jo_alone_no_electrical_no_mixed_edges] GF 0.00/cell hit 0.00 lat nan ms depol 0.32 mV | CNS 0.0065 Hz | 149.5s
   raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
   t0  DNp01  ..|......................
   t0  CNS    .1444444555555443232111..   (log2 spikes/bin, 9 = flood)
@@ -89,7 +89,7 @@ A2 working point: loom gain 0.6
   t1  DNp01  ..|......................
   t1  CNS    .2444445554444443331.....   (log2 spikes/bin, 9 = flood)
 
-[ref_jo_alone_chem_only_EM_as_annotated] GF 0.75/cell hit 1.00 lat 10.7 ms depol 3.64 mV | CNS 0.0066 Hz | 312.0s
+[ref_jo_alone_chem_only_EM_as_annotated] GF 0.75/cell hit 1.00 lat 10.7 ms depol 3.64 mV | CNS 0.0066 Hz | 148.2s
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
   raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
   t0  DNp01  .........................
@@ -98,7 +98,7 @@ A2 working point: loom gain 0.6
   t1  DNp01  ..............|..........
   t1  CNS    ..234333332322331........   (log2 spikes/bin, 9 = flood)
 
-[subthreshold_loom_alone] GF 0.12/cell hit 0.20 lat 48.9 ms depol 5.11 mV | CNS 0.0024 Hz | 276.1s
+[subthreshold_loom_alone] GF 0.12/cell hit 0.20 lat 48.9 ms depol 5.11 mV | CNS 0.0024 Hz | 140.7s
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
   raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
   t0  DNp01  .........................
@@ -107,7 +107,7 @@ A2 working point: loom gain 0.6
   t1  DNp01  ....|....................
   t1  CNS    .24555554445555543311....   (log2 spikes/bin, 9 = flood)
 
-[A2_loom_plus_jo] GF 0.06/cell hit 0.12 lat 21.3 ms depol 3.11 mV | CNS 0.0091 Hz | 277.8s
+[A2_loom_plus_jo] GF 0.06/cell hit 0.12 lat 21.3 ms depol 3.11 mV | CNS 0.0091 Hz | 143.1s
 [graph] removed 679 EM chemical synapses on declared mixed pairs (modelled as electrical)
   raster: 4 ms/char, 100 ms from onset   (| spike, # multiple)
   t0  DNp01  .........................
@@ -116,7 +116,7 @@ A2 working point: loom gain 0.6
   t1  DNp01  .........................
   t1  CNS    ..121212132132221........   (log2 spikes/bin, 9 = flood)
 
-[A4_jo_rewired_null_chem] GF 0.00/cell hit 0.00 lat nan ms depol 0.18 mV | CNS 0.0007 Hz | 275.1s
+[A4_jo_rewired_null_chem] GF 0.00/cell hit 0.00 lat nan ms depol 0.18 mV | CNS 0.0007 Hz | 140.9s
 A2 by summation alone: 0.20 -> predicted 0.80, observed 0.12; residual -0.68 (95% CI -0.90 to -0.48)
 A2 (reported, 40 trials/arm): loom alone 0.20 -> with JO 0.12; difference -0.08 (95% CI -0.24 to +0.09) -> UNRESOLVED
 

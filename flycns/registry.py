@@ -39,12 +39,15 @@ from pathlib import Path
 
 from .integrity import PLUMBING, ROOT, _box, _git, allow_dirty, git_state, overrides
 
-VERSION = 4
+VERSION = 5
 NAME = "registration.json" if VERSION == 2 else f"registration_v{VERSION}.json"
-GENERATION_NOTE = ("hygiene refreeze (Gen 4 phase 0), no model parameter changed: flycns/integrity.py joins the hashed "
-                   "files (it holds the declared defaults and the data checks); the input data are re-pinned without "
-                   "the legacy `sign` column (one transmitter-to-sign table, graph.SIGN_MAP); two frozen code comments "
-                   "corrected. Criteria unchanged; every number is expected to equal generation 3's.")
+GENERATION_NOTE = ("Shiu-compatible simulator options (Gen 5 phase 1), off by default: flycns.model.SimOptions and "
+                   "load_graph(amines=...), used only by the phase-1 positive control (fit/shiu2024_phase1.py). Every "
+                   "default simulation is identical to generation 4's (scripts/fingerprint.py identity check: cloud "
+                   "runs 20 and 21, 55 of 55 jobs, 7,591 fingerprints equal). Criteria unchanged; every number is "
+                   "expected to equal generation 4's.")
+# Generation 4 (hygiene refreeze, Gen 4 phase 0): no model parameter changed; flycns/integrity.py joined the hashed
+# files; the input data were re-pinned without the legacy `sign` column; two frozen code comments corrected.
 # Files that define the model and its inputs, and the role table (relabelling a failed independent check
 # after the fact is a design change). integrity.py is listed since generation 4: it holds the declared
 # defaults (what counts as an override), the data verification and the guards a registered run depends on.

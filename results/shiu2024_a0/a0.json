@@ -1,0 +1,334 @@
+{
+  "benchmark": "shiu2024_a0",
+  "criteria": {
+    "question": "does Shiu et al. 2024's own code, on its own released data and in its own package versions, reproduce its released sugar -> MN9 output when run here?",
+    "reference": {
+      "repository": "https://github.com/philshiu/Drosophila_brain_model",
+      "commit": "91bdd1e7dcf193f3e7ca5a8933497fcef63b7960",
+      "licence": "MIT",
+      "sha256": {
+        "2023_03_23_completeness_630_final.csv": "e6b71e17671a9bdb05f55e4bc6774640a1418cb7a05125e0fc994ad40f9bfdfb",
+        "2023_03_23_connectivity_630_final.parquet": "94db8c650533bc36ffa3223f2e62325d5648b8d6bd31c3a4e1c804628c7557b3",
+        "results/example/sugarR_100Hz.parquet": "93722ec03c3faa5a85790d77ed16bdd7f1e38a7c847ed0bc3af3dc2e4d0c3d34",
+        "model.py": "fc45837d7122c6ce2a7f3f2f23c515992e4b232aadb919efabb72337fac88e4e",
+        "utils.py": "f378cf0b464f2ac5e1daf3609ba25fd51c7e34f294846281707ffe006c3e9ef1",
+        "figures.ipynb": "33cd73c0b4b4a291c51b7bab639c4fa28978e49e111ff0d6adbca5687addb84c",
+        "environment_full.yml": "402fcef4968c99397b0e908b3323ab9e6ef86af5583e46e6427f96f3d1091adf"
+      },
+      "published": {
+        "contra_mean_hz": 67.03,
+        "contra_sd_hz": 6.71,
+        "ipsi_mean_hz": 48.63,
+        "grn_mean_hz": 99.0,
+        "neurons_active": 404,
+        "file": "results/example/sugarR_100Hz.parquet"
+      }
+    },
+    "environment": {
+      "python": "3.10",
+      "packages": "scripts/shiu2024_run_reference.py PINNED (environment_full.yml versions, from PyPI)",
+      "runner": "GitHub windows-latest",
+      "seeds": "none (their code sets none)"
+    },
+    "protocol": {
+      "stimulus": "the 21 sugar GRNs of figures.ipynb (first neu_sugar list) at 100 Hz (their r_poi)",
+      "trials": 30,
+      "trial_s": 1.0,
+      "code": "their run_exp, unmodified, n_proc = all cores",
+      "readout": "spikes per trial of MN9 720575940660219265 (contralateral) and 720575940645521262"
+    },
+    "checks": {
+      "A0_S1_mn9_contra_magnitude": {
+        "band": [
+          -6.7,
+          6.7
+        ],
+        "rule": "the 95% percentile-bootstrap interval (flycns.stats.bootstrap_diff, seed 0) of our contralateral MN9 mean minus the published 30 trials' mean lies within +/-6.7 Hz: PASS; wholly outside: FAIL; else UNRESOLVED"
+      },
+      "A0_S2_mn9_reliability": {
+        "rule": "contralateral MN9 fires in at least 29 of 30 trials (a count, no interval)"
+      },
+      "A0_S3_laterality": {
+        "bands": [
+          [
+            0.0,
+            null
+          ],
+          [
+            -4.86,
+            4.86
+          ]
+        ],
+        "rule": "BOTH parts: contralateral minus ipsilateral per trial, 95% bootstrap interval above 0; our ipsilateral mean minus the published one, 95% bootstrap interval within +/-4.86 Hz"
+      }
+    },
+    "reported": [
+      "GRN mean rate (published 99.0 Hz)",
+      "neurons active (published 404)",
+      "package versions and engine"
+    ],
+    "decision": "A0 passes only if all three checks PASS; then phase 1 continues with A1 and M1 after review",
+    "preregistered_phase1": {
+      "data": "FlyWire v630 from the pinned reference repository (PINS); sugar, bitter and MN9 ids from its figures.ipynb; the per-neuron sign is the repository's Excitatory column (Shiu's rule: GABA and glutamate inhibitory; acetylcholine and the amines excitatory), mapped onto graph.SIGN_MAP labels",
+      "a1_settings": {
+        "reset": "v and g reset at a spike; g frozen while refractory",
+        "stimulation": "stimulated cells stay in the network; Poisson input of 250 x w_syn per event, refractory 0",
+        "min_weight": 1,
+        "w_scale": 1.0,
+        "amines": "excitatory (the repository's sign column)",
+        "adaptation": "none",
+        "electrical": false,
+        "peptides": false,
+        "dt_ms": 0.1,
+        "trial_ms": 1000,
+        "trials": 30
+      },
+      "checks": {
+        "S1_sugar_mn9_magnitude": "sugar GRNs (21 ids) at 100 Hz, 30 trials: the 95% bootstrap interval of (our contralateral MN9 mean - the published 30 trials' mean) lies within +/-6.7 Hz",
+        "S2_reliability": "contralateral MN9 fires (>= 1 spike) in at least 29 of 30 trials",
+        "S3_laterality": "BOTH: contralateral minus ipsilateral (paired per trial) above 0, AND ipsilateral within +/-4.86 Hz of the published 48.63 Hz (two samples)",
+        "S4_calibration_reproduced": "MN9 at 100 Hz divided by the maximum of the MN9 means at 50, 100, 150 and 200 Hz (30 trials each), 95% bootstrap interval within [0.7, 0.9] (the paper: W_syn chosen so that 100 Hz gives 'roughly 80% of maximal MN9 firing')",
+        "S5_bitter_suppression": "sugar GRNs at 100 Hz plus bitter GRNs (21 ids, figures.ipynb) at 0, 50, 100, 150 and 200 Hz, 30 trials each. PASS if BOTH: the 95% bootstrap interval of MN9(sugar 100 + bitter 100) - MN9(sugar 100 + bitter 0) lies below 0, AND the 95% bootstrap interval of the Spearman rank correlation between bitter rate and per-trial contralateral MN9 rate (150 trials) lies below 0. FAIL if either interval lies wholly at or above 0; UNRESOLVED otherwise. Qualitative, from the paper's text. If the authors' archived Fig 3a values become available, a quantitative S5b is registered separately before it is scored; S5 is never changed",
+        "S6_wiring_control": "100 weight shuffles keeping the global weight distribution (as the paper), 1 trial each, sugar at 100 Hz. A shuffle 'activates MN9' if its contralateral MN9 rate reaches T = 51.4 Hz. Derivation: T is the 1st percentile of a normal fit to the 30 released real-wiring trials (mean 67.03, SD 6.71 Hz; their minimum is 53 Hz), i.e. a rate the real wiring reaches in 99% of trials. PASS if at most 5 of 100 shuffles activate MN9 (the paper: 1 of 100; if the true probability were 1%, 6 or more of 100 would occur with probability below 0.001); FAIL otherwise",
+        "M1_male_mn9": "MaleCNS under the A1 settings, the sugar set and MN9 readout of flycns check F3 (LB3b and LB3c at 100 Hz), 30 trials: MN9 'responds' if the 95% bootstrap interval of its rate lies above 0.5 Hz (the F3 band)"
+      },
+      "ladder": "L1-L6, reported and not scored: from A1, one setting switched to its flycns value at a time (reset, stimulation, connection floor 5, w_scale 0.4, motor adaptation), then all together",
+      "decision_rule": "A0 fails: the reference does not reproduce here; stop. A0 passes and A1 fails: flycns differs beyond the listed settings; bisect first. A1 passes and M1 responds: the male MN9 zero is caused by flycns settings (the ladder names which). A1 passes and M1 does not respond: the male zero is wiring or annotation, not the simulator"
+    }
+  },
+  "checks": {
+    "A0_S1_mn9_contra_magnitude": true,
+    "A0_S2_mn9_reliability": true,
+    "A0_S3_laterality": true
+  },
+  "uncertainty": {
+    "A0_S1_mn9_contra_magnitude": {
+      "estimate": 0.06666666666666288,
+      "ci95": [
+        -2.86666666666666,
+        2.9341666666666657
+      ],
+      "band": [
+        -6.7,
+        6.7
+      ],
+      "method": "bootstrap, two samples of 30 trials",
+      "verdict": "PASS",
+      "n": 30,
+      "note": "our contralateral MN9 mean minus the published one, Hz"
+    },
+    "A0_S2_mn9_reliability": {
+      "estimate": 30.0,
+      "ci95": null,
+      "band": null,
+      "method": "count: trials with a contralateral MN9 spike, of 30; at least 29 required",
+      "verdict": "PASS"
+    },
+    "A0_S3_laterality": {
+      "estimate": null,
+      "ci95": null,
+      "band": null,
+      "method": "all of 2 parts",
+      "parts": [
+        {
+          "estimate": 18.633333333333333,
+          "ci95": [
+            16.933333333333334,
+            20.267499999999995
+          ],
+          "band": [
+            0.0,
+            null
+          ],
+          "method": "bootstrap",
+          "verdict": "PASS",
+          "band_lower_exclusive": true,
+          "n": 30,
+          "note": "contralateral minus ipsilateral MN9, paired per trial, Hz"
+        },
+        {
+          "estimate": -0.1666666666666643,
+          "ci95": [
+            -2.4666666666666686,
+            2.06666666666667
+          ],
+          "band": [
+            -4.86,
+            4.86
+          ],
+          "method": "bootstrap, two samples of 30 trials",
+          "verdict": "PASS",
+          "n": 30,
+          "note": "our ipsilateral MN9 mean minus the published one, Hz"
+        }
+      ],
+      "verdict": "PASS",
+      "note": "laterality, and the ipsilateral magnitude"
+    }
+  },
+  "reported": {
+    "mn9_contra_hz": {
+      "ours": 67.1,
+      "ours_sd": 5.396997888353909,
+      "published": 67.03333333333333,
+      "published_sd": 6.708118258849693,
+      "ours_per_trial": [
+        72.0,
+        60.0,
+        72.0,
+        76.0,
+        69.0,
+        63.0,
+        65.0,
+        69.0,
+        68.0,
+        59.0,
+        68.0,
+        69.0,
+        66.0,
+        68.0,
+        76.0,
+        68.0,
+        64.0,
+        57.0,
+        72.0,
+        59.0,
+        71.0,
+        69.0,
+        80.0,
+        62.0,
+        61.0,
+        66.0,
+        68.0,
+        62.0,
+        69.0,
+        65.0
+      ]
+    },
+    "mn9_ipsi_hz": {
+      "ours": 48.46666666666667,
+      "published": 48.63333333333333,
+      "ours_per_trial": [
+        47.0,
+        49.0,
+        51.0,
+        50.0,
+        49.0,
+        44.0,
+        47.0,
+        45.0,
+        44.0,
+        46.0,
+        49.0,
+        54.0,
+        41.0,
+        45.0,
+        55.0,
+        51.0,
+        48.0,
+        44.0,
+        48.0,
+        48.0,
+        47.0,
+        50.0,
+        56.0,
+        40.0,
+        44.0,
+        49.0,
+        58.0,
+        48.0,
+        55.0,
+        52.0
+      ]
+    },
+    "sugar_grn_mean_hz": {
+      "ours": 98.49047619047619,
+      "published": 98.98253968253968
+    },
+    "neurons_active": {
+      "ours": 410,
+      "published": 404
+    },
+    "spikes_per_trial": {
+      "ours": 9614.766666666666,
+      "published": 9635.766666666666
+    },
+    "run": {
+      "exp_name": "A0_sugarR_100Hz",
+      "rate_hz": 100,
+      "n_run": 30,
+      "t_run_s": 1.0,
+      "sugar_ids": [
+        720575940624963786,
+        720575940630233916,
+        720575940637568838,
+        720575940638202345,
+        720575940617000768,
+        720575940630797113,
+        720575940632889389,
+        720575940621754367,
+        720575940621502051,
+        720575940640649691,
+        720575940639332736,
+        720575940616885538,
+        720575940639198653,
+        720575940620900446,
+        720575940617937543,
+        720575940632425919,
+        720575940633143833,
+        720575940612670570,
+        720575940628853239,
+        720575940629176663,
+        720575940611875570
+      ],
+      "versions": {
+        "brian2": "2.5.1",
+        "numpy": "1.22.3",
+        "pandas": "1.4.3",
+        "pyarrow": "11.0.0",
+        "scipy": "1.8.1",
+        "joblib": "1.2.0",
+        "Cython": "0.29.33",
+        "sympy": "1.12",
+        "Jinja2": "2.11.3"
+      },
+      "python": "3.10.11",
+      "platform": "Windows-10-10.0.26100-SP0",
+      "cpu_count": 4,
+      "n_proc": -1,
+      "codegen_target": "auto",
+      "cython_available": true,
+      "wall_s": 937.4
+    }
+  },
+  "a0_passes": true,
+  "registration": {
+    "file": "results/shiu2024_a0/registration_v4.json",
+    "version": 4,
+    "supersedes": null,
+    "git_commit": "2f9b1b6",
+    "model_hash": "57dbc4e8b9ab3274ae4286df94c2c1f1fb1c1b759ddfffe50723e2051a5e1a74",
+    "registered_at": "2026-10-12T06:30:21",
+    "matches": true,
+    "problems": []
+  },
+  "provenance": {
+    "written_at": "2026-10-12T13:48:53",
+    "git_commit": "a79bcf7",
+    "git_is_repo": true,
+    "git_dirty": false,
+    "dirty_files": [],
+    "allow_dirty": false,
+    "env": {},
+    "python": "3.12.10",
+    "versions": {
+      "brian2": "2.10.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6"
+    },
+    "engine": "not used",
+    "platform": "win32",
+    "machine": "AMD64",
+    "float_dtype": "float64"
+  }
+}

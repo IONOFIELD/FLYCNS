@@ -70,9 +70,44 @@ class LIFParams:
     baseline_noise_mV: float = float(os.environ.get("FLYCNS_BASELINE_NOISE", "0"))
 
 
+@dataclass(frozen=True)
+class SimOptions:
+    """Simulator choices on which flycns and Shiu et al. 2024 differ (Gen 5, phase 1). The defaults are flycns's
+    own and leave every simulation exactly as in generation 4 (scripts/fingerprint.py checks it); the other
+    values exist for the phase-1 positive control (fit/shiu2024_phase1.py: A1, its ladder and M1).
+      reset        "v": v resets at a spike and g carries over (flycns). "v_and_g": v and g reset and g is
+                   frozen while refractory (Shiu's model.py: reset `v = v_rst; g = 0`, g "unless refractory").
+      stimulation  "source": stimulated cells are replaced by Poisson spike sources (flycns). "kick": they stay
+                   in the network, each Poisson event adds stim_kick_mV to v, and their refractory period is
+                   0 (Shiu's PoissonInput, N=1, weight 250 x w_syn). Here the events come from a PoissonGroup
+                   through a one-to-one synapse without delay, so set_stim_rates() works as in "source"; a
+                   PoissonInput can add two events in one 0.1 ms step, this cannot (probability ~1e-4 per step
+                   at 100-200 Hz, and one 68.75 mV kick already crosses threshold).
+      stim_kick_mV 68.75 = 250 x 0.275 mV, Shiu's value (stimulation="kick" only; not scaled by w_scale).
+      integration  "euler" (flycns) or "exact" (Brian2 method 'linear', as Shiu's model.py).
+      adaptation   True: the declared intrinsic overrides (graph.INTRINSIC_OVERRIDES: GF and central motor
+                   neuron adaptation). False: none, as Shiu."""
+    reset: str = "v"
+    stimulation: str = "source"
+    stim_kick_mV: float = 68.75
+    integration: str = "euler"
+    adaptation: bool = True
+
+    def check(self):
+        bad = [f"{k}={v!r}" for k, v, ok in (("reset", self.reset, ("v", "v_and_g")),
+                                             ("stimulation", self.stimulation, ("source", "kick")),
+                                             ("integration", self.integration, ("euler", "exact")))
+               if v not in ok]
+        if bad:
+            raise ValueError(f"[model] unknown SimOptions: {', '.join(bad)}")
+        return self
+
+
 class CNSModel:
     def __init__(self, neurons, edges, stim_types, params=LIFParams(),
-                 electrical=True, codegen=None, monitor_types=()):
+                 electrical=True, codegen=None, monitor_types=(), options=None):
+        opt = self.options = (options or SimOptions()).check()
+        kick = opt.stimulation == "kick"
         # engine: compiled when a C++ compiler works, else pure Python; same equations either way
         # (flycns/windows.py; tests/unit.py checks the two give identical spikes)
         self.codegen = codegen or codegen_target()
@@ -109,11 +144,17 @@ class CNSModel:
         self.stim = stim
         self.stim_index = pd.Series(np.arange(len(stim)), index=stim["bodyId"].values)
         all_ids = pd.unique(pd.concat([edges["pre"], edges["post"]]))
-        self.lif_ids = np.array([b for b in all_ids if b not in self.stim_index.index])
+        if kick:     # stimulated cells stay in the network (those without any connection too)
+            self.lif_ids = np.array(list(all_ids) + [b for b in stim["bodyId"] if b not in set(all_ids)])
+        else:
+            self.lif_ids = np.array([b for b in all_ids if b not in self.stim_index.index])
         self.lif_index = pd.Series(np.arange(len(self.lif_ids)), index=self.lif_ids)
 
         p = params
         noise = "+ sigma * sqrt(2 / tau_m) * xi" if p.baseline_noise_mV > 0 else ""
+        if noise and opt.integration == "exact":
+            raise ValueError("[model] exact integration cannot take the membrane noise term; use euler")
+        g_flag = " (unless refractory)" if opt.reset == "v_and_g" else ""
         use_pep = bool(p.peptide_gain_scale)
         # g_shunt: gap-junction load from electrically coupled partners that are stimulus sources.
         # A simulated partner loads its post cell through I_gap = g(v_pre - v_post); a source has no
@@ -122,7 +163,7 @@ class CNSModel:
         # pep: peptide level, copied each step from a shared per-peptide pool when modulation is on, else 0.
         eqs = f"""
         dv/dt = (v_rest + I_base - v + g + I_gap + g_shunt * (v_rest - v) - a) / tau_m {noise} : volt (unless refractory)
-        dg/dt = -g / tau_syn : volt
+        dg/dt = -g / tau_syn : volt{g_flag}
         da/dt = -a / tau_adapt : volt
         pep : 1
         pep_gain : 1
@@ -138,8 +179,9 @@ class CNSModel:
         eqs = eqs.replace("/ tau_m ", "/ tau_m_i ").replace("/ tau_m)", "/ tau_m_i)")
         eqs += "        tau_m_i : second\n        v_thresh_i : volt\n        ref_i : second\n"
         G = NeuronGroup(len(self.lif_ids), eqs, threshold="v > v_thresh_i",
-                        reset="v = v_reset; a += b_adapt",
-                        refractory="ref_i", method="euler", namespace=ns)
+                        reset="v = v_reset; g = 0*mV; a += b_adapt" if opt.reset == "v_and_g" else "v = v_reset; a += b_adapt",
+                        refractory="ref_i", method="linear" if opt.integration == "exact" else "euler",
+                        namespace=ns)
         G.v = p.v_rest_mV * mV
         G.b_adapt = 0 * mV
         G.tau_m_i = p.tau_m_ms * ms
@@ -163,7 +205,7 @@ class CNSModel:
                     G.ref_i[idx] = over["refractory_ms"] * ms
                 self.superclass_params_applied.append(dict(superclass=sc, n=int(len(idx)), **over))
         self.overrides_applied = []
-        for typ, par, val, src in INTRINSIC_OVERRIDES:
+        for typ, par, val, src in (INTRINSIC_OVERRIDES if opt.adaptation else ()):
             if typ.startswith("superclass:"):
                 sel = self.meta.index[self.meta["superclass"] == typ.split(":", 1)[1]]
             else:
@@ -187,6 +229,8 @@ class CNSModel:
 
         P = PoissonGroup(len(stim), rates=0 * Hz)
         se = edges[edges["pre"].isin(self.stim_index.index) & edges["post"].isin(self.lif_index.index)]
+        if kick:     # the stimulated cells' own synapses are among the recurrent ones (rec)
+            se = se.iloc[:0]
         objs = [G, P] + ([S_rec] if len(rec) else [])
         if len(se):
             S_stim = Synapses(P, G, "w : volt", on_pre="g_post += w * (1 + pep_gain_post * pep_post)")
@@ -194,8 +238,15 @@ class CNSModel:
             S_stim.w = (se["weight"] * se["sign"] * gain_of.loc[se["pre"]].values).values * w_unit
             S_stim.delay = p.chem_delay_ms * ms
             objs.append(S_stim)
-        elif len(stim):   # a model driven only by its own spike sources has no stimulus types: no warning
+        elif len(stim) and not kick:   # a model driven only by its own spike sources has no stimulus types: no warning
             print("[model] WARNING: stimulated types have no outgoing edges to LIF neurons")
+        if kick and len(stim):
+            tgt = self.lif_index[stim["bodyId"]].values
+            G.ref_i[tgt] = 0 * ms
+            S_kick = Synapses(P, G, "kick : volt", on_pre="v_post += kick")
+            S_kick.connect(i=np.arange(len(stim)), j=tgt)
+            S_kick.kick = opt.stim_kick_mV * mV
+            objs.append(S_kick)
         self.electrical_table = pd.DataFrame()
         if electrical:
             ep_all = electrical_pairs(neurons)
@@ -212,7 +263,7 @@ class CNSModel:
                 S_gap.delay = p.gap_delay_ms * ms
                 objs.append(S_gap)
             # stimulus source -> LIF: spikelet, plus the coupling load of a partner at rest (g_shunt)
-            eps = ep_all[ep_all.pre.isin(self.stim_index.index)]
+            eps = ep_all[ep_all.pre.isin(self.stim_index.index)] if not kick else ep_all.iloc[:0]
             if len(eps):
                 load = eps.groupby("post")["g_gap"].sum()
                 G.g_shunt[self.lif_index[load.index].values] = load.values
@@ -237,7 +288,7 @@ class CNSModel:
             for k, entry in enumerate(PEPTIDE_MODULATION, start=1):
                 ids = self.meta.index[self.meta["type"] == entry["source"]]
                 src_lif = [self.lif_index[b] for b in ids if b in self.lif_index.index]
-                src_stim = [self.stim_index[b] for b in ids if b in self.stim_index.index]
+                src_stim = [self.stim_index[b] for b in ids if b in self.stim_index.index] if not kick else []
                 tgt_types = [t for t in entry["targets"] if t not in p.peptide_exclude]
                 tgt = np.array([self.lif_index[b] for b in self.meta.index[self.meta["type"].isin(tgt_types)]
                                 if b in self.lif_index.index], dtype=int)

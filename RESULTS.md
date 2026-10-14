@@ -1,6 +1,6 @@
 # flycns: results note
 
-*Status v0.11, registration generation 4 (a hygiene refreeze; run 18 reproduces generation 3 number for number), 12 October 2026. A working note, not a manuscript. Every number is reproducible
+*Status v0.12, registration generation 5 (Shiu-compatible options, off by default; phase 1: the simulator reproduces Shiu et al. 2024's model), 12 October 2026. A working note, not a manuscript. Every number is reproducible
 from the scripts named beside it; run `./fly` and use the menu. Where the model disagrees with a
 measurement, the model is presumed wrong.*
 
@@ -34,6 +34,76 @@ every check re-registered before run 14 (below).
 
 (Earlier summaries that described the auditory result as "reproducing published physiology" are
 superseded by its registered tests.)
+
+---
+
+## 12 October 2026: generation 5, phase 1: set to Shiu et al.'s choices, flycns reproduces their model (run 22)
+
+**The question.** flycns finds no sugar -> MN9 response in the male CNS (check F3), where Shiu et al. 2024's
+model of the female brain finds a strong one. Is that the simulator or the wiring? Phase 1 ran a positive
+control: the flycns simulator, set to Shiu et al.'s choices, on their own FlyWire v630 data (A1), then the
+male CNS under the same choices (M1). Everything was registered before it ran: the pre-registration
+(`results/shiu2024_a0/`), an addendum (`results/shiu2024_phase1_addendum/`: exact integration for A1; M1
+at a connection floor of 5, the MaleCNS data's floor), two point-by-point checks against the authors'
+archived output (S4b, S5b) and the phase-1 registration (`results/shiu2024_phase1/registration_v5.json`,
+commit `65ce101`). Shiu et al.'s own code was first run here on their data (A0): it reproduces its
+published output (67.10 vs 67.03 Hz).
+
+**Generation 5 changes no default.** The options (`flycns.model.SimOptions`, `load_graph(amines=...)`) are
+off unless phase 1 sets them. The identity check proves it: every job of the rerun, reduced to a few
+trials and fingerprinted on the generation-4 and generation-5 code (cloud runs 20 and 21), gave identical
+networks, neuron states, spikes and exit codes in 55 of 55 jobs (7,591 fingerprints).
+
+**A1 passes: on all seven counted checks** (`results/shiu2024_phase1/phase1.json`):
+
+| check | result | 95% interval | band |
+|---|---|---|---|
+| S1 contralateral MN9, sugar 100 Hz | 68.33 Hz vs published 67.03 (+1.30) | -1.67 to +4.20 | +/-6.7 |
+| S2 fires in >= 29 of 30 trials | 30 of 30 | | |
+| S3 contra - ipsi; ipsi vs published | +17.9; +1.77 | 15.8 to 19.9; -0.57 to +4.07 | > 0; +/-4.86 |
+| S4b dose curve, 50/100/150/200 Hz | 17.5/68.3/82.6/94.5 vs 19.4/65.7/83.7/93.2 | every point inside | +/-6.7 each |
+| S5 bitter suppression; minus rho | 63.9 Hz; 0.955 | 62.0 to 65.9; 0.944 to 0.963 | > 0 |
+| S5b bitter curve, 0-200 Hz (8 points) | every point within 1.9 Hz of the published | every point inside | +/-6.7 each |
+| S6 shuffled weights reaching 51.4 Hz | 0 of 100 | | <= 5 |
+
+S4 (MN9 at 100 Hz as a share of the maximum, band 0.7-0.9) does not count: the reference's own output is
+UNRESOLVED on it (0.705), and so is A1 (0.723, 0.700 to 0.745; under other bootstrap seeds it passes about
+three times in four). How "A1 passes" is defined (only checks the reference itself passes count; three
+outcomes; one extension if unresolved) was chosen after A0 and after S4's behaviour on the reference was
+known, but before any A1 run; read plainly, the pre-registration would have made A1 UNRESOLVED (through S4)
+and called for its extension, not FAILED it. No extension and no reference shuffle run were needed.
+
+An independent review re-derived every check from the arm files with its own code, and tested the A1
+configuration against Shiu et al.'s `model.py` directly on a 400-neuron network: identical spikes (3,706
+of 3,706 under Poisson drive, 3,255 of 3,255 after the same weight permutation); switching flycns to
+Euler, or to its own reset, breaks the match.
+
+**M1: the male CNS drives MN9 under the same choices.** LB3b and LB3c at 100 Hz, connection floor 5, amines
+excitatory: MN9 21.5 Hz (19.8 to 23.2), every one of 30 trials. The registered rule therefore reads: **the
+male MN9 zero is caused by flycns's settings, not by the wiring.** Caveats: the response is one cell
+(42.8 Hz; the other MN9 0.13 Hz); at w_scale 1.0 the male network is broadly active (about 7,600 neurons
+per trial, 4.4%, against 358 on FlyWire) and no specificity control for M1 was registered, so "responds"
+does not yet show a sugar-specific drive; and M1 differs from flycns's own F3 run in settings the ladder
+does not test (amines, electrical synapses, a 1 s rather than a 200 ms pulse).
+
+**The ladder (female brain, reported, not scored):** from A1, one setting at a time back to flycns's value,
+sugar 100 Hz, contralateral MN9:
+
+| switched to flycns's value | MN9 (Hz) | vs A1 |
+|---|---|---|
+| none (A1) | 68.3 | |
+| synaptic scale 0.4 (L4) | **0.0** | -68.3 (0 of 30 trials fire) |
+| all of them (L6) | **0.0** | -68.3 |
+| motor adaptation (L5) | 37.9 | -30.4 |
+| connection floor 5 (L3) | 61.8 | -6.5 |
+| stimulus as source cells (L2) | 67.7 | -0.6 |
+| Euler integration (Le) | 66.9 | -1.4 |
+| reset of v only, g carries over (L1) | 231.8 | +163.5 |
+
+The synaptic scale alone silences MN9 on the female brain. That it is what silences it on the male brain
+is the obvious next test (the same ladder on MaleCNS); phase 1 does not show it. The scale is not a
+measured value: 0.4 was chosen by a benchmark-blind rule because the male network runs away near 0.5
+(docs/CALIBRATION.md).
 
 ---
 

@@ -152,8 +152,8 @@
     "Turner MH, Krieger A, Pang MM, Clandinin TR (2022). Visual and motor signatures of locomotion dynamically shape a population code for feature detection in Drosophila. eLife 11:e82587. Source of the measured loom amplitudes used for the drive here."
   ],
   "provenance": {
-    "written_at": "2026-10-12T12:54:29",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T18:35:38",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

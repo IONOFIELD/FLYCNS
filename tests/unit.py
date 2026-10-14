@@ -528,24 +528,40 @@ def t_seed_reaches_the_model(tmp):
 
 DATA_TABLE_NAMES = {"neurons.parquet", "edges.parquet", "roi_membership.parquet", "edges_nt.parquet"}
 RESULT_TABLE_NAMES = {"cascade_links.parquet", "cascade_sites.parquet", "spikes_real.parquet"}   # written under results/
+REFERENCE_RUN_TABLE_NAMES = {"A0_sugarR_100Hz.parquet"}   # written by the A0 reference run under reference-runs/
+
+
+def _reference_pins():
+    """Tables of the published reference model (Shiu et al. 2024): read in the authors' own repository, not
+    flycns inputs, so they are pinned by sha256 in fit/shiu2024_reference.py (PINS), not in data/MANIFEST.json."""
+    import ast
+    tree = ast.parse((ROOT / "fit/shiu2024_reference.py").read_text(encoding="utf-8"))
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and any(getattr(t, "id", None) == "PINS" for t in node.targets):
+            return {Path(k).name: v for k, v in ast.literal_eval(node.value).items()}
+    return {}
 
 
 def t_manifest_pins_every_input_table():
-    """Every parquet table the code reads is either pinned in data/MANIFEST.json or a result the code
-    itself writes under results/. A new input table must be pinned before any result can rest on it."""
+    """Every parquet table the code reads is either pinned in data/MANIFEST.json, a result the code itself
+    writes under results/, or a table of the published reference model pinned by sha256 in
+    fit/shiu2024_reference.py (or written by its run). A new input table must be pinned before any result can
+    rest on it. Name templates (Sugar_Bitter_<s>_Hz_<b>_Hz.parquet, sugarR_{}Hz.parquet) are not table names."""
     import re
     names = set()
     for top in ("benchmarks", "fit", "scripts", "flycns", "viz"):
         for f in (ROOT / top).rglob("*.py"):
             if "legacy" not in f.parts:
-                names |= set(re.findall(r"([A-Za-z0-9_]+\.parquet)", f.read_text(encoding="utf-8")))
+                names |= set(re.findall(r"(?<![>}A-Za-z0-9_])([A-Za-z0-9_]+\.parquet)", f.read_text(encoding="utf-8")))
     names.discard("pyarrow.parquet")
-    unknown = names - DATA_TABLE_NAMES - RESULT_TABLE_NAMES
+    reference = {n for n, h in _reference_pins().items() if n.endswith(".parquet") and len(h) == 64}
+    unknown = names - DATA_TABLE_NAMES - RESULT_TABLE_NAMES - reference - REFERENCE_RUN_TABLE_NAMES
     mf = ROOT / "data/MANIFEST.json"
     pinned = set(json.loads(mf.read_text(encoding="utf-8"))["files"]) if mf.exists() else set()
     unpinned = sorted(DATA_TABLE_NAMES - pinned)
     ok = not unknown and not unpinned
-    return ok, (f"all {len(DATA_TABLE_NAMES)} input tables pinned ({', '.join(sorted(DATA_TABLE_NAMES))})" if ok else
+    return ok, (f"all {len(DATA_TABLE_NAMES)} input tables pinned ({', '.join(sorted(DATA_TABLE_NAMES))}); "
+                f"{len(reference)} reference-model tables pinned by sha256 in fit/shiu2024_reference.py" if ok else
                 f"unclassified tables {sorted(unknown)}; not pinned in data/MANIFEST.json: {unpinned}")
 
 
@@ -1164,6 +1180,103 @@ def t_token_private(tmp):
     return ok, ("only the current user has access; nothing inherited" if ok else f"icacls: {out.strip()[:300]}")
 
 
+_FP_RUN = """
+import sys, json, hashlib, numpy as np
+sys.path.insert(0, sys.argv[1])
+from flycns import CNSModel, LIFParams, load_graph
+neurons, edges = load_graph(sys.argv[2])
+m = CNSModel(neurons, edges, ["LC4", "LPLC2"], LIFParams(w_scale=float(sys.argv[3])), electrical=True)
+m.store()
+for k in range(2):
+    m.restore()
+    m.set_stim_rates(np.full(len(m.stim), 40.0))
+    m.run(100)
+    m.run(50)
+f = m.spike_frame().sort_values(["t_ms", "bodyId"])
+print(json.dumps(dict(n=len(f), h=hashlib.sha256(f[["t_ms", "bodyId"]].to_numpy().tobytes()).hexdigest())))
+"""
+
+
+def t_identity_check(tmp):
+    """The identity check (scripts/fingerprint.py): its hook gives the same fingerprints twice, changes no
+    simulated spike, and tells a weight scale differing in the 7th digit apart (through the neuron state even
+    where no spike moves); and every job of the cloud rerun has a reduced command whose script exists."""
+    d = tmp / "idcheck"; d.mkdir()
+    subprocess.run([sys.executable, str(ROOT / "scripts/make_testdata.py")], cwd=d, capture_output=True, check=True)
+    base = {k: v for k, v in os.environ.items() if not k.startswith("FLYCNS_") or k == "FLYCNS_CODEGEN"}
+    logs, outs = [], []
+    for k, (w, hook) in enumerate((("0.4", True), ("0.4", True), ("0.4000001", True), ("0.4", False))):
+        log = d / f"fp{k}.jsonl"
+        env = dict(base, **({"FPRINT_LOG": str(log), "PYTHONPATH": str(ROOT / "scripts" / "fingerprint")} if hook else {}))
+        r = subprocess.run([sys.executable, "-c", _FP_RUN, str(ROOT), str(d / "testdata"), w], cwd=d,
+                           capture_output=True, text=True, encoding="utf-8", errors="replace", env=env)
+        if r.returncode != 0:
+            return False, r.stderr.strip()[-300:]
+        outs.append(json.loads(r.stdout.strip().splitlines()[-1]))
+        logs.append([json.loads(x) for x in log.read_text(encoding="utf-8").splitlines()] if hook else [])
+    runs = [[x for x in lg if x["kind"] == "run"] for lg in logs[:3]]
+    same_twice = logs[0] == logs[1] and len(runs[0]) == 4 and any(x["kind"] == "net" for x in logs[0])
+    unchanged = outs[0] == outs[3] and outs[0]["n"] > 0
+    told_apart = [x["state"] for x in runs[0]] != [x["state"] for x in runs[2]]
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("flycns_fingerprint", ROOT / "scripts" / "fingerprint.py")
+    fp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(fp)
+    wf = (ROOT / ".github/workflows/rerun.yml").read_text(encoding="utf-8")
+    jobs = re.findall(r'\{"name": "([^"]+)"[^}]*\}', wf.split("RERUNS: |", 1)[1].split("\n\n", 1)[0])
+    manual = set(re.findall(r'\{"name": "([^"]+)"[^}]*"manual": true', wf))
+    missing = []
+    for job in jobs:
+        if job in manual:
+            continue
+        try:
+            missing += [f"{job}: {c[0]}" for c, _ in fp.commands(job) if not (ROOT / c[0]).exists()]
+        except SystemExit as e:
+            missing.append(f"{job}: {e}")
+    ok = same_twice and unchanged and told_apart and not missing and len(jobs) > 40
+    return ok, (f"same fingerprints twice ({len(runs[0])} steps), spikes unchanged by the hook ({outs[0]['n']}), "
+                f"w_scale +1e-7 told apart; all {len(jobs) - len(manual)} rerun jobs have a reduced command" if ok else
+                f"same_twice {same_twice} unchanged {unchanged} ({outs[0]} vs {outs[3]}) told_apart {told_apart} "
+                f"missing {missing[:5]} jobs {len(jobs)}")
+
+
+def t_shiu_options(tmp):
+    """The phase-1 options (flycns.model.SimOptions, load_graph amines) do what they say, and the defaults
+    build exactly the generation-4 network: same objects, equations, reset, method and size."""
+    from flycns import load_graph
+    from flycns.model import CNSModel, LIFParams, SimOptions
+    from flycns.graph import AMINES
+    d = tmp / "shiuopt"; d.mkdir()
+    subprocess.run([sys.executable, str(ROOT / "scripts/make_testdata.py")], cwd=d, capture_output=True, check=True)
+    neurons, edges = load_graph(str(d / "testdata"))
+    stim = ["Gr64f_sugar_GRN"]
+
+    def desc(m):
+        return ([type(o).__name__ for o in sorted(m.net.objects, key=lambda o: o.name)], str(m.G.equations),
+                str(m.G.event_codes), m.G.state_updater.method_choice, len(m.lif_ids))
+    plain = CNSModel(neurons, edges, stim, LIFParams(), electrical=True)
+    dflt = CNSModel(neurons, edges, stim, LIFParams(), electrical=True, options=SimOptions())
+    same = desc(plain) == desc(dflt) and plain.G.state_updater.method_choice == "euler"
+    a1 = CNSModel(neurons, edges, stim, LIFParams(w_scale=1.0), electrical=False,
+                  options=SimOptions(reset="v_and_g", stimulation="kick", integration="exact", adaptation=False))
+    sid = a1.stim["bodyId"].values
+    in_net = all(b in a1.lif_index.index for b in sid) and not any(b in plain.lif_index.index for b in sid)
+    ref0 = bool((np.asarray(a1.G.ref_i_[a1.lif_index[sid].values]) == 0).all())
+    g_frozen = any("dg/dt" in ln and "unless refractory" in ln for ln in str(a1.G.equations).splitlines())
+    exact = a1.G.state_updater.method_choice == "linear" and "g = 0*mV" in str(a1.G.event_codes)
+    no_adapt = not a1.overrides_applied and bool(plain.overrides_applied)
+    raw = pd.read_parquet(d / "testdata" / "edges.parquet")
+    n_amine = int(raw["nt"].str.lower().isin(AMINES).sum())
+    _, e_exc = load_graph(str(d / "testdata"), amines="excitatory")
+    amines_ok = len(e_exc) - len(edges) == n_amine
+    ok = same and in_net and ref0 and g_frozen and exact and no_adapt and amines_ok
+    return ok, (f"defaults build the generation-4 network; A1 options: stimulated cells in the network with "
+                f"refractory 0, g reset and frozen, exact integration, no adaptation; amines excitatory adds "
+                f"{n_amine} edges" if ok else
+                f"same {same} in_net {in_net} ref0 {ref0} g_frozen {g_frozen} exact {exact} no_adapt {no_adapt} "
+                f"amines {amines_ok} ({len(e_exc)} - {len(edges)} vs {n_amine})")
+
+
 def t_neutral_wording():
     """User-facing messages ask for help neutrally; none tells the user to send output to a named assistant."""
     bad = []
@@ -1219,6 +1332,8 @@ def run_all():
                          ("a refrozen model registers a new generation", lambda: t_registry_generations(tmp)),
                          ("results go to a review branch only", lambda: t_review_branch(tmp)),
                          ("a refused push says why", lambda: t_review_push_failure_reason(tmp)),
+                         ("identity check is exact and complete", lambda: t_identity_check(tmp)),
+                         ("phase-1 options, defaults unchanged", lambda: t_shiu_options(tmp)),
                          ("menu input guards", lambda: t_menu_guards(tmp)),
                          ("token file is private", lambda: t_token_private(tmp)),
                          ("messages use neutral wording", t_neutral_wording)]:

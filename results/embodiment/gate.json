@@ -199,8 +199,8 @@
     "next_step": "If buildable: the surrogate needs firing rates for wing and haltere campaniform afferents during flight, from the literature, with the wingbeat phase relationship. Without a cited rate the loop is a guess and should not be built. Fenton/Dickinson haltere campaniform work and Dickerson et al. on wing campaniform fields are the places to look. If not buildable: record which question failed and stop."
   },
   "provenance": {
-    "written_at": "2026-10-12T11:24:10",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T18:16:15",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],

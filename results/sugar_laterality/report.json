@@ -360,8 +360,8 @@
     "L1_sugar_contralateral_bias": true
   },
   "provenance": {
-    "written_at": "2026-10-12T12:48:29",
-    "git_commit": "bd631a2",
+    "written_at": "2026-10-12T17:56:57",
+    "git_commit": "65ce101",
     "git_is_repo": true,
     "git_dirty": false,
     "dirty_files": [],
@@ -413,12 +413,12 @@
     }
   },
   "registration": {
-    "file": "results/sugar_laterality/registration_v4.json",
-    "version": 4,
-    "supersedes": "results/sugar_laterality/registration_v3.json",
-    "git_commit": "7851c7c",
-    "model_hash": "994272c93461317443b616fddf3a65060d2c49e27a4025a86860c1b7916820c5",
-    "registered_at": "2026-10-12T03:48:26",
+    "file": "results/sugar_laterality/registration_v5.json",
+    "version": 5,
+    "supersedes": "results/sugar_laterality/registration_v4.json",
+    "git_commit": "24ea400",
+    "model_hash": "29080f77161afbf930c49007a21dfde28f9ec9bba2c777abe4383294be3cfc5c",
+    "registered_at": "2026-10-12T10:43:40",
     "matches": true,
     "problems": []
   }

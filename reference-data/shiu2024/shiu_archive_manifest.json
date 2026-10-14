@@ -1,0 +1,579 @@
+{
+  "source": "Edmond doi:10.17617/3.CZODIW, version 3, results.zip",
+  "zip_bytes": 4499610373,
+  "zip_md5": "f6f2e314821fa6a4196214e3b2b14bc4",
+  "n_files_read": 142,
+  "n_trials_per_file": 30,
+  "mn9_contra": 720575940660219265,
+  "mn9_ipsi": 720575940645521262,
+  "files": {
+    "results/example/sugarR_100Hz.parquet": {
+      "sha256": "93722ec03c3faa5a85790d77ed16bdd7f1e38a7c847ed0bc3af3dc2e4d0c3d34",
+      "bytes": 557849
+    },
+    "results/figure_1/data/sugarR_100Hz.parquet": {
+      "sha256": "09fd882d62addb86a0c1a07daf1c3d1dc9facd07d55e690b1df1be47b4921bd3",
+      "bytes": 561201
+    },
+    "results/figure_1/data/sugarR_10Hz.parquet": {
+      "sha256": "dac26144961162de5e2a255a00833d7ce37c2347774edc2dcbcb1aacf6217dd2",
+      "bytes": 33667
+    },
+    "results/figure_1/data/sugarR_110Hz.parquet": {
+      "sha256": "9f11a940837d8079c3365c22a5d19187e96000f16eddf9d184c21c3585dd0540",
+      "bytes": 604936
+    },
+    "results/figure_1/data/sugarR_120Hz.parquet": {
+      "sha256": "17b738d59c6f0ea3a82b1e2f54c76f6150af197519868c228ba52d834d188b7f",
+      "bytes": 646236
+    },
+    "results/figure_1/data/sugarR_130Hz.parquet": {
+      "sha256": "62b326fde098aaf873dfa30f298b5339c644f88c479985a1b9f91b32c63aa0c7",
+      "bytes": 691280
+    },
+    "results/figure_1/data/sugarR_140Hz.parquet": {
+      "sha256": "df8cbc0373c0501c3dd18e4f1224d337f8aa50b6e7ee8dae55614e6a2256b023",
+      "bytes": 727217
+    },
+    "results/figure_1/data/sugarR_150Hz.parquet": {
+      "sha256": "04e8b0309bf7b027004f3d11fa90b3f51773131c533b6419314cdc19cb546df1",
+      "bytes": 769702
+    },
+    "results/figure_1/data/sugarR_160Hz.parquet": {
+      "sha256": "6df093e09eb79fdb3727d6cf85e614cd8341b8cd87413014df32f0af997600ba",
+      "bytes": 806483
+    },
+    "results/figure_1/data/sugarR_170Hz.parquet": {
+      "sha256": "fe306960a1d6441367f1e67fda2cd9befb1a5dcca60c2e6076948a56a4be9dac",
+      "bytes": 843025
+    },
+    "results/figure_1/data/sugarR_180Hz.parquet": {
+      "sha256": "784e15bc3f824f9e2689b5ea9b69b81c3c4a44a103c3f7cb2e7852cc1fc73197",
+      "bytes": 876596
+    },
+    "results/figure_1/data/sugarR_190Hz.parquet": {
+      "sha256": "d27407b87494113b0c3ee935b9bfe85f81d11fe5a3e01586b9e8132ecc94aba6",
+      "bytes": 914982
+    },
+    "results/figure_1/data/sugarR_200Hz.parquet": {
+      "sha256": "cae3cd2823dfbd88a8d957724d63aba2b288b40e6b453bfe13a75f77a8bb6357",
+      "bytes": 942070
+    },
+    "results/figure_1/data/sugarR_20Hz.parquet": {
+      "sha256": "10132b4dd54ab41c8e0156e0d6d517e47e25a8bd20527b010e3c2076cb8e0394",
+      "bytes": 63777
+    },
+    "results/figure_1/data/sugarR_30Hz.parquet": {
+      "sha256": "8f2371d1c2b1e20734cc0960fbbdf46b1835b374d17df474e6e3c991eb60a3a2",
+      "bytes": 94411
+    },
+    "results/figure_1/data/sugarR_40Hz.parquet": {
+      "sha256": "23655d0b0c0a445c27f170b9a65fb36114c9f57a2bf2da1cad952e1000368119",
+      "bytes": 135749
+    },
+    "results/figure_1/data/sugarR_50Hz.parquet": {
+      "sha256": "05b77753af8f6a86f34740757b6bfb59f62f3410be105fb62a04c396d1f2bb41",
+      "bytes": 211850
+    },
+    "results/figure_1/data/sugarR_60Hz.parquet": {
+      "sha256": "9a72f7eef36dc0ccabbba86e5ffede1c53c8f92dcf727e4a9fd8a118d5fe7746",
+      "bytes": 302477
+    },
+    "results/figure_1/data/sugarR_70Hz.parquet": {
+      "sha256": "f50e1b0442a742aae8198398d264f2b1e2b5e1adb23eee5d48af29b67b1297c4",
+      "bytes": 393072
+    },
+    "results/figure_1/data/sugarR_80Hz.parquet": {
+      "sha256": "f9cccfbe764ccdf1076174de50cc6ffbf1cbace376fa3b56358b53d267625fab",
+      "bytes": 458422
+    },
+    "results/figure_1/data/sugarR_90Hz.parquet": {
+      "sha256": "0350cbc2e609520b6392d23e06bdf69c310910921dddb1e135f4aba0e2af3959",
+      "bytes": 511519
+    },
+    "results/figure_3/data/Sugar_Bitter_0_Hz_0_Hz.parquet": {
+      "sha256": "7da7ce4920cec85f14a6cd5555290a8da8ce1f9f57e7c6d18d97b20aeeb50d3a",
+      "bytes": 2833
+    },
+    "results/figure_3/data/Sugar_Bitter_0_Hz_100_Hz.parquet": {
+      "sha256": "3ac990a2c71244f29c08f32633ff324b9963b388839febba05eee79cf936fa16",
+      "bytes": 187296
+    },
+    "results/figure_3/data/Sugar_Bitter_0_Hz_120_Hz.parquet": {
+      "sha256": "e201bfef89a8b7f193a2b02c78e77c48c674fb9b0fc9c9ac98e915e3915cfa44",
+      "bytes": 224158
+    },
+    "results/figure_3/data/Sugar_Bitter_0_Hz_140_Hz.parquet": {
+      "sha256": "6d70e2ccd9a91b3fe455205acbbb882f0b0389858eb4948e71d72c1462224724",
+      "bytes": 261722
+    },
+    "results/figure_3/data/Sugar_Bitter_0_Hz_160_Hz.parquet": {
+      "sha256": "16830538e36e0e4580fcce41885221bb8b8352da18e69574bfc0fa652308e33f",
+      "bytes": 298985
+    },
+    "results/figure_3/data/Sugar_Bitter_0_Hz_180_Hz.parquet": {
+      "sha256": "49d8f5b9187cda929dd415a7ef1962ba80aa6b44c6193c99e475da1689afa79e",
+      "bytes": 338160
+    },
+    "results/figure_3/data/Sugar_Bitter_0_Hz_200_Hz.parquet": {
+      "sha256": "1273292803b38e2397f31e0476dc2fec3222b6786bebb12d12535fc352499d0e",
+      "bytes": 377184
+    },
+    "results/figure_3/data/Sugar_Bitter_0_Hz_20_Hz.parquet": {
+      "sha256": "77f564e32040c369748efba7a00af8c29f2d6bbe5099d045faac31bfaa76bb8e",
+      "bytes": 52333
+    },
+    "results/figure_3/data/Sugar_Bitter_0_Hz_40_Hz.parquet": {
+      "sha256": "0877d3300d0a4147769507851e7f48d4c1eaec84e61dade520c823d331365b89",
+      "bytes": 86928
+    },
+    "results/figure_3/data/Sugar_Bitter_0_Hz_60_Hz.parquet": {
+      "sha256": "2797bf0e6d8ad5789afba06f43ffc60a6e66841c78c094dd2480c95a1951f9c7",
+      "bytes": 118538
+    },
+    "results/figure_3/data/Sugar_Bitter_0_Hz_80_Hz.parquet": {
+      "sha256": "9cda8781a90e989df240a129d0f0e6e123c6fa2721118931d338268f06c14edf",
+      "bytes": 150424
+    },
+    "results/figure_3/data/Sugar_Bitter_100_Hz_0_Hz.parquet": {
+      "sha256": "58c10aa0ab7fae961c181f95f9290fa61f1fb9b0e3bb4cfa8d542ae5de412da9",
+      "bytes": 561811
+    },
+    "results/figure_3/data/Sugar_Bitter_100_Hz_100_Hz.parquet": {
+      "sha256": "9dce7c2d5d0cb092f63f0067dee52855d067640f30832d1e133fdd96e5debc68",
+      "bytes": 531917
+    },
+    "results/figure_3/data/Sugar_Bitter_100_Hz_120_Hz.parquet": {
+      "sha256": "7506c5c0e55e6b8e410cfa690a119f61b339f0b0a55acfa4114c474d998c4753",
+      "bytes": 545311
+    },
+    "results/figure_3/data/Sugar_Bitter_100_Hz_140_Hz.parquet": {
+      "sha256": "3dc1f36dd1813f428fb34a1c2f684fde3e8c0aac6005b80713513d9eb46f4be1",
+      "bytes": 539305
+    },
+    "results/figure_3/data/Sugar_Bitter_100_Hz_160_Hz.parquet": {
+      "sha256": "53127cc171c44131f5a68fd78823930227f509cd1cf578a0a1728cf39f804ebe",
+      "bytes": 549546
+    },
+    "results/figure_3/data/Sugar_Bitter_100_Hz_180_Hz.parquet": {
+      "sha256": "e70b94e8b2ca0026690e4ea0a2f73b140b4bcf28f28a8d6de7d6b4e2a9b6fec8",
+      "bytes": 566045
+    },
+    "results/figure_3/data/Sugar_Bitter_100_Hz_200_Hz.parquet": {
+      "sha256": "537b024e9eb33c9b81b9e6ee8db0dd8dfc528eacf8aa56a8ff1f6c3bf4786d6b",
+      "bytes": 591972
+    },
+    "results/figure_3/data/Sugar_Bitter_100_Hz_20_Hz.parquet": {
+      "sha256": "36dc38f0352efc976d90c8a4d0a1524e18759f3a527a2908c11eb65a38c9a88a",
+      "bytes": 552108
+    },
+    "results/figure_3/data/Sugar_Bitter_100_Hz_40_Hz.parquet": {
+      "sha256": "03c90c855a898229402df148a014920c197313f058a43513f238722573c7504d",
+      "bytes": 545042
+    },
+    "results/figure_3/data/Sugar_Bitter_100_Hz_60_Hz.parquet": {
+      "sha256": "fb0b802ccea77dd345f0cb4c9c8fd406f4d6dbf495393ef1000df67cffacf93e",
+      "bytes": 537064
+    },
+    "results/figure_3/data/Sugar_Bitter_100_Hz_80_Hz.parquet": {
+      "sha256": "7df3fa86c89072c3c3b1569bfc668f2de4f0ee53c0b060acd10af6dbb07fb035",
+      "bytes": 522857
+    },
+    "results/figure_3/data/Sugar_Bitter_120_Hz_0_Hz.parquet": {
+      "sha256": "51fb5c5c6786327a708f37bba85b88bea09bb9da90b374216f9d347cde95271e",
+      "bytes": 651876
+    },
+    "results/figure_3/data/Sugar_Bitter_120_Hz_100_Hz.parquet": {
+      "sha256": "9ddcaf51c4c5fc36ec3d4c28225fc8994273554b2231ba138e261a797b8fada3",
+      "bytes": 623212
+    },
+    "results/figure_3/data/Sugar_Bitter_120_Hz_120_Hz.parquet": {
+      "sha256": "6a263b7c99ce613ad98e4dba954c5d5fc040f0f99026008e62ecd9b733acd862",
+      "bytes": 624808
+    },
+    "results/figure_3/data/Sugar_Bitter_120_Hz_140_Hz.parquet": {
+      "sha256": "2c321ffd09c149c82929d717da67c4e72e8803df0322d1621c8606822d5417f9",
+      "bytes": 631229
+    },
+    "results/figure_3/data/Sugar_Bitter_120_Hz_160_Hz.parquet": {
+      "sha256": "122c9bfedf77ec2388d1adde9471be6864a9c0d273dbc4b25f7891a7bb13e78c",
+      "bytes": 640900
+    },
+    "results/figure_3/data/Sugar_Bitter_120_Hz_180_Hz.parquet": {
+      "sha256": "77d4f891a1c92e3347aaca947934ffa369fe7d9ea26e50185a860f50adb79e77",
+      "bytes": 646788
+    },
+    "results/figure_3/data/Sugar_Bitter_120_Hz_200_Hz.parquet": {
+      "sha256": "a72740823459ccf9911f38a15177dd61afb911189da4f97a345148bb9a19892b",
+      "bytes": 658883
+    },
+    "results/figure_3/data/Sugar_Bitter_120_Hz_20_Hz.parquet": {
+      "sha256": "a34a1e939034cc9bc3aaab3fc4bf386d039cfe92eb53bc1a68aff9b76d182a5c",
+      "bytes": 641526
+    },
+    "results/figure_3/data/Sugar_Bitter_120_Hz_40_Hz.parquet": {
+      "sha256": "c87a54533e957b872b463a324feaef6174eab0947f8f4cfea8e9ef73cc4fdf44",
+      "bytes": 640535
+    },
+    "results/figure_3/data/Sugar_Bitter_120_Hz_60_Hz.parquet": {
+      "sha256": "af5679ce3b0751122d202c662197e99612fa0eee6c26d504ebdeaf6a1a94b526",
+      "bytes": 631015
+    },
+    "results/figure_3/data/Sugar_Bitter_120_Hz_80_Hz.parquet": {
+      "sha256": "89903132ca63f9efa97183be3a8ab03292e4b814613fbac960c918c64f551369",
+      "bytes": 618461
+    },
+    "results/figure_3/data/Sugar_Bitter_140_Hz_0_Hz.parquet": {
+      "sha256": "c29aa2d11c1ff24021d511fd5f55d4aca734fad5e7b753f640c5c7dd459b701f",
+      "bytes": 729309
+    },
+    "results/figure_3/data/Sugar_Bitter_140_Hz_100_Hz.parquet": {
+      "sha256": "d4655b74d2f2463e67030a1c189412f70e86f070ed4ac49c1270f56e26d373c8",
+      "bytes": 704460
+    },
+    "results/figure_3/data/Sugar_Bitter_140_Hz_120_Hz.parquet": {
+      "sha256": "c1b8f737fc3f712f36304f0aa8455589ab0d2fae0587943dc9d992ed315056d9",
+      "bytes": 712728
+    },
+    "results/figure_3/data/Sugar_Bitter_140_Hz_140_Hz.parquet": {
+      "sha256": "daa9db1180c27f80b97d677af4071b8e40a3e8b574d00c78b6a99a9657de8c74",
+      "bytes": 715476
+    },
+    "results/figure_3/data/Sugar_Bitter_140_Hz_160_Hz.parquet": {
+      "sha256": "96d4a8d4c7089e282d6703574c0d4699a675d57779230a3110cbcf6e3b721729",
+      "bytes": 722568
+    },
+    "results/figure_3/data/Sugar_Bitter_140_Hz_180_Hz.parquet": {
+      "sha256": "0bce64450934a66186ea40f1898fffa5a9100590d6649ceb3fa3144ea38a6302",
+      "bytes": 729548
+    },
+    "results/figure_3/data/Sugar_Bitter_140_Hz_200_Hz.parquet": {
+      "sha256": "028f317e5c5cbc308414d75c6cac1a783c3a8a9b97c79915e4d280763500617f",
+      "bytes": 739415
+    },
+    "results/figure_3/data/Sugar_Bitter_140_Hz_20_Hz.parquet": {
+      "sha256": "0a0993f4ff0d366c5c9c62dc248382dd08d8987d2b40c1a51e3b99b706d24dad",
+      "bytes": 716930
+    },
+    "results/figure_3/data/Sugar_Bitter_140_Hz_40_Hz.parquet": {
+      "sha256": "d507db61be37b91d2cfe2d663e06db9489c58eb31f0dcc7d6ca5987238a936a1",
+      "bytes": 717406
+    },
+    "results/figure_3/data/Sugar_Bitter_140_Hz_60_Hz.parquet": {
+      "sha256": "4ed4235a2c90d24f7e78dbd16df301ce9ce69313e78730655f1d1566a88ce433",
+      "bytes": 716895
+    },
+    "results/figure_3/data/Sugar_Bitter_140_Hz_80_Hz.parquet": {
+      "sha256": "1b9c5dd89b9440d3298b3fd2958e027e48f52da69752ef0d7966dab0b55e2668",
+      "bytes": 709605
+    },
+    "results/figure_3/data/Sugar_Bitter_160_Hz_0_Hz.parquet": {
+      "sha256": "c1443976c92a8f92c89c85b0acc7931baec974fc7e0813c26db80d53efb3fd8e",
+      "bytes": 807771
+    },
+    "results/figure_3/data/Sugar_Bitter_160_Hz_100_Hz.parquet": {
+      "sha256": "d06ea741f12d4133d41bd432da3104d459dd3b3ba8b7a04826d2bfe5c5e65afd",
+      "bytes": 782250
+    },
+    "results/figure_3/data/Sugar_Bitter_160_Hz_120_Hz.parquet": {
+      "sha256": "f1999e089a3a0871585b37db0d56baa32e61708a055d5bb17b97bf18640be403",
+      "bytes": 781034
+    },
+    "results/figure_3/data/Sugar_Bitter_160_Hz_140_Hz.parquet": {
+      "sha256": "2c33fdc216975771f53622827dd1ddc337c198f563c93ef90d017c28d8b880ec",
+      "bytes": 790313
+    },
+    "results/figure_3/data/Sugar_Bitter_160_Hz_160_Hz.parquet": {
+      "sha256": "a822a92b5498881ca323f52732865319c609416262a6f410e0f94e7397bc9f5f",
+      "bytes": 804289
+    },
+    "results/figure_3/data/Sugar_Bitter_160_Hz_180_Hz.parquet": {
+      "sha256": "96a0fe62284ebb7f65dbbe12018a890d247282bfb7a90dcdd0e41395de0f3816",
+      "bytes": 810083
+    },
+    "results/figure_3/data/Sugar_Bitter_160_Hz_200_Hz.parquet": {
+      "sha256": "c2d1ee26f678e697ae215832f22ae47cd084fb1e0897cd34d4097b220c1f62d9",
+      "bytes": 819745
+    },
+    "results/figure_3/data/Sugar_Bitter_160_Hz_20_Hz.parquet": {
+      "sha256": "2fd6ec5bc55b89f126d08baa16bdc53cec1f281901cd591356538ca6eac75f71",
+      "bytes": 800061
+    },
+    "results/figure_3/data/Sugar_Bitter_160_Hz_40_Hz.parquet": {
+      "sha256": "6f85af64daaf252dee03a1c0e866afb8aaf5c2b36cd845af1337066510b6222b",
+      "bytes": 800442
+    },
+    "results/figure_3/data/Sugar_Bitter_160_Hz_60_Hz.parquet": {
+      "sha256": "9d65e550dd76a17386bd2df95ead6f8fa10fe6a6f456e44bbb60cc0ce0965709",
+      "bytes": 795790
+    },
+    "results/figure_3/data/Sugar_Bitter_160_Hz_80_Hz.parquet": {
+      "sha256": "11d7fa64265c5392c66d962c0ec2cfabc3b2b888835fd6169fdcbf5e50207226",
+      "bytes": 788760
+    },
+    "results/figure_3/data/Sugar_Bitter_180_Hz_0_Hz.parquet": {
+      "sha256": "bfa045532e2f69b21ce0c74101036077831926939005100fd2ae59572376720b",
+      "bytes": 879250
+    },
+    "results/figure_3/data/Sugar_Bitter_180_Hz_100_Hz.parquet": {
+      "sha256": "16d33e6ab7f481ef75d679bd118d63f2ede3759e532ad5703a1234ebeab61b43",
+      "bytes": 870003
+    },
+    "results/figure_3/data/Sugar_Bitter_180_Hz_120_Hz.parquet": {
+      "sha256": "225fd5886a44cda9d4c17ecdfeac25ad31ff6e8853d4e22bffa40b73c2ba5e8a",
+      "bytes": 854171
+    },
+    "results/figure_3/data/Sugar_Bitter_180_Hz_140_Hz.parquet": {
+      "sha256": "aeaac99755ae223df705e26f053ff514590f546110460a82a577ade787130979",
+      "bytes": 868693
+    },
+    "results/figure_3/data/Sugar_Bitter_180_Hz_160_Hz.parquet": {
+      "sha256": "66394edb57a7473a28082c3cbefa85e1499f776a4a68609f70f23036d5cdaeef",
+      "bytes": 876540
+    },
+    "results/figure_3/data/Sugar_Bitter_180_Hz_180_Hz.parquet": {
+      "sha256": "228563561b1f96e01239f887c85e06b64e432908e66193c61ad146bc2a157658",
+      "bytes": 884326
+    },
+    "results/figure_3/data/Sugar_Bitter_180_Hz_200_Hz.parquet": {
+      "sha256": "692a5972b7ec0257ec2ae2749ed798f11fa2ac6ef55eead84e34ce16155b3db3",
+      "bytes": 894908
+    },
+    "results/figure_3/data/Sugar_Bitter_180_Hz_20_Hz.parquet": {
+      "sha256": "af7d67aad5b7cf4c0873828a17edd54db36f81eb59f32154870cc82bae443c44",
+      "bytes": 869473
+    },
+    "results/figure_3/data/Sugar_Bitter_180_Hz_40_Hz.parquet": {
+      "sha256": "a116ad9f4b1aeedd5c200d4d7998964114ec247e71dcafa4141e27dc64a64790",
+      "bytes": 873675
+    },
+    "results/figure_3/data/Sugar_Bitter_180_Hz_60_Hz.parquet": {
+      "sha256": "6539a9018b0597b5a3389c2640c82033fe94fb51fd28a48545d161deba42f615",
+      "bytes": 872101
+    },
+    "results/figure_3/data/Sugar_Bitter_180_Hz_80_Hz.parquet": {
+      "sha256": "04d538fe55cbddb320ecc3af0be4224a4f720cd929d8693c3f4450c3bad27db4",
+      "bytes": 874351
+    },
+    "results/figure_3/data/Sugar_Bitter_200_Hz_0_Hz.parquet": {
+      "sha256": "217caea78ab8d2c49b4ebdc77a776db9a124771d5010debed2114e853015754e",
+      "bytes": 942988
+    },
+    "results/figure_3/data/Sugar_Bitter_200_Hz_100_Hz.parquet": {
+      "sha256": "c33e444d85aed8c343ae667181bcad10fc21c412d550a162c5185b2520e41bb9",
+      "bytes": 939663
+    },
+    "results/figure_3/data/Sugar_Bitter_200_Hz_120_Hz.parquet": {
+      "sha256": "126aac90114d9e13e2eacd471f950f036d9024e58d1ad67250b61b3186d51f49",
+      "bytes": 943013
+    },
+    "results/figure_3/data/Sugar_Bitter_200_Hz_140_Hz.parquet": {
+      "sha256": "97114d112ab6c9400ee67860d55592239ff9607382f377c66001b3eff417edf8",
+      "bytes": 939879
+    },
+    "results/figure_3/data/Sugar_Bitter_200_Hz_160_Hz.parquet": {
+      "sha256": "d5d00efa9c4729a61d7783cd7777ff5a1560b51f8dfe7093a0f79d2403d5fb4f",
+      "bytes": 947950
+    },
+    "results/figure_3/data/Sugar_Bitter_200_Hz_180_Hz.parquet": {
+      "sha256": "733da05057774772d6305b03e84035999db8c7568b2bad7bf5ba83c80f363f48",
+      "bytes": 959769
+    },
+    "results/figure_3/data/Sugar_Bitter_200_Hz_200_Hz.parquet": {
+      "sha256": "ee1c2dad516fdf2682ccbe1f7028bba799503f2b82e26bcf342862d707ef9f91",
+      "bytes": 971419
+    },
+    "results/figure_3/data/Sugar_Bitter_200_Hz_20_Hz.parquet": {
+      "sha256": "df6951b42ea8b75758a30aea58bd96687f7e0ce72aafc5755786a02c446d6f41",
+      "bytes": 938340
+    },
+    "results/figure_3/data/Sugar_Bitter_200_Hz_40_Hz.parquet": {
+      "sha256": "abaea3113b4c9b28734b62ccfeb094b49e1fe52e284cabe4e218bddd973782db",
+      "bytes": 938999
+    },
+    "results/figure_3/data/Sugar_Bitter_200_Hz_60_Hz.parquet": {
+      "sha256": "2fd19421f390526b684186f77e6a53c7d155963e6d5155861ccf22c4cf6f509e",
+      "bytes": 942735
+    },
+    "results/figure_3/data/Sugar_Bitter_200_Hz_80_Hz.parquet": {
+      "sha256": "225e59469aaaaab914665a069f21e50c90c41f7ce882263ae7bc18e658b917ff",
+      "bytes": 944241
+    },
+    "results/figure_3/data/Sugar_Bitter_20_Hz_0_Hz.parquet": {
+      "sha256": "5a78447b8abbe45886d12ffad9989319a02415edc7256d195a0a03f48f798fd6",
+      "bytes": 62460
+    },
+    "results/figure_3/data/Sugar_Bitter_20_Hz_100_Hz.parquet": {
+      "sha256": "2df8eb74c25ed4bf38eb5c7739cbfd1039504a08fe7071dd0b71951de3c24717",
+      "bytes": 217982
+    },
+    "results/figure_3/data/Sugar_Bitter_20_Hz_120_Hz.parquet": {
+      "sha256": "c8c7a04a0a21e49127c1e343e7c1ff86cc9777c4d969efe403a010edabcf534a",
+      "bytes": 254613
+    },
+    "results/figure_3/data/Sugar_Bitter_20_Hz_140_Hz.parquet": {
+      "sha256": "4ab50bbb81d90585ef7ed87981218032afd545ac94532d66bbcb2f0e63d1fd1e",
+      "bytes": 292640
+    },
+    "results/figure_3/data/Sugar_Bitter_20_Hz_160_Hz.parquet": {
+      "sha256": "e65806a47e71b3c13a3ca77202d7b05ec91ce8f510c6ae816e90590f494c89a4",
+      "bytes": 330647
+    },
+    "results/figure_3/data/Sugar_Bitter_20_Hz_180_Hz.parquet": {
+      "sha256": "108bbf75dfa2fbccdab496bcd40270855a24d24d1c935802d70a7d0c1767614b",
+      "bytes": 369536
+    },
+    "results/figure_3/data/Sugar_Bitter_20_Hz_200_Hz.parquet": {
+      "sha256": "4bce3c0bd351eeebda0b6eb13f0d96373e583b4f6e7a255338a690844d4a969c",
+      "bytes": 407760
+    },
+    "results/figure_3/data/Sugar_Bitter_20_Hz_20_Hz.parquet": {
+      "sha256": "a30a765e4cd0e56875370b94fbd2fd91f223730581f4dea5bbf9b440b517e510",
+      "bytes": 92802
+    },
+    "results/figure_3/data/Sugar_Bitter_20_Hz_40_Hz.parquet": {
+      "sha256": "096203a567a9a8c09035d8cdcead6f9f1e1a06be3419405cddbb9797ade0a063",
+      "bytes": 120548
+    },
+    "results/figure_3/data/Sugar_Bitter_20_Hz_60_Hz.parquet": {
+      "sha256": "c4646d83aa4aad3e7c355b1cb8aef1f5845e611ecaa23c1b7bad8c2b545c7299",
+      "bytes": 151874
+    },
+    "results/figure_3/data/Sugar_Bitter_20_Hz_80_Hz.parquet": {
+      "sha256": "2c82be24e19bc3adef418b0695df46bbae3a4ca21a724a04c647e3b30084991b",
+      "bytes": 182440
+    },
+    "results/figure_3/data/Sugar_Bitter_40_Hz_0_Hz.parquet": {
+      "sha256": "40cae0b264df4fa47fde4290ff2976d40e6c83df5b5123cd0b59103811c3ddb4",
+      "bytes": 134855
+    },
+    "results/figure_3/data/Sugar_Bitter_40_Hz_100_Hz.parquet": {
+      "sha256": "fa7d589b16d455ab3c8868aa753f0753fb151e66e0559acebe7e475aff578c48",
+      "bytes": 262816
+    },
+    "results/figure_3/data/Sugar_Bitter_40_Hz_120_Hz.parquet": {
+      "sha256": "c8e20dc3f3e50e9939aa79cfe763141a429a9e85e7d2058c2d318f3ee5369877",
+      "bytes": 300721
+    },
+    "results/figure_3/data/Sugar_Bitter_40_Hz_140_Hz.parquet": {
+      "sha256": "f95f38e4362c0a2dadc3b924f743af115b42c25027ed5a22ed814470664d05cc",
+      "bytes": 335494
+    },
+    "results/figure_3/data/Sugar_Bitter_40_Hz_160_Hz.parquet": {
+      "sha256": "57c6775820b337d9474bd8488e9abbd18b47a561e44259efe65c4d8744bedd9f",
+      "bytes": 373462
+    },
+    "results/figure_3/data/Sugar_Bitter_40_Hz_180_Hz.parquet": {
+      "sha256": "196d528501b720518a73663231d27e31fec862e4893c26284d6ac82bade8dbbd",
+      "bytes": 413362
+    },
+    "results/figure_3/data/Sugar_Bitter_40_Hz_200_Hz.parquet": {
+      "sha256": "0b1a2e52c5eb7a5c70845412fb247a77aa4212988dd011b47cc97ac2e4eb87e3",
+      "bytes": 447630
+    },
+    "results/figure_3/data/Sugar_Bitter_40_Hz_20_Hz.parquet": {
+      "sha256": "56752e765ecf58dbae8df4088ff1ee6bf5c291d707fa48d5e0525d75a9df0a90",
+      "bytes": 156109
+    },
+    "results/figure_3/data/Sugar_Bitter_40_Hz_40_Hz.parquet": {
+      "sha256": "38247c67150c466bba9b530192e4383f14cea885d937fb980fe2f955c03e1542",
+      "bytes": 175167
+    },
+    "results/figure_3/data/Sugar_Bitter_40_Hz_60_Hz.parquet": {
+      "sha256": "93175e7eaf3ce565765ffce6e98e68ac4cf01fbd2f1e6a88cc5443169b686679",
+      "bytes": 202834
+    },
+    "results/figure_3/data/Sugar_Bitter_40_Hz_80_Hz.parquet": {
+      "sha256": "e8839b862a45803ad2642f5463dfd44db34d8b83f648030d7f76e3a74f191df0",
+      "bytes": 230542
+    },
+    "results/figure_3/data/Sugar_Bitter_60_Hz_0_Hz.parquet": {
+      "sha256": "14f677c21073d5f4179f193937c62387f48c4288d7accc6cae2694295e64d88d",
+      "bytes": 302768
+    },
+    "results/figure_3/data/Sugar_Bitter_60_Hz_100_Hz.parquet": {
+      "sha256": "df17833fc9c1add59dfb2a48377fe65120cb53a29a68dd88f152b2525257d8ef",
+      "bytes": 331486
+    },
+    "results/figure_3/data/Sugar_Bitter_60_Hz_120_Hz.parquet": {
+      "sha256": "c5be7546328d167fc76f9651ae499c5709b8729f73e6fe43f7ad9365ed342a5f",
+      "bytes": 353414
+    },
+    "results/figure_3/data/Sugar_Bitter_60_Hz_140_Hz.parquet": {
+      "sha256": "0e7f6da4c0310c7d85225bf7e4217b1650799961265c6ddf02a7cce1bcc18c82",
+      "bytes": 384597
+    },
+    "results/figure_3/data/Sugar_Bitter_60_Hz_160_Hz.parquet": {
+      "sha256": "09166d31c8534bf6aa9e91cc0db086719b1668d27d3e983ac193e9d7481c5134",
+      "bytes": 421252
+    },
+    "results/figure_3/data/Sugar_Bitter_60_Hz_180_Hz.parquet": {
+      "sha256": "49e20487e7dc3dcb8810e23d333dd8abff1752e1ae456f6adeecd277de7aa9d1",
+      "bytes": 459617
+    },
+    "results/figure_3/data/Sugar_Bitter_60_Hz_200_Hz.parquet": {
+      "sha256": "0ab4408d30913f96d6f614bd7fa0a791f88536ef959f76eb7edf1c7978997cd0",
+      "bytes": 496027
+    },
+    "results/figure_3/data/Sugar_Bitter_60_Hz_20_Hz.parquet": {
+      "sha256": "4508872f75f6777ab82a7236b17974283de98e144d7b8cb8a6983ad32e384caf",
+      "bytes": 307577
+    },
+    "results/figure_3/data/Sugar_Bitter_60_Hz_40_Hz.parquet": {
+      "sha256": "1bf320aa8113925fdcb1db77567d64132265387a22697ab761025fc515daa8e5",
+      "bytes": 301123
+    },
+    "results/figure_3/data/Sugar_Bitter_60_Hz_60_Hz.parquet": {
+      "sha256": "ebe4927d99301f9de8d3651058e0028a39a1bf971cebfc9b9b905d9e1f741dd8",
+      "bytes": 299486
+    },
+    "results/figure_3/data/Sugar_Bitter_60_Hz_80_Hz.parquet": {
+      "sha256": "b22de5815d87484354cf4864821cddcd184a61d09eef807e4e02ed478527508c",
+      "bytes": 316425
+    },
+    "results/figure_3/data/Sugar_Bitter_80_Hz_0_Hz.parquet": {
+      "sha256": "dc1e17756fdf3785ad6a86963b82ded7219c73ac7b81467255728a0b0b7fb10a",
+      "bytes": 458340
+    },
+    "results/figure_3/data/Sugar_Bitter_80_Hz_100_Hz.parquet": {
+      "sha256": "ee397ea3955efaf4d2782d5764b0c94a142e7e51790520841bfe9aba50d35663",
+      "bytes": 440373
+    },
+    "results/figure_3/data/Sugar_Bitter_80_Hz_120_Hz.parquet": {
+      "sha256": "8622dd7d0456c8508c41982348f1bf2dcaf20c382ded799ff7b4b0f06487724d",
+      "bytes": 438635
+    },
+    "results/figure_3/data/Sugar_Bitter_80_Hz_140_Hz.parquet": {
+      "sha256": "8bc31f750b68dbd8854556a30d9022f415c45bc2cb96833c0b0c37209e8f2bb0",
+      "bytes": 454478
+    },
+    "results/figure_3/data/Sugar_Bitter_80_Hz_160_Hz.parquet": {
+      "sha256": "ccf0fe915bcf699a90d63f1ecd1824aec5d821acba24db4e247da6f3cc858004",
+      "bytes": 477964
+    },
+    "results/figure_3/data/Sugar_Bitter_80_Hz_180_Hz.parquet": {
+      "sha256": "c17bdf4a2e6a1f109818bbc379eaa595adf0aa1d573a24b7cdccb8f2abb7e823",
+      "bytes": 509442
+    },
+    "results/figure_3/data/Sugar_Bitter_80_Hz_200_Hz.parquet": {
+      "sha256": "01efa36d8b24b6ac2b7a452157628335b5455719514e3a713480f040b4419211",
+      "bytes": 544299
+    },
+    "results/figure_3/data/Sugar_Bitter_80_Hz_20_Hz.parquet": {
+      "sha256": "184ac034271b8611abf73b3c981ee780d778f560853b4c207b350bdd3e416995",
+      "bytes": 455678
+    },
+    "results/figure_3/data/Sugar_Bitter_80_Hz_40_Hz.parquet": {
+      "sha256": "58fb19fc9e663aa4e637a699744e7e2f0a8f2bd1ed685398a6205eb41cbf16bd",
+      "bytes": 443303
+    },
+    "results/figure_3/data/Sugar_Bitter_80_Hz_60_Hz.parquet": {
+      "sha256": "ea6041b941ebeaf82836d816b9451f1bb7590dc408f82624ba46d477b16b28df",
+      "bytes": 434820
+    },
+    "results/figure_3/data/Sugar_Bitter_80_Hz_80_Hz.parquet": {
+      "sha256": "c7981d8c7b827bf92f879eb8e86e480f36a0e7c140de3cfc994c16270cc7292f",
+      "bytes": 434162
+    }
+  }
+}
