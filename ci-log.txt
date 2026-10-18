@@ -1,0 +1,7 @@
+--- null_weightperm
+[phase1b] null_weightperm draw 17/20 (812 s)
+[phase1b] null_weightperm draw 18/20 (858 s)
+[phase1b] null_weightperm draw 19/20 (903 s)
+[phase1b] null_weightperm draw 20/20 (948 s)
+[phase1b] null_weightperm: 20 runs in 947.8 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\null_weightperm.json
+
