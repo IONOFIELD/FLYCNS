@@ -1,0 +1,35 @@
+--- c4_blind_w040
+[phaseA] c4_blind_w040 7/10 (314 s)
+[phaseA] c4_blind_w040 8/10 (348 s)
+[phaseA] c4_blind_w040 9/10 (379 s)
+[phaseA] c4_blind_w040 10/10 (412 s)
+[phaseA] c4_blind_w040: 10 runs in 412.3 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\c4_blind_w040.json
+
+--- c4_blind_w050
+[phaseA] c4_blind_w050 7/10 (318 s)
+[phaseA] c4_blind_w050 8/10 (352 s)
+[phaseA] c4_blind_w050 9/10 (383 s)
+[phaseA] c4_blind_w050 10/10 (418 s)
+[phaseA] c4_blind_w050: 10 runs in 417.6 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\c4_blind_w050.json
+
+--- c4_blind_w060
+[phaseA] c4_blind_w060 7/10 (257 s)
+[phaseA] c4_blind_w060 8/10 (294 s)
+[phaseA] c4_blind_w060 9/10 (327 s)
+[phaseA] c4_blind_w060 10/10 (360 s)
+[phaseA] c4_blind_w060: 10 runs in 359.8 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\c4_blind_w060.json
+
+--- c4_blind_w080
+[phaseA] c4_blind_w080 7/10 (263 s)
+[phaseA] c4_blind_w080 8/10 (297 s)
+[phaseA] c4_blind_w080 9/10 (330 s)
+[phaseA] c4_blind_w080 10/10 (363 s)
+[phaseA] c4_blind_w080: 10 runs in 362.7 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\c4_blind_w080.json
+
+--- c4_blind_w100
+[phaseA] c4_blind_w100 7/10 (228 s)
+[phaseA] c4_blind_w100 8/10 (258 s)
+[phaseA] c4_blind_w100 9/10 (288 s)
+[phaseA] c4_blind_w100 10/10 (319 s)
+[phaseA] c4_blind_w100: 10 runs in 318.5 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\c4_blind_w100.json
+
