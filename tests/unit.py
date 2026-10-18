@@ -1286,6 +1286,27 @@ def t_neutral_wording():
             bad.append(str(f.relative_to(ROOT)))
     return not bad, "no message names an assistant" if not bad else f"found in {bad}"
 
+def t_phase1b_parts_match_rerun_jobs():
+    """Every phase-1b part is a rerun.yml job and every p1b-* job is a part (audit 2026-10-17, R4): a renamed
+    part would otherwise surface only after a cloud run. The script is executed up to its registration line,
+    so no registration is read or written."""
+    src = (ROOT / "fit" / "shiu2024_phase1b.py").read_text(encoding="utf-8")
+    cut = src.index("REG = registry.register(")
+    ns = {"__file__": str(ROOT / "fit" / "shiu2024_phase1b.py"), "__name__": "phase1b_parts"}
+    exec(compile(src[:cut], "fit/shiu2024_phase1b.py", "exec"), ns)
+    parts = set(ns["PARTS"])
+    wf = (ROOT / ".github/workflows/rerun.yml").read_text(encoding="utf-8")
+    jobs = re.findall(r'\{"name": "(p1b-[^"]+)",\s*"run": "fit/shiu2024_phase1b\.py part ([^"]+)"', wf)
+    named = {j for j, _ in jobs}
+    bad_run = [j for j, p in jobs if j != p.strip()]
+    shiu = set(re.findall(r'\{"name": "(p1b-[^"]+)"[^}]*"shiu": true', wf))
+    ok = (named == parts and len(parts) == 13 and not bad_run and shiu == set(ns["NEEDS_SHIU"]))
+    return ok, (f"all {len(parts)} parts are rerun jobs with matching commands; reference repository flagged on "
+                f"{len(shiu)}" if ok else
+                f"only in script: {sorted(parts - named)}; only in rerun.yml: {sorted(named - parts)}; "
+                f"command mismatch: {bad_run}; shiu flag {sorted(shiu)} vs {sorted(ns['NEEDS_SHIU'])}")
+
+
 def run_all():
     out = []
     tmp = Path(tempfile.mkdtemp(prefix="flycns_unit_"))
@@ -1334,6 +1355,7 @@ def run_all():
                          ("a refused push says why", lambda: t_review_push_failure_reason(tmp)),
                          ("identity check is exact and complete", lambda: t_identity_check(tmp)),
                          ("phase-1 options, defaults unchanged", lambda: t_shiu_options(tmp)),
+                         ("phase-1b parts are the rerun jobs", t_phase1b_parts_match_rerun_jobs),
                          ("menu input guards", lambda: t_menu_guards(tmp)),
                          ("token file is private", lambda: t_token_private(tmp)),
                          ("messages use neutral wording", t_neutral_wording)]:

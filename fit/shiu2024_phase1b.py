@@ -5,7 +5,8 @@ Phase 1 (fit/shiu2024_phase1.py, run 22) ended "A1 passes and M1 responds: the m
 flycns settings; the ladder names which". Its ladder ran on the female brain only, and named one setting:
 w_scale 0.4 alone leaves MN9 at 0 Hz in 0 of 30 trials, while the v-only reset triples it (231.8 Hz) and
 every other setting is mild. w_scale 0.4 is the value the blind rule picked for QUIETNESS (fit/select_wscale.py:
-whole-CNS rate < 1 Hz and < 10% active under 1,575 sensory neurons at 20 Hz); Shiu et al. 2024 picked 1.0 for
+whole-CNS rate < 1 Hz and < 10% active under 1,470 effective driven sources at 20 Hz (1,575 drawn; about 105
+drawn cells never enter the model, results/select_wscale/report.json); Shiu et al. 2024 picked 1.0 for
 FUNCTION (80% of maximal MN9). On the male data at 1.0 the network is broadly active (M1: ~7,600 neurons per
 trial, bimodal across trials, against 358 on the female). Three things are open, and this phase answers them
 in one cloud run before any default is changed:
@@ -154,7 +155,9 @@ CRITERIA = dict(
                           "and sha256; sugar: the 21 neu_sugar ids of figures.ipynb; MN9: the two ids of phase 1"),
         ladder=dict(protocol=f"as M1: one network per arm, built once; per trial restore, set the sugar rate, run "
                              f"{LADDER_MS} ms; {LADDER_TRIALS} trials; seeds in arm order from 201",
-                    readout="mean spikes per MN9 cell per second, per trial (the M1 statistic); both cells reported",
+                    readout=("mean spikes per MN9 cell per second, per trial (the M1 statistic); each cell reported "
+                             "with its bodyId (mn9_cells, mn9_per_cell_hz); secondary: the larger of the cells "
+                             "(mn9_max_cell_hz), because run 22's male response is one cell (42.8 vs 0.13 Hz)"),
                     floor="not a rung: the male tables are fetched at a floor of 5, M1's and flycns's value"),
         nulls=dict(weightperm=(f"{NULL_DRAWS} draws: the signed per-connection weights of the recurrent network "
                                "permuted among the existing connections (numpy default_rng(10000 + k), as phase-1 S6), "
@@ -178,7 +181,11 @@ CRITERIA = dict(
                    readouts=("per trial, excluding the stimulated cells: active neurons and spikes during the drive, "
                              "whole-CNS rate (spikes per neuron per second) and fraction active; the same in the last "
                              f"{TAIL_MS // 2} ms of the tail; spikes per {BIN_MS} ms bin over the whole trial; spikes and "
-                             "active cells by superclass and by dominant neuropil (MaleCNS); MN9 (sugar drive)"),
+                             "active cells by superclass and by dominant neuropil (MaleCNS); MN9 (sugar drive). For "
+                             "every superclass and every dominant neuropil (all groups, zeros included), in the drive "
+                             "and in the tail window: spikes, active cells and rate per cell of the group "
+                             "(drive_by_*, tail_by_*), with the group sizes (group_sizes), so self-sustained can be "
+                             "recomputed with any one group left out"),
                    self_sustained=("a trial is self-sustained if the whole-CNS rate in the last half of the tail is at "
                                    "least 10% of the rate during the drive and at least 0.01 Hz"),
                    role="reported, not scored"),
@@ -197,6 +204,14 @@ CRITERIA = dict(
                                               "if the null is not active by the alive rule"), arm="null_weightperm"),
         "MS2_degree_corrected_specific": dict(rule="as MS1, against the degree-corrected rewiring draws", arm="null_dc"),
     },
+    secondary=dict(
+        rule=("pre-registered secondary readouts, reported with verdicts; they do not enter the ladder or specificity "
+              "outcomes: the four MN9 checks repeated on mn9_max_cell_hz (the larger MN9 cell per trial) instead of "
+              "the two-cell mean, with the same bands and null rule"),
+        checks={"ML0_responds_maxcell": dict(band=[RESPONDS, None], arm="ML0_m1"),
+                "ML_wscale04_silent_maxcell": dict(band=[None, RESPONDS], arm="ML4_wscale04"),
+                "MS1_weightperm_specific_maxcell": dict(rule="as MS1, on the larger cell", arm="null_weightperm"),
+                "MS2_degree_corrected_specific_maxcell": dict(rule="as MS2, on the larger cell", arm="null_dc")}),
     prediction=("from the female ladder (phase 1): ML_wscale04_silent PASSES and ML_single_switches_respond PASSES. "
                 "ML7_amines_dropped was not on the female ladder (FlyWire's sign column fixes amines); it is predicted "
                 "to respond because amines carry about 1.6% of the signed synapses"),
@@ -337,13 +352,20 @@ def _counts(m, sp, t0, t1, exclude):
 
 
 def _mn9(m, sp, seconds, data):
-    """MN9 rates from the spikes in a window (a spike_frame slice) lasting `seconds`."""
+    """MN9 rates from the spikes in a window (a spike_frame slice) lasting `seconds`. mn9_per_cell_hz is
+    aligned with mn9_cells (bodyIds, ascending). mn9_max_cell_hz is the pre-registered secondary readout:
+    the male M1 response is carried by one of the two cells (run 22: 42.8 vs 0.13 Hz), so the two-cell
+    mean halves a one-sided response."""
     if data == "flywire":
-        return dict(mn9_contra_hz=float((sp.bodyId == MN9_CONTRA).sum() / seconds),
-                    mn9_ipsi_hz=float((sp.bodyId == MN9_IPSI).sum() / seconds))
-    cells = [int(b) for b in m.meta.index[m.meta["type"] == "MN9"] if b in m.lif_index.index]
+        contra = float((sp.bodyId == MN9_CONTRA).sum() / seconds)
+        ipsi = float((sp.bodyId == MN9_IPSI).sum() / seconds)
+        return dict(mn9_contra_hz=contra, mn9_ipsi_hz=ipsi, mn9_cells=[MN9_CONTRA, MN9_IPSI],
+                    mn9_per_cell_hz=[contra, ipsi], mn9_max_cell_hz=max(contra, ipsi))
+    cells = sorted(int(b) for b in m.meta.index[m.meta["type"] == "MN9"] if b in m.lif_index.index)
     per = [float((sp.bodyId == b).sum() / seconds) for b in cells]
-    return dict(mn9_hz=float(np.mean(per)) if per else float("nan"), mn9_per_cell_hz=per)
+    nan = float("nan")
+    return dict(mn9_hz=float(np.mean(per)) if per else nan, mn9_cells=cells, mn9_per_cell_hz=per,
+                mn9_max_cell_hz=float(max(per)) if per else nan)
 
 
 def run_ladder_trial(m, rates, data, exclude):
@@ -358,7 +380,36 @@ def run_ladder_trial(m, rates, data, exclude):
     return row
 
 
-def run_sweep_trial(m, rates, data, exclude, roi):
+def _groups(m, exclude, roi):
+    """Per simulated (non-stimulated) cell: its superclass and, on MaleCNS, its dominant neuropil; and the
+    number of such cells per group, so a per-group rate (spikes per cell per second) can be formed and the
+    whole-CNS rate recomputed with any one group left out (gen-6 Outcome B, docs/gen6_rule.md)."""
+    import pandas as pd
+    ids = np.asarray(m.lif_ids, dtype="int64")
+    ids = ids[~np.isin(ids, list(exclude))]
+    sc = m.meta["superclass"].reindex(ids) if "superclass" in m.meta else pd.Series(None, index=ids, dtype=object)
+    out = dict(superclass=sc.fillna("?").astype(str))
+    if roi is not None:
+        out["neuropil"] = roi.reindex(ids).fillna("?").astype(str)
+    sizes = {k: {g: int(n) for g, n in v.value_counts().items()} for k, v in out.items()}
+    return out, sizes
+
+
+def _by_group(w, labels, sizes, seconds):
+    """{group: [spikes, active cells, rate Hz]} over EVERY group (zeros included) for one window."""
+    if len(w):
+        lab = w["bodyId"].map(labels).fillna("?").astype(str)
+        agg = w.groupby(lab)["bodyId"].agg(["size", "nunique"])
+    else:
+        agg = None
+    out = {}
+    for g, n in sizes.items():
+        s, a = (int(agg.loc[g, "size"]), int(agg.loc[g, "nunique"])) if agg is not None and g in agg.index else (0, 0)
+        out[g] = [s, a, s / n / seconds if n else 0.0]
+    return out
+
+
+def run_sweep_trial(m, rates, data, exclude, roi, groups=None):
     m.restore()
     m.set_stim_rates(np.zeros_like(rates))
     m.run(SETTLE_MS)
@@ -370,7 +421,7 @@ def run_sweep_trial(m, rates, data, exclude, roi):
     total = SETTLE_MS + DRIVE_MS + TAIL_MS
     d, n, d_sp, d_act = _counts(m, sp, SETTLE_MS, SETTLE_MS + DRIVE_MS, exclude)
     half = TAIL_MS // 2
-    _, _, t_sp, t_act = _counts(m, sp, total - half, total, exclude)
+    tw, _, t_sp, t_act = _counts(m, sp, total - half, total, exclude)
     _, _, s_sp, s_act = _counts(m, sp, 0, SETTLE_MS, exclude)
     drive_hz, tail_hz = d_sp / n / (DRIVE_MS / 1000.0), t_sp / n / (half / 1000.0)
     bins = np.histogram(sp.t_ms[~sp.bodyId.isin(exclude)], bins=np.arange(0, total + 1, BIN_MS))[0]
@@ -384,6 +435,11 @@ def run_sweep_trial(m, rates, data, exclude, roi):
         r = d["bodyId"].map(roi).fillna("?").astype(str)
         by_roi = d.groupby(r).agg(spikes=("bodyId", "size"), active=("bodyId", "nunique")).sort_values("spikes", ascending=False)
         row["by_neuropil_top15"] = {k: [int(v.spikes), int(v.active)] for k, v in by_roi.head(15).iterrows()}
+    if groups is not None:      # every group, both windows: [spikes, active cells, Hz per cell of the group]
+        labels, sizes = groups
+        for key, lab in labels.items():
+            row[f"drive_by_{key}"] = _by_group(d, lab, sizes[key], DRIVE_MS / 1000.0)
+            row[f"tail_by_{key}"] = _by_group(tw, lab, sizes[key], half / 1000.0)
     row.update(_mn9(m, sp[(sp.t_ms >= SETTLE_MS) & (sp.t_ms < SETTLE_MS + DRIVE_MS)], DRIVE_MS / 1000.0, data))
     return row
 
@@ -397,7 +453,7 @@ def run_arm(name, repo, data_dir="data", trials=None):
     n_trials = trials if trials is not None else spec["trials"]
     out_dir = OUT / ("smoke" if reduced else "arms")
     t0 = time.time()
-    unknown, roi, pool = None, None, None
+    unknown, roi, pool, group_sizes = None, None, None, None
     if spec["data"] == "flywire":
         neurons, edges, stim_types, driven, pool = flywire(repo, st["floor"], spec.get("drive", "sugar"))
     else:
@@ -427,8 +483,10 @@ def run_arm(name, repo, data_dir="data", trials=None):
             print(f"[phase1b] {name} {k + 1}/{n_trials} ({time.time() - t0:.0f} s)", flush=True)
     elif kind == "sweep":
         rates, exclude = rates_of(m), set(int(b) for b in m.stim["bodyId"])
+        groups = _groups(m, exclude, roi)
+        group_sizes = groups[1]
         for k in range(n_trials):
-            rows.append(dict(k=k, **run_sweep_trial(m, rates, spec["data"], exclude, roi)))
+            rows.append(dict(k=k, **run_sweep_trial(m, rates, spec["data"], exclude, roi, groups)))
             print(f"[phase1b] {name} {k + 1}/{n_trials} ({time.time() - t0:.0f} s)", flush=True)
     elif kind == "null_weightperm":
         rates, exclude = rates_of(m), set(int(b) for b in m.stim["bodyId"])
@@ -464,7 +522,8 @@ def run_arm(name, repo, data_dir="data", trials=None):
         size = dict(n_lif=int(len(m.lif_ids)), n_recurrent=int(m.n_chem), n_stimulated=int(len(exclude)),
                     n_driven=int((rates > 0).sum()))
     rec = dict(arm=name, spec=spec, options=opt.__dict__, reduced=reduced, data_dir=data_dir, **size, pool=pool, drive_hz=hz,
-               unknown_transmitter=unknown, build_s=round(built, 1), wall_s=round(time.time() - t0, 1), trials=rows,
+               group_sizes=group_sizes, unknown_transmitter=unknown, build_s=round(built, 1),
+               wall_s=round(time.time() - t0, 1), trials=rows,
                registration=registry.stamp(REG), provenance=provenance(data_dir if spec["data"] != "flywire" else None))
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / f"{name}.json").write_text(json.dumps(rec, indent=1, default=float), encoding="utf-8")
@@ -519,6 +578,38 @@ def _responds(rec, note):
     return stats.scored(e, lo, hi, low=RESPONDS, strict=True, n=len(x), note=note)
 
 
+def _self_sustained_without(trial, key, group, sizes):
+    """The self-sustained rule recomputed with one group's cells left out of both windows (gen-6 Outcome B)."""
+    n = sum(sizes.values()) - sizes.get(group, 0)
+    if n <= 0:
+        return None
+    d = trial["n_spikes"] - trial[f"drive_by_{key}"].get(group, [0])[0]
+    t = trial["tail_spikes"] - trial[f"tail_by_{key}"].get(group, [0])[0]
+    drive_hz, tail_hz = d / n / (DRIVE_MS / 1000.0), t / n / ((TAIL_MS // 2) / 1000.0)
+    return bool(tail_hz >= 0.1 * drive_hz and tail_hz >= 0.01)
+
+
+def _tail_groups(r):
+    """Per arm: the group (dominant neuropil on MaleCNS, else superclass) with the largest share of tail spikes
+    over the self-sustained trials, that share, and how many trials stay self-sustained without it."""
+    sizes_all = r.get("group_sizes") or {}
+    key = "neuropil" if "neuropil" in sizes_all else "superclass"
+    tr = [t for t in r["trials"] if f"tail_by_{key}" in t]
+    ss = [t for t in tr if t["self_sustained"]]
+    if not ss or key not in sizes_all:
+        return dict(key=key, top_group=None, top_share=None, self_sustained_without_top=None)
+    tot = {}
+    for t in ss:
+        for g, (spk, _, _) in t[f"tail_by_{key}"].items():
+            tot[g] = tot.get(g, 0) + spk
+    allspk = sum(tot.values())
+    top = max(tot, key=tot.get)
+    without = [_self_sustained_without(t, key, top, sizes_all[key]) for t in tr]
+    return dict(key=key, top_group=top, top_share=(tot[top] / allspk) if allspk else None,
+                self_sustained_without_top=int(sum(bool(x) for x in without)),
+                tail_spikes_by_group={g: int(v) for g, v in sorted(tot.items(), key=lambda kv: -kv[1])})
+
+
 def _sweep_summary(recs):
     """Per family and drive: the drive-dependent and runaway scales, from the per-trial records."""
     out = {}
@@ -535,7 +626,9 @@ def _sweep_summary(recs):
                                  fraction_active=float(np.median([t["fraction_active"] for t in tr])),
                                  n_active=[t["n_active"] for t in tr], tail_rate_hz=float(np.median([t["tail_rate_hz"] for t in tr])),
                                  self_sustained_trials=int(sum(ss)), trials=len(tr),
-                                 mn9=[t.get("mn9_hz", t.get("mn9_contra_hz")) for t in tr] if drive == "sugar" else None))
+                                 mn9=[t.get("mn9_hz", t.get("mn9_contra_hz")) for t in tr] if drive == "sugar" else None,
+                                 mn9_max_cell=[t.get("mn9_max_cell_hz") for t in tr] if drive == "sugar" else None,
+                                 tail_groups=_tail_groups(r)))
             dep = [x["w_scale"] for x in rows if x["self_sustained_trials"] == 0 and x["cns_rate_hz"] < 1.0]
             run = [x["w_scale"] for x in rows if x["self_sustained_trials"] > x["trials"] / 2]
             out[f"{fam}_{drive}"] = dict(grid=rows, largest_drive_dependent=max(dep) if dep else None,
@@ -573,6 +666,23 @@ def score(repo):
                    null_n_active=[t["n_active"] for t in nulls[arm]["trials"]])
         U[check] = rec
     registry.verify_bands(REG, U)
+    # pre-registered secondary readouts (CRITERIA["secondary"]): the same checks on the larger MN9 cell
+    S = {}
+    x = _col(ladder["ML0_m1"], "mn9_max_cell_hz")
+    e, lo, hi = stats.bootstrap(x)
+    S["ML0_responds_maxcell"] = stats.scored(e, lo, hi, low=RESPONDS, strict=True, n=len(x),
+                                             note="ML0: the larger MN9 cell per trial, Hz")
+    x = _col(ladder["ML4_wscale04"], "mn9_max_cell_hz")
+    e, lo, hi = stats.bootstrap(x)
+    S["ML_wscale04_silent_maxcell"] = stats.scored(e, lo, hi, high=RESPONDS, n=len(x),
+                                                   note="ML4 (w_scale 0.4): the larger MN9 cell per trial, Hz")
+    real_max = float(np.mean(_col(ladder["ML0_m1"], "mn9_max_cell_hz")))
+    for check, arm in (("MS1_weightperm_specific_maxcell", "null_weightperm"),
+                       ("MS2_degree_corrected_specific_maxcell", "null_dc")):
+        null_cns = float(np.median(_col(nulls[arm], "cns_rate_hz")))
+        alive = real_cns > 0 and null_cns >= ALIVE_FRACTION * real_cns
+        S[check] = stats.null_percentile(real_max, _col(nulls[arm], "mn9_max_cell_hz").tolist(), null_alive=alive,
+                                         note="real = ML0's mean of the larger MN9 cell")
     v = {k: r["verdict"] for k, r in U.items()}
     lad = v["ML_wscale04_silent"], v["ML_single_switches_respond"]
     if lad == ("PASS", "PASS"):
@@ -599,8 +709,12 @@ def score(repo):
                              fired_trials=int((_col(r, "mn9_hz") > 0).sum()), trials=len(r["trials"]),
                              n_active_median=float(np.median(_col(r, "n_active"))),
                              n_active_min_max=[int(_col(r, "n_active").min()), int(_col(r, "n_active").max())],
+                             mn9_cells=r["trials"][0]["mn9_cells"],
                              per_cell_fired=[int(sum(t["mn9_per_cell_hz"][i] > 0 for t in r["trials"]))
-                                             for i in range(len(r["trials"][0]["mn9_per_cell_hz"]))])
+                                             for i in range(len(r["trials"][0]["mn9_per_cell_hz"]))],
+                             per_cell_mean_hz=[float(np.mean([t["mn9_per_cell_hz"][i] for t in r["trials"]]))
+                                               for i in range(len(r["trials"][0]["mn9_per_cell_hz"]))],
+                             mn9_max_cell_hz=list(stats.bootstrap(_col(r, "mn9_max_cell_hz"))))
                      for a, r in ladder.items()},
         ladder_female=P1["result"]["ladder_female"],
         m1_run22=dict(mn9_hz_mean=P1["result"]["m1_mn9_hz_mean"], ci95=P1["result"]["m1_mn9_ci95"]),
@@ -609,11 +723,14 @@ def score(repo):
         sweep=_sweep_summary(sweep), sweep_missing=missing_sweep,
         wall_s={a: r["wall_s"] for a, r in {**ladder, **nulls, **sweep}.items()})
     report = dict(benchmark=LABEL, criteria=CRITERIA, uncertainty=U, checks={k: x == "PASS" for k, x in v.items()},
+                  secondary=S,
                   ladder_outcome=ladder_outcome, specificity_outcome=spec_outcome, reported=reported,
                   registration=registry.stamp(REG), provenance=provenance())
     (OUT / "phase1b.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
     for k, x in v.items():
         print(f"  {x:<10} {k}")
+    for k, r in S.items():
+        print(f"  {r['verdict']:<10} {k}   (secondary)")
     print(f"ladder: {ladder_outcome}\nspecificity: {spec_outcome}")
     for key, s in reported["sweep"].items():
         print(f"  {key:<24} drive-dependent up to {s['largest_drive_dependent']}; runaway from {s['smallest_runaway']}"

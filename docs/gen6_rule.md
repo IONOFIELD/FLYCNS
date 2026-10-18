@@ -3,8 +3,9 @@
 Status: DRAFT for review, 14 October 2026. Commit this file **before** `FLYCNS_REGISTER_ONLY=1 python
 fit/shiu2024_phase1b.py`, so the Phase 1b registration's git commit contains it. Phase 1b's own registration
 says the generation-6 defaults are decided "in a separate registration"; this file is the rule that
-registration will implement. Once committed it is never edited; a change is a new file (`gen6_rule_v2.md`)
-committed before the data it would be applied to.
+registration will implement. It is frozen once the Phase 1b registration is committed; after that a change is a
+new file (`gen6_rule_v2.md`) committed before the data it would be applied to. (Revised 17 October 2026, before
+registration, after the read-only audit of that date: reset held fixed, MN9 per-cell readout, Outcome B data.)
 
 ## Why
 
@@ -20,7 +21,8 @@ All readouts come from the Phase 1b sweep, family `male_flycns` (the declared fl
 
 | Term | Definition |
 |---|---|
-| MN9 statistic | Mean spikes per MN9 cell per second over the drive window (the M1 statistic: mean of every MN9 cell). Each cell is also reported separately. |
+| MN9 statistic | Mean spikes per MN9 cell per second over the drive window (the M1 statistic: mean of every MN9 cell). Each cell is also reported separately, with its bodyId. |
+| MN9 max cell | The larger of the MN9 cells per trial (Phase 1b `mn9_max_cell_hz`). Reported next to every MN9 statistic. Run 22's male response is one cell (42.8 Hz vs 0.13 Hz, firing in 4 of 30 trials), so the two-cell mean halves a one-sided response. |
 | FUNCTION (screen) | Under the sugar drive, the 95% interval of the MN9 statistic lies wholly above 0.5 Hz (lower edge exclusive). |
 | FUNCTION (confirm) | At the candidate w, the MN9 statistic beats **both** nulls by `stats.null_percentile` (PASS = exceeds every one of 20 draws): the weight permutation and the degree-corrected rewiring, as Phase 1b defines them. UNRESOLVED counts as not passing. |
 | Self-sustained trial | As Phase 1b registers it: whole-CNS rate in the last half of the 500 ms tail is at least 10% of the rate during the drive and at least 0.01 Hz. |
@@ -28,6 +30,16 @@ All readouts come from the Phase 1b sweep, family `male_flycns` (the declared fl
 | Window | The set of grid w that pass FUNCTION (screen) and STABILITY. |
 
 Stimulated cells are excluded from every whole-CNS readout, as in Phase 1b.
+
+## What is held fixed, and why
+
+Only w_scale moves. Every other setting stays at its generation-5 value, **the v-only reset included**. That
+is a choice, not an oversight: on the female ladder (Phase 1, run 22) the v-only reset alone moves MN9 from
+0 Hz to 231.8 Hz, so the reset is the other setting that dominates this circuit, and the sharp quiet-to-runaway
+step between w 0.4 and 0.5 (`results/select_wscale/report.json`: whole-CNS rate 0.015 to 2.51 Hz) may be partly
+a property of that reset. Changing two dominant settings at once would leave a result that names neither.
+The reset is therefore not re-picked here. If the outcome is B or C, the reset is the first setting to test
+next, in its own registration, before conductance-based synapses are considered.
 
 ## The rule
 
@@ -43,7 +55,7 @@ Stimulated cells are excluded from every whole-CNS readout, as in Phase 1b.
 | Outcome | Condition | Action |
 |---|---|---|
 | **A** | A w passes step 3 | Change w_scale only. Refit every calibration that depends on w (list below). |
-| **B** | FUNCTION passes at some w, but every such w fails STABILITY, and at the smallest of them one neuropil group (the Phase 1b neuropil breakdown) carries at least 50% of tail spikes in the self-sustained trials, and STABILITY passes when that group's cells are left out of the readout | Report; no default changes on this basis. Name the group (expected: the VNC). Move Phase 4 earlier. |
+| **B** | FUNCTION passes at some w, but every such w fails STABILITY, and at the smallest of them one neuropil group (Phase 1b `tail_by_neuropil`, per trial, with `group_sizes`; summarised in phase1b.json `tail_groups`) carries at least 50% of tail spikes in the self-sustained trials, and STABILITY passes when that group's cells are left out of the readout | Report; no default changes on this basis. Name the group (expected: the VNC). Move Phase 4 earlier. |
 | **C** | FUNCTION passes at some w, but no w passes STABILITY, and B's condition does not hold | Switch to conductance-based synapses (a new model; generation 7 planning). |
 | **D** | FUNCTION (screen) fails at every grid point, 1.0 included | w_scale is not the cause on the male flycns settings. Stop. Name the setting from the Phase 1b ladder. No default changes. |
 
