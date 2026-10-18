@@ -1,0 +1,21 @@
+--- ML4_wscale04
+[phase1b] ML4_wscale04 27/30 (1867 s)
+[phase1b] ML4_wscale04 28/30 (1927 s)
+[phase1b] ML4_wscale04 29/30 (1988 s)
+[phase1b] ML4_wscale04 30/30 (2048 s)
+[phase1b] ML4_wscale04: 30 runs in 2048.4 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\ML4_wscale04.json
+
+--- ML5_adaptation
+[phase1b] ML5_adaptation 27/30 (1881 s)
+[phase1b] ML5_adaptation 28/30 (1943 s)
+[phase1b] ML5_adaptation 29/30 (2004 s)
+[phase1b] ML5_adaptation 30/30 (2065 s)
+[phase1b] ML5_adaptation: 30 runs in 2064.8 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\ML5_adaptation.json
+
+--- MLe_euler
+[phase1b] MLe_euler 27/30 (441 s)
+[phase1b] MLe_euler 28/30 (456 s)
+[phase1b] MLe_euler 29/30 (473 s)
+[phase1b] MLe_euler 30/30 (488 s)
+[phase1b] MLe_euler: 30 runs in 488.5 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\MLe_euler.json
+

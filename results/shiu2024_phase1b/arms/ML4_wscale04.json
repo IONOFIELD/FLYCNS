@@ -1,0 +1,758 @@
+{
+ "arm": "ML4_wscale04",
+ "spec": {
+  "seed": 204,
+  "kind": "ladder",
+  "data": "malecns",
+  "settings": {
+   "reset": "v_and_g",
+   "stimulation": "kick",
+   "integration": "exact",
+   "adaptation": false,
+   "w_scale": 0.4,
+   "floor": 5,
+   "amines": "excitatory",
+   "electrical": false
+  },
+  "trials": 30
+ },
+ "options": {
+  "reset": "v_and_g",
+  "stimulation": "kick",
+  "stim_kick_mV": 68.75,
+  "integration": "exact",
+  "adaptation": false
+ },
+ "reduced": false,
+ "data_dir": "data",
+ "n_lif": 170184,
+ "n_recurrent": 6177653,
+ "n_stimulated": 34,
+ "n_driven": 34,
+ "pool": null,
+ "drive_hz": 100.0,
+ "group_sizes": null,
+ "unknown_transmitter": {
+  "edges": 110136,
+  "synapses": 1405114,
+  "silent_presynaptic": 7508
+ },
+ "build_s": 14.2,
+ "wall_s": 2048.4,
+ "trials": [
+  {
+   "k": 0,
+   "n_active": 58,
+   "n_spikes": 1322,
+   "cns_rate_hz": 0.007769615045548046,
+   "fraction_active": 0.00034087569791360563,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 1,
+   "n_active": 56,
+   "n_spikes": 1347,
+   "cns_rate_hz": 0.007916544225683221,
+   "fraction_active": 0.00032912136350279165,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 2,
+   "n_active": 58,
+   "n_spikes": 1403,
+   "cns_rate_hz": 0.008245665589186012,
+   "fraction_active": 0.00034087569791360563,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 3,
+   "n_active": 57,
+   "n_spikes": 1347,
+   "cns_rate_hz": 0.007916544225683221,
+   "fraction_active": 0.00033499853070819867,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 4,
+   "n_active": 55,
+   "n_spikes": 1395,
+   "cns_rate_hz": 0.008198648251542756,
+   "fraction_active": 0.00032324419629738463,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 5,
+   "n_active": 56,
+   "n_spikes": 1373,
+   "cns_rate_hz": 0.008069350573023803,
+   "fraction_active": 0.00032912136350279165,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 6,
+   "n_active": 57,
+   "n_spikes": 1349,
+   "cns_rate_hz": 0.007928298560094034,
+   "fraction_active": 0.00033499853070819867,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 7,
+   "n_active": 56,
+   "n_spikes": 1290,
+   "cns_rate_hz": 0.007581545694975022,
+   "fraction_active": 0.00032912136350279165,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 8,
+   "n_active": 57,
+   "n_spikes": 1280,
+   "cns_rate_hz": 0.007522774022920952,
+   "fraction_active": 0.00033499853070819867,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 9,
+   "n_active": 58,
+   "n_spikes": 1286,
+   "cns_rate_hz": 0.007558037026153394,
+   "fraction_active": 0.00034087569791360563,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 10,
+   "n_active": 56,
+   "n_spikes": 1328,
+   "cns_rate_hz": 0.007804878048780488,
+   "fraction_active": 0.00032912136350279165,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 11,
+   "n_active": 55,
+   "n_spikes": 1268,
+   "cns_rate_hz": 0.007452248016456068,
+   "fraction_active": 0.00032324419629738463,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 12,
+   "n_active": 57,
+   "n_spikes": 1401,
+   "cns_rate_hz": 0.0082339112547752,
+   "fraction_active": 0.00033499853070819867,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 13,
+   "n_active": 57,
+   "n_spikes": 1302,
+   "cns_rate_hz": 0.007652071701439906,
+   "fraction_active": 0.00033499853070819867,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 14,
+   "n_active": 57,
+   "n_spikes": 1232,
+   "cns_rate_hz": 0.007240669997061416,
+   "fraction_active": 0.00033499853070819867,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 15,
+   "n_active": 57,
+   "n_spikes": 1343,
+   "cns_rate_hz": 0.007893035556861593,
+   "fraction_active": 0.00033499853070819867,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 16,
+   "n_active": 57,
+   "n_spikes": 1308,
+   "cns_rate_hz": 0.007687334704672348,
+   "fraction_active": 0.00033499853070819867,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 17,
+   "n_active": 57,
+   "n_spikes": 1349,
+   "cns_rate_hz": 0.007928298560094034,
+   "fraction_active": 0.00033499853070819867,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 18,
+   "n_active": 57,
+   "n_spikes": 1337,
+   "cns_rate_hz": 0.00785777255362915,
+   "fraction_active": 0.00033499853070819867,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 19,
+   "n_active": 58,
+   "n_spikes": 1320,
+   "cns_rate_hz": 0.007757860711137232,
+   "fraction_active": 0.00034087569791360563,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 20,
+   "n_active": 57,
+   "n_spikes": 1311,
+   "cns_rate_hz": 0.007704966206288569,
+   "fraction_active": 0.00033499853070819867,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 21,
+   "n_active": 58,
+   "n_spikes": 1339,
+   "cns_rate_hz": 0.007869526888039964,
+   "fraction_active": 0.00034087569791360563,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 22,
+   "n_active": 57,
+   "n_spikes": 1353,
+   "cns_rate_hz": 0.007951807228915662,
+   "fraction_active": 0.00033499853070819867,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 23,
+   "n_active": 56,
+   "n_spikes": 1297,
+   "cns_rate_hz": 0.007622685865412871,
+   "fraction_active": 0.00032912136350279165,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 24,
+   "n_active": 57,
+   "n_spikes": 1355,
+   "cns_rate_hz": 0.007963561563326477,
+   "fraction_active": 0.00033499853070819867,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 25,
+   "n_active": 57,
+   "n_spikes": 1322,
+   "cns_rate_hz": 0.007769615045548046,
+   "fraction_active": 0.00033499853070819867,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 26,
+   "n_active": 57,
+   "n_spikes": 1316,
+   "cns_rate_hz": 0.007734352042315604,
+   "fraction_active": 0.00033499853070819867,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 27,
+   "n_active": 59,
+   "n_spikes": 1383,
+   "cns_rate_hz": 0.008128122245077873,
+   "fraction_active": 0.00034675286511901264,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 28,
+   "n_active": 55,
+   "n_spikes": 1294,
+   "cns_rate_hz": 0.00760505436379665,
+   "fraction_active": 0.00032324419629738463,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 29,
+   "n_active": 56,
+   "n_spikes": 1337,
+   "cns_rate_hz": 0.00785777255362915,
+   "fraction_active": 0.00032912136350279165,
+   "mn9_hz": 0.0,
+   "mn9_cells": [
+    10331,
+    16949
+   ],
+   "mn9_sides": [
+    "L",
+    "R"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  }
+ ],
+ "registration": {
+  "file": "results/shiu2024_phase1b/registration_v5.json",
+  "version": 5,
+  "supersedes": null,
+  "git_commit": "1710398",
+  "model_hash": "b4e59cc8dcc29c2a0e0a0e693175a32c8e954940e1b3e01550b50e6c7ad21197",
+  "registered_at": "2026-10-18T01:34:15",
+  "matches": true,
+  "problems": []
+ },
+ "provenance": {
+  "written_at": "2026-10-18T09:35:43",
+  "git_commit": "6e50cba",
+  "git_is_repo": true,
+  "git_dirty": false,
+  "dirty_files": [],
+  "allow_dirty": false,
+  "env": {},
+  "python": "3.12.10",
+  "versions": {
+   "brian2": "2.10.1",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6"
+  },
+  "engine": "cython",
+  "platform": "win32",
+  "machine": "AMD64",
+  "float_dtype": "float64",
+  "graph": {
+   "data_dir": "data",
+   "min_weight": 5,
+   "n_neurons": 176422,
+   "n_signed_edges": 6177653,
+   "n_signed_synapses": 88892185,
+   "n_dropped_unsigned_edges": 110136,
+   "n_dropped_unsigned_synapses": 1405114,
+   "n_silent_presynaptic": 7508,
+   "edges_nt_used": false,
+   "glu_vnc": "inhibitory",
+   "n_glu_vnc_flipped": 0,
+   "jon_mode": "electrical",
+   "jon_compound_mv": 3.0,
+   "amines": "excitatory"
+  },
+  "data": {
+   "dir": "data",
+   "digests": {
+    "neurons.parquet": "06ea0afb48c414ad",
+    "edges.parquet": "f08e90783d6b6420",
+    "roi_membership.parquet": "5fce5c5d54e45570"
+   },
+   "manifest": "match"
+  }
+ }
+}
