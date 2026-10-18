@@ -1,0 +1,208 @@
+{
+  "rule": "docs/gen6_rule.md as amended by docs/gen6_rule_v2.md (d808f5b)",
+  "family": "male_flycns",
+  "grid": [
+    {
+      "w_scale": 0.4,
+      "function": {
+        "mn9_hz": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "passes": false
+      },
+      "stability": {
+        "sugar_self_sustained": 0,
+        "blind_self_sustained": 1,
+        "blind_rate_hz": [
+          0.11591926238442699,
+          0.013555818083892232,
+          0.3199643182313641
+        ],
+        "blind_fraction_active": [
+          0.00408689296110591,
+          0.0013240244418512204,
+          0.009526679575794103
+        ],
+        "passes": false
+      },
+      "li": {
+        "median": null,
+        "n": 0
+      },
+      "li_min5": {
+        "median": null,
+        "n": 0
+      }
+    },
+    {
+      "w_scale": 0.5,
+      "function": {
+        "mn9_hz": [
+          0.05,
+          0.0,
+          0.15
+        ],
+        "passes": false
+      },
+      "stability": {
+        "sugar_self_sustained": 0,
+        "blind_self_sustained": 8,
+        "blind_rate_hz": [
+          1.7617060566035316,
+          1.1540819558610433,
+          2.272941277362434
+        ],
+        "blind_fraction_active": [
+          0.030633744117156747,
+          0.020166226388479244,
+          0.037671371872635646
+        ],
+        "passes": false
+      },
+      "li": {
+        "median": 1.0,
+        "n": 1
+      },
+      "li_min5": {
+        "median": null,
+        "n": 0
+      }
+    },
+    {
+      "w_scale": 0.6,
+      "function": {
+        "mn9_hz": [
+          1.45,
+          0.6,
+          2.45
+        ],
+        "passes": true
+      },
+      "stability": {
+        "sugar_self_sustained": 3,
+        "blind_self_sustained": 10,
+        "blind_rate_hz": [
+          2.957751247098652,
+          2.663715760890473,
+          3.199167168925764
+        ],
+        "blind_fraction_active": [
+          0.046781267231761584,
+          0.04612017670971134,
+          0.0474679729677742
+        ],
+        "passes": false
+      },
+      "li": {
+        "median": 1.0,
+        "n": 8
+      },
+      "li_min5": {
+        "median": 1.0,
+        "n": 3
+      }
+    },
+    {
+      "w_scale": 0.8,
+      "function": {
+        "mn9_hz": [
+          7.45,
+          6.3,
+          8.6
+        ],
+        "passes": true
+      },
+      "stability": {
+        "sugar_self_sustained": 10,
+        "blind_self_sustained": 10,
+        "blind_rate_hz": [
+          4.837482848386146,
+          4.709751990869572,
+          4.981657038252908
+        ],
+        "blind_fraction_active": [
+          0.07121285954270913,
+          0.06797856208563624,
+          0.07494833677434246
+        ],
+        "passes": false
+      },
+      "li": {
+        "median": 0.8819444444444444,
+        "n": 10
+      },
+      "li_min5": {
+        "median": 0.8819444444444444,
+        "n": 10
+      }
+    },
+    {
+      "w_scale": 1.0,
+      "function": {
+        "mn9_hz": [
+          45.55,
+          33.34875,
+          55.65
+        ],
+        "passes": true
+      },
+      "stability": {
+        "sugar_self_sustained": 10,
+        "blind_self_sustained": 10,
+        "blind_rate_hz": [
+          6.845320655031354,
+          6.7295737102627555,
+          6.9628492837999
+        ],
+        "blind_fraction_active": [
+          0.09614457367820366,
+          0.09480677985663176,
+          0.09776939254433772
+        ],
+        "passes": false
+      },
+      "li": {
+        "median": 0.8775401069518716,
+        "n": 10
+      },
+      "li_min5": {
+        "median": 0.8775401069518716,
+        "n": 10
+      }
+    }
+  ],
+  "window": [],
+  "outcome_b": {
+    "w_scale": 0.6,
+    "group": "AL(R)",
+    "share": 0.16020589014522854,
+    "top_shares": {
+      "AL(R)": 0.16020589014522854,
+      "AL(L)": 0.14841235279966136,
+      "LH(R)": 0.12866839840550096,
+      "LH(L)": 0.1093812332700934,
+      "VNC": 0.09028591962336203,
+      "gL(R)": 0.04031621997752597
+    },
+    "stability_without_group": {
+      "sugar_self_sustained": 3,
+      "blind_self_sustained": 10,
+      "blind_rate_hz": [
+        2.3044240609754643,
+        2.076970549995825,
+        2.4922330534250987
+      ],
+      "blind_fraction_active": [
+        0.04088707849756074,
+        0.04027159845891433,
+        0.04152523647077066
+      ],
+      "passes": false
+    },
+    "holds": false,
+    "sugar_only_vnc_share": 0.8870652780360796
+  },
+  "outcome": "C"
+}
