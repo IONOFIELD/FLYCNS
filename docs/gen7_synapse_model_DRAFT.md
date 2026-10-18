@@ -110,7 +110,14 @@ numerics check.
 2. Whether stage 1 is a full 2 x 2 or STD alone first (cheaper; Huang predicts it is the decisive arm).
 3. Whether the AL mechanisms (stage 3) run in gen 7 or wait for a viable core model.
 4. Whether to fold the `"unclear"` fallback fix into the same freeze (declared and measured separately) or
-   leave it for its own generation.
+   leave it for its own generation. **Size (18 October, read-only script on the pinned data, floor 5):**
+   9,793 cells have consensusNt "unclear"; their predictedNt is unclear for 8,673, an amine for 404 (stay
+   dropped), and signable for 716 (ACh 329, Glu 320, GABA 53, histamine 14). The fix adds 20,428 edges and
+   253,733 synapses (about 0.3% of the signed graph): 111,043 excitatory, 142,690 inhibitory. AL -> AL goes from
+   2,282,863 exc / 420,718 inh to 2,292,250 / 469,396 (inhibition +12%; excitatory share 84.4% -> 83.0%), so it
+   does not by itself remove the AL loop. Caveat: these cells are signed from their per-cell prediction because
+   the type-level consensus was unclear, the lower-confidence label. Recommendation: fold into the freeze,
+   declared and measured as its own arm.
 
 ## Not in this plan
 
