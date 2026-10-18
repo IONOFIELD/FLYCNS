@@ -1307,6 +1307,54 @@ def t_phase1b_parts_match_rerun_jobs():
                 f"command mismatch: {bad_run}; shiu flag {sorted(shiu)} vs {sorted(ns['NEEDS_SHIU'])}")
 
 
+def _phaseA_module():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("phaseA_unit", ROOT / "fit" / "gen6_phaseA.py")
+    mod = importlib.util.module_from_spec(spec)      # any name but gen6_phaseA: no registration is read or written
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def t_gen6_phaseA_transforms():
+    """Gen-6 phase A: the MN9_R mirror, the normalise transform and the four edge cuts give the hand-computed
+    tables (fit/gen6_phaseA.py selftest), and the committed cell-type list is the one the script pins."""
+    A = _phaseA_module()
+    ok, msg = A.selftest()
+    sha_ok = A.sha256(A.CELLTYPES) == A.CELLTYPES_SHA256
+    return ok and sha_ok, msg + ("" if sha_ok else "; data/gen6_phaseA_celltypes.json differs from CELLTYPES_SHA256")
+
+
+def t_gen6_phaseA_design():
+    """Gen-6 phase A: every arm in exactly one part; arms at the same (drive, w) share one seed (M5); seed blocks
+    disjoint from Phase 1b's; top-up parts are only the conditional ones."""
+    A = _phaseA_module()
+    arms = sorted(a for p in A.PARTS.values() for a in p)
+    one = arms == sorted(A.ARMS) and len(arms) == len(set(arms))
+    paired = all(len({s["seed"] for a, s in A.ARMS.items() if s.get("drive") == d and s["kind"] == "sweep"
+                      and a.endswith(A._w(w)) and "topup_of" not in s}) == 1 for d in A.DRIVES for w in A.GRID_W)
+    seeds = {s["seed"] for s in A.ARMS.values()}
+    disjoint = all(x >= 6000 for x in seeds) and A.A3_REWIRE_BASE == 30000
+    cond = all(p.startswith("pa-topup-") for p in A.CONDITIONAL_PARTS) and all(
+        all(a.endswith("_topup") for a in A.PARTS[p]) for p in A.CONDITIONAL_PARTS)
+    n = len([a for a in A.ARMS if not a.endswith("_topup")])
+    ok = one and paired and disjoint and cond and n == 95
+    return ok, (f"{n} arms (+{len(A.ARMS) - n} top-ups) in {len(A.PARTS)} parts; paired seeds; blocks disjoint" if ok
+                else f"one-part {one}, paired {paired}, disjoint {disjoint}, conditional {cond}, arms {n}")
+
+
+def t_gen6_phaseA_parts_match_rerun_jobs():
+    """Every phase A part is a manual rerun.yml job with the matching command, and every pa-* job is a part."""
+    A = _phaseA_module()
+    wf = (ROOT / ".github/workflows/rerun.yml").read_text(encoding="utf-8")
+    jobs = re.findall(r'\{"name": "(pa-[^"]+)",\s*"run": "fit/gen6_phaseA\.py part ([^"]+)", "manual": true\}', wf)
+    named = {j for j, _ in jobs}
+    bad = [j for j, p in jobs if j != p.strip()]
+    ok = named == set(A.PARTS) and not bad
+    return ok, (f"all {len(named)} phase A parts are manual rerun jobs" if ok else
+                f"only in script: {sorted(set(A.PARTS) - named)}; only in rerun.yml: {sorted(named - set(A.PARTS))}; "
+                f"command mismatch: {bad}")
+
+
 def t_phase1b_laterality_and_vnc_group():
     """The phase-1b MN9 laterality index and the Outcome-B VNC grouping do what docs/gen6_rule.md says."""
     src = (ROOT / "fit" / "shiu2024_phase1b.py").read_text(encoding="utf-8")
@@ -1377,6 +1425,9 @@ def run_all():
                          ("phase-1 options, defaults unchanged", lambda: t_shiu_options(tmp)),
                          ("phase-1b parts are the rerun jobs", t_phase1b_parts_match_rerun_jobs),
                          ("phase-1b laterality and VNC group", t_phase1b_laterality_and_vnc_group),
+                         ("gen-6 phase A transforms", t_gen6_phaseA_transforms),
+                         ("gen-6 phase A design", t_gen6_phaseA_design),
+                         ("gen-6 phase A parts are the rerun jobs", t_gen6_phaseA_parts_match_rerun_jobs),
                          ("menu input guards", lambda: t_menu_guards(tmp)),
                          ("token file is private", lambda: t_token_private(tmp)),
                          ("messages use neutral wording", t_neutral_wording)]:

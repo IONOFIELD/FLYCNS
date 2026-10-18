@@ -219,6 +219,11 @@ wins.
 **B2. Edge sets for the cuts.** Adopted, with one change to cut (ii).
 - `data/gen6_phaseA_celltypes.json` is committed before launch, its sha256 in the registration. It holds the
   Cell Type Explorer type lists for ALPN, ALLN and Kenyon_Cell, with the source URL, date and extraction rule.
+  **Built (18 October)** by `scripts/make_gen6_celltypes.py` from the Explorer's own repository
+  (reiserlab/celltype-explorer-drosophila-male-cns, commit 789cc6c, 10 September 2026; `types.html` sha256
+  3213642...). ALPN 173 types, ALLN 77, Kenyon_Cell 11. The catalogue's Kenyon_Cell class has no alpha'/beta'
+  types (KC, KCab-c/m/p/s, KCg-d/m/s1-s4 only), so the CA(L)/CA(R) post-ROI half of the LH + MB rule is what
+  catches any other calyx targets. The preflight's AL PN out-weight by post ROI shows whether that is enough.
   `neurons.parquet` has no class column, and edges carry no synapse location, so cuts are defined by cell
   type and by the post cell's `dominant_roi`.
 - AL PN = cells whose type is in ALPN, every transmitter.
@@ -244,6 +249,11 @@ wins.
   presynaptic cell. If P' has no signed output, P's sign is used. The weight with a sign mismatch is logged.
 - Untyped, midline and no-match partners stay on P. MN9_R's outputs are unchanged. The MN9_R -> MN9_L edge
   becomes MN9_L -> MN9_R.
+- **Added while writing the code (18 October):** a mirrored partner P' must be a simulated cell, that is, one with
+  at least one edge at or above the floor. An opposite-side cell with no edge at all is not in the network;
+  adding it would change the simulated cell set (m5). Such cells are skipped. If none is left, the weight stays
+  on P. The count is logged (`opposite_not_in_network`). On the toy data this affected 5 cells; on the pinned
+  data the preflight reports it.
 - bodyIds fixed: 10331 (L), 16949 (R), asserted against `type == "MN9"` and the sides.
 - Recorded in the registration from `mn9_mirror_audit.py`: kept count and weight, below-floor count,
   sign-mismatch weight, and how many partners are unclear-silent.
@@ -358,5 +368,10 @@ output is kept with the registration as context.
 2. ~~Side tiebreak~~: closed, somaSide first; no disagreements on the pinned data.
 3. ~~MN9_R status~~: closed, `Traced` (both cells). Recorded as a caveat on the reconstruction reading.
 4. ~~Q4 and Q6~~: signed off (Q4 high, Q6 moderate, reasons logged).
-5. `data/gen6_phaseA_celltypes.json`, `fit/gen6_phaseA.py`, `fit/gen6_phaseA_score.py`: to be written and
-   smoke-tested (B2, B4).
+5. ~~Code~~: `data/gen6_phaseA_celltypes.json`, `fit/gen6_phaseA.py`, `fit/gen6_phaseA_score.py` written and
+   smoke-tested on the toy data (B2, B4). Both scripts are hashed into the registration.
+6. **Preflight on the pinned data** (no simulation, a few minutes): `python fit/gen6_phaseA.py preflight`. It
+   writes `results/gen6_phaseA/preflight.json`: the mirror and normalise logs, what each cut removes and
+   whether it would drop a cell, the AL PN out-weight by post ROI, and the drive (b)/(c) counts, including
+   whether any ORN is driven. It is committed with the registration as context.
+7. `rerun.yml` jobs for the 23 unconditional parts (and the 12 top-up parts, run only if the scorer names them).
