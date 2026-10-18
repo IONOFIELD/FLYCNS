@@ -28,7 +28,13 @@ current generation's file governs a run; each new file names the one it supersed
   version 2  model frozen 11 October 2026 at 4c39a8f, registrations committed at b7eba83 (run 12)
   version 3  model refrozen at a94769d, registrations committed at 47eb98e (run 14): per-GF JON calibration,
              w_scale 0.4, GF adaptation 45 mV
-  version 4  GENERATION_NOTE
+  version 4  model refrozen at 7851c7c, registrations committed at bd631a2 (run 18): hygiene only, no
+             parameter changed; integrity.py joined the hashed files, data re-pinned without the legacy sign
+             column, two frozen code comments corrected
+  version 5  model refrozen at 24ea400, registrations committed at 65ce101 (runs 22-23): Shiu-compatible
+             simulator options, off by default; every default simulation identical to version 4's
+The current generation's reason is GENERATION_NOTE below. This docstring is not hashed: registry.py is not in
+MODEL_FILES and no registration lists it among its scripts, so it can be kept current without a refreeze.
 """
 import datetime
 import hashlib

@@ -84,6 +84,11 @@ loom-driven readout re-derived by its own rule, on GitHub's Windows machines (cl
   `INTRINSIC_OVERRIDES` note in `flycns/graph.py` says 0 mV adaptation gives "up to 10 spikes per
   loom"; 9.7 is the strongest-quartile mean and the maximum is 15. The `flycns/registry.py` docstring
   dates version 2 to `b7eba83`, the commit of its registrations; the frozen model was `4c39a8f`.
+  (Correction, 17 October 2026: the `flycns/registry.py` docstring is **not** a frozen code comment.
+  registry.py is not in `MODEL_FILES` and no registration hashes it (checked over all 85 committed
+  registrations), so editing it changes no hash. It now separates frozen model and registration commits
+  for every version, 2 to 5. The `graph.py` erratum above is in a hashed file and still waits for a
+  refreeze.)
 
 **Generation 4, phase 0 (hygiene), 12 October 2026. No parameter changed.** Logged as deviations from
 the generation-3 freeze:

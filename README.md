@@ -36,7 +36,9 @@ circuit by circuit, including where the wiring alone is not enough.
 - **Built to be used and to last.** Every result is traceable to its code, data and settings, and
   automated checks run on every change.
 
-**Headline result, after the refrozen model's registered rerun (generation 3, 12 October 2026; reproduced number for number under generation 4, run 18).** The
+**Where it stands (generation 5, 12 October 2026).** Generation 5 changes no default: its registered rerun (run 23) reproduced every generation-4 number, so the counts above still hold. Its phase 1 was a positive control: set to Shiu et al. 2024's choices, the flycns simulator reproduces their model on their own FlyWire data (7 of 7 counted checks; run 22). On the male CNS under the same choices, MN9 responds to sugar (21.5 Hz, 95% interval 19.8 to 23.2), but one of the two MN9 cells carries the response, and whether it is specific to the real wiring is the open question phase 1b tests against two rewired nulls. See RESULTS.md.
+
+**Headline result, after the refrozen model's registered rerun (generation 3, 12 October 2026; reproduced number for number under generation 4, run 18, and generation 5, run 23).** The
 result that used to lead this page does not survive. With each escape neuron's sound input
 calibrated on its own ear afferents (before, one side got several times the other's), a sound
 makes the escape neuron LESS likely to fire for a faint visual threat (from 30% to 17% of trials): the
