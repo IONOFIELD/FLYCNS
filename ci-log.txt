@@ -1,0 +1,35 @@
+--- c1_sugar_w040
+[phaseA] c1_sugar_w040 7/10 (251 s)
+[phaseA] c1_sugar_w040 8/10 (276 s)
+[phaseA] c1_sugar_w040 9/10 (302 s)
+[phaseA] c1_sugar_w040 10/10 (328 s)
+[phaseA] c1_sugar_w040: 10 runs in 327.5 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\c1_sugar_w040.json
+
+--- c1_sugar_w050
+[phaseA] c1_sugar_w050 7/10 (248 s)
+[phaseA] c1_sugar_w050 8/10 (274 s)
+[phaseA] c1_sugar_w050 9/10 (299 s)
+[phaseA] c1_sugar_w050 10/10 (324 s)
+[phaseA] c1_sugar_w050: 10 runs in 323.9 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\c1_sugar_w050.json
+
+--- c1_sugar_w060
+[phaseA] c1_sugar_w060 7/10 (200 s)
+[phaseA] c1_sugar_w060 8/10 (226 s)
+[phaseA] c1_sugar_w060 9/10 (253 s)
+[phaseA] c1_sugar_w060 10/10 (278 s)
+[phaseA] c1_sugar_w060: 10 runs in 278.4 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\c1_sugar_w060.json
+
+--- c1_sugar_w080
+[phaseA] c1_sugar_w080 7/10 (203 s)
+[phaseA] c1_sugar_w080 8/10 (230 s)
+[phaseA] c1_sugar_w080 9/10 (256 s)
+[phaseA] c1_sugar_w080 10/10 (283 s)
+[phaseA] c1_sugar_w080: 10 runs in 283.3 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\c1_sugar_w080.json
+
+--- c1_sugar_w100
+[phaseA] c1_sugar_w100 7/10 (182 s)
+[phaseA] c1_sugar_w100 8/10 (207 s)
+[phaseA] c1_sugar_w100 9/10 (232 s)
+[phaseA] c1_sugar_w100 10/10 (258 s)
+[phaseA] c1_sugar_w100: 10 runs in 257.7 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\c1_sugar_w100.json
+
