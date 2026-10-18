@@ -23,3 +23,5 @@ results/**/*.html
 overnight*.log
 *.log
 fingerprints/
+# phase-1b smoke runs (reduced trials or toy data): never a result, never committed
+results/*/smoke/

@@ -1,0 +1,435 @@
+{
+  "version": 5,
+  "benchmark": "shiu2024_phase1b",
+  "criteria": {
+    "question": "on the male CNS, is w_scale the one flycns setting that silences MN9 under sugar (as the female ladder says); is M1's MN9 response specific to the real wiring; and at which synaptic scale, under which drive, does either network stop being drive-dependent?",
+    "phase1": {
+      "registration": {
+        "file": "results/shiu2024_phase1/registration_v5.json",
+        "git_commit": "24ea400",
+        "registered_at": "2026-10-12T10:44:08",
+        "model_hash": "1e1bb7c3d79260114b0ad90fded7f3ec3d5740f664fba48bf11ec7625743111e"
+      },
+      "result": {
+        "file": "results/shiu2024_phase1/phase1.json",
+        "outcome": "A1 passes and M1 responds: the male MN9 zero is caused by flycns settings (the ladder names which)",
+        "m1": "PASS",
+        "m1_mn9_hz_mean": 21.466666666666665,
+        "m1_mn9_ci95": [
+          19.833333333333332,
+          23.183333333333334
+        ],
+        "ladder_female": {
+          "L1_reset": {
+            "switched": [
+              "reset"
+            ],
+            "mn9_contra_hz": [
+              231.8,
+              222.76666666666668,
+              240.36666666666667
+            ],
+            "fired_trials": 30
+          },
+          "L2_stimulation": {
+            "switched": [
+              "stimulation"
+            ],
+            "mn9_contra_hz": [
+              67.7,
+              66.06666666666666,
+              69.33333333333333
+            ],
+            "fired_trials": 30
+          },
+          "L3_floor5": {
+            "switched": [
+              "floor"
+            ],
+            "mn9_contra_hz": [
+              61.8,
+              59.666666666666664,
+              63.733333333333334
+            ],
+            "fired_trials": 30
+          },
+          "L4_wscale04": {
+            "switched": [
+              "w_scale"
+            ],
+            "mn9_contra_hz": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "fired_trials": 0
+          },
+          "L5_adaptation": {
+            "switched": [
+              "adaptation"
+            ],
+            "mn9_contra_hz": [
+              37.93333333333333,
+              36.96666666666667,
+              38.934166666666655
+            ],
+            "fired_trials": 30
+          },
+          "Le_euler": {
+            "switched": [
+              "integration"
+            ],
+            "mn9_contra_hz": [
+              66.93333333333334,
+              65.4,
+              68.50083333333333
+            ],
+            "fired_trials": 30
+          },
+          "L6_all": {
+            "switched": [
+              "reset",
+              "stimulation",
+              "floor",
+              "w_scale",
+              "adaptation",
+              "integration"
+            ],
+            "mn9_contra_hz": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "fired_trials": 0
+          }
+        }
+      }
+    },
+    "implementation": {
+      "settings": {
+        "M1": {
+          "reset": "v_and_g",
+          "stimulation": "kick",
+          "integration": "exact",
+          "adaptation": false,
+          "w_scale": 1.0,
+          "floor": 5,
+          "amines": "excitatory",
+          "electrical": false
+        },
+        "flycns": {
+          "reset": "v",
+          "stimulation": "source",
+          "integration": "euler",
+          "adaptation": true,
+          "w_scale": 0.4,
+          "floor": 5,
+          "amines": "dropped",
+          "electrical": true
+        },
+        "A1": {
+          "reset": "v_and_g",
+          "stimulation": "kick",
+          "integration": "exact",
+          "adaptation": false,
+          "w_scale": 1.0,
+          "floor": 1,
+          "amines": "column",
+          "electrical": false
+        },
+        "ladder": {
+          "ML1_reset": [
+            "reset"
+          ],
+          "ML2_stimulation": [
+            "stimulation"
+          ],
+          "ML4_wscale04": [
+            "w_scale"
+          ],
+          "ML5_adaptation": [
+            "adaptation"
+          ],
+          "MLe_euler": [
+            "integration"
+          ],
+          "ML7_amines_dropped": [
+            "amines"
+          ],
+          "ML_all": [
+            "reset",
+            "stimulation",
+            "w_scale",
+            "adaptation",
+            "integration",
+            "amines",
+            "electrical"
+          ]
+        },
+        "note": "M1 and A1 as registered in phase 1 (results/shiu2024_phase1/registration_v5.json); flycns = LIFParams() and SimOptions() defaults, electrical synapses on, amines dropped (flycns/graph.py SIGN_MAP). amines='column' on FlyWire: the repository's Excitatory column, in which Shiu et al. count amines as excitatory"
+      },
+      "data": {
+        "malecns": "data/ as pinned by data/MANIFEST.json (neurons, edges, roi_membership); sugar: every LB3b and LB3c cell at 100 Hz; MN9: every cell of type MN9",
+        "flywire": "the reference repository's completeness and connectivity tables at the phase-1 commit and sha256; sugar: the 21 neu_sugar ids of figures.ipynb; MN9: the two ids of phase 1"
+      },
+      "ladder": {
+        "protocol": "as M1: one network per arm, built once; per trial restore, set the sugar rate, run 1000 ms; 30 trials; seeds in arm order from 201",
+        "readout": "mean spikes per MN9 cell per second, per trial (the M1 statistic); each cell reported with its bodyId (mn9_cells, mn9_per_cell_hz); secondary: the larger of the cells (mn9_max_cell_hz), because run 22's male response is one cell (42.8 vs 0.13 Hz)",
+        "floor": "not a rung: the male tables are fetched at a floor of 5, M1's and flycns's value"
+      },
+      "nulls": {
+        "weightperm": "20 draws: the signed per-connection weights of the recurrent network permuted among the existing connections (numpy default_rng(10000 + k), as phase-1 S6), one 1000 ms trial at sugar 100 Hz under M1's settings",
+        "degree_corrected": "20 draws: flycns.graph.rewire_null(mode='degree_corrected', seed=20000 + k): targets permuted among connections sharing the target's superclass, neuropil (data/roi_membership.parquet), the connection's sign and size class; the model rebuilt per draw under M1's settings; one trial each",
+        "real": "ML0_m1 (M1 under a fresh seed, this phase): mean over trials of the MN9 statistic",
+        "alive_rule": "median null whole-CNS rate >= 0.1 x ML0's median (benchmarks/null_distribution.py)"
+      },
+      "sweep": {
+        "grid": [
+          0.4,
+          0.5,
+          0.6,
+          0.8,
+          1.0
+        ],
+        "families": {
+          "male_shiu_exc": "malecns",
+          "male_shiu_drop": "malecns",
+          "male_flycns": "malecns",
+          "fw_shiu": "flywire"
+        },
+        "protocol": "per trial: restore, 200 ms silence, 1000 ms drive, 500 ms with every stimulus rate at 0; 10 trials; one network per arm",
+        "drives": {
+          "sugar": "the sugar set of the dataset at 100 Hz",
+          "blind": "MaleCNS: exactly fit/select_wscale.py's drive: a fixed random 10% (numpy default_rng(0)) of the sensory-superclass neurons no benchmark drives, at 20 Hz. FlyWire has no class annotation in the reference repository, so its proxy is the cells with no input and at least one output at the arm's floor (afferent-like), sampled the same way; the cross-dataset comparison under this drive is approximate and is said so"
+        },
+        "readouts": "per trial, excluding the stimulated cells: active neurons and spikes during the drive, whole-CNS rate (spikes per neuron per second) and fraction active; the same in the last 250 ms of the tail; spikes per 50 ms bin over the whole trial; spikes and active cells by superclass and by dominant neuropil (MaleCNS); MN9 (sugar drive). For every superclass and every dominant neuropil (all groups, zeros included), in the drive and in the tail window: spikes, active cells and rate per cell of the group (drive_by_*, tail_by_*), with the group sizes (group_sizes), so self-sustained can be recomputed with any one group left out",
+        "self_sustained": "a trial is self-sustained if the whole-CNS rate in the last half of the tail is at least 10% of the rate during the drive and at least 0.01 Hz",
+        "role": "reported, not scored"
+      },
+      "intervals": "flycns.stats: percentile bootstrap over trials, 2,000 resamples, seed 0"
+    },
+    "checks": {
+      "ML0_responds": {
+        "band": [
+          0.5,
+          null
+        ],
+        "arm": "ML0_m1",
+        "scored_as": "M1 replicated under a fresh seed: interval above 0.5 Hz, lower edge exclusive"
+      },
+      "ML_wscale04_silent": {
+        "band": [
+          null,
+          0.5
+        ],
+        "arm": "ML4_wscale04",
+        "scored_as": "PASS = the whole interval lies at or below 0.5 Hz (MN9 does not respond, as on the female); FAIL = the whole interval lies above it"
+      },
+      "ML_single_switches_respond": {
+        "bands": [
+          [
+            0.5,
+            null
+          ],
+          [
+            0.5,
+            null
+          ],
+          [
+            0.5,
+            null
+          ],
+          [
+            0.5,
+            null
+          ],
+          [
+            0.5,
+            null
+          ]
+        ],
+        "arms": [
+          "ML1_reset",
+          "ML2_stimulation",
+          "ML5_adaptation",
+          "MLe_euler",
+          "ML7_amines_dropped"
+        ],
+        "scored_as": "every other single switch leaves MN9 responding: all parts PASS (interval above 0.5 Hz, lower edge exclusive); FAIL if any part FAILs"
+      },
+      "MS1_weightperm_specific": {
+        "rule": "stats.null_percentile: PASS if ML0's MN9 exceeds every weight-permutation draw; FAIL if it does not exceed the null median; UNRESOLVED in between, or if the null is not active by the alive rule",
+        "arm": "null_weightperm"
+      },
+      "MS2_degree_corrected_specific": {
+        "rule": "as MS1, against the degree-corrected rewiring draws",
+        "arm": "null_dc"
+      }
+    },
+    "secondary": {
+      "rule": "pre-registered secondary readouts, reported with verdicts; they do not enter the ladder or specificity outcomes: the four MN9 checks repeated on mn9_max_cell_hz (the larger MN9 cell per trial) instead of the two-cell mean, with the same bands and null rule",
+      "checks": {
+        "ML0_responds_maxcell": {
+          "band": [
+            0.5,
+            null
+          ],
+          "arm": "ML0_m1"
+        },
+        "ML_wscale04_silent_maxcell": {
+          "band": [
+            null,
+            0.5
+          ],
+          "arm": "ML4_wscale04"
+        },
+        "MS1_weightperm_specific_maxcell": {
+          "rule": "as MS1, on the larger cell",
+          "arm": "null_weightperm"
+        },
+        "MS2_degree_corrected_specific_maxcell": {
+          "rule": "as MS2, on the larger cell",
+          "arm": "null_dc"
+        }
+      },
+      "laterality": {
+        "statistic": "per trial, LI = (max - min) / (max + min) over the MN9 cells' rates; undefined (not 0) when no MN9 cell fires; each cell's bodyId and soma side recorded (mn9_cells, mn9_sides)",
+        "reported": "median LI with a 95% bootstrap interval over the trials where it is defined, and that count: for every ladder arm, for both null arms (every draw), and for every sugar sweep arm",
+        "why": "the male drive is two-sided and symmetric (LB3b/LB3c, both sides) and the connectome paths give the two MN9 cells roughly equal input, yet run 22 split about 300:1; in Shiu et al.'s model, reproduced in phase 1, both cells fire (68.3 and 50.4 Hz)",
+        "gen6_use": "docs/gen6_rule.md: a median LI >= 0.8 at the candidate scale holds w_scale until a one-side-at-a-time run explains the asymmetry; the two-cell mean stays the FUNCTION statistic"
+      }
+    },
+    "outcome_b_grouping": {
+      "rule": "for gen-6 Outcome B, the dominant-neuropil groups with every VNC neuropil merged into one group 'VNC', left and right together: a label is VNC if the part before its first '(' is one of LegNp, Ov, mVAC, WTct, HTct, NTct, IntTct, LTct, ANm. Every other label keeps its own name and is never VNC: the neck connective, brain and optic-lobe neuropils, nerves, '?' and unassigned",
+      "audit": "phase1b.json reports every label and its group (tail_groups.label_map); a VNC neuropil found outside the list after the run is fixed only by a new registration, never by re-scoring"
+    },
+    "prediction": "from the female ladder (phase 1): ML_wscale04_silent PASSES and ML_single_switches_respond PASSES. ML7_amines_dropped was not on the female ladder (FlyWire's sign column fixes amines); it is predicted to respond because amines carry about 1.6% of the signed synapses",
+    "decision_rule": {
+      "ladder": "both ladder checks PASS: w_scale alone accounts for the male zero, as on the female. ML_wscale04_silent FAILS: the male zero is not w_scale (unexpected; stop for review). ML_single_switches_respond FAILS: the failing switch is a second cause on the male data and is named",
+      "specificity": "MS1 and MS2 PASS: M1's response is wiring-specific and stands. Either FAILS: M1's 'responds' at w_scale 1.0 is not evidence about the sugar circuit (the network responds to that drive on rewired wiring too) and phase 1's outcome is downgraded accordingly. UNRESOLVED (a null that cannot fire, or a real value inside the null range) is reported as such",
+      "sweep": "reported: for every family and drive, the largest grid scale at which no trial is self-sustained and the whole-CNS rate stays below 1 Hz (drive-dependent), and the smallest at which a majority of trials are self-sustained (runaway). The generation-6 defaults are decided from this table together with the two registered outcomes above, in a separate registration; nothing here changes a default"
+    }
+  },
+  "model": {
+    "files": {
+      "flycns/__init__.py": "544f1616b7e65d1bf08ed482120ee5718dc0f379a43640f178adb55d9651f31c",
+      "flycns/anatomy.py": "ff00097801baf4cee8c8fe726b5437e3484360f7a262f50c4ecd688926ff605b",
+      "flycns/bench.py": "35022f6ae430c468bf46fa6178cf7cb84c8b6d6f6d0ac99f1fc930c45ab499a1",
+      "flycns/calibration.py": "7a9933748d3b7bd98b9327fc0417f60caaac1e27edbb94e090c9919e700117ce",
+      "flycns/graph.py": "82bd29a7dfaae958e45131b8803ffc084dda6992082393ba6666ef3c245cefb9",
+      "flycns/integrity.py": "202bd32cfdad4e180b91e37853d319e0ae89ec1226772b7ce86747c151e1a32b",
+      "flycns/model.py": "b80432a37aecdabc1b3c4e5757f94f85a670c5832a4e0cbe526586c126fd8cb3",
+      "flycns/protocols.py": "152a1abd79db86885c3473cb43a81a9f994809578d9ad2b4903c5f2cae0a155f",
+      "flycns/stats.py": "9baada5e46202c2f88bfd083fc577d5d80ca03c5274267332ffc1e07a1036e78",
+      "data/loom_tuning_measured.json": "238def4e51bd439f8cb0e8498d334eca9e934bfffc1361e240383b6bee1f6671",
+      "data/MANIFEST.json": "abe54e8ba24c43cbd11373adee94231bd085f197ecae3551b0802c5ac9c5818c",
+      "requirements.lock": "84481267167e01842aae97b321d07d888a3fb38c3213586c13f361118002d275",
+      "fit/shiu2024_phase1b.py": "e1f1c048d107debb5caeb954d2d1c297d7f2ea4b2ae1f52082c6ec0697d81aa8"
+    },
+    "hash": "b4e59cc8dcc29c2a0e0a0e693175a32c8e954940e1b3e01550b50e6c7ad21197"
+  },
+  "values": {
+    "lif": {
+      "v_rest_mV": -52.0,
+      "v_thresh_mV": -45.0,
+      "v_reset_mV": -52.0,
+      "tau_m_ms": 20.0,
+      "tau_syn_ms": 5.0,
+      "refractory_ms": 2.2,
+      "w_syn_mV": 0.275,
+      "w_scale": 0.4,
+      "tau_adapt_ms": 100.0,
+      "gap_delay_ms": 0.8,
+      "chem_delay_ms": 1.8,
+      "dt_ms": 0.1,
+      "seed": 0,
+      "class_gains": {
+        "sensory": 1.0,
+        "relay": 1.0,
+        "local": 1.0
+      },
+      "region_gains": {
+        "SEZ": 1.0,
+        "other": 1.0
+      },
+      "superclass_params": {},
+      "peptide_gain_scale": 0.0,
+      "peptide_exclude": [],
+      "baseline_depol_mV": 0.0,
+      "baseline_noise_mV": 0.0
+    },
+    "electrical": [
+      [
+        "DNp01",
+        "TTMn",
+        true,
+        9.0,
+        "shakB gap junction, 1:1 relay; Tanouye & Wyman 1980; Allen et al. 2006"
+      ],
+      [
+        "DNp01",
+        "PSI",
+        true,
+        9.0,
+        "shakB gap junction, 1:1 relay; Allen et al. 2006; Phelan et al. 2008"
+      ],
+      [
+        "JO-B1_a",
+        "DNp01",
+        true,
+        {
+          "compound_mV": 3.0,
+          "at_hz": 150
+        },
+        "JON->GF mixed synapse modelled as electrical; shakB-dependent (Pezier et al. 2016); mixed (Pezier et al. 2014); 3 mV target untraced; contact set from MaleCNS v1.0"
+      ],
+      [
+        "JO-B1_c",
+        "DNp01",
+        true,
+        {
+          "compound_mV": 3.0,
+          "at_hz": 150
+        },
+        "JON->GF mixed synapse modelled as electrical; shakB-dependent (Pezier et al. 2016); mixed (Pezier et al. 2014); 3 mV target untraced; contact set from MaleCNS v1.0"
+      ]
+    ],
+    "intrinsic": [
+      [
+        "DNp01",
+        "b_adapt_mV",
+        45.0,
+        "all-or-none GF response; von Reyn 2014; Ache 2019. Fitted by pre-stated rule (smallest value giving 1-2 spikes/response, <=2 on the strongest gain quartile, P(response) 0.5-1, TTMn relay intact; benchmarks/fit_gf_adapt.py at >=40 trials). 45 mV at w_scale 0.4 with the per-GF JON calibration (refit 2026-10-11, cloud run 13, 40 trials; the strong-quartile constraint holds at exactly 2.0, its limit; 30 mV gives 2.75). Before: 10 mV at w_scale 0.3 (2026-10-10), 30 mV under the all-trials loom input, 15 mV from an undersampled 20-trial fit. 0 mV gives up to 15 spikes per loom (9.7 on average on the strongest-gain quartile)."
+      ],
+      [
+        "superclass:cb_motor",
+        "b_adapt_mV",
+        10.0,
+        "sustained MN rates < 100 Hz; Azevedo 2020; McKellar 2020"
+      ]
+    ],
+    "sign_map": {
+      "acetylcholine": 1,
+      "gaba": -1,
+      "glutamate": -1,
+      "histamine": -1,
+      "dopamine": 0,
+      "octopamine": 0,
+      "serotonin": 0
+    },
+    "min_weight": 5,
+    "peak_hz": 5.0,
+    "gain_sigma": 0.357,
+    "loom_state": "stationary"
+  },
+  "packages": {
+    "brian2": "2.10.1",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scipy": "1.18.1"
+  },
+  "supersedes": null,
+  "git_commit": "1710398",
+  "code_uncommitted": false,
+  "registered_at": "2026-10-18T01:34:15"
+}

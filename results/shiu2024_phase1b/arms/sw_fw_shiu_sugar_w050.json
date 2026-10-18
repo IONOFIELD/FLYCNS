@@ -1,0 +1,1038 @@
+{
+ "arm": "sw_fw_shiu_sugar_w050",
+ "spec": {
+  "seed": 242,
+  "kind": "sweep",
+  "data": "flywire",
+  "settings": {
+   "reset": "v_and_g",
+   "stimulation": "kick",
+   "integration": "exact",
+   "adaptation": false,
+   "w_scale": 0.5,
+   "floor": 1,
+   "amines": "column",
+   "electrical": false
+  },
+  "drive": "sugar",
+  "trials": 10
+ },
+ "options": {
+  "reset": "v_and_g",
+  "stimulation": "kick",
+  "stim_kick_mV": 68.75,
+  "integration": "exact",
+  "adaptation": false
+ },
+ "reduced": false,
+ "data_dir": "data",
+ "n_lif": 127400,
+ "n_recurrent": 14687178,
+ "n_stimulated": 21,
+ "n_driven": 21,
+ "pool": 21,
+ "drive_hz": 100.0,
+ "group_sizes": {
+  "superclass": {
+   "": 127377,
+   "cb_motor": 2
+  }
+ },
+ "unknown_transmitter": null,
+ "build_s": 10.8,
+ "wall_s": 679.1,
+ "trials": [
+  {
+   "k": 0,
+   "n_active": 31,
+   "n_spikes": 826,
+   "cns_rate_hz": 0.0064845853712150354,
+   "fraction_active": 0.0002433682161109759,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    38,
+    35,
+    30,
+    46,
+    47,
+    38,
+    39,
+    41,
+    39,
+    42,
+    43,
+    38,
+    50,
+    46,
+    41,
+    51,
+    38,
+    38,
+    53,
+    33,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     826,
+     31
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     826,
+     31,
+     0.006484687188424912
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 1,
+   "n_active": 41,
+   "n_spikes": 915,
+   "cns_rate_hz": 0.007183287669082031,
+   "fraction_active": 0.00032187409227580683,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    38,
+    39,
+    39,
+    36,
+    45,
+    58,
+    58,
+    37,
+    41,
+    60,
+    60,
+    47,
+    48,
+    38,
+    37,
+    44,
+    40,
+    36,
+    54,
+    60,
+    6,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     915,
+     41
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     915,
+     41,
+     0.007183400456911374
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 2,
+   "n_active": 36,
+   "n_spikes": 842,
+   "cns_rate_hz": 0.006610194773078765,
+   "fraction_active": 0.0002826211541933914,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    34,
+    44,
+    36,
+    45,
+    37,
+    44,
+    63,
+    43,
+    48,
+    56,
+    46,
+    42,
+    31,
+    43,
+    38,
+    44,
+    52,
+    28,
+    31,
+    37,
+    5,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     842,
+     36
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     842,
+     36,
+     0.006610298562534838
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 3,
+   "n_active": 31,
+   "n_spikes": 779,
+   "cns_rate_hz": 0.00611560775324033,
+   "fraction_active": 0.0002433682161109759,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    32,
+    49,
+    32,
+    43,
+    43,
+    41,
+    35,
+    37,
+    29,
+    32,
+    49,
+    46,
+    38,
+    32,
+    42,
+    28,
+    46,
+    46,
+    42,
+    37,
+    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     779,
+     31
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     779,
+     31,
+     0.006115703776977005
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 4,
+   "n_active": 35,
+   "n_spikes": 853,
+   "cns_rate_hz": 0.006696551236860079,
+   "fraction_active": 0.0002747705665769083,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    39,
+    57,
+    45,
+    45,
+    30,
+    40,
+    50,
+    38,
+    51,
+    37,
+    44,
+    37,
+    52,
+    40,
+    33,
+    34,
+    32,
+    52,
+    49,
+    48,
+    3,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     853,
+     35
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     853,
+     35,
+     0.006696656382235411
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 5,
+   "n_active": 33,
+   "n_spikes": 827,
+   "cns_rate_hz": 0.006492435958831519,
+   "fraction_active": 0.00025906939134394207,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    34,
+    35,
+    43,
+    48,
+    32,
+    43,
+    32,
+    40,
+    37,
+    46,
+    43,
+    39,
+    45,
+    32,
+    56,
+    42,
+    41,
+    43,
+    48,
+    48,
+    4,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     827,
+     33
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     827,
+     33,
+     0.006492537899306782
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 6,
+   "n_active": 35,
+   "n_spikes": 839,
+   "cns_rate_hz": 0.006586643010229315,
+   "fraction_active": 0.0002747705665769083,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    39,
+    30,
+    58,
+    40,
+    45,
+    51,
+    39,
+    55,
+    62,
+    36,
+    44,
+    48,
+    38,
+    29,
+    31,
+    37,
+    45,
+    42,
+    38,
+    32,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     839,
+     35
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     839,
+     35,
+     0.006586746429889227
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 7,
+   "n_active": 35,
+   "n_spikes": 812,
+   "cns_rate_hz": 0.006374677144584272,
+   "fraction_active": 0.0002747705665769083,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    29,
+    45,
+    46,
+    40,
+    23,
+    47,
+    43,
+    45,
+    42,
+    41,
+    40,
+    57,
+    46,
+    36,
+    38,
+    32,
+    51,
+    38,
+    46,
+    27,
+    4,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     812,
+     35
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     812,
+     35,
+     0.006374777236078727
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 8,
+   "n_active": 36,
+   "n_spikes": 853,
+   "cns_rate_hz": 0.006696551236860079,
+   "fraction_active": 0.0002826211541933914,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    24,
+    32,
+    54,
+    46,
+    39,
+    59,
+    28,
+    51,
+    41,
+    37,
+    46,
+    37,
+    43,
+    52,
+    35,
+    34,
+    53,
+    63,
+    50,
+    29,
+    4,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     853,
+     36
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     853,
+     36,
+     0.006696656382235411
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  },
+  {
+   "k": 9,
+   "n_active": 35,
+   "n_spikes": 887,
+   "cns_rate_hz": 0.006963471215820504,
+   "fraction_active": 0.0002747705665769083,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    39,
+    42,
+    34,
+    56,
+    42,
+    38,
+    35,
+    38,
+    64,
+    52,
+    50,
+    51,
+    38,
+    53,
+    40,
+    47,
+    46,
+    43,
+    29,
+    50,
+    3,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     887,
+     35
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     887,
+     35,
+     0.006963580552219004
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 0.0,
+   "mn9_ipsi_hz": 0.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    0.0,
+    0.0
+   ],
+   "mn9_max_cell_hz": 0.0,
+   "mn9_li": null
+  }
+ ],
+ "registration": {
+  "file": "results/shiu2024_phase1b/registration_v5.json",
+  "version": 5,
+  "supersedes": null,
+  "git_commit": "1710398",
+  "model_hash": "b4e59cc8dcc29c2a0e0a0e693175a32c8e954940e1b3e01550b50e6c7ad21197",
+  "registered_at": "2026-10-18T01:34:15",
+  "matches": true,
+  "problems": []
+ },
+ "provenance": {
+  "written_at": "2026-10-18T09:12:47",
+  "git_commit": "6e50cba",
+  "git_is_repo": true,
+  "git_dirty": false,
+  "dirty_files": [],
+  "allow_dirty": false,
+  "env": {},
+  "python": "3.12.10",
+  "versions": {
+   "brian2": "2.10.1",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6"
+  },
+  "engine": "cython",
+  "platform": "win32",
+  "machine": "AMD64",
+  "float_dtype": "float64",
+  "graph": {
+   "data_dir": "D:\\a\\_temp\\shiu",
+   "min_weight": 1,
+   "n_neurons": 127400,
+   "n_signed_edges": 14687178,
+   "n_signed_synapses": 52793639,
+   "dataset": "FlyWire v630"
+  },
+  "data": {
+   "dir": "D:\\a\\_temp\\shiu",
+   "digests": {},
+   "manifest": "no-manifest"
+  }
+ }
+}
