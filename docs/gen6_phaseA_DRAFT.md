@@ -122,7 +122,8 @@ to later runs.
 | Q1 | The v-and-g reset makes the male blind drive stable at some w, by itself | moderate |
 | Q2 | The MN9_R correction brings male laterality below 0.8 | high |
 | Q3 | A3 still UNRESOLVED at 100 draws (the real value sits inside the null's upper tail) | moderate |
-| Q4 | H4 holds: the antennal-lobe tail persists after the projection cut | low |
+| Q4 | H4 holds: the antennal-lobe tail persists after the projection cut, LH-only and LH + MB alike (raised from low after the local audit: LH -> LH and LH -> AL are net inhibitory) | high |
+| Q6 | At least one in-AL cut ((i) or (ii)) brings STABILITY (b) to 0 of 10 at some w where the uncut network fails it | low |
 | Q5 | No cell is viable, so the outcome stays C | moderate |
 
 ## Signing audit (Grok, 18 October 2026), checked against the code
@@ -141,8 +142,32 @@ to later runs.
     rides with a generation freeze and is **not** part of phase A, so phase A stays comparable with Phase 1b.
   - Before deciding, record from `al_lh_sign_audit.py`: how many dropped AL/LH cells have `predictedNt` GABA
     or glutamate, and their AL -> AL output weight.
-- **To run locally before registering** (read-only): `al_lh_sign_audit.py` (Grok, tested only on synthetic
-  data). Its AL -> AL / AL -> LH / LH -> LH exc/inh/dropped totals go into the registration as context.
+- **Local run on the pinned data (18 October 2026)**, `al_lh_sign_audit.py` and the follow-up
+  `al_other_check.py` (both read-only; outputs kept with the registration as context). Signed synapses between
+  dominant-ROI groups, both sides pooled:
+
+  | path | excitatory | inhibitory | dropped (unsigned) | excitatory share |
+  |---|---|---|---|---|
+  | AL -> AL | 2,282,863 | 420,718 | 235,340 | 0.844 |
+  | AL -> LH | 354,095 | 44,207 | 5,052 | 0.889 |
+  | LH -> LH | 132,870 | 257,265 | 8,025 | 0.341 |
+  | LH -> AL | 4,307 | 50,940 | 2,356 | 0.078 |
+
+  - The LH is net inhibitory internally, and its feedback to the AL is inhibitory. An AL-LH excitatory loop
+    is not supported by the wiring. The LH tail is most likely relayed feed-forward from the AL.
+  - The in-AL recurrence is among central-brain intrinsic cells (PNs and LNs): 1,097,279 excitatory vs
+    326,910 inhibitory. By sender: cholinergic ALLNs 586,857; cholinergic ALPNs 495,371; all ALLN GABA 337,755.
+  - Sensory cells (2,730 AL-dominant, nearly all cholinergic) send 1,139,291 excitatory synapses, almost all
+    feed-forward onto intrinsic cells (1,050,448). Sensory -> sensory is 81,456, and input onto sensory cells
+    is about balanced (110,836 exc, 90,197 inh). **A sensory axo-axonic loop was hypothesised and is not
+    supported**, so no sensory-input cut is added.
+  - Right-left difference: AL(R) -> AL(R) 1,054,583 excitatory vs AL(L) -> AL(L) 770,803 (about 1.37x),
+    consistent with AL(R) as the top tail group.
+  - The `"unclear"` drop in the AL: 477 cells lose their outputs, 235,340 AL -> AL synapses (8%). The largest
+    are GABA-predicted LNs (lLN2F_a, lLN2T_d). Restoring them would add inhibition but leave AL -> AL near
+    80% excitatory: worth fixing at the freeze, not the explanation for the tail.
+  - In the fly, excitatory LNs act on PNs mainly through gap junctions (Yaksi & Wilson 2010; Huang et al.
+    2010), which this model lacks; here their whole output is chemical excitation. Cut (i) tests this.
 - **Not adopted for phase A:** a slow GABA_B-like inhibition and PN adaptation (Grok's (iv), (v)). Both are
   model changes. They belong in the synapse-model plan that outcome C points to, not in a phase that changes
   only the reset and MN9_R's input.
@@ -171,4 +196,3 @@ That is about 35-40 cloud jobs. Branch names stay under 150 characters, split as
    them, or match cell to cell by `instance`.
 2. Whether `instance` or `somaSide` decides side when they disagree.
 3. MN9_R's `status` from `data/neurons.parquet`.
-4. The output of `al_lh_sign_audit.py` on the pinned data.
