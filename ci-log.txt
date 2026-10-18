@@ -1,0 +1,35 @@
+--- sw_male_shiu_drop_sugar_w040
+[phase1b] sw_male_shiu_drop_sugar_w040 7/10 (876 s)
+[phase1b] sw_male_shiu_drop_sugar_w040 8/10 (1011 s)
+[phase1b] sw_male_shiu_drop_sugar_w040 9/10 (1143 s)
+[phase1b] sw_male_shiu_drop_sugar_w040 10/10 (1259 s)
+[phase1b] sw_male_shiu_drop_sugar_w040: 10 runs in 1259.2 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\sw_male_shiu_drop_sugar_w040.json
+
+--- sw_male_shiu_drop_sugar_w050
+[phase1b] sw_male_shiu_drop_sugar_w050 7/10 (875 s)
+[phase1b] sw_male_shiu_drop_sugar_w050 8/10 (1010 s)
+[phase1b] sw_male_shiu_drop_sugar_w050 9/10 (1143 s)
+[phase1b] sw_male_shiu_drop_sugar_w050 10/10 (1259 s)
+[phase1b] sw_male_shiu_drop_sugar_w050: 10 runs in 1259.0 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\sw_male_shiu_drop_sugar_w050.json
+
+--- sw_male_shiu_drop_sugar_w060
+[phase1b] sw_male_shiu_drop_sugar_w060 7/10 (732 s)
+[phase1b] sw_male_shiu_drop_sugar_w060 8/10 (836 s)
+[phase1b] sw_male_shiu_drop_sugar_w060 9/10 (939 s)
+[phase1b] sw_male_shiu_drop_sugar_w060 10/10 (1043 s)
+[phase1b] sw_male_shiu_drop_sugar_w060: 10 runs in 1043.4 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\sw_male_shiu_drop_sugar_w060.json
+
+--- sw_male_shiu_drop_sugar_w080
+[phase1b] sw_male_shiu_drop_sugar_w080 7/10 (732 s)
+[phase1b] sw_male_shiu_drop_sugar_w080 8/10 (835 s)
+[phase1b] sw_male_shiu_drop_sugar_w080 9/10 (939 s)
+[phase1b] sw_male_shiu_drop_sugar_w080 10/10 (1043 s)
+[phase1b] sw_male_shiu_drop_sugar_w080: 10 runs in 1043.1 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\sw_male_shiu_drop_sugar_w080.json
+
+--- sw_male_shiu_drop_sugar_w100
+[phase1b] sw_male_shiu_drop_sugar_w100 7/10 (700 s)
+[phase1b] sw_male_shiu_drop_sugar_w100 8/10 (801 s)
+[phase1b] sw_male_shiu_drop_sugar_w100 9/10 (899 s)
+[phase1b] sw_male_shiu_drop_sugar_w100 10/10 (997 s)
+[phase1b] sw_male_shiu_drop_sugar_w100: 10 runs in 997.5 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\sw_male_shiu_drop_sugar_w100.json
+
