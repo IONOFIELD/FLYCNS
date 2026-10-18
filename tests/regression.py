@@ -119,7 +119,16 @@ TEXT = dict(capture_output=True, text=True, encoding="utf-8", errors="replace") 
 
 GOLDEN = ROOT / "tests/toy_expected.json"
 # never compared: run timing, the provenance stamp (commit, host, time) and the registration text
-SKIP_KEYS = {"provenance", "wall_s", "written_at", "criteria", "registration", "registered_at", "elapsed_s"}
+SKIP_KEYS = {"provenance", "wall_s", "written_at", "criteria", "registration", "registered_at", "elapsed_s",
+             "git_commit", "script_uncommitted"}
+
+
+def _skipped(key):
+    """A key that describes the environment, not the model: a SKIP_KEYS name, or any registration stamp
+    (registration, registration_v1, ...). script_uncommitted comes from `git status` inside the regression's
+    temp copy, which has no .git: it is false when git answers "not a repository" and true when git times
+    out or the temp folder sits inside another repository, so it depends on the machine (2026-10-18)."""
+    return key in SKIP_KEYS or key.startswith("registration")
 
 
 def _flatten(obj, prefix=""):
@@ -127,7 +136,7 @@ def _flatten(obj, prefix=""):
     out = {}
     if isinstance(obj, dict):
         for k, v in obj.items():
-            if k not in SKIP_KEYS:
+            if not _skipped(k):
                 out.update(_flatten(v, f"{prefix}/{k}"))
     elif isinstance(obj, list):
         for i, v in enumerate(obj):
@@ -167,6 +176,8 @@ def compare_golden(got):
                 diffs.append(f"{step}: {f} {'no longer written' if f in w else 'is new'}")
                 continue
             for k in sorted(set(w[f]) | set(g[f])):
+                if any(_skipped(seg.split("[")[0]) for seg in k.split("/") if seg):
+                    continue      # golden files written before a key was skipped still hold it
                 if k not in w[f] or k not in g[f] or not _same(w[f][k], g[f][k]):
                     diffs.append(f"{step}: {f}{k} expected {w[f].get(k, '(absent)')}, got {g[f].get(k, '(absent)')}")
     n = sum(len(v) for st in want.values() for v in st.values())
