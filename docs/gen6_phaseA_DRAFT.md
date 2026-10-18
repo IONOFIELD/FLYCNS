@@ -166,16 +166,22 @@ to later runs.
   - The `"unclear"` drop in the AL: 477 cells lose their outputs, 235,340 AL -> AL synapses (8%). The largest
     are GABA-predicted LNs (lLN2F_a, lLN2T_d). Restoring them would add inhibition but leave AL -> AL near
     80% excitatory: worth fixing at the freeze, not the explanation for the tail.
-  - In the fly, excitatory LNs act on PNs mainly through gap junctions (Yaksi & Wilson 2010; Huang et al.
-    2010), which this model lacks; here their whole output is chemical excitation. Cut (i) tests this.
+  - Biology (checked by Grok against the papers, 18 October): excitatory (cholinergic) LNs depolarise PNs
+    largely, if not purely, through electrical coupling, which is shakB-dependent (Yaksi & Wilson 2010, Fig. 4;
+    PN-PN sister coupling is also electrical, Fig. 6). Huang et al. (2010, abstract only read) also report a
+    cholinergic dendrodendritic component. In Yaksi & Wilson, eLN output onto inhibitory LNs is mainly
+    chemical and nicotinic, so eLNs inhibit PNs indirectly; Huang et al. found eLN-iLN connections rare. EM
+    connectomes annotate chemical synapses only (to confirm against the dataset papers before citing). So this
+    model has no eLN -> PN electrical path, and every ACh-LN output it carries is chemical. Cut (i) removes
+    that chemical output, most of which, in the fly, is not how eLNs excite PNs.
 - **Not adopted for phase A:** a slow GABA_B-like inhibition and PN adaptation (Grok's (iv), (v)). Both are
   model changes. They belong in the synapse-model plan that outcome C points to, not in a phase that changes
   only the reset and MN9_R's input.
 
 ## Size
 
-- 6 cells x 5 w x 2 drives = 60 sweep arms (cells 2b and 4b add 20).
-- 100 null draws.
+- 4 deciding cells x 5 w x 2 drives = 40 sweep arms, plus cells 2b and 4b = 20: 60 in all.
+- 1 fresh 30-trial M1 arm and 100 null draws (A3).
 - 2 extra drive compositions x 5 w.
 - 2 projection cuts (LH only; LH + MB) x 5 w.
 - 2 in-AL cuts x 5 w.
@@ -190,9 +196,133 @@ That is about 35-40 cloud jobs. Branch names stay under 150 characters, split as
 3. FUNCTION-q: half of non-runaway trials; runaway = the Phase 1b self-sustained rule; response = 0.5 Hz per
    trial; fewer than 5 non-runaway trials gives UNRESOLVED.
 
+## Definitions fixed before registering (from Grok's blind referee review, 18 October 2026)
+
+Each finding of `phaseA_review_full_2026-10-18` is adopted as proposed unless a different choice is stated.
+Code citations were checked against `d0f65b4`. Where this section and the sections above differ, this section
+wins.
+
+**B1. Decision rule (replaces rules 1-4 of "Decision rule").** Adopted.
+- Viable(c): there is a grid w at which FUNCTION (screen), FUNCTION-q, STABILITY (a), (b) and (c) all PASS.
+  The cell's decision w is the smallest such w. LATERALITY joins this list for cells 2 and 4 (M7).
+- Outcomes over V1-V4 (2b and 4b never enter):
+  - V1: Phase 1b's outcome C is not replicated. Stop for review; no default changes.
+  - not V1, V2, not V3: adopt the MN9_R mirror.
+  - not V1, V3, not V2: adopt the v-and-g reset.
+  - not V1, V2 and V3: adopt the mirror only (a data fix with its own justification); report V3.
+  - not V1, V4 only: adopt both.
+  - none: outcome stays C.
+- If a component at a candidate w is UNRESOLVED and none FAILs, run one top-up of 10 trials for that arm (next
+  seed block). After that, UNRESOLVED counts as not passing.
+- An adopted w still goes through gen6_rule.md's refine and confirm steps in the generation-6 registration.
+
+**B2. Edge sets for the cuts.** Adopted, with one change to cut (ii).
+- `data/gen6_phaseA_celltypes.json` is committed before launch, its sha256 in the registration. It holds the
+  Cell Type Explorer type lists for ALPN, ALLN and Kenyon_Cell, with the source URL, date and extraction rule.
+  `neurons.parquet` has no class column, and edges carry no synapse location, so cuts are defined by cell
+  type and by the post cell's `dominant_roi`.
+- AL PN = cells whose type is in ALPN, every transmitter.
+- LH-only cut: remove signed edges with pre in AL PN and `dominant_roi(post)` in {LH(L), LH(R)}.
+- LH + MB cut: also remove edges with pre in AL PN and (post type in Kenyon_Cell, or `dominant_roi(post)` in
+  {CA(L), CA(R)}). Kenyon cells are mostly lobe-dominated, so a calyx-ROI rule alone would miss them.
+- Logged: AL PN out-weight by post `dominant_roi`, so what the cuts keep (for example SLP) is visible.
+- Cut (i): remove every out-edge of cells with type in ALLN and edge `nt` == "acetylcholine".
+- Cut (ii), **changed:** remove edges with pre a uniglomerular ALPN (type not starting M_, MZ_ or CB) **with
+  `nt` == "acetylcholine"**, and post in ALPN or ALLN. Reason: the cut tests excitatory PN recurrence; without
+  the transmitter condition it would also remove the GABAergic uniglomerular vPNs (for example DA1_vPN).
+
+**B3. The mirror.** Adopted, with one change to the sign.
+- A function on `load_graph`'s returned edges (signed, at or above the floor), applied before CNSModel, in
+  cells 2 and 4 only. Not in A3, A4 or the cuts.
+- Side: `flycns.graph.infer_side` without the soma-x fallback (somaSide, then instance `_[LR]$`). Anything else
+  counts as midline. This settles open item 2, provisionally, until the audit output is read.
+- Mapping: (A) the weight is split equally across every same-type opposite-side cell. MaleCNS instances are
+  type plus side, so instance matching (B) cannot pick one cell among several and falls back to (A). This
+  settles open item 1, provisionally, until the audit confirms the fallback on the pinned data.
+- Split weights below 5 are kept, as floats. The model takes float weights (`model.py:227`).
+- **Sign, changed:** a mirrored edge takes P''s own model sign, because the model signs every edge by its
+  presynaptic cell. If P' has no signed output, P's sign is used. The weight with a sign mismatch is logged.
+- Untyped, midline and no-match partners stay on P. MN9_R's outputs are unchanged. The MN9_R -> MN9_L edge
+  becomes MN9_L -> MN9_R.
+- bodyIds fixed: 10331 (L), 16949 (R), asserted against `type == "MN9"` and the sides.
+- Recorded in the registration from `mn9_mirror_audit.py`: kept count and weight, below-floor count,
+  sign-mismatch weight, and how many partners are unclear-silent.
+
+**B4. Code before launch.** Adopted. `fit/gen6_phaseA.py` (registration and arms) and
+`fit/gen6_phaseA_score.py` hold the mirror and normalise transforms, the cuts, the drive pools, FUNCTION-q,
+the 95-of-100 null score and the B1 table. Both are committed with smoke runs on `scripts/make_testdata.py`
+data before any cloud job. `stats.null_percentile` stays unchanged; the new score is a separate function.
+
+**M1. What "stops it" means.** Adopted.
+- Baseline: cell 1 (v-only reset, MN9_R as in the data), blind drive, seeds paired with the cut arms.
+- W* = the grid w at which baseline cell 1 has at least 5/10 self-sustained blind trials. (In Phase 1b's
+  `male_flycns` blind arms that was w 0.5 to 1.0; at w 0.4 only 1/10.)
+- A cut stops it if, at some w in W*, the cut arm has STABILITY (b) 0/10 and (c) PASS. Q6 uses the same W*.
+
+**M2. Readings for the in-AL cuts.** Adopted, with the biology caveat attached.
+- (i) stops it: in the model, ACh-LN chemical output sustains the AL loop. Because the fly's eLN -> PN path is
+  electrical, this is read as a model-structure finding, not as fly biology.
+- (ii) stops it: excitatory PN recurrence sustains it.
+- Both: either is enough. Neither: no single cut removes it; mechanism UNRESOLVED.
+- Reported only. These readings never feed B1.
+
+**M3. Drive arms (b) and (c).** Adopted. stim_types and the driven set of arm (a) are kept, so the network
+is the same. The rate is set to 0 for (b) driven cells with superclass `ol_sensory` or edge `nt` not
+acetylcholine; (c) those, plus types starting `ORN_` or `HRN_`. Driven count and total input rate are reported
+per arm.
+
+**M4. A3 null.** Adopted.
+- Real value: a fresh 30-trial M1 arm (phase A seed block), MN9_R as in the data.
+- 100 draws, one trial each, seeds 30000 + k (Phase 1b used 20000 + k).
+- PASS iff #(real > draw), strict, is at least 95. FAIL iff real is at or below the null median. Otherwise
+  UNRESOLVED. The alive rule is Phase 1b's (`fit/shiu2024_phase1b.py:735`, ALIVE_FRACTION of the real arm's
+  median whole-CNS rate).
+- **Deviation, stated plainly:** the bar moved from "exceeds every draw" (MS2, 20 draws) to "exceeds at least
+  95 of 100". It was proposed after MS2 came out at 19 of 20. The reason is power: 20 draws give a smallest
+  attainable p of 1/21 only if the real value beats all of them, so one tie or near-miss decides the
+  verdict. MS2 is not re-scored.
+
+**M5. Seeds and trials.** Adopted. 10 trials per sweep, cut and drive arm. Seed = 6000 + index of (drive, w),
+shared by cells 1-4b and the cut and drive arms at the same (drive, w), so comparisons are paired. A3 real arm
+seed 6100; null draws 30000 + k. All are disjoint from Phase 1b (201+, 20000+k) and the gen6_rule refine block
+(5000).
+
+**M6. Multiple comparisons.** Adopted. No correction. Declared as an uncorrected screen; B1's same-w and
+smallest-w rule limits the search, and adoption still needs gen6_rule's confirm step (both nulls).
+
+**M7. Laterality.** Adopted. Adopting the mirror under B1 also needs a median sugar LI below 0.8 in cell 2 (or
+4) at its decision w; otherwise outcome H as amended in v2 section 2. "Below 0.8 under mirroring only" means
+cell 2 median LI < 0.8 and cell 1 median LI >= 0.8 at the same w.
+
+**M8. Normalise factor.** Adopted. From the signed `load_graph` totals (MN9_L / MN9_R), as the audit script's
+variant (ii).
+
+**M9. A4 secondary.** Adopted. Per w under drive (c), pool `tail_by_neuropil` spikes over the self-sustained
+blind trials. Tail share = (AL(L) + AL(R) + LH(L) + LH(R)) / all; drive share from `drive_by_neuropil` over the
+same trials. Test: tail share >= 2 x drive share. With no self-sustained trial: not scorable.
+
+**Minor, all adopted:**
+- m1: the response bar (two-cell mean > 0.5 Hz over 1 s) means at least 2 MN9 spikes, both possibly from
+  MN9_L. Stated, not changed. A 3/6 pass has a Wilson interval of about 0.19-0.81.
+- m2: the per-trial rule is called "self-sustained (`fit/shiu2024_phase1b.py:474`)" everywhere; "runaway" is
+  kept only for Phase 1b's `smallest_runaway` (more than half the trials self-sustained).
+- m3: bimodal iff max n_active > 2 x min n_active; split at the largest gap in n_active.
+- m4: the size arithmetic is corrected above.
+- m5: every cut arm asserts that `len(m.lif_ids)` equals the uncut value (`model.py:146` builds it from
+  the edges present).
+- m6: the `"unclear"` defect also touches MN9. Grok inferred that GNG002 (92 synapses to MN9_L) is dropped. The
+  audit's figures are recorded in the registration.
+- m7: the soma-x fallback of `infer_side` is not used (B3).
+- m8: A4 runs under the v-only reset only. If B1 adopts v-and-g, the A4 readings describe the gen-5 dynamics.
+- m9: verdicts use the point fraction; the Wilson interval is reported only.
+
 ## Open items before registering
 
-1. Mirror mapping when the opposite side has several cells of the partner's type: split w equally across
-   them, or match cell to cell by `instance`.
-2. Whether `instance` or `somaSide` decides side when they disagree.
-3. MN9_R's `status` from `data/neurons.parquet`.
+1. Mirror mapping: (A) equal split, provisionally (B3). **OPEN** until `mn9_mirror_audit.py` output confirms
+   that instance matching falls back to (A) on the pinned data.
+2. Side tiebreak: somaSide first, provisionally (B3). **OPEN** until the audit's disagreement list (section d)
+   is read; GNG654 is the case to check.
+3. MN9_R's `status` from `data/neurons.parquet`. **OPEN** (audit section a).
+4. Q4 and Q6: Jayson's sign-off.
+5. `data/gen6_phaseA_celltypes.json`, `fit/gen6_phaseA.py`, `fit/gen6_phaseA_score.py`: to be written and
+   smoke-tested (B2, B4).
