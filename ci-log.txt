@@ -1,0 +1,21 @@
+--- ML0_m1
+[phase1b] ML0_m1 27/30 (1871 s)
+[phase1b] ML0_m1 28/30 (1931 s)
+[phase1b] ML0_m1 29/30 (1991 s)
+[phase1b] ML0_m1 30/30 (2052 s)
+[phase1b] ML0_m1: 30 runs in 2051.6 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\ML0_m1.json
+
+--- ML1_reset
+[phase1b] ML1_reset 27/30 (1908 s)
+[phase1b] ML1_reset 28/30 (1969 s)
+[phase1b] ML1_reset 29/30 (2031 s)
+[phase1b] ML1_reset 30/30 (2094 s)
+[phase1b] ML1_reset: 30 runs in 2093.9 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\ML1_reset.json
+
+--- ML2_stimulation
+[phase1b] ML2_stimulation 27/30 (1568 s)
+[phase1b] ML2_stimulation 28/30 (1626 s)
+[phase1b] ML2_stimulation 29/30 (1683 s)
+[phase1b] ML2_stimulation 30/30 (1740 s)
+[phase1b] ML2_stimulation: 30 runs in 1739.9 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\ML2_stimulation.json
+
