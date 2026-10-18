@@ -1,0 +1,35 @@
+--- c2b_blind_w040
+[phaseA] c2b_blind_w040 7/10 (295 s)
+[phaseA] c2b_blind_w040 8/10 (327 s)
+[phaseA] c2b_blind_w040 9/10 (357 s)
+[phaseA] c2b_blind_w040 10/10 (390 s)
+[phaseA] c2b_blind_w040: 10 runs in 390.1 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\c2b_blind_w040.json
+
+--- c2b_blind_w050
+[phaseA] c2b_blind_w050 7/10 (307 s)
+[phaseA] c2b_blind_w050 8/10 (341 s)
+[phaseA] c2b_blind_w050 9/10 (374 s)
+[phaseA] c2b_blind_w050 10/10 (409 s)
+[phaseA] c2b_blind_w050: 10 runs in 408.5 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\c2b_blind_w050.json
+
+--- c2b_blind_w060
+[phaseA] c2b_blind_w060 7/10 (326 s)
+[phaseA] c2b_blind_w060 8/10 (369 s)
+[phaseA] c2b_blind_w060 9/10 (411 s)
+[phaseA] c2b_blind_w060 10/10 (454 s)
+[phaseA] c2b_blind_w060: 10 runs in 453.6 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\c2b_blind_w060.json
+
+--- c2b_blind_w080
+[phaseA] c2b_blind_w080 7/10 (273 s)
+[phaseA] c2b_blind_w080 8/10 (312 s)
+[phaseA] c2b_blind_w080 9/10 (347 s)
+[phaseA] c2b_blind_w080 10/10 (382 s)
+[phaseA] c2b_blind_w080: 10 runs in 382.0 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\c2b_blind_w080.json
+
+--- c2b_blind_w100
+[phaseA] c2b_blind_w100 7/10 (243 s)
+[phaseA] c2b_blind_w100 8/10 (274 s)
+[phaseA] c2b_blind_w100 9/10 (308 s)
+[phaseA] c2b_blind_w100 10/10 (340 s)
+[phaseA] c2b_blind_w100: 10 runs in 340.4 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\c2b_blind_w100.json
+
