@@ -235,10 +235,10 @@ wins.
 - A function on `load_graph`'s returned edges (signed, at or above the floor), applied before CNSModel, in
   cells 2 and 4 only. Not in A3, A4 or the cuts.
 - Side: `flycns.graph.infer_side` without the soma-x fallback (somaSide, then instance `_[LR]$`). Anything else
-  counts as midline. This settles open item 2, provisionally, until the audit output is read.
+  counts as midline. Confirmed by the audit: no disagreements on the pinned data.
 - Mapping: (A) the weight is split equally across every same-type opposite-side cell. MaleCNS instances are
-  type plus side, so instance matching (B) cannot pick one cell among several and falls back to (A). This
-  settles open item 1, provisionally, until the audit confirms the fallback on the pinned data.
+  type plus side, so instance matching (B) cannot pick one cell among several and falls back to (A).
+  Confirmed by the audit: (A) and (B) differ on 36 synapses only.
 - Split weights below 5 are kept, as floats. The model takes float weights (`model.py:227`).
 - **Sign, changed:** a mirrored edge takes P''s own model sign, because the model signs every edge by its
   presynaptic cell. If P' has no signed output, P's sign is used. The weight with a sign mismatch is logged.
@@ -316,13 +316,47 @@ same trials. Test: tail share >= 2 x drive share. With no self-sustained trial: 
 - m8: A4 runs under the v-only reset only. If B1 adopts v-and-g, the A4 readings describe the gen-5 dynamics.
 - m9: verdicts use the point fraction; the Wilson interval is reported only.
 
+## MN9 mirror audit on the pinned data (18 October 2026)
+
+`mn9_mirror_audit.py` (Grok; read-only), run by Jayson on the MANIFEST-pinned data, `amines=dropped`. The
+output is kept with the registration as context.
+
+| | MN9_L (10331) | MN9_R (16949) |
+|---|---|---|
+| status | Traced | Traced |
+| input synapses, all (neuPrint `post`) | 6,358 | 633 |
+| signed input >= 5 (model) | 5,651 (exc 2,805, inh 2,846) | 364 (exc 161, inh 203) |
+| signed partner cells | 93 | 25 |
+
+- **Both MN9 cells are `Traced`.** The status column does not flag MN9_R as incomplete, so "incomplete
+  reconstruction" stays an interpretation. Two observations favour a thin input arbor over different wiring
+  (INFERRED): MN9_R's partners are mostly the same types as MN9_L's, each at about 5-10% of the weight
+  (17 types in both, 2 types into MN9_R only, 54 into MN9_L only); and MN9_R's output is not short (244 vs 172
+  presynapses). v2 section 2's condition (MN9_R below a third of MN9_L's input) is met on counts, 364/5,651 =
+  0.064; the registration states that the status column does not confirm it.
+- **Mapping (open item 1): (A) equal split, confirmed.** 98.1% of MN9_L's signed input weight comes from
+  partners whose type has exactly one opposite-side cell. Only 5 partners (36 synapses, 0.6%) have more than
+  one. (A) and (B) give the same totals; they differ only in which cell carries those 36 synapses. One partner
+  (DNg90, 34 synapses) has an opposite cell with a non-standard instance and falls back to (A) under (B).
+- **Side tiebreak (open item 2): moot, somaSide first as in B3.** No partner's instance side disagrees with
+  its somaSide, and the two tiebreaks decide the same side for every partner. Five partners are midline or
+  missing on one field (215 synapses): GNG654 (somaSide null; instance gives L and R, so it maps normally),
+  GNG297_M (one cell, no opposite: kept, 21), GNG001_M (midline: kept, 6), one untyped cell (kept, 44).
+- **Kept on the same partner:** 3 partners, 71 synapses. **Split edges below the floor:** 11 edges, 21
+  synapses (kept as floats, B3). **Sign mismatch P vs P':** 0. **P' with no signed output:** 2.5 synapses.
+- **Mirror total:** 5,651 (exc 2,805, inh 2,846) onto MN9_R, from 100 presynaptic cells. It drops two types that
+  reach MN9_R only (GNG017, GNG140; 10 synapses).
+- **Normalise factor (M8):** signed L/R = 15.525, so 5,651 in total, with MN9_R's own exc/inh mix (2,499 /
+  3,152). The neuPrint-based factor (10.044) is reported only.
+- **The `"unclear"` defect at MN9:** one partner is dropped, GNG002, with 92 synapses onto MN9_L. Its
+  `predictedNt` is serotonin, so it would stay dropped under `amines=dropped` even after the fallback fix.
+- Note: MN9_L's signed input is almost balanced, 49.6% excitatory.
+
 ## Open items before registering
 
-1. Mirror mapping: (A) equal split, provisionally (B3). **OPEN** until `mn9_mirror_audit.py` output confirms
-   that instance matching falls back to (A) on the pinned data.
-2. Side tiebreak: somaSide first, provisionally (B3). **OPEN** until the audit's disagreement list (section d)
-   is read; GNG654 is the case to check.
-3. MN9_R's `status` from `data/neurons.parquet`. **OPEN** (audit section a).
+1. ~~Mirror mapping~~: closed, (A) equal split (audit above).
+2. ~~Side tiebreak~~: closed, somaSide first; no disagreements on the pinned data.
+3. ~~MN9_R status~~: closed, `Traced` (both cells). Recorded as a caveat on the reconstruction reading.
 4. Q4 and Q6: Jayson's sign-off.
 5. `data/gen6_phaseA_celltypes.json`, `fit/gen6_phaseA.py`, `fit/gen6_phaseA_score.py`: to be written and
    smoke-tested (B2, B4).
