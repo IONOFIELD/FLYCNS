@@ -1,0 +1,35 @@
+--- A4_cut_lh_w040
+[phaseA] A4_cut_lh_w040 7/10 (303 s)
+[phaseA] A4_cut_lh_w040 8/10 (336 s)
+[phaseA] A4_cut_lh_w040 9/10 (368 s)
+[phaseA] A4_cut_lh_w040 10/10 (410 s)
+[phaseA] A4_cut_lh_w040: 10 runs in 409.6 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\A4_cut_lh_w040.json
+
+--- A4_cut_lh_w050
+[phaseA] A4_cut_lh_w050 7/10 (302 s)
+[phaseA] A4_cut_lh_w050 8/10 (336 s)
+[phaseA] A4_cut_lh_w050 9/10 (369 s)
+[phaseA] A4_cut_lh_w050 10/10 (411 s)
+[phaseA] A4_cut_lh_w050: 10 runs in 411.0 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\A4_cut_lh_w050.json
+
+--- A4_cut_lh_w060
+[phaseA] A4_cut_lh_w060 7/10 (265 s)
+[phaseA] A4_cut_lh_w060 8/10 (300 s)
+[phaseA] A4_cut_lh_w060 9/10 (336 s)
+[phaseA] A4_cut_lh_w060 10/10 (370 s)
+[phaseA] A4_cut_lh_w060: 10 runs in 369.6 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\A4_cut_lh_w060.json
+
+--- A4_cut_lh_w080
+[phaseA] A4_cut_lh_w080 7/10 (278 s)
+[phaseA] A4_cut_lh_w080 8/10 (316 s)
+[phaseA] A4_cut_lh_w080 9/10 (353 s)
+[phaseA] A4_cut_lh_w080 10/10 (386 s)
+[phaseA] A4_cut_lh_w080: 10 runs in 385.9 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\A4_cut_lh_w080.json
+
+--- A4_cut_lh_w100
+[phaseA] A4_cut_lh_w100 7/10 (238 s)
+[phaseA] A4_cut_lh_w100 8/10 (271 s)
+[phaseA] A4_cut_lh_w100 9/10 (308 s)
+[phaseA] A4_cut_lh_w100 10/10 (342 s)
+[phaseA] A4_cut_lh_w100: 10 runs in 342.0 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\A4_cut_lh_w100.json
+
