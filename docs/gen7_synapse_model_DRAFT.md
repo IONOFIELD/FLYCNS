@@ -1,7 +1,7 @@
 # Generation 7: change of synapse model (DRAFT plan, not registered)
 
 Status: DRAFT, 18 October 2026, committed at 09:19 PDT (fb1c47b) while gen-6 phase A (runs 33-36) was still
-running. **Correction (09:24 PDT): the first phase A arm results had already been pushed to GitHub at 09:03 PDT
+running. **Correction (09:20 PDT, 82eb3a4): the first phase A arm results had already been pushed to GitHub at 09:03 PDT
 (`rerun-out/34/pa-c3-sugar`), so this file does NOT provably predate the results.** No phase A result had been
 opened or scored when it was written: the plan was drafted from the literature review and phase 1b alone, and
 no phase A number appears in it. That cannot be proven from git (the same gap as Phase 1b's rule v2). For that
