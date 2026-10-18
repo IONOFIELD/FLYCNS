@@ -1,0 +1,7 @@
+--- A3_null_dc_3
+[phaseA] A3_null_dc_3 draw 96 (22/25, 1710 s)
+[phaseA] A3_null_dc_3 draw 97 (23/25, 1778 s)
+[phaseA] A3_null_dc_3 draw 98 (24/25, 1847 s)
+[phaseA] A3_null_dc_3 draw 99 (25/25, 1917 s)
+[phaseA] A3_null_dc_3: 25 runs in 1917.0 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\A3_null_dc_3.json
+
