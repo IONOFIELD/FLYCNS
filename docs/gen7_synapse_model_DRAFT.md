@@ -5,8 +5,8 @@ registration, committed before any generation-7 run; until then this plan may be
 is meant to inform it. It is conditional: it applies if phase A ends in outcome C
 (no deciding cell viable; prediction Q5), which is the registered trigger in `docs/gen6_phaseA_DRAFT.md`
 ("the next phase is a change of synapse model (conductance-based), in its own plan"). If phase A adopts the
-reset or the MN9_R mirror, this plan is revised before anything is registered, and the revision is a new dated
-file. Sources: `docs/lit/synapse_model_lit_2026-10-18.md` (Grok, read-only literature review, 22 sources read
+reset or the MN9_R mirror, this plan is revised before anything is
+registered. Sources: `docs/lit/synapse_model_lit_2026-10-18.md` (Grok, read-only literature review, 22 sources read
 in full; every value tagged VERIFIED / VERIFIED-fig / INFERRED / CAN'T VERIFY). Only VERIFIED or VERIFIED-fig
 values are cited as measurements below; everything else is labelled an assumption.
 
