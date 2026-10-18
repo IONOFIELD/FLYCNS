@@ -11,7 +11,7 @@ synapses against MN9_L's 6,358) and the antennal-lobe tail unexplained. This pha
             sugar and the blind drive. Everything else at the flycns (generation 5) settings.
   A3        specificity: M1 against 100 degree-corrected rewirings (PASS iff it beats at least 95).
   A4        where the blind-drive loop is: two drive compositions, two projection cuts (AL PN -> LH; AL PN -> LH and
-            MB) and two in-AL cuts (cholinergic LN outputs; cholinergic non-M_/MZ_/CB PN -> PN/LN), under cell 1.
+            MB) and two in-AL cuts (cholinergic LN outputs; every cholinergic PN -> PN/LN), under cell 1.
 
 Scoring is fit/gen6_phaseA_score.py; both files are hashed into this registration.
 
@@ -63,7 +63,7 @@ SUGAR_HZ, BLIND_HZ = 100.0, 20.0
 EXCLUDED_SUBCLASSES_EXTRA = {"auditory", "wind_gravity", "campaniform sensilla"}
 EXCLUDED_PREFIXES = ("JO-", "LC", "LPLC", "SNpp", "pC1", "DNg02", "L1", "L2", "L3", "L5", "Pm3", "Mi1", "Tm2")
 LH_ROIS, CA_ROIS = ("LH(L)", "LH(R)"), ("CA(L)", "CA(R)")
-MULTIGLOM_PREFIXES = ("M_", "MZ_", "CB")    # ALPN types cut (ii) leaves out: the multiglomerular mlACT PNs (B2)
+MULTIGLOM_PREFIXES = ("M_", "MZ_", "CB")    # multiglomerular mlACT PN names; reported within cut (ii), not excluded
 
 # Settings. FLY = the declared flycns model (generation 5 defaults; fit/shiu2024_phase1b.py FLY). M1 = the phase-1
 # male arm (Shiu's choices), used only by A3, as Phase 1b's MS2 used it.
@@ -204,10 +204,10 @@ CRITERIA = dict(
         lhmb=("as lh, and also edges with pre an AL PN and post type in Kenyon_Cell or post dominant_roi in CA(L), "
               "CA(R)"),
         i="remove every out-edge of cells with type in ALLN whose transmitter (the edge's nt) is acetylcholine",
-        ii=("remove edges with pre a cholinergic ALPN type not starting M_, MZ_ or CB (the 16 two-glomerulus '+' "
-            "types such as VP1m+VP5_ilPN included, by Jayson's decision of 18 October), nt acetylcholine, and post "
-            "type in ALPN or ALLN; the synapses removed from the '+' types are reported (a description, not an "
-            "arm)")),
+        ii=("remove edges with pre of an ALPN type and nt acetylcholine (all cholinergic ALPN types: uniglomerular, "
+            "the two-glomerulus '+' types and the multiglomerular M_/MZ_/CB types; Jayson's decisions of 18 "
+            "October), and post type in ALPN or ALLN. GABAergic and glutamatergic PNs are not cut. The synapses "
+            "removed from the '+' types and from the M_/MZ_/CB types are reported (descriptions, not arms)")),
     thresholds=dict(
         responds_hz=0.5, rate_bar_hz=1.0, fraction_bar=0.10, li_bar=0.8, function_q_min_trials=5,
         function_q_need=0.5, wstar_min_self_sustained=5, null_pass_draws=95, alive_fraction=ALIVE_FRACTION,
@@ -429,8 +429,7 @@ def cut_mask(edges, neurons, roi, cut, ct):
     if cut == "i":
         return pre_t.isin(ct["ALLN"]) & (nt == "acetylcholine")
     if cut == "ii":
-        pn_ii = is_pn & ~pre_t.fillna("").astype(str).str.startswith(MULTIGLOM_PREFIXES)
-        return pn_ii & (nt == "acetylcholine") & (post_t.isin(ct["ALPN"]) | post_t.isin(ct["ALLN"]))
+        return is_pn & (nt == "acetylcholine") & (post_t.isin(ct["ALPN"]) | post_t.isin(ct["ALLN"]))
     raise ValueError(cut)
 
 
@@ -454,11 +453,15 @@ def apply_cut(edges, neurons, roi, cut, ct):
                removed_exc=float(edges.loc[m & (edges["sign"] > 0).to_numpy(), "weight"].sum()),
                removed_inh=float(edges.loc[m & (edges["sign"] < 0).to_numpy(), "weight"].sum()),
                placeholders=len(lost), placeholder_ids=lost[:20])
-    if cut == "ii":           # description only: how much of the cut comes from the two-glomerulus '+' types
+    if cut == "ii":           # descriptions only: how much of the cut comes from the '+' and the M_/MZ_/CB types
         pre_t = edges["pre"].map(neurons.set_index("bodyId")["type"]).fillna("").astype(str)
-        plus = m & pre_t.str.contains("+", regex=False).to_numpy()
-        log["from_plus_types"] = dict(types=int(pre_t[plus].nunique()), edges=int(plus.sum()),
-                                      synapses=float(edges.loc[plus, "weight"].sum()))
+        multi = pre_t.str.startswith(MULTIGLOM_PREFIXES).to_numpy()
+        plus = pre_t.str.contains("+", regex=False).to_numpy() & ~multi
+        tot = float(edges.loc[m, "weight"].sum())
+        for key, sel in (("from_plus_types", m & plus), ("from_m_mz_cb_types", m & multi)):
+            syn = float(edges.loc[sel, "weight"].sum())
+            log[key] = dict(types=int(pre_t[sel].nunique()), edges=int(sel.sum()), synapses=syn,
+                            share=(syn / tot) if tot else None)
     return out, log
 
 
@@ -704,17 +707,9 @@ def preflight(data_dir="data"):
         log["cells_after"] = len(set(cut_edges["pre"]) | set(cut_edges["post"]))
         cuts[cut] = log
     out["cuts"] = cuts
-    # descriptions on the committed lists, not arms: what cut (ii) leaves (cholinergic M_/MZ_/CB PNs onto PNs and
-    # LNs), and the AL -> AL synapses by sender class x transmitter (corrects the sign audit's class sums, which
-    # were built on a truncated type list)
+    # a description on the committed lists, not an arm: the AL -> AL synapses by sender class x transmitter (corrects
+    # the sign audit's class sums, which were built on a truncated type list)
     t_of = meta["type"]
-    pre_t, post_t = edges["pre"].map(t_of), edges["post"].map(t_of)
-    ntl = edges["nt"].astype("string").str.lower()
-    left = (pre_t.isin(ct["ALPN"]) & pre_t.fillna("").astype(str).str.startswith(MULTIGLOM_PREFIXES)
-            & (ntl == "acetylcholine") & (post_t.isin(ct["ALPN"]) | post_t.isin(ct["ALLN"]))).fillna(False)
-    out["cut_ii_left_in"] = dict(rule="cholinergic M_/MZ_/CB ALPN -> ALPN or ALLN (kept by cut ii)",
-                                 types=int(pre_t[left].nunique()), edges=int(left.sum()),
-                                 synapses=float(edges.loc[left.to_numpy(), "weight"].sum()))
     reg = edges["pre"].map(roi).fillna("").str.extract(r"^(AL)\(")[0]
     regp = edges["post"].map(roi).fillna("").str.extract(r"^(AL)\(")[0]
     alal = edges[(reg == "AL").to_numpy() & (regp == "AL").to_numpy()]
@@ -745,21 +740,22 @@ def selftest():
     """The transforms on a hand-made table, with exact expectations. Returns (ok, message)."""
     import pandas as pd
     nrn = pd.DataFrame(dict(
-        bodyId=[1, 2, 10, 11, 20, 21, 22, 30, 40, 50, 60, 61, 70, 71, 80, 23, 24],
-        type=["MN9", "MN9", "A", "A", "B", "B", "B", "C", None, "D", "PNu", "PNm", "LNa", "LNa", "KCg-m", "E", "E"],
-        somaSide=["L", "R", "R", "L", "R", "L", "L", "M", None, None, "R", "R", "R", "L", "R", "L", "R"],
+        bodyId=[1, 2, 10, 11, 20, 21, 22, 30, 40, 50, 60, 61, 70, 71, 80, 23, 24, 62],
+        type=["MN9", "MN9", "A", "A", "B", "B", "B", "C", None, "D", "PNu", "PNm", "LNa", "LNa", "KCg-m", "E", "E",
+              "M_lPNy"],
+        somaSide=["L", "R", "R", "L", "R", "L", "L", "M", None, None, "R", "R", "R", "L", "R", "L", "R", "R"],
         instance=["MN9_L", "MN9_R", "A_R", "A_L", "B_R", "B_L", "B_L", "C_M", None, "D_L", "PNu_R", "M_x_R", "LNa_R",
-                  "LNa_L", "KCg-m_R", "E_L", "E_R"],
-        superclass=["cb_motor"] * 2 + ["cb_intrinsic"] * 15))
+                  "LNa_L", "KCg-m_R", "E_L", "E_R", "M_lPNy_R"],
+        superclass=["cb_motor"] * 2 + ["cb_intrinsic"] * 16))
     nrn.loc[nrn.bodyId == 61, "type"] = "M_lPNx"
     E = pd.DataFrame(dict(
-        pre=[10, 20, 30, 40, 50, 2, 21, 11, 60, 61, 70, 60, 60, 60, 99, 10, 24],
-        post=[1, 1, 1, 1, 1, 1, 2, 3, 70, 60, 60, 81, 80, 82, 60, 22, 1],
-        weight=[100, 30, 7, 9, 11, 6, 40, 5, 20, 8, 12, 50, 9, 6, 5, 5, 8],
-        sign=[1, -1, -1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, 1, 1, 1, 1],
+        pre=[10, 20, 30, 40, 50, 2, 21, 11, 60, 61, 70, 60, 60, 60, 99, 10, 24, 62],
+        post=[1, 1, 1, 1, 1, 1, 2, 3, 70, 60, 60, 81, 80, 82, 60, 22, 1, 60],
+        weight=[100, 30, 7, 9, 11, 6, 40, 5, 20, 8, 12, 50, 9, 6, 5, 5, 8, 7],
+        sign=[1, -1, -1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, 1, 1, 1, 1, 1],
         nt=["acetylcholine", "gaba", "gaba", "acetylcholine", "acetylcholine", "acetylcholine", "acetylcholine",
             "gaba", "acetylcholine", "gaba", "acetylcholine", "acetylcholine", "acetylcholine", "acetylcholine",
-            "acetylcholine", "acetylcholine", "acetylcholine"]))
+            "acetylcholine", "acetylcholine", "acetylcholine", "acetylcholine"]))
     checks = []
     m, log = mirror_mn9(E, nrn, 1, 2)
     into_R = m[m.post == 2].set_index("pre")["weight"].to_dict()
@@ -781,14 +777,18 @@ def selftest():
     checks.append(("mirror leaves MN9_L", a.equals(b)))
     n2, nlog = normalise_mn9(E, 1, 2)
     checks.append(("normalise", abs(nlog["factor"] - 171 / 40) < 1e-12 and abs(nlog["mn9_R_in_after"] - 171) < 1e-9))
-    ct = dict(ALPN={"PNu", "M_lPNx"}, ALLN={"LNa"}, Kenyon_Cell={"KCg-m"})
-    roi = pd.Series({81: "LH(R)", 82: "CA(R)", 80: "gL(R)", 70: "AL(R)", 60: "AL(R)", 61: "AL(R)"})
+    ct = dict(ALPN={"PNu", "M_lPNx", "M_lPNy"}, ALLN={"LNa"}, Kenyon_Cell={"KCg-m"})
+    roi = pd.Series({81: "LH(R)", 82: "CA(R)", 80: "gL(R)", 70: "AL(R)", 60: "AL(R)", 61: "AL(R)", 62: "AL(R)"})
     got = {c: sorted(map(tuple, E.loc[cut_mask(E, nrn, roi, c, ct).fillna(False).to_numpy(), ["pre", "post"]].values.tolist()))
            for c in CUTS}
-    want = dict(lh=[(60, 81)], lhmb=[(60, 80), (60, 81), (60, 82)], i=[(70, 60)], ii=[(60, 70)])
+    # (ii): every cholinergic ALPN onto a PN or LN: 60 -> 70 and the multiglomerular 62 -> 60; 61 (M_, GABA) is not cut
+    want = dict(lh=[(60, 81)], lhmb=[(60, 80), (60, 81), (60, 82)], i=[(70, 60)], ii=[(60, 70), (62, 60)])
     checks.append(("cuts", got == want))
     cl, clog = apply_cut(E, nrn, roi, "lh", ct)     # 81's only edge is 60 -> 81: it keeps a zero-weight self-edge
     ph = cl[(cl.pre == 81) & (cl.post == 81)]
+    _, ii = apply_cut(E, nrn, roi, "ii", ct)
+    checks.append(("cut (ii) shares", ii["removed_synapses"] == 27.0 and ii["from_m_mz_cb_types"]["synapses"] == 7.0
+                   and ii["from_plus_types"]["synapses"] == 0.0))
     checks.append(("cut keeps the cell set", (set(cl.pre) | set(cl.post)) == (set(E.pre) | set(E.post))
                    and len(ph) == 1 and float(ph.weight.iloc[0]) == 0.0 and clog["placeholders"] == 1))
     bad = [n for n, ok in checks if not ok]

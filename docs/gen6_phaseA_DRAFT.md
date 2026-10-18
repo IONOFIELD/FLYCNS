@@ -76,7 +76,7 @@ to later runs.
 - **A4-AL, direct test of the in-AL loop** (so the third reading is tested, not inferred by elimination). Drive
   (a), single cuts inside the AL:
   - (i) outputs of cholinergic AL local neurons removed;
-  - (ii) cholinergic PN -> PN and PN -> LN edges removed, from ALPN types not starting M_, MZ_ or CB (PN -> LH kept).
+  - (ii) PN -> PN and PN -> LN edges of every cholinergic ALPN type removed (PN -> LH kept).
   These come from the signing audit, which found that the only excitatory recurrence left in AL and LH runs
   through cholinergic cells.
 - **Secondary:** under drive (c), whether antennal lobe plus lateral horn still hold at least twice their
@@ -258,8 +258,8 @@ wins.
   {CA(L), CA(R)}). Kenyon cells are mostly lobe-dominated, so a calyx-ROI rule alone would miss them.
 - Logged: AL PN out-weight by post `dominant_roi`, so what the cuts keep (for example SLP) is visible.
 - Cut (i): remove every out-edge of cells with type in ALLN and edge `nt` == "acetylcholine".
-- Cut (ii), **changed:** remove edges with pre a cholinergic ALPN type not starting M_, MZ_ or CB (renamed 18
-  October; it was called "uniglomerular") **with
+- Cut (ii), **changed twice (18 October):** remove edges with pre of any ALPN type (it was "uniglomerular", then
+  "not starting M_, MZ_ or CB"; see the decisions above) **with
   `nt` == "acetylcholine"**, and post in ALPN or ALLN. Reason: the cut tests excitatory PN recurrence; without
   the transmitter condition it would also remove the GABAergic uniglomerular vPNs (for example DA1_vPN).
 
@@ -270,10 +270,12 @@ wins.
   On the pinned data a cut that removes no edge refuses to run.
 - **Decided (Jayson, 18 October): the 16 "+" PN types stay in cut (ii).** They have two glomeruli in their name
   (for example VP1m+VP5_ilPN, VP2+Z_lvPN); a cholinergic PN covering two glomeruli is still part of the
-  excitatory recurrence the cut tests. The rule is renamed to say what the code does: **cut (ii) removes edges
-  from cholinergic ALPN types not starting M_, MZ_ or CB** (no longer "uniglomerular"). The synapses removed
-  from the "+" types are reported (a description, not an arm). The preflight also reports, as a description,
-  what the cut leaves in place: cholinergic M_/MZ_/CB PN -> PN/LN synapses.
+  excitatory recurrence the cut tests.
+- **Decided (Jayson, 18 October, same logic): the cholinergic M_/MZ_/CB (multiglomerular mlACT) PN types go in
+  too.** **Cut (ii) removes every cholinergic ALPN type's edges onto ALPN and ALLN cells** ("all cholinergic ALPN
+  types"; the GABAergic M_vPN and other inhibitory PNs are not cut). The synapses removed from the "+" types and
+  from the M_/MZ_/CB types are reported next to each other in every cut (ii) arm and in the preflight, as
+  descriptions, not arms.
 
 **B3. The mirror.** Adopted, with one change to the sign.
 - A function on `load_graph`'s returned edges (signed, at or above the floor), applied before CNSModel, in
