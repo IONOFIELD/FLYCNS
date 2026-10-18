@@ -1,0 +1,35 @@
+--- sw_male_flycns_blind_w040
+[phase1b] sw_male_flycns_blind_w040 7/10 (268 s)
+[phase1b] sw_male_flycns_blind_w040 8/10 (296 s)
+[phase1b] sw_male_flycns_blind_w040 9/10 (321 s)
+[phase1b] sw_male_flycns_blind_w040 10/10 (347 s)
+[phase1b] sw_male_flycns_blind_w040: 10 runs in 346.9 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\sw_male_flycns_blind_w040.json
+
+--- sw_male_flycns_blind_w050
+[phase1b] sw_male_flycns_blind_w050 7/10 (274 s)
+[phase1b] sw_male_flycns_blind_w050 8/10 (302 s)
+[phase1b] sw_male_flycns_blind_w050 9/10 (329 s)
+[phase1b] sw_male_flycns_blind_w050 10/10 (355 s)
+[phase1b] sw_male_flycns_blind_w050: 10 runs in 355.5 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\sw_male_flycns_blind_w050.json
+
+--- sw_male_flycns_blind_w060
+[phase1b] sw_male_flycns_blind_w060 7/10 (209 s)
+[phase1b] sw_male_flycns_blind_w060 8/10 (238 s)
+[phase1b] sw_male_flycns_blind_w060 9/10 (267 s)
+[phase1b] sw_male_flycns_blind_w060 10/10 (298 s)
+[phase1b] sw_male_flycns_blind_w060: 10 runs in 297.9 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\sw_male_flycns_blind_w060.json
+
+--- sw_male_flycns_blind_w080
+[phase1b] sw_male_flycns_blind_w080 7/10 (218 s)
+[phase1b] sw_male_flycns_blind_w080 8/10 (249 s)
+[phase1b] sw_male_flycns_blind_w080 9/10 (279 s)
+[phase1b] sw_male_flycns_blind_w080 10/10 (310 s)
+[phase1b] sw_male_flycns_blind_w080: 10 runs in 310.1 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\sw_male_flycns_blind_w080.json
+
+--- sw_male_flycns_blind_w100
+[phase1b] sw_male_flycns_blind_w100 7/10 (217 s)
+[phase1b] sw_male_flycns_blind_w100 8/10 (247 s)
+[phase1b] sw_male_flycns_blind_w100 9/10 (277 s)
+[phase1b] sw_male_flycns_blind_w100 10/10 (308 s)
+[phase1b] sw_male_flycns_blind_w100: 10 runs in 307.7 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\sw_male_flycns_blind_w100.json
+
