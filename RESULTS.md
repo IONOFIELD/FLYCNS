@@ -1,6 +1,6 @@
 # flycns: results note
 
-*Status v0.12, registration generation 5 (Shiu-compatible options, off by default; phase 1: the simulator reproduces Shiu et al. 2024's model), 12 October 2026. A working note, not a manuscript. Every number is reproducible
+*Status v0.13, registration generation 5 (Shiu-compatible options, off by default; phase 1: the simulator reproduces Shiu et al. 2024's model; phase 1b: no synaptic scale is both functional and stable on the male data), 18 October 2026. A working note, not a manuscript. Every number is reproducible
 from the scripts named beside it; run `./fly` and use the menu. Where the model disagrees with a
 measurement, the model is presumed wrong.*
 
@@ -34,6 +34,81 @@ every check re-registered before run 14 (below).
 
 (Earlier summaries that described the auditory result as "reproducing published physiology" are
 superseded by its registered tests.)
+
+---
+
+## 18 October 2026: generation 5, phase 1b: w_scale settles the male zero; no synaptic scale is both functional and stable (runs 29-32)
+
+**The question.** Phase 1 showed that w_scale 0.4, the value the blind rule picked for quietness, silences
+the only circuit with ground truth (sugar -> MN9) on the female brain. Phase 1b asked three things on the
+male data: is w_scale the one setting that silences MN9 there too; is the male MN9 response (M1) specific to
+the real wiring; and is there any synaptic scale at which the male network responds to sugar without running
+away? Registered at `6e50cba` (criteria `1710398`, model `b4e59cc8dcc2`), run once (cloud runs 29-32, 13 jobs,
+50 arms), scored once (`e38e5d4`). The generation-6 decision rule (`docs/gen6_rule.md`) and its amendments
+(`docs/gen6_rule_v2.md`, `d808f5b`) were committed before scoring. The result branches existed 12 to 67
+minutes before the amendments were committed; that the amendments were written without reading results rests
+on the session record, which git cannot show. An independent reviewer recomputed every number below from the
+raw arm files and found no differences.
+
+**Registered checks** (`results/shiu2024_phase1b/phase1b.json`):
+
+| check | result | 95% interval | verdict |
+|---|---|---|---|
+| ML0: M1 replicated (male, Shiu's settings) | MN9 22.8 Hz | 21.0 to 24.7 | PASS |
+| ML4: w_scale 0.4 alone | MN9 0 Hz, 0 of 30 trials | 0 to 0 | PASS (silent) |
+| every other single setting (reset, stimulation, adaptation, Euler, amines dropped) | 13.8 / 24.1 / 11.9 / 24.7 / 21.6 Hz | each above 0.5 | PASS (5 of 5) |
+| MS1: beats the weight-permutation null | the null network is silent (0.010 vs 1.237 Hz) | | UNRESOLVED |
+| MS2: beats the degree-corrected rewiring null | beats 19 of 20 draws; one draw 28.0 Hz | | UNRESOLVED |
+
+**w_scale alone accounts for the male MN9 zero, as on the female.** Specificity is undecided: the weight
+permutation silences the whole network and so cannot test anything, and against the rewiring null the real
+wiring is above the null median but not above every draw. MN9 does not track network activity in either the
+real or the null networks (equally active null draws give 0 Hz), so this is a genuine open question, not a
+near pass. It stays UNRESOLVED; the registered bar is not lowered after the fact.
+
+**The male MN9 response is one cell, and the dataset explains why.** Laterality (|L - R| / (L + R)) is 1.0 in
+all 30 trials: cell 10331 (left) fires 45.6 Hz, cell 16949 (right) 0.07 Hz, under a symmetric drive (17 + 17
+LB3b/c cells). On FlyWire both cells fire (laterality 0.14 to 0.18). The MaleCNS Cell Type Explorer lists
+6,358 input synapses for MN9_L and 633 for MN9_R; the MaleCNS paper notes segmentation issues for some motor
+neurons. This was written into the amendments before scoring. A reconstruction artefact is the likely cause;
+it is not verified.
+
+**No synaptic scale is both functional and stable** (`results/gen6_screen/screen_v2.json`,
+`fit/gen6_screen_v2.py`; flycns settings, male data):
+
+| w_scale | MN9 under sugar (FUNCTION) | sugar trials self-sustained | blind-drive trials self-sustained | blind-drive rate, Hz |
+|---|---|---|---|---|
+| 0.4 | 0 Hz (fail) | 0 of 10 | 1 of 10 | 0.01 to 0.32 |
+| 0.5 | 0.05 Hz (fail) | 0 of 10 | 8 of 10 | 1.15 to 2.27 |
+| 0.6 | 1.45 Hz, 0.60 to 2.45 (pass) | 3 of 10 | 10 of 10 | 2.66 to 3.20 |
+| 0.8 | 7.45 Hz (pass) | 10 of 10 | 10 of 10 | 4.71 to 4.98 |
+| 1.0 | 45.6 Hz (pass) | 10 of 10 | 10 of 10 | 6.73 to 6.96 |
+
+"Self-sustained": activity in the last 250 ms after the drive stops is at least 10% of the rate during it.
+MN9 responds only where the network also reverberates: at 0.6 the pass comes from the three runaway trials.
+The current default, 0.4, is itself not stable (one blind-drive trial self-sustains, not borderline). The
+reverberation is not concentrated in one region (the largest share is the right antennal lobe, 16%), so the
+rule's outcome is **C**: no scale works, and the next step is the reset rule, then, if needed, a different
+synapse model. Shiu's own settings on the male data run away too (from 0.4 under the blind drive); FlyWire
+never self-sustains up to 1.0 under either drive. **The instability belongs to the male data, not to flycns's
+options.**
+
+**Two observations, registered as hypotheses for the next phase, not claims:**
+- The blind-drive reverberation sits in the antennal lobe and lateral horn (about 55% of the tail) although
+  only 17% of the drive enters the antennal lobe. The lateral horn is fed forward from the antennal lobe
+  (excitatory and inhibitory projection neurons), with no known excitatory return, so the likelier reading is
+  activity that sustains itself inside the antennal lobe and is relayed on. Under sugar the tail sits in the
+  ventral nerve cord (89%).
+- 38% of the blind drive is photoreceptors, which are histaminergic and inhibitory: the quietness rule that
+  chose 0.4 in generation 3 was scored under a drive more than a third inhibitory.
+
+**Predictions logged before the run:** w_scale 0.4 silences male MN9 (correct); the v-only reset runs away
+above 100 Hz (wrong: MN9 13.8 Hz, though the whole-CNS rate rises about six-fold); M1 beats both nulls
+(unresolved); Outcome B in the nerve cord (wrong: outcome C); laterality at least 0.8 (correct, 1.0).
+
+**Next** (`docs/gen6_phaseA_DRAFT.md`): the reset rule crossed with an MN9_R input correction, scored on
+stability; a 100-draw rewiring null with its bar set in advance; a non-olfactory blind drive; and a FUNCTION
+criterion that requires MN9 to respond without the network running away.
 
 ---
 
@@ -1395,7 +1470,7 @@ implicates. Gap junctions appear only where documented.
 
 Model class, parameters and the feeding validation design: Shiu et al. 2024 (Nature 634:210-219).
 Escape physiology: Tanouye & Wyman 1980, Allen et al. 2006, von Reyn et al. 2014 and 2017, Ache et
-al. 2019, Augustin et al. 2019. Auditory-GF synapse: Pezier & Blagburn 2013, Yorozu et al. 2009,
+al. 2019, Augustin et al. 2019. Auditory-GF synapse: Pezier et al. 2014 and 2016, Yorozu et al. 2009,
 Tootoonian et al. 2012, Kamikouchi et al. 2009, Vaughan et al. 2014. Loom tuning: Turner, Krieger,
 Pang & Clandinin 2022. Peptidergic modulation: Krieger 2023. Transmitter prediction: Eckstein et
 al. 2024.
