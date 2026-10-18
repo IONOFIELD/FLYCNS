@@ -1,8 +1,12 @@
 # Generation 7: change of synapse model (DRAFT plan, not registered)
 
-Status: DRAFT, 18 October 2026, written **while gen-6 phase A (runs 33-36) is still running and before any of
-its results exist**. The commit time of this file precedes every `rerun-out/33..36/*` result push, so its
-design is provably independent of phase A's outcome. It is conditional: it applies if phase A ends in outcome C
+Status: DRAFT, 18 October 2026, committed at 09:19 PDT (fb1c47b) while gen-6 phase A (runs 33-36) was still
+running. **Correction (09:24 PDT): the first phase A arm results had already been pushed to GitHub at 09:03 PDT
+(`rerun-out/34/pa-c3-sugar`), so this file does NOT provably predate the results.** No phase A result had been
+opened or scored when it was written: the plan was drafted from the literature review and phase 1b alone, and
+no phase A number appears in it. That cannot be proven from git (the same gap as Phase 1b's rule v2). For that
+reason the design below is frozen as written: any change made after phase A is scored goes in a new dated
+file that says what it changed and why. It is conditional: it applies if phase A ends in outcome C
 (no deciding cell viable; prediction Q5), which is the registered trigger in `docs/gen6_phaseA_DRAFT.md`
 ("the next phase is a change of synapse model (conductance-based), in its own plan"). If phase A adopts the
 reset or the MN9_R mirror, this plan is revised before anything is registered, and the revision is a new dated
