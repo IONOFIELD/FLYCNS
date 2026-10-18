@@ -1,0 +1,35 @@
+--- A4_drive_c_w040
+[phaseA] A4_drive_c_w040 7/10 (298 s)
+[phaseA] A4_drive_c_w040 8/10 (329 s)
+[phaseA] A4_drive_c_w040 9/10 (360 s)
+[phaseA] A4_drive_c_w040 10/10 (391 s)
+[phaseA] A4_drive_c_w040: 10 runs in 390.9 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\A4_drive_c_w040.json
+
+--- A4_drive_c_w050
+[phaseA] A4_drive_c_w050 7/10 (297 s)
+[phaseA] A4_drive_c_w050 8/10 (328 s)
+[phaseA] A4_drive_c_w050 9/10 (359 s)
+[phaseA] A4_drive_c_w050 10/10 (392 s)
+[phaseA] A4_drive_c_w050: 10 runs in 391.7 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\A4_drive_c_w050.json
+
+--- A4_drive_c_w060
+[phaseA] A4_drive_c_w060 7/10 (236 s)
+[phaseA] A4_drive_c_w060 8/10 (268 s)
+[phaseA] A4_drive_c_w060 9/10 (305 s)
+[phaseA] A4_drive_c_w060 10/10 (337 s)
+[phaseA] A4_drive_c_w060: 10 runs in 337.4 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\A4_drive_c_w060.json
+
+--- A4_drive_c_w080
+[phaseA] A4_drive_c_w080 7/10 (255 s)
+[phaseA] A4_drive_c_w080 8/10 (292 s)
+[phaseA] A4_drive_c_w080 9/10 (329 s)
+[phaseA] A4_drive_c_w080 10/10 (362 s)
+[phaseA] A4_drive_c_w080: 10 runs in 362.0 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\A4_drive_c_w080.json
+
+--- A4_drive_c_w100
+[phaseA] A4_drive_c_w100 7/10 (239 s)
+[phaseA] A4_drive_c_w100 8/10 (272 s)
+[phaseA] A4_drive_c_w100 9/10 (305 s)
+[phaseA] A4_drive_c_w100 10/10 (337 s)
+[phaseA] A4_drive_c_w100: 10 runs in 336.8 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\A4_drive_c_w100.json
+
