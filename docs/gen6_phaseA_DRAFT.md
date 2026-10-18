@@ -125,7 +125,7 @@ to later runs.
 | Q2 | The MN9_R correction brings male laterality below 0.8 | high |
 | Q3 | A3 still UNRESOLVED at 100 draws (the real value sits inside the null's upper tail) | moderate |
 | Q4 | H4 holds: the antennal-lobe tail persists after the projection cut, LH-only and LH + MB alike. Reason: the local audit puts the loop inside the AL; LH -> LH (0.34 excitatory) and LH -> AL (0.08) are net inhibitory. "Persists" = the cut does not stop it by the M1 rule (W*). Signed off by Jayson, 18 Oct. | high |
-| Q6 | At least one in-AL cut ((i) or (ii)) stops it by the M1 rule (blind STABILITY (b) 0/10 and (c) PASS at some w in W*). Reason for moderate, not high: AL -> AL is 84% excitatory and the two cuts remove its two largest excitatory sources (ACh LNs 586,857; ACh PNs 495,023 synapses, corrected list), but (b) and (c) are whole-network tests. In Phase 1b's blind self-sustained trials, AL + LH carry 61% of the tail at w 0.5, 56% at 0.6, 43% at 0.8 and 34% at 1.0 (VNC 7-14%). Whether the rest is relayed from the AL or sustains itself is not known, so a cut can end the AL loop and still fail (b). Raised from low by Jayson, 18 Oct. | moderate |
+| Q6 | At least one in-AL cut ((i) or (ii)) stops it by the M1 rule (blind STABILITY (b) 0/10 and (c) PASS at some w in W*). Reason for moderate, not high: AL -> AL is 84% excitatory and the two cuts remove its two largest excitatory sources (ACh LNs 587,339; ACh PNs 495,371 synapses, final list), but (b) and (c) are whole-network tests. In Phase 1b's blind self-sustained trials, AL + LH carry 61% of the tail at w 0.5, 56% at 0.6, 43% at 0.8 and 34% at 1.0 (VNC 7-14%). Whether the rest is relayed from the AL or sustains itself is not known, so a cut can end the AL loop and still fail (b). Raised from low by Jayson, 18 Oct. | moderate |
 | Q5 | No cell is viable, so the outcome stays C | moderate |
 
 ## Signing audit (Grok, 18 October 2026), checked against the code
@@ -159,9 +159,10 @@ to later runs.
     is not supported by the wiring. The LH tail is most likely relayed feed-forward from the AL.
   - The in-AL recurrence is among central-brain intrinsic cells (PNs and LNs): 1,097,279 excitatory vs
     326,910 inhibitory. By sender: cholinergic ALLNs 586,857; cholinergic ALPNs 495,371; all ALLN GABA 337,755.
-    **Recomputed on the corrected class list (preflight, `al_to_al_by_sender`, 18 October):** cholinergic ALLNs
-    586,857 (unchanged); cholinergic ALPNs 495,023 (was 495,371); ALLN GABA 337,550 (was 337,755); ALLN
-    glutamate 41,117; other (sensory and unclassed) cholinergic 1,200,983. The audit's conclusions stand. The
+    **Recomputed on the final class list (preflight on 64279cb, `al_to_al_by_sender`, 18 October):**
+    cholinergic ALLNs 587,339; cholinergic ALPNs 495,371; ALLN GABA 337,755; ALLN glutamate 41,117; other
+    (sensory and unclassed) cholinergic 1,200,153. (The intermediate 177/76/14 list gave 586,857 / 495,023 /
+    337,550.) The audit's conclusions stand. The
     region-level flows in the table above do not depend on the class list.
   - Sensory cells (2,730 AL-dominant, nearly all cholinergic) send 1,139,291 excitatory synapses, almost all
     feed-forward onto intrinsic cells (1,050,448). Sensory -> sensory is 81,456, and input onto sensory cells
@@ -446,5 +447,9 @@ output is kept with the registration as context.
    - mi4: the report carries the "A4 describes gen-5 dynamics" caveat when B1 adopts v-and-g.
    - mi7: the self-sustained rule, the A3 statistic and the pair-index formula are written into the criteria.
    - mi8: a missing arm refuses scoring (fails safe, never PASS); stated in the criteria.
-9. **Rerun the preflight** on the corrected list. Expected `from_m_mz_cb_types.types` 47 -> 49 and a
-   `mirror.placeholders` count (0 if no MN9_R-only cell).
+9. ~~Rerun the preflight~~: done on 64279cb, final list 180/79/15 (`results/gen6_phaseA/preflight.json`,
+   replaces the earlier run). Every type found (ALPN 180 / 682 cells, ALLN 79 / 399, Kenyon_Cell 15 / 4,064).
+   Mirror: 5,651 (exc 2,805, inh 2,846) onto MN9_R, the same split as MN9_L's input; 0 placeholders; 1 P' cell
+   with no signed output; 170,175 cells before and after. Cuts, synapses removed (placeholders): LH 413,873 (5);
+   LH + MB 801,529 (7); (i) 588,606 (6); (ii) 473,474 (2), of which "+" types 36,687 (7.7%, 15 types) and
+   M_/MZ_/CB types 49,606 (10.5%, **49 types**, as Grok predicted). Drives unchanged: (b) 879 kept, (c) 619.
