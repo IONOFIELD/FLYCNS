@@ -63,6 +63,11 @@ ALIVE_FRACTION = 0.1          # benchmarks/null_distribution.py: null median who
 BIN_MS = 50
 RESPONDS = 0.5                # Hz, M1's registered band: "responds" = interval above 0.5 Hz (lower edge exclusive)
 GRID_W = [0.4, 0.5, 0.6, 0.8, 1.0]
+LI_HOLD = 0.8                 # gen-6 rule: median MN9 laterality index at or above this holds w_scale
+# Outcome B grouping (docs/gen6_rule.md): every VNC neuropil, every side, is ONE group "VNC". A label is VNC if
+# the part before its first "(" is one of the MANC neuropil families below. Every other label keeps its own
+# name and is never VNC: the neck connective, brain and optic-lobe neuropils, nerves, "?" and unassigned.
+VNC_STEMS = ("LegNp", "Ov", "mVAC", "WTct", "HTct", "NTct", "IntTct", "LTct", "ANm")
 MALE_SUGAR = ["LB3b", "LB3c"]  # M1's sugar set (phase 1): every cell of both types
 SUGAR_HZ, BLIND_HZ = 100.0, 20.0
 # the blind rule's exclusions, copied from fit/select_wscale.py (importing it would run the selection)
@@ -211,7 +216,24 @@ CRITERIA = dict(
         checks={"ML0_responds_maxcell": dict(band=[RESPONDS, None], arm="ML0_m1"),
                 "ML_wscale04_silent_maxcell": dict(band=[None, RESPONDS], arm="ML4_wscale04"),
                 "MS1_weightperm_specific_maxcell": dict(rule="as MS1, on the larger cell", arm="null_weightperm"),
-                "MS2_degree_corrected_specific_maxcell": dict(rule="as MS2, on the larger cell", arm="null_dc")}),
+                "MS2_degree_corrected_specific_maxcell": dict(rule="as MS2, on the larger cell", arm="null_dc")},
+        laterality=dict(
+            statistic=("per trial, LI = (max - min) / (max + min) over the MN9 cells' rates; undefined (not 0) when "
+                       "no MN9 cell fires; each cell's bodyId and soma side recorded (mn9_cells, mn9_sides)"),
+            reported=("median LI with a 95% bootstrap interval over the trials where it is defined, and that count: "
+                      "for every ladder arm, for both null arms (every draw), and for every sugar sweep arm"),
+            why=("the male drive is two-sided and symmetric (LB3b/LB3c, both sides) and the connectome paths give "
+                 "the two MN9 cells roughly equal input, yet run 22 split about 300:1; in Shiu et al.'s model, "
+                 "reproduced in phase 1, both cells fire (68.3 and 50.4 Hz)"),
+            gen6_use=(f"docs/gen6_rule.md: a median LI >= {LI_HOLD} at the candidate scale holds w_scale until a "
+                      "one-side-at-a-time run explains the asymmetry; the two-cell mean stays the FUNCTION statistic"))),
+    outcome_b_grouping=dict(
+        rule=("for gen-6 Outcome B, the dominant-neuropil groups with every VNC neuropil merged into one group 'VNC', "
+              "left and right together: a label is VNC if the part before its first '(' is one of "
+              f"{', '.join(VNC_STEMS)}. Every other label keeps its own name and is never VNC: the neck connective, "
+              "brain and optic-lobe neuropils, nerves, '?' and unassigned"),
+        audit=("phase1b.json reports every label and its group (tail_groups.label_map); a VNC neuropil found outside "
+               "the list after the run is fixed only by a new registration, never by re-scoring")),
     prediction=("from the female ladder (phase 1): ML_wscale04_silent PASSES and ML_single_switches_respond PASSES. "
                 "ML7_amines_dropped was not on the female ladder (FlyWire's sign column fixes amines); it is predicted "
                 "to respond because amines carry about 1.6% of the signed synapses"),
@@ -360,12 +382,33 @@ def _mn9(m, sp, seconds, data):
         contra = float((sp.bodyId == MN9_CONTRA).sum() / seconds)
         ipsi = float((sp.bodyId == MN9_IPSI).sum() / seconds)
         return dict(mn9_contra_hz=contra, mn9_ipsi_hz=ipsi, mn9_cells=[MN9_CONTRA, MN9_IPSI],
-                    mn9_per_cell_hz=[contra, ipsi], mn9_max_cell_hz=max(contra, ipsi))
+                    mn9_sides=["contra", "ipsi"], mn9_per_cell_hz=[contra, ipsi], mn9_max_cell_hz=max(contra, ipsi),
+                    mn9_li=_li([contra, ipsi]))
     cells = sorted(int(b) for b in m.meta.index[m.meta["type"] == "MN9"] if b in m.lif_index.index)
+    side = m.meta["somaSide"] if "somaSide" in m.meta else None
+    sides = [str(side.get(b)) if side is not None and isinstance(side.get(b), str) else "?" for b in cells]
     per = [float((sp.bodyId == b).sum() / seconds) for b in cells]
     nan = float("nan")
-    return dict(mn9_hz=float(np.mean(per)) if per else nan, mn9_cells=cells, mn9_per_cell_hz=per,
-                mn9_max_cell_hz=float(max(per)) if per else nan)
+    return dict(mn9_hz=float(np.mean(per)) if per else nan, mn9_cells=cells, mn9_sides=sides, mn9_per_cell_hz=per,
+                mn9_max_cell_hz=float(max(per)) if per else nan, mn9_li=_li(per))
+
+
+def _li(per):
+    """MN9 laterality index of one trial, (max - min) / (max + min) over the cells; None if no cell fired
+    (undefined, not 0). 0 = both cells equal, 1 = one cell only."""
+    if len(per) < 2 or max(per) + min(per) <= 0:
+        return None
+    return float((max(per) - min(per)) / (max(per) + min(per)))
+
+
+def _li_summary(trials):
+    """Median laterality index over the trials where it is defined, its 95% interval, and the count."""
+    li = np.array([t["mn9_li"] for t in trials if t.get("mn9_li") is not None], dtype=float)
+    if not len(li):
+        return dict(median=None, ci95=None, n_defined=0, n_trials=len(trials), at_or_above_hold=None)
+    e, lo, hi = stats.bootstrap(li, stat=np.median)
+    return dict(median=e, ci95=[lo, hi], n_defined=int(len(li)), n_trials=len(trials),
+                at_or_above_hold=bool(e >= LI_HOLD), values=li.tolist())
 
 
 def run_ladder_trial(m, rates, data, exclude):
@@ -578,6 +621,19 @@ def _responds(rec, note):
     return stats.scored(e, lo, hi, low=RESPONDS, strict=True, n=len(x), note=note)
 
 
+def vnc_group(label):
+    """Outcome B grouping: "VNC" for every VNC neuropil label (VNC_STEMS, any side), else the label itself."""
+    return "VNC" if str(label).split("(")[0] in VNC_STEMS else str(label)
+
+
+def _merge(by_label, fn):
+    out = {}
+    for g, v in by_label.items():
+        k = fn(g)
+        out[k] = [a + b for a, b in zip(out.get(k, [0] * len(v)), v)] if k in out else list(v)
+    return out
+
+
 def _self_sustained_without(trial, key, group, sizes):
     """The self-sustained rule recomputed with one group's cells left out of both windows (gen-6 Outcome B)."""
     n = sum(sizes.values()) - sizes.get(group, 0)
@@ -590,14 +646,29 @@ def _self_sustained_without(trial, key, group, sizes):
 
 
 def _tail_groups(r):
-    """Per arm: the group (dominant neuropil on MaleCNS, else superclass) with the largest share of tail spikes
-    over the self-sustained trials, that share, and how many trials stay self-sustained without it."""
+    """Per arm, for gen-6 Outcome B: the group with the largest share of tail spikes over the self-sustained
+    trials, that share, and how many trials stay self-sustained without it. On MaleCNS the groups are the
+    dominant neuropils with every VNC neuropil merged into one group "VNC" (vnc_group); the label -> group
+    map is reported so a VNC label missing from VNC_STEMS is visible. FlyWire: superclass."""
     sizes_all = r.get("group_sizes") or {}
     key = "neuropil" if "neuropil" in sizes_all else "superclass"
+    if key == "neuropil":       # merge VNC labels in the sizes and in every trial's per-group counts
+        labels = sorted(sizes_all["neuropil"])
+        label_map = {g: vnc_group(g) for g in labels}
+        sizes_m = {}
+        for g, n in sizes_all["neuropil"].items():
+            sizes_m[label_map[g]] = sizes_m.get(label_map[g], 0) + n
+        r = dict(r, group_sizes=dict(sizes_all, vnc_merged=sizes_m), trials=[
+            dict(t, tail_by_vnc_merged=_merge(t["tail_by_neuropil"], vnc_group),
+                 drive_by_vnc_merged=_merge(t["drive_by_neuropil"], vnc_group))
+            for t in r["trials"] if "tail_by_neuropil" in t])
+        sizes_all, key = r["group_sizes"], "vnc_merged"
+    else:
+        label_map = None
     tr = [t for t in r["trials"] if f"tail_by_{key}" in t]
     ss = [t for t in tr if t["self_sustained"]]
     if not ss or key not in sizes_all:
-        return dict(key=key, top_group=None, top_share=None, self_sustained_without_top=None)
+        return dict(key=key, top_group=None, top_share=None, self_sustained_without_top=None, label_map=label_map)
     tot = {}
     for t in ss:
         for g, (spk, _, _) in t[f"tail_by_{key}"].items():
@@ -607,7 +678,8 @@ def _tail_groups(r):
     without = [_self_sustained_without(t, key, top, sizes_all[key]) for t in tr]
     return dict(key=key, top_group=top, top_share=(tot[top] / allspk) if allspk else None,
                 self_sustained_without_top=int(sum(bool(x) for x in without)),
-                tail_spikes_by_group={g: int(v) for g, v in sorted(tot.items(), key=lambda kv: -kv[1])})
+                tail_spikes_by_group={g: int(v) for g, v in sorted(tot.items(), key=lambda kv: -kv[1])},
+                label_map=label_map)
 
 
 def _sweep_summary(recs):
@@ -628,6 +700,7 @@ def _sweep_summary(recs):
                                  self_sustained_trials=int(sum(ss)), trials=len(tr),
                                  mn9=[t.get("mn9_hz", t.get("mn9_contra_hz")) for t in tr] if drive == "sugar" else None,
                                  mn9_max_cell=[t.get("mn9_max_cell_hz") for t in tr] if drive == "sugar" else None,
+                                 mn9_li=_li_summary(tr) if drive == "sugar" else None,
                                  tail_groups=_tail_groups(r)))
             dep = [x["w_scale"] for x in rows if x["self_sustained_trials"] == 0 and x["cns_rate_hz"] < 1.0]
             run = [x["w_scale"] for x in rows if x["self_sustained_trials"] > x["trials"] / 2]
@@ -683,6 +756,11 @@ def score(repo):
         alive = real_cns > 0 and null_cns >= ALIVE_FRACTION * real_cns
         S[check] = stats.null_percentile(real_max, _col(nulls[arm], "mn9_max_cell_hz").tolist(), null_alive=alive,
                                          note="real = ML0's mean of the larger MN9 cell")
+    # pre-registered laterality readout (CRITERIA["secondary"]["laterality"]): reported, not a verdict here;
+    # the gen-6 rule holds w_scale if the median is at or above LI_HOLD at its candidate scale
+    LI = dict(hold_threshold=LI_HOLD, ladder={a: _li_summary(r["trials"]) for a, r in ladder.items()},
+              nulls={a: _li_summary(r["trials"]) for a, r in nulls.items()},
+              cells=dict(ids=ladder["ML0_m1"]["trials"][0]["mn9_cells"], sides=ladder["ML0_m1"]["trials"][0]["mn9_sides"]))
     v = {k: r["verdict"] for k, r in U.items()}
     lad = v["ML_wscale04_silent"], v["ML_single_switches_respond"]
     if lad == ("PASS", "PASS"):
@@ -723,7 +801,7 @@ def score(repo):
         sweep=_sweep_summary(sweep), sweep_missing=missing_sweep,
         wall_s={a: r["wall_s"] for a, r in {**ladder, **nulls, **sweep}.items()})
     report = dict(benchmark=LABEL, criteria=CRITERIA, uncertainty=U, checks={k: x == "PASS" for k, x in v.items()},
-                  secondary=S,
+                  secondary=S, laterality=LI,
                   ladder_outcome=ladder_outcome, specificity_outcome=spec_outcome, reported=reported,
                   registration=registry.stamp(REG), provenance=provenance())
     (OUT / "phase1b.json").write_text(json.dumps(report, indent=2, default=float), encoding="utf-8")
@@ -731,6 +809,9 @@ def score(repo):
         print(f"  {x:<10} {k}")
     for k, r in S.items():
         print(f"  {r['verdict']:<10} {k}   (secondary)")
+    m0 = LI["ladder"]["ML0_m1"]
+    print(f"  MN9 laterality, ML0: median {m0['median']} over {m0['n_defined']}/{m0['n_trials']} trials "
+          f"(hold at >= {LI_HOLD})")
     print(f"ladder: {ladder_outcome}\nspecificity: {spec_outcome}")
     for key, s in reported["sweep"].items():
         print(f"  {key:<24} drive-dependent up to {s['largest_drive_dependent']}; runaway from {s['smallest_runaway']}"

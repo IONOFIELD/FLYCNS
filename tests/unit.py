@@ -1307,6 +1307,26 @@ def t_phase1b_parts_match_rerun_jobs():
                 f"command mismatch: {bad_run}; shiu flag {sorted(shiu)} vs {sorted(ns['NEEDS_SHIU'])}")
 
 
+def t_phase1b_laterality_and_vnc_group():
+    """The phase-1b MN9 laterality index and the Outcome-B VNC grouping do what docs/gen6_rule.md says."""
+    src = (ROOT / "fit" / "shiu2024_phase1b.py").read_text(encoding="utf-8")
+    ns = {"__file__": str(ROOT / "fit" / "shiu2024_phase1b.py"), "__name__": "phase1b_li"}
+    exec(compile(src[:src.index("REG = registry.register(")], "fit/shiu2024_phase1b.py", "exec"), ns)
+    li, g, merge = ns["_li"], ns["vnc_group"], ns["_merge"]
+    li_ok = (li([0.0, 0.0]) is None and li([10.0, 10.0]) == 0.0 and li([42.8, 0.0]) == 1.0
+             and abs(li([42.8, 0.13]) - 42.67 / 42.93) < 1e-12 and li([5.0]) is None)
+    vnc = ["LegNp(T1)(L)", "LegNp(T3)(R)", "IntTct", "ANm", "WTct(UTct-T2)(L)", "HTct(UTct-T3)(R)",
+           "NTct(UTct-T1)(L)", "LTct", "Ov(L)", "mVAC(T2)(R)"]
+    other = ["CV", "NeckC", "GNG", "SMP(R)", "ME(R)", "LO(L)", "?", "", "ProNN(L)"]
+    grp_ok = all(g(x) == "VNC" for x in vnc) and all(g(x) == x for x in other)
+    m = merge({"LegNp(T1)(L)": [3, 1, 0.5], "ANm": [2, 2, 1.0], "GNG": [7, 3, 2.0]}, g)
+    merge_ok = m == {"VNC": [5, 3, 1.5], "GNG": [7, 3, 2.0]}
+    ok = li_ok and grp_ok and merge_ok
+    return ok, ("LI undefined when silent, 0 when equal, 1 when one-sided; VNC neuropils merge into one group, "
+                "neck connective, brain, optic lobe, nerves and '?' stay separate" if ok else
+                f"li {li_ok} grouping {grp_ok} merge {merge_ok} ({m})")
+
+
 def run_all():
     out = []
     tmp = Path(tempfile.mkdtemp(prefix="flycns_unit_"))
@@ -1356,6 +1376,7 @@ def run_all():
                          ("identity check is exact and complete", lambda: t_identity_check(tmp)),
                          ("phase-1 options, defaults unchanged", lambda: t_shiu_options(tmp)),
                          ("phase-1b parts are the rerun jobs", t_phase1b_parts_match_rerun_jobs),
+                         ("phase-1b laterality and VNC group", t_phase1b_laterality_and_vnc_group),
                          ("menu input guards", lambda: t_menu_guards(tmp)),
                          ("token file is private", lambda: t_token_private(tmp)),
                          ("messages use neutral wording", t_neutral_wording)]:

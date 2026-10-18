@@ -4,8 +4,9 @@ Status: DRAFT for review, 14 October 2026. Commit this file **before** `FLYCNS_R
 fit/shiu2024_phase1b.py`, so the Phase 1b registration's git commit contains it. Phase 1b's own registration
 says the generation-6 defaults are decided "in a separate registration"; this file is the rule that
 registration will implement. It is frozen once the Phase 1b registration is committed; after that a change is a
-new file (`gen6_rule_v2.md`) committed before the data it would be applied to. (Revised 17 October 2026, before
-registration, after the read-only audit of that date: reset held fixed, MN9 per-cell readout, Outcome B data.)
+new file (`gen6_rule_v2.md`) committed before the data it would be applied to. (Revised 17-18 October 2026, before
+registration, after the read-only audit of 17 October: reset held fixed, MN9 per-cell readout, Outcome B data,
+MN9 laterality gate, one VNC group for Outcome B.)
 
 ## Why
 
@@ -22,7 +23,10 @@ All readouts come from the Phase 1b sweep, family `male_flycns` (the declared fl
 | Term | Definition |
 |---|---|
 | MN9 statistic | Mean spikes per MN9 cell per second over the drive window (the M1 statistic: mean of every MN9 cell). Each cell is also reported separately, with its bodyId. |
-| MN9 max cell | The larger of the MN9 cells per trial (Phase 1b `mn9_max_cell_hz`). Reported next to every MN9 statistic. Run 22's male response is one cell (42.8 Hz vs 0.13 Hz, firing in 4 of 30 trials), so the two-cell mean halves a one-sided response. |
+| MN9 max cell | The larger of the MN9 cells per trial (Phase 1b `mn9_max_cell_hz`). **Reported only; never used by FUNCTION.** FUNCTION keeps the two-cell mean on purpose: switching to the max cell would let FUNCTION pass on exactly the one-sided response that needs explaining, and would redefine the "M1 responds" result registered in phase 1. |
+| MN9 laterality index (LI) | Per trial, LI = (max − min) / (max + min) over the MN9 cells' rates, with each cell's bodyId and soma side recorded (Phase 1b `mn9_li`, `mn9_cells`, `mn9_sides`). Undefined, not 0, when no MN9 cell fires. Summary: the median over trials where it is defined. 0 = both cells equal, 1 = one cell only. |
+| LATERALITY | At the candidate w, under the sugar drive, the median LI is **below 0.8**. |
+| Outcome-B groups | The dominant neuropils, with **every VNC neuropil merged into one group "VNC"**, left and right together. A label is VNC if the part before its first "(" is one of LegNp, Ov, mVAC, WTct, HTct, NTct, IntTct, LTct, ANm. Every other label keeps its own name and is **never** VNC: the neck connective, brain and optic-lobe neuropils, nerves, "?" and unassigned. Phase 1b reports every label with its group (`tail_groups.label_map`). A VNC neuropil found outside the list after the run is fixed only by a new registration, never by re-scoring. |
 | FUNCTION (screen) | Under the sugar drive, the 95% interval of the MN9 statistic lies wholly above 0.5 Hz (lower edge exclusive). |
 | FUNCTION (confirm) | At the candidate w, the MN9 statistic beats **both** nulls by `stats.null_percentile` (PASS = exceeds every one of 20 draws): the weight permutation and the degree-corrected rewiring, as Phase 1b defines them. UNRESOLVED counts as not passing. |
 | Self-sustained trial | As Phase 1b registers it: whole-CNS rate in the last half of the 500 ms tail is at least 10% of the rate during the drive and at least 0.01 Hz. |
@@ -30,6 +34,14 @@ All readouts come from the Phase 1b sweep, family `male_flycns` (the declared fl
 | Window | The set of grid w that pass FUNCTION (screen) and STABILITY. |
 
 Stimulated cells are excluded from every whole-CNS readout, as in Phase 1b.
+
+## Why LATERALITY gates the result
+
+The male sugar drive is two-sided and symmetric: 17 left and 17 right LB3b/LB3c cells. The connectome paths
+give the two MN9 cells roughly equal input. Yet run 22 split about 300:1 (42.8 Hz vs 0.13 Hz). In Shiu et al.'s
+model, which phase 1 reproduced, both cells fire (68.3 and 50.4 Hz). A near-total one-sided response to a
+symmetric drive is a red flag to explain, not something to optimise around. The nulls already test the
+two-cell mean on real and null runs alike, so they stay as they are; LI is reported for the null draws too.
 
 ## What is held fixed, and why
 
@@ -50,12 +62,16 @@ next, in its own registration, before conductance-based synapses are considered.
 3. **Confirm.** At each refined point in increasing order, run both nulls (20 draws each). The generation-6
    w_scale is the **smallest** point that passes FUNCTION (screen), FUNCTION (confirm) and STABILITY.
    If none of the refined points passes, try w_hi itself, then the next window point upward.
+3a. **Laterality.** If the point chosen in step 3 fails LATERALITY (median LI 0.8 or higher), w_scale is
+   **held** at its generation-5 value. No default changes until a registered run that drives one side at a
+   time explains the asymmetry. That is outcome **H**, and it overrides A.
 4. **Outcome:**
 
 | Outcome | Condition | Action |
 |---|---|---|
-| **A** | A w passes step 3 | Change w_scale only. Refit every calibration that depends on w (list below). |
-| **B** | FUNCTION passes at some w, but every such w fails STABILITY, and at the smallest of them one neuropil group (Phase 1b `tail_by_neuropil`, per trial, with `group_sizes`; summarised in phase1b.json `tail_groups`) carries at least 50% of tail spikes in the self-sustained trials, and STABILITY passes when that group's cells are left out of the readout | Report; no default changes on this basis. Name the group (expected: the VNC). Move Phase 4 earlier. |
+| **A** | A w passes step 3 and LATERALITY | Change w_scale only. Refit every calibration that depends on w (list below). |
+| **H** | A w passes step 3 but fails LATERALITY | Hold w_scale. Next: a registered one-side-at-a-time sugar run to explain the MN9 asymmetry. |
+| **B** | FUNCTION passes at some w, but every such w fails STABILITY, and at the smallest of them one **Outcome-B group** (defined above: all VNC neuropils are one group) carries at least 50% of tail spikes in the self-sustained trials, and STABILITY passes when that group's cells are left out of the readout (Phase 1b `tail_by_neuropil` with `group_sizes`, merged and summarised in phase1b.json `tail_groups`) | Report; no default changes on this basis. Name the group (expected: VNC). Move Phase 4 earlier. |
 | **C** | FUNCTION passes at some w, but no w passes STABILITY, and B's condition does not hold | Switch to conductance-based synapses (a new model; generation 7 planning). |
 | **D** | FUNCTION (screen) fails at every grid point, 1.0 included | w_scale is not the cause on the male flycns settings. Stop. Name the setting from the Phase 1b ladder. No default changes. |
 
@@ -95,3 +111,4 @@ normalisation; the paper finds loom gain unaffected by walking; absolute state e
 | P2 | v-only reset alone (ML1) drives MN9 far above M1 (runaway, > 100 Hz) | high |
 | P3 | MS1 and MS2: M1 exceeds both nulls | moderate |
 | P4 | Outcome B: FUNCTION passes at 0.6-0.8, STABILITY fails there, with the tail activity concentrated in the VNC | low |
+| P5 | The asymmetry persists: ML0 median LI >= 0.8 (run 22 gives about 0.99) | high |
