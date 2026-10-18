@@ -122,8 +122,8 @@ to later runs.
 | Q1 | The v-and-g reset makes the male blind drive stable at some w, by itself | moderate |
 | Q2 | The MN9_R correction brings male laterality below 0.8 | high |
 | Q3 | A3 still UNRESOLVED at 100 draws (the real value sits inside the null's upper tail) | moderate |
-| Q4 | H4 holds: the antennal-lobe tail persists after the projection cut, LH-only and LH + MB alike (raised from low after the local audit: LH -> LH and LH -> AL are net inhibitory) | high |
-| Q6 | At least one in-AL cut ((i) or (ii)) brings STABILITY (b) to 0 of 10 at some w where the uncut network fails it | low |
+| Q4 | H4 holds: the antennal-lobe tail persists after the projection cut, LH-only and LH + MB alike. Reason: the local audit puts the loop inside the AL; LH -> LH (0.34 excitatory) and LH -> AL (0.08) are net inhibitory. "Persists" = the cut does not stop it by the M1 rule (W*). Signed off by Jayson, 18 Oct. | high |
+| Q6 | At least one in-AL cut ((i) or (ii)) stops it by the M1 rule (blind STABILITY (b) 0/10 and (c) PASS at some w in W*). Reason for moderate, not high: AL -> AL is 84% excitatory and the two cuts remove its two largest excitatory sources (ACh LNs 586,857; ACh PNs 495,371 synapses), but (b) and (c) are whole-network tests. In Phase 1b's blind self-sustained trials, AL + LH carry 61% of the tail at w 0.5, 56% at 0.6, 43% at 0.8 and 34% at 1.0 (VNC 7-14%). Whether the rest is relayed from the AL or sustains itself is not known, so a cut can end the AL loop and still fail (b). Raised from low by Jayson, 18 Oct. | moderate |
 | Q5 | No cell is viable, so the outcome stays C | moderate |
 
 ## Signing audit (Grok, 18 October 2026), checked against the code
@@ -357,6 +357,6 @@ output is kept with the registration as context.
 1. ~~Mirror mapping~~: closed, (A) equal split (audit above).
 2. ~~Side tiebreak~~: closed, somaSide first; no disagreements on the pinned data.
 3. ~~MN9_R status~~: closed, `Traced` (both cells). Recorded as a caveat on the reconstruction reading.
-4. Q4 and Q6: Jayson's sign-off.
+4. ~~Q4 and Q6~~: signed off (Q4 high, Q6 moderate, reasons logged).
 5. `data/gen6_phaseA_celltypes.json`, `fit/gen6_phaseA.py`, `fit/gen6_phaseA_score.py`: to be written and
    smoke-tested (B2, B4).
