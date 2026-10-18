@@ -1,0 +1,289 @@
+{
+  "version": 5,
+  "benchmark": "gen6_phaseA",
+  "criteria": {
+    "question": "on the male CNS: does the reset rule, or completing MN9_R's input, give a synaptic scale that is both functional and stable; is M1's MN9 response specific to the real wiring at 100 draws; and where does the blind-drive reverberation sustain itself?",
+    "plan": "docs/gen6_phaseA_DRAFT.md (every definition there, section 'Definitions fixed before registering' wins)",
+    "sources": {
+      "phase1b": "results/shiu2024_phase1b/registration_v5.json, phase1b.json",
+      "gen6_rule": [
+        "docs/gen6_rule.md",
+        "docs/gen6_rule_v2.md"
+      ],
+      "screen": "results/gen6_screen/screen_v2.json (outcome C)",
+      "celltypes": {
+        "file": "data/gen6_phaseA_celltypes.json",
+        "sha256": "ea8bad7dccde7e714efdb5a882f73fe5391659415130bde57e71f1d7e5585504",
+        "built_by": "scripts/make_gen6_celltypes.py from the MaleCNS Cell Type Explorer repository"
+      }
+    },
+    "settings": {
+      "flycns": {
+        "reset": "v",
+        "stimulation": "source",
+        "integration": "euler",
+        "adaptation": true,
+        "w_scale": 0.4,
+        "floor": 5,
+        "amines": "dropped",
+        "electrical": true
+      },
+      "M1": {
+        "reset": "v_and_g",
+        "stimulation": "kick",
+        "integration": "exact",
+        "adaptation": false,
+        "w_scale": 1.0,
+        "floor": 5,
+        "amines": "excitatory",
+        "electrical": false
+      },
+      "cells": {
+        "c1": {
+          "reset": "v",
+          "mn9": "data"
+        },
+        "c2": {
+          "reset": "v",
+          "mn9": "mirror"
+        },
+        "c2b": {
+          "reset": "v",
+          "mn9": "normalise"
+        },
+        "c3": {
+          "reset": "v_and_g",
+          "mn9": "data"
+        },
+        "c4": {
+          "reset": "v_and_g",
+          "mn9": "mirror"
+        },
+        "c4b": {
+          "reset": "v_and_g",
+          "mn9": "normalise"
+        }
+      },
+      "deciding": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "grid": [
+        0.4,
+        0.5,
+        0.6,
+        0.8,
+        1.0
+      ]
+    },
+    "protocol": {
+      "sweep": "per trial: restore, 200 ms silence, 1000 ms drive, 500 ms with every stimulus rate at 0; 10 trials; one network per arm; readouts as Phase 1b's run_sweep_trial",
+      "drives": {
+        "sugar": "every LB3b and LB3c cell at 100 Hz",
+        "blind": "fit/select_wscale.py's drive, as Phase 1b: a fixed 10% (numpy default_rng(0)) of the eligible sensory cells, at 20 Hz",
+        "composition": "A4 (M3): the stimulated types and the driven set of the blind drive kept, so the network is the same; rate set to 0 for (b) driven cells with superclass ol_sensory or a transmitter (consensusNt, else predictedNt) other than acetylcholine; (c) those, plus types starting ORN_ or HRN_"
+      },
+      "ladder": "A3 real arm: as M1, 30 trials of 1000 ms at sugar 100 Hz, seed 6100",
+      "null": "A3: 100 degree-corrected rewirings (flycns.graph.rewire_null, mode degree_corrected), one 1000 ms trial each under M1; alive iff the null median whole-CNS rate >= 0.1 x the real arm's median (Phase 1b's rule)",
+      "seeds": "sweep, drive and cut arms: 6000 + index of (drive, w), shared by every arm at the same (drive, w) (paired, M5); top-ups 7000 + the same index; A3 real 6100; A3 null model 6101 with rewiring seeds 30000 + k, k = 0..99"
+    },
+    "mn9": {
+      "cells": {
+        "L": 10331,
+        "R": 16949,
+        "check": "asserted against type == 'MN9' and soma side on the pinned data"
+      },
+      "mirror": "cells c2 and c4 (B3): applied to load_graph's signed edges (at or above the floor), before the model is built. MN9_R's input is REPLACED by the mirror of MN9_L's: each partner P -> MN9_L (weight w) becomes P' -> MN9_R for every SIMULATED cell P' of P's type on the opposite side (one with at least one edge at or above the floor; adding an edgeless cell would change the simulated cell set), weight w / (number of such cells), kept as a float even below the floor. Side = flycns.graph.infer_side without the soma-x fallback (somaSide, then instance _L/_R); anything else is midline. Untyped, midline and no-match partners stay on P (P -> MN9_R, w). A mirrored edge takes P''s own model sign (the model signs every edge by its sender); if P' has no signed output, P's sign. MN9_R -> MN9_L becomes MN9_L -> MN9_R, with MN9_L's own sign. MN9_R's outputs are unchanged. Repeated (pre, post) pairs are summed. A cell whose only edge went into MN9_R keeps a zero-weight self-edge, so the simulated cell set is unchanged (m5)",
+      "normalise": "cells c2b and c4b: MN9_R's existing input weights multiplied by (MN9_L's signed input total / MN9_R's), both from load_graph's edges (M8); partners unchanged"
+    },
+    "cuts": {
+      "rule": "A4 (B2): applied to load_graph's signed edges; defined by cell type (the committed lists) and the post cell's dominant_roi (data/roi_membership.parquet). A cell whose every edge is cut keeps a zero-weight self-edge, so the simulated cell set equals the uncut one (m5); such a cell has no input at or above the floor and never fires either way. On the pinned data a cut that removes no edge refuses to run",
+      "lh": "remove edges with pre an AL PN (type in ALPN) and post dominant_roi in LH(L), LH(R)",
+      "lhmb": "as lh, and also edges with pre an AL PN and post type in Kenyon_Cell or post dominant_roi in CA(L), CA(R)",
+      "i": "remove every out-edge of cells with type in ALLN whose transmitter (the edge's nt) is acetylcholine",
+      "ii": "remove edges with pre of an ALPN type and nt acetylcholine (all cholinergic ALPN types: uniglomerular, the two-glomerulus '+' types and the multiglomerular M_/MZ_/CB types; Jayson's decisions of 18 October), and post type in ALPN or ALLN. GABAergic and glutamatergic PNs are not cut. The synapses removed from the '+' types and from the M_/MZ_/CB types are reported (descriptions, not arms)"
+    },
+    "thresholds": {
+      "responds_hz": 0.5,
+      "rate_bar_hz": 1.0,
+      "fraction_bar": 0.1,
+      "li_bar": 0.8,
+      "function_q_min_trials": 5,
+      "function_q_need": 0.5,
+      "wstar_min_self_sustained": 5,
+      "null_pass_draws": 95,
+      "alive_fraction": 0.1,
+      "tail_share_factor": 2.0,
+      "bimodal_factor": 2.0,
+      "meaning": "FUNCTION (screen): sugar MN9 two-cell-mean interval wholly above responds_hz (lower edge exclusive). FUNCTION-q: of the non-self-sustained sugar trials, the fraction with MN9 > responds_hz is at least function_q_need, with at least function_q_min_trials such trials, else UNRESOLVED. STABILITY (a)/(b): 0 self-sustained trials; (c): blind intervals of whole-CNS rate and fraction active wholly below rate_bar_hz and fraction_bar (PASS iff upper edge < bar; FAIL iff lower edge >= bar). LATERALITY: median sugar LI < li_bar. W*: grid w with at least wstar_min_self_sustained of 10 baseline blind trials self-sustained. A3: PASS iff real > draw (strict) for at least null_pass_draws valid draws (absolute; with fewer valid draws it cannot pass). M9: tail share >= tail_share_factor x drive share. m3: bimodal iff max n_active > bimodal_factor x max(1, min n_active) (the max(1, .) keeps a zero minimum from making every arm with one active trial bimodal), split at the largest gap"
+    },
+    "decision": {
+      "viable": "a grid w at which FUNCTION (screen), FUNCTION-q and STABILITY (a), (b), (c) all PASS; the decision w is the smallest such w",
+      "table": "c1 viable: stop for review (Phase 1b's C not replicated). Else c2 viable: mirror at c2's w (c3 reported if also viable). c3 only: v-and-g reset at c3's w. c4 only: both at c4's w. None: C",
+      "laterality": "M7: an outcome that adopts the mirror (mirror, both) also needs LATERALITY PASS in its cell (c2, c4) at its decision w; otherwise the outcome is H (rule v2 section 2): no default changes; v-and-g, if viable, is reported",
+      "top_up": "a candidate w (no component FAILs, at least one UNRESOLVED) in a deciding cell names its arm(s) for ONE top-up (seed 7000 + the pair index, 10 trials); the scorer pools the 10 + 10 trials for every component of that arm (STABILITY (a)/(b) then need 0 of 20; FUNCTION-q counts over the 20); after it, UNRESOLVED counts as not passing",
+      "provisional": "an adopted w is provisional until gen6_rule.md's refine and confirm steps (both nulls) pass"
+    },
+    "scoring": "fit/gen6_phaseA_score.py, hashed into this registration: B1 decision table over cells 1-4; FUNCTION (screen), FUNCTION-q, STABILITY (a), (b), (c), LATERALITY for c2/c4 (M7); A3 null at 95 of 100 (M4); A4 readings against W* (M1, M2, M9); the top-up rule; every verdict as the draft defines it",
+    "predictions": {
+      "Q1": [
+        "The v-and-g reset makes the male blind drive stable at some w, by itself",
+        "moderate"
+      ],
+      "Q2": [
+        "The MN9_R correction brings male laterality below 0.8",
+        "high"
+      ],
+      "Q3": [
+        "A3 still UNRESOLVED at 100 draws",
+        "moderate"
+      ],
+      "Q4": [
+        "the antennal-lobe tail persists after both projection cuts (they do not stop it by the M1 rule)",
+        "high"
+      ],
+      "Q5": [
+        "No cell is viable, so the outcome stays C",
+        "moderate"
+      ],
+      "Q6": [
+        "At least one in-AL cut stops it by the M1 rule",
+        "moderate"
+      ]
+    },
+    "definitions": {
+      "self_sustained": "per trial: whole-CNS rate in the last half of the tail >= 0.1 x the rate during the drive, and >= 0.01 Hz (Phase 1b, fit/shiu2024_phase1b.py:474)",
+      "a3_statistic": "real = mean over the 30 A3_real_m1 trials of mn9_hz; each null draw = its one trial's mn9_hz",
+      "pair_index": "index(drive, w) = DRIVES.index(drive) x 5 + GRID_W.index(w), DRIVES = (sugar, blind); drive and cut arms are blind",
+      "missing_arm": "the scorer refuses to score if a registered (non-top-up) arm is missing: it fails safe, never PASS",
+      "a4_reset": "A4 runs under the v-only reset only; if B1 adopts v-and-g, the A4 readings describe the gen-5 dynamics",
+      "context": "results/gen6_phaseA/preflight.json: every transform and cut on the pinned data, committed before registering"
+    },
+    "deviation": "A3's bar (at least 95 of 100 draws) differs from Phase 1b's MS2 (every one of 20), and was proposed after MS2 came out at 19 of 20; MS2 is not re-scored (M4)"
+  },
+  "model": {
+    "files": {
+      "flycns/__init__.py": "544f1616b7e65d1bf08ed482120ee5718dc0f379a43640f178adb55d9651f31c",
+      "flycns/anatomy.py": "ff00097801baf4cee8c8fe726b5437e3484360f7a262f50c4ecd688926ff605b",
+      "flycns/bench.py": "35022f6ae430c468bf46fa6178cf7cb84c8b6d6f6d0ac99f1fc930c45ab499a1",
+      "flycns/calibration.py": "7a9933748d3b7bd98b9327fc0417f60caaac1e27edbb94e090c9919e700117ce",
+      "flycns/graph.py": "82bd29a7dfaae958e45131b8803ffc084dda6992082393ba6666ef3c245cefb9",
+      "flycns/integrity.py": "202bd32cfdad4e180b91e37853d319e0ae89ec1226772b7ce86747c151e1a32b",
+      "flycns/model.py": "b80432a37aecdabc1b3c4e5757f94f85a670c5832a4e0cbe526586c126fd8cb3",
+      "flycns/protocols.py": "152a1abd79db86885c3473cb43a81a9f994809578d9ad2b4903c5f2cae0a155f",
+      "flycns/stats.py": "9baada5e46202c2f88bfd083fc577d5d80ca03c5274267332ffc1e07a1036e78",
+      "data/loom_tuning_measured.json": "238def4e51bd439f8cb0e8498d334eca9e934bfffc1361e240383b6bee1f6671",
+      "data/MANIFEST.json": "abe54e8ba24c43cbd11373adee94231bd085f197ecae3551b0802c5ac9c5818c",
+      "requirements.lock": "84481267167e01842aae97b321d07d888a3fb38c3213586c13f361118002d275",
+      "fit/gen6_phaseA.py": "664daa5f81c6bc17fcdec88e3be34816d1bd54ca3789abd34d454732b1cf4900",
+      "fit/gen6_phaseA_score.py": "0c6f475ec878a897b5701334c2a1773f2ff404a9668520850471d3715fb34066"
+    },
+    "hash": "dcb44bf09a8869b159fcbc7dc59b23eda7895849f13ebf119c4f4b220dc5dcb8"
+  },
+  "values": {
+    "lif": {
+      "v_rest_mV": -52.0,
+      "v_thresh_mV": -45.0,
+      "v_reset_mV": -52.0,
+      "tau_m_ms": 20.0,
+      "tau_syn_ms": 5.0,
+      "refractory_ms": 2.2,
+      "w_syn_mV": 0.275,
+      "w_scale": 0.4,
+      "tau_adapt_ms": 100.0,
+      "gap_delay_ms": 0.8,
+      "chem_delay_ms": 1.8,
+      "dt_ms": 0.1,
+      "seed": 0,
+      "class_gains": {
+        "sensory": 1.0,
+        "relay": 1.0,
+        "local": 1.0
+      },
+      "region_gains": {
+        "SEZ": 1.0,
+        "other": 1.0
+      },
+      "superclass_params": {},
+      "peptide_gain_scale": 0.0,
+      "peptide_exclude": [],
+      "baseline_depol_mV": 0.0,
+      "baseline_noise_mV": 0.0
+    },
+    "electrical": [
+      [
+        "DNp01",
+        "TTMn",
+        true,
+        9.0,
+        "shakB gap junction, 1:1 relay; Tanouye & Wyman 1980; Allen et al. 2006"
+      ],
+      [
+        "DNp01",
+        "PSI",
+        true,
+        9.0,
+        "shakB gap junction, 1:1 relay; Allen et al. 2006; Phelan et al. 2008"
+      ],
+      [
+        "JO-B1_a",
+        "DNp01",
+        true,
+        {
+          "compound_mV": 3.0,
+          "at_hz": 150
+        },
+        "JON->GF mixed synapse modelled as electrical; shakB-dependent (Pezier et al. 2016); mixed (Pezier et al. 2014); 3 mV target untraced; contact set from MaleCNS v1.0"
+      ],
+      [
+        "JO-B1_c",
+        "DNp01",
+        true,
+        {
+          "compound_mV": 3.0,
+          "at_hz": 150
+        },
+        "JON->GF mixed synapse modelled as electrical; shakB-dependent (Pezier et al. 2016); mixed (Pezier et al. 2014); 3 mV target untraced; contact set from MaleCNS v1.0"
+      ]
+    ],
+    "intrinsic": [
+      [
+        "DNp01",
+        "b_adapt_mV",
+        45.0,
+        "all-or-none GF response; von Reyn 2014; Ache 2019. Fitted by pre-stated rule (smallest value giving 1-2 spikes/response, <=2 on the strongest gain quartile, P(response) 0.5-1, TTMn relay intact; benchmarks/fit_gf_adapt.py at >=40 trials). 45 mV at w_scale 0.4 with the per-GF JON calibration (refit 2026-10-11, cloud run 13, 40 trials; the strong-quartile constraint holds at exactly 2.0, its limit; 30 mV gives 2.75). Before: 10 mV at w_scale 0.3 (2026-10-10), 30 mV under the all-trials loom input, 15 mV from an undersampled 20-trial fit. 0 mV gives up to 15 spikes per loom (9.7 on average on the strongest-gain quartile)."
+      ],
+      [
+        "superclass:cb_motor",
+        "b_adapt_mV",
+        10.0,
+        "sustained MN rates < 100 Hz; Azevedo 2020; McKellar 2020"
+      ]
+    ],
+    "sign_map": {
+      "acetylcholine": 1,
+      "gaba": -1,
+      "glutamate": -1,
+      "histamine": -1,
+      "dopamine": 0,
+      "octopamine": 0,
+      "serotonin": 0
+    },
+    "min_weight": 5,
+    "peak_hz": 5.0,
+    "gain_sigma": 0.357,
+    "loom_state": "stationary"
+  },
+  "packages": {
+    "brian2": "2.10.1",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scipy": "1.18.1"
+  },
+  "supersedes": null,
+  "git_commit": "ff816c1",
+  "code_uncommitted": false,
+  "registered_at": "2026-10-18T08:31:14"
+}
