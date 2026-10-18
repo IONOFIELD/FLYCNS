@@ -76,7 +76,7 @@ to later runs.
 - **A4-AL, direct test of the in-AL loop** (so the third reading is tested, not inferred by elimination). Drive
   (a), single cuts inside the AL:
   - (i) outputs of cholinergic AL local neurons removed;
-  - (ii) uniglomerular PN -> PN and PN -> LN edges inside the AL removed (PN -> LH kept).
+  - (ii) cholinergic PN -> PN and PN -> LN edges removed, from ALPN types not starting M_, MZ_ or CB (PN -> LH kept).
   These come from the signing audit, which found that the only excitatory recurrence left in AL and LH runs
   through cholinergic cells.
 - **Secondary:** under drive (c), whether antennal lobe plus lateral horn still hold at least twice their
@@ -157,6 +157,9 @@ to later runs.
     is not supported by the wiring. The LH tail is most likely relayed feed-forward from the AL.
   - The in-AL recurrence is among central-brain intrinsic cells (PNs and LNs): 1,097,279 excitatory vs
     326,910 inhibitory. By sender: cholinergic ALLNs 586,857; cholinergic ALPNs 495,371; all ALLN GABA 337,755.
+    **These by-sender sums used class lists built with the truncating pattern; they are recomputed on the
+    corrected list by the preflight (`al_to_al_by_sender`) and replaced here before registering.** The
+    region-level flows in the table above do not depend on the class list.
   - Sensory cells (2,730 AL-dominant, nearly all cholinergic) send 1,139,291 excitatory synapses, almost all
     feed-forward onto intrinsic cells (1,050,448). Sensory -> sensory is 81,456, and input onto sensory cells
     is about balanced (110,836 exc, 90,197 inh). **A sensory axo-axonic loop was hypothesised and is not
@@ -255,7 +258,8 @@ wins.
   {CA(L), CA(R)}). Kenyon cells are mostly lobe-dominated, so a calyx-ROI rule alone would miss them.
 - Logged: AL PN out-weight by post `dominant_roi`, so what the cuts keep (for example SLP) is visible.
 - Cut (i): remove every out-edge of cells with type in ALLN and edge `nt` == "acetylcholine".
-- Cut (ii), **changed:** remove edges with pre a uniglomerular ALPN (type not starting M_, MZ_ or CB) **with
+- Cut (ii), **changed:** remove edges with pre a cholinergic ALPN type not starting M_, MZ_ or CB (renamed 18
+  October; it was called "uniglomerular") **with
   `nt` == "acetylcholine"**, and post in ALPN or ALLN. Reason: the cut tests excitatory PN recurrence; without
   the transmitter condition it would also remove the GABAergic uniglomerular vPNs (for example DA1_vPN).
 
@@ -264,9 +268,12 @@ wins.
   keep the simulated cell set equal to the uncut one (m5), it keeps a zero-weight self-edge. Its readouts and
   the network's dynamics are unchanged; only the cell counts in the denominators stay as in the uncut network.
   On the pinned data a cut that removes no edge refuses to run.
-- **Open, Jayson's call: "+" PN types.** 16 ALPN types not starting M_, MZ_ or CB have two glomeruli in their
-  name (for example VP1m+VP5_ilPN, VP2+Z_lvPN). The B2 rule counts them as uniglomerular, so cut (ii) removes
-  their cholinergic PN -> PN/LN edges too. Keep them in (the rule as written) or exclude names containing "+".
+- **Decided (Jayson, 18 October): the 16 "+" PN types stay in cut (ii).** They have two glomeruli in their name
+  (for example VP1m+VP5_ilPN, VP2+Z_lvPN); a cholinergic PN covering two glomeruli is still part of the
+  excitatory recurrence the cut tests. The rule is renamed to say what the code does: **cut (ii) removes edges
+  from cholinergic ALPN types not starting M_, MZ_ or CB** (no longer "uniglomerular"). The synapses removed
+  from the "+" types are reported (a description, not an arm). The preflight also reports, as a description,
+  what the cut leaves in place: cholinergic M_/MZ_/CB PN -> PN/LN synapses.
 
 **B3. The mirror.** Adopted, with one change to the sign.
 - A function on `load_graph`'s returned edges (signed, at or above the floor), applied before CNSModel, in

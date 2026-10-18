@@ -11,7 +11,7 @@ synapses against MN9_L's 6,358) and the antennal-lobe tail unexplained. This pha
             sugar and the blind drive. Everything else at the flycns (generation 5) settings.
   A3        specificity: M1 against 100 degree-corrected rewirings (PASS iff it beats at least 95).
   A4        where the blind-drive loop is: two drive compositions, two projection cuts (AL PN -> LH; AL PN -> LH and
-            MB) and two in-AL cuts (cholinergic LN outputs; cholinergic uniglomerular PN -> PN/LN), under cell 1.
+            MB) and two in-AL cuts (cholinergic LN outputs; cholinergic non-M_/MZ_/CB PN -> PN/LN), under cell 1.
 
 Scoring is fit/gen6_phaseA_score.py; both files are hashed into this registration.
 
@@ -63,7 +63,7 @@ SUGAR_HZ, BLIND_HZ = 100.0, 20.0
 EXCLUDED_SUBCLASSES_EXTRA = {"auditory", "wind_gravity", "campaniform sensilla"}
 EXCLUDED_PREFIXES = ("JO-", "LC", "LPLC", "SNpp", "pC1", "DNg02", "L1", "L2", "L3", "L5", "Pm3", "Mi1", "Tm2")
 LH_ROIS, CA_ROIS = ("LH(L)", "LH(R)"), ("CA(L)", "CA(R)")
-MULTIGLOM_PREFIXES = ("M_", "MZ_", "CB")    # ALPN types not uniglomerular (B2, cut ii)
+MULTIGLOM_PREFIXES = ("M_", "MZ_", "CB")    # ALPN types cut (ii) leaves out: the multiglomerular mlACT PNs (B2)
 
 # Settings. FLY = the declared flycns model (generation 5 defaults; fit/shiu2024_phase1b.py FLY). M1 = the phase-1
 # male arm (Shiu's choices), used only by A3, as Phase 1b's MS2 used it.
@@ -204,8 +204,10 @@ CRITERIA = dict(
         lhmb=("as lh, and also edges with pre an AL PN and post type in Kenyon_Cell or post dominant_roi in CA(L), "
               "CA(R)"),
         i="remove every out-edge of cells with type in ALLN whose transmitter (the edge's nt) is acetylcholine",
-        ii=("remove edges with pre a uniglomerular ALPN (type not starting M_, MZ_ or CB) with nt acetylcholine, and "
-            "post type in ALPN or ALLN")),
+        ii=("remove edges with pre a cholinergic ALPN type not starting M_, MZ_ or CB (the 16 two-glomerulus '+' "
+            "types such as VP1m+VP5_ilPN included, by Jayson's decision of 18 October), nt acetylcholine, and post "
+            "type in ALPN or ALLN; the synapses removed from the '+' types are reported (a description, not an "
+            "arm)")),
     thresholds=dict(
         responds_hz=0.5, rate_bar_hz=1.0, fraction_bar=0.10, li_bar=0.8, function_q_min_trials=5,
         function_q_need=0.5, wstar_min_self_sustained=5, null_pass_draws=95, alive_fraction=ALIVE_FRACTION,
@@ -427,8 +429,8 @@ def cut_mask(edges, neurons, roi, cut, ct):
     if cut == "i":
         return pre_t.isin(ct["ALLN"]) & (nt == "acetylcholine")
     if cut == "ii":
-        uni = is_pn & ~pre_t.fillna("").astype(str).str.startswith(MULTIGLOM_PREFIXES)
-        return uni & (nt == "acetylcholine") & (post_t.isin(ct["ALPN"]) | post_t.isin(ct["ALLN"]))
+        pn_ii = is_pn & ~pre_t.fillna("").astype(str).str.startswith(MULTIGLOM_PREFIXES)
+        return pn_ii & (nt == "acetylcholine") & (post_t.isin(ct["ALPN"]) | post_t.isin(ct["ALLN"]))
     raise ValueError(cut)
 
 
@@ -452,6 +454,11 @@ def apply_cut(edges, neurons, roi, cut, ct):
                removed_exc=float(edges.loc[m & (edges["sign"] > 0).to_numpy(), "weight"].sum()),
                removed_inh=float(edges.loc[m & (edges["sign"] < 0).to_numpy(), "weight"].sum()),
                placeholders=len(lost), placeholder_ids=lost[:20])
+    if cut == "ii":           # description only: how much of the cut comes from the two-glomerulus '+' types
+        pre_t = edges["pre"].map(neurons.set_index("bodyId")["type"]).fillna("").astype(str)
+        plus = m & pre_t.str.contains("+", regex=False).to_numpy()
+        log["from_plus_types"] = dict(types=int(pre_t[plus].nunique()), edges=int(plus.sum()),
+                                      synapses=float(edges.loc[plus, "weight"].sum()))
     return out, log
 
 
@@ -697,6 +704,27 @@ def preflight(data_dir="data"):
         log["cells_after"] = len(set(cut_edges["pre"]) | set(cut_edges["post"]))
         cuts[cut] = log
     out["cuts"] = cuts
+    # descriptions on the committed lists, not arms: what cut (ii) leaves (cholinergic M_/MZ_/CB PNs onto PNs and
+    # LNs), and the AL -> AL synapses by sender class x transmitter (corrects the sign audit's class sums, which
+    # were built on a truncated type list)
+    t_of = meta["type"]
+    pre_t, post_t = edges["pre"].map(t_of), edges["post"].map(t_of)
+    ntl = edges["nt"].astype("string").str.lower()
+    left = (pre_t.isin(ct["ALPN"]) & pre_t.fillna("").astype(str).str.startswith(MULTIGLOM_PREFIXES)
+            & (ntl == "acetylcholine") & (post_t.isin(ct["ALPN"]) | post_t.isin(ct["ALLN"]))).fillna(False)
+    out["cut_ii_left_in"] = dict(rule="cholinergic M_/MZ_/CB ALPN -> ALPN or ALLN (kept by cut ii)",
+                                 types=int(pre_t[left].nunique()), edges=int(left.sum()),
+                                 synapses=float(edges.loc[left.to_numpy(), "weight"].sum()))
+    reg = edges["pre"].map(roi).fillna("").str.extract(r"^(AL)\(")[0]
+    regp = edges["post"].map(roi).fillna("").str.extract(r"^(AL)\(")[0]
+    alal = edges[(reg == "AL").to_numpy() & (regp == "AL").to_numpy()]
+    cls = alal["pre"].map(t_of)
+    sender = np.select([cls.isin(ct["ALPN"]), cls.isin(ct["ALLN"]), cls.isin(ct["Kenyon_Cell"])],
+                       ["ALPN", "ALLN", "Kenyon_Cell"], default="other")
+    sign = np.where(alal["sign"] > 0, "exc", "inh")
+    nt_al = alal["nt"].astype("string").str.lower().fillna("?")
+    g = alal.assign(sender=sender, nt_=nt_al.values, sgn=sign).groupby(["sender", "nt_", "sgn"])["weight"].sum()
+    out["al_to_al_by_sender"] = {f"{a} {b} {c}": float(v) for (a, b, c), v in g.sort_values(ascending=False).items()}
     pn = edges[edges["pre"].map(meta["type"]).isin(ct["ALPN"])]
     by_roi = pn.groupby(pn["post"].map(roi).fillna("?"))["weight"].sum().sort_values(ascending=False)
     out["al_pn_out_weight_by_post_roi"] = {k: float(v) for k, v in by_roi.head(25).items()}
