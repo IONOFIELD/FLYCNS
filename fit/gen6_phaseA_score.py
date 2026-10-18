@@ -36,12 +36,10 @@ _spec = importlib.util.spec_from_file_location(__name_for_import, ROOT / "fit" /
 A = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(A)
 
-RESPONDS = 0.5            # Hz: FUNCTION's bar and FUNCTION-q's per-trial response bar
-RATE_BAR, FRAC_BAR = 1.0, 0.10   # STABILITY (c): intervals wholly below
-LI_BAR = 0.8              # LATERALITY: median LI below
-FQ_MIN, FQ_NEED = 5, 0.5  # FUNCTION-q: at least 5 non-self-sustained trials; at least half respond
-WSTAR_MIN = 5             # M1: W* = grid w with at least 5 of 10 self-sustained baseline blind trials
-NULL_PASS = 95            # M4
+T = A.CRITERIA["thresholds"]       # every bar comes from the registered criteria (one place, hashed)
+RESPONDS, RATE_BAR, FRAC_BAR, LI_BAR = T["responds_hz"], T["rate_bar_hz"], T["fraction_bar"], T["li_bar"]
+FQ_MIN, FQ_NEED, WSTAR_MIN, NULL_PASS = (T["function_q_min_trials"], T["function_q_need"],
+                                         T["wstar_min_self_sustained"], T["null_pass_draws"])
 VNC_STEMS = ("LegNp", "Ov", "mVAC", "WTct", "HTct", "NTct", "IntTct", "LTct", "ANm")
 AL_LH = ("AL(L)", "AL(R)", "LH(L)", "LH(R)")
 DIR = A.OUT / ("smoke" if SMOKE else "arms")
@@ -79,7 +77,7 @@ def below(values, bar, note):
 def function_screen(su):
     e, lo, hi = stats.bootstrap(col(su, "mn9_hz"))
     return stats.scored(e, lo, hi, low=RESPONDS, strict=True, n=len(su),
-                        note="sugar: MN9 two-cell mean, Hz; interval wholly above 0.5 (lower edge exclusive)")
+                        note=f"sugar: MN9 two-cell mean, Hz; interval wholly above {RESPONDS} (lower edge exclusive)")
 
 
 def function_q(su):
@@ -126,7 +124,7 @@ def laterality(su):
 def modes(n_active):
     """m3: bimodal iff max > 2 x min; split at the largest gap."""
     x = sorted(int(v) for v in n_active)
-    if len(x) < 2 or x[-1] <= 2 * max(1, x[0]):
+    if len(x) < 2 or x[-1] <= T["bimodal_factor"] * max(1, x[0]):
         return dict(bimodal=False, median=float(np.median(x)) if x else None)
     gaps = np.diff(x)
     cut = int(np.argmax(gaps)) + 1
@@ -185,8 +183,7 @@ def cell_at(cell, w, topups):
                 used.append(name(d) + "_topup")
     comp = dict(function=function_screen(S), function_q=function_q(S), stability_a=count_zero(S, "sugar"),
                 stability_b=count_zero(B, "blind"), stability_c=stability_c(B))
-    if cell in ("c2", "c4"):
-        comp["laterality"] = laterality(S)
+    lat = laterality(S)       # M7: decides H for an outcome that adopts the mirror; not a viability component
     vs = [c["verdict"] for c in comp.values()]
     status = "viable" if all(v == "PASS" for v in vs) else ("fails" if "FAIL" in vs else "candidate")
     need = []
@@ -195,7 +192,7 @@ def cell_at(cell, w, topups):
             if c["verdict"] == "UNRESOLVED":
                 need.append(name("blind") if k == "stability_c" else name("sugar"))
     report = dict(w_scale=w, status=status, components=comp, topups_used=used,
-                  laterality_report=laterality(S) if cell not in ("c2", "c4") else None,
+                  laterality=lat,
                   mn9_per_cell_mean_hz=[float(np.mean([t["mn9_per_cell_hz"][i] for t in S]))
                                         for i in range(len(S[0]["mn9_per_cell_hz"]))] if S and S[0]["mn9_per_cell_hz"] else None,
                   mn9_cells=S[0]["mn9_cells"] if S else None, sugar=arm_summary(dict(su, trials=S)),
@@ -204,18 +201,31 @@ def cell_at(cell, w, topups):
 
 
 def b1(results):
+    """B1 with M7. Returns (decision, why, adopted cell, its decision w)."""
     V = {c: results[c]["viable"] for c in A.DECIDING}
+    w_of = {c: results[c]["decision_w"] for c in A.DECIDING}
+    tail = " " + A.CRITERIA["decision"]["provisional"].capitalize() + "."
     if V["c1"]:
-        return "V1", "cell 1 (generation-5 settings) is viable: Phase 1b's outcome C is not replicated; stop for review"
-    if V["c2"] and V["c3"]:
-        return "mirror", "cells 2 and 3 both viable: adopt the MN9_R mirror only (a data fix); v-and-g reported (V3)"
+        return "V1", ("cell 1 (generation-5 settings) is viable: Phase 1b's outcome C is not replicated; stop for "
+                      "review"), "c1", w_of["c1"]
     if V["c2"]:
-        return "mirror", "cell 2 viable, cell 3 not: adopt the MN9_R mirror"
-    if V["c3"]:
-        return "reset", "cell 3 viable, cell 2 not: adopt the v-and-g reset"
-    if V["c4"]:
-        return "both", "only cell 4 viable: adopt the mirror and the v-and-g reset"
-    return "C", "no deciding cell is viable: the outcome stays C (next: a change of synapse model, its own plan)"
+        dec, cell = "mirror", "c2"
+        why = ("cells 2 and 3 both viable: adopt the MN9_R mirror only (a data fix); v-and-g reported (V3)" if V["c3"]
+               else "cell 2 viable, cell 3 not: adopt the MN9_R mirror")
+    elif V["c3"]:
+        return "reset", "cell 3 viable, cell 2 not: adopt the v-and-g reset." + tail, "c3", w_of["c3"]
+    elif V["c4"]:
+        dec, cell, why = "both", "c4", "only cell 4 viable: adopt the mirror and the v-and-g reset"
+    else:
+        return "C", ("no deciding cell is viable: the outcome stays C (next: a change of synapse model, in its own "
+                     "plan)"), None, None
+    w = w_of[cell]
+    row = next(r for r in results[cell]["grid"] if r["w_scale"] == w)
+    if row["laterality"]["verdict"] != "PASS":
+        return "H", (f"{why}, but MN9 stays one-sided in {cell} at w {w} (median LI {row['laterality']['median']}, "
+                     f"bar {LI_BAR}): outcome H as amended in rule v2 section 2; no default changes"
+                     + ("; v-and-g (cell 3) is viable and reported" if V["c3"] else "")), cell, w
+    return dec, why + "." + tail, cell, w
 
 
 # ------------------------------------------------------------------------------------------------ A3, A4
@@ -224,12 +234,13 @@ def a3():
     draws = [load(f"A3_null_dc_{j}") for j in range(A.NULL_DRAWS // A.NULL_PER_ARM)]
     if real is None or any(d is None for d in draws):
         return dict(verdict="UNRESOLVED", note="arms missing")
-    nv = [t["mn9_hz"] for d in draws for t in d["trials"]]
+    raw = [t["mn9_hz"] for d in draws for t in d["trials"]]
+    nv = [float(x) for x in raw if x is not None and not np.isnan(float(x))]
     ncns = [t["cns_rate_hz"] for d in draws for t in d["trials"]]
     r = float(np.mean(col(real["trials"], "mn9_hz")))
     rc = float(np.median(col(real["trials"], "cns_rate_hz")))
     nc = float(np.median(ncns)) if ncns else float("nan")
-    alive = bool(nv) and rc > 0 and nc >= A.ALIVE_FRACTION * rc
+    alive = bool(nv) and rc > 0 and nc >= T["alive_fraction"] * rc
     k = int(sum(r > x for x in nv))
     med = float(np.median(nv)) if nv else float("nan")
     if not alive:
@@ -238,9 +249,11 @@ def a3():
         vd, why = "PASS", None
     elif r <= med:
         vd, why = "FAIL", None
+    elif len(nv) < NULL_PASS:
+        vd, why = "UNRESOLVED", f"only {len(nv)} valid draws, fewer than the {NULL_PASS} needed to pass"
     else:
         vd, why = "UNRESOLVED", None
-    rec = dict(real_mn9_hz=r, draws=len(nv), exceeded=k, null_median=med, null_alive=alive,
+    rec = dict(real_mn9_hz=r, draws=len(nv), invalid_draws=len(raw) - len(nv), exceeded=k, null_median=med, null_alive=alive,
                real_cns_median=rc, null_cns_median=nc, percentile=stats.percentile_of(r, nv) if nv else None,
                rule=f"PASS iff real > draw (strict) for at least {NULL_PASS} of {A.NULL_DRAWS}; FAIL iff real <= null "
                     "median; else UNRESOLVED; not alive is UNRESOLVED", deviation=A.CRITERIA["deviation"], verdict=vd,
@@ -299,7 +312,7 @@ def a4():
         da = sum(sum(v[0] for k, v in t["drive_by_neuropil"].items() if k in AL_LH) for t in ss)
         tsh, dsh = (ta / tt if tt else None), (da / dt if dt else None)
         sec[A._w(w)] = dict(scorable=True, n=len(ss), tail_share=tsh, drive_share=dsh,
-                            holds=bool(tsh is not None and dsh is not None and tsh >= 2 * dsh))
+                            holds=bool(tsh is not None and dsh is not None and tsh >= T["tail_share_factor"] * dsh))
     out["secondary_drive_c"] = sec
     return out
 
@@ -329,7 +342,8 @@ def main():
         viable = [r["w_scale"] for r in rows if r["status"] == "viable"]
         cells[cell] = dict(deciding=cell in A.DECIDING, grid=rows, viable=bool(viable),
                            decision_w=min(viable) if viable else None)
-    decision, why = b1(cells) if all(c in cells for c in A.DECIDING) else (None, "deciding cells missing")
+    decision, why, d_cell, d_w = (b1(cells) if all(c in cells for c in A.DECIDING)
+                                  else (None, "deciding cells missing", None, None))
     if missing_topups and decision is not None:
         why += f" (PROVISIONAL: top-ups named by the rule are not yet run: {missing_topups})"
     mirror_only = {}
@@ -337,7 +351,7 @@ def main():
         c1 = next((r for r in cells.get("c1", {}).get("grid", []) if r["w_scale"] == w), None)
         c2 = next((r for r in cells.get("c2", {}).get("grid", []) if r["w_scale"] == w), None)
         if c1 and c2:
-            l1, l2 = c1["laterality_report"]["median"], c2["components"]["laterality"]["median"]
+            l1, l2 = c1["laterality"]["median"], c2["laterality"]["median"]
             mirror_only[A._w(w)] = dict(c1=l1, c2=l2, mirror_only=bool(l1 is not None and l2 is not None
                                                                          and l2 < LI_BAR and l1 >= LI_BAR))
     A3, A4 = a3(), a4()
@@ -345,13 +359,14 @@ def main():
     preds = dict(
         Q1=any(r["components"]["stability_b"]["verdict"] == "PASS" and r["components"]["stability_c"]["verdict"] == "PASS"
                for r in cells.get("c3", {}).get("grid", [])),
-        Q2=any(r["components"]["laterality"]["median"] is not None and r["components"]["laterality"]["median"] < LI_BAR
+        Q2=any(r["laterality"]["median"] is not None and r["laterality"]["median"] < LI_BAR
                for r in cells.get("c2", {}).get("grid", [])),
         Q3=A3.get("verdict") == "UNRESOLVED",
         Q4=None if None in cut_stops.values() else (not cut_stops["lh"] and not cut_stops["lhmb"]),
         Q5=decision == "C",
         Q6=None if None in cut_stops.values() else bool(cut_stops["i"] or cut_stops["ii"]))
     report = dict(benchmark=A.LABEL, smoke=SMOKE, criteria=A.CRITERIA, cells=cells, decision=decision, decision_why=why,
+                  decision_cell=d_cell, decision_w=d_w,
                   topups_named=sorted(named), topups_missing=missing_topups, laterality_mirror_only=mirror_only,
                   A3=A3, A4=A4, predictions={k: dict(text=A.CRITERIA["predictions"][k][0],
                                                      confidence=A.CRITERIA["predictions"][k][1], held=v)
@@ -362,7 +377,7 @@ def main():
     for cell, c in cells.items():
         line = "  ".join(f"{r['w_scale']}:{r['status'][:9]}" for r in c["grid"])
         print(f"  {cell:<4} {'deciding' if c['deciding'] else 'reported'}  viable={c['viable']!s:<5} w*={c['decision_w']}  {line}")
-    print(f"B1: {decision}: {why}")
+    print(f"B1: {decision} ({d_cell} at w {d_w}): {why}")
     print(f"A3: {A3.get('verdict')} (real {A3.get('real_mn9_hz')}, exceeds {A3.get('exceeded')} of {A3.get('draws')})")
     print(f"A4: W* {A4['W_star']}; cuts stop: {cut_stops}; projection: {A4.get('projection_reading')}; "
           f"in-AL: {A4.get('in_al_reading')}")

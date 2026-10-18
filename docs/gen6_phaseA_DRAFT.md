@@ -64,7 +64,7 @@ to later runs.
 - **Projection cut (decided):** with drive (a), remove the antennal-lobe projection neurons' outputs.
   - Primary arm, **LH only:** AL PN -> LH edges removed.
   - Secondary arm, **LH + MB:** AL PN -> LH and AL PN -> MB (calyx) edges removed.
-  - "Stops the instability" means STABILITY (b) and (c) pass under the blind drive at that w.
+  - "Stops the instability" is defined by M1 (W*), below. (The earlier "at that w" wording is struck.)
 - **Interpretation, registered before launch:**
 
   | LH-only cut | LH + MB cut | reading |
@@ -83,12 +83,12 @@ to later runs.
   drive share of the tail.
 
 **A5: FUNCTION without runaway (decided).** FUNCTION-q, scored per w under the sugar drive:
-- **Runaway trial:** a self-sustained trial as Phase 1b registers it (tail rate at least 10% of the drive rate
+- **Self-sustained trial:** as as Phase 1b registers it (tail rate at least 10% of the drive rate
   and at least 0.01 Hz). This is the per-trial rule STABILITY (a) and (b) already count; no new threshold.
 - **Response:** MN9 two-cell mean above 0.5 Hz over the drive window, in that trial (FUNCTION's bar).
-- **Minimum:** at least 5 non-runaway trials. Fewer gives UNRESOLVED, not PASS or FAIL. (Phase 1b's ML0 split
+- **Minimum:** at least 5 non-self-sustained trials. Fewer gives UNRESOLVED, not PASS or FAIL. (Phase 1b's ML0 split
   15/15 into quiet and active trials; at some w almost every trial may run away.)
-- **PASS** iff at least half of the non-runaway trials respond. **FAIL** otherwise. Wilson 95% interval
+- **PASS** iff at least half of the non-self-sustained trials respond. **FAIL** otherwise. Wilson 95% interval
   reported.
 - FUNCTION-q sits alongside FUNCTION (the two-cell mean, unchanged) and does not replace it.
 
@@ -174,6 +174,15 @@ to later runs.
     connectomes annotate chemical synapses only (to confirm against the dataset papers before citing). So this
     model has no eLN -> PN electrical path, and every ACh-LN output it carries is chemical. Cut (i) removes
     that chemical output, most of which, in the fly, is not how eLNs excite PNs.
+- **Electrical synapses are missing from the connectome (sources checked by Grok, 18 October, full texts).**
+  FlyWire: "Our connectome includes only chemical synapses; the identification of electrical synapses awaits a
+  future electron microscopy dataset with higher resolution" (Dorkenwald et al. 2024). Hemibrain: gap junctions
+  "could not be included", being "difficult to reliably detect by FIB-SEM" (Scheffer et al. 2020). MaleCNS
+  (Berg et al. 2025) detects synapses as presynaptic T-bars and their postsynaptic partners and reports no
+  electrical synapses (no statement either way; read as an absence). Shiu et al. (2024): "Gap junctions cannot
+  be identified in the electron microscopy dataset, so we ignore their possibility." FLYCNS adds electrical
+  coupling only where documented and named (the giant-fibre circuit, `flycns/graph.py`), none in the AL. This
+  paragraph goes into RESULTS.md's limitations with the phase A result.
 - **Not adopted for phase A:** a slow GABA_B-like inhibition and PN adaptation (Grok's (iv), (v)). Both are
   model changes. They belong in the synapse-model plan that outcome C points to, not in a phase that changes
   only the reset and MN9_R's input.
@@ -193,8 +202,8 @@ That is about 35-40 cloud jobs. Branch names stay under 150 characters, split as
 1. MN9_R: mirror primary, normalise reported; unmatched and midline partners kept on the same partner, count
    logged; LI reported under both.
 2. Projection cut: LH only primary, LH + MB secondary, with the registered three-way reading.
-3. FUNCTION-q: half of non-runaway trials; runaway = the Phase 1b self-sustained rule; response = 0.5 Hz per
-   trial; fewer than 5 non-runaway trials gives UNRESOLVED.
+3. FUNCTION-q: half of the non-self-sustained trials; self-sustained = the Phase 1b rule; response = 0.5 Hz
+   per trial; fewer than 5 non-self-sustained trials gives UNRESOLVED.
 
 ## Definitions fixed before registering (from Grok's blind referee review, 18 October 2026)
 
@@ -214,6 +223,16 @@ wins.
   - none: outcome stays C.
 - If a component at a candidate w is UNRESOLVED and none FAILs, run one top-up of 10 trials for that arm (next
   seed block). After that, UNRESOLVED counts as not passing.
+- **Answered while coding (Grok's checklist, AMB1, AMB8, AMB9, AMB10, AMB12):**
+  - LATERALITY is not a viability component. An outcome that adopts the mirror (mirror, both) also needs
+    LATERALITY PASS in its cell at its decision w; otherwise the outcome is H (M7, rule v2 section 2).
+  - The adopted w is the decision w of the cell that is adopted: c2 for mirror, c3 for reset, c4 for both.
+  - Top-up seed block 7000 + the pair index. The top-up's 10 trials are pooled with the arm's 10 for every
+    component of that arm: STABILITY (a)/(b) then need 0 of 20, and FUNCTION-q counts over the 20.
+    Top-ups are run only for deciding cells.
+  - A3's bar is 95 valid draws, absolute. NaN draws are dropped and counted. With fewer than 95 valid draws
+    it cannot pass (UNRESOLVED unless FAIL applies).
+  - Every bar lives in the registered criteria (`thresholds`); the scorer reads them from there.
 - An adopted w still goes through gen6_rule.md's refine and confirm steps in the generation-6 registration.
 
 **B2. Edge sets for the cuts.** Adopted, with one change to cut (ii).
@@ -221,9 +240,13 @@ wins.
   Cell Type Explorer type lists for ALPN, ALLN and Kenyon_Cell, with the source URL, date and extraction rule.
   **Built (18 October)** by `scripts/make_gen6_celltypes.py` from the Explorer's own repository
   (reiserlab/celltype-explorer-drosophila-male-cns, commit 789cc6c, 10 September 2026; `types.html` sha256
-  3213642...). ALPN 173 types, ALLN 77, Kenyon_Cell 11. The catalogue's Kenyon_Cell class has no alpha'/beta'
-  types (KC, KCab-c/m/p/s, KCg-d/m/s1-s4 only), so the CA(L)/CA(R) post-ROI half of the LH + MB rule is what
-  catches any other calyx targets. The preflight's AL PN out-weight by post ROI shows whether that is enough.
+  3213642...). **Corrected the same day after the preflight:** the first extractor read names from the card
+  text, which truncates long names ("M_l2PN10t..."), and skipped cards whose link is quoted (472 of 11,751),
+  which also hid the alpha'/beta' Kenyon cells. It now parses the page with html.parser and takes each name
+  from the link target. Result: **ALPN 177 types, ALLN 76, Kenyon_Cell 14** (KCa'b'-ap1, -ap2 and -m
+  included), no truncated names, no overlap between the lists. Earlier class tables built with the same
+  pattern (the AL/LH sign audit's class counts) carry the same error; its region-level numbers do not depend
+  on it.
   `neurons.parquet` has no class column, and edges carry no synapse location, so cuts are defined by cell
   type and by the post cell's `dominant_roi`.
 - AL PN = cells whose type is in ALPN, every transmitter.
@@ -235,6 +258,15 @@ wins.
 - Cut (ii), **changed:** remove edges with pre a uniglomerular ALPN (type not starting M_, MZ_ or CB) **with
   `nt` == "acetylcholine"**, and post in ALPN or ALLN. Reason: the cut tests excitatory PN recurrence; without
   the transmitter condition it would also remove the GABAergic uniglomerular vPNs (for example DA1_vPN).
+
+- **Cells a cut isolates (preflight, 18 October).** Every cut removes all the edges of a few cells (LH 4, LH + MB
+  6, (i) 6, (ii) 1, on the first list). Such a cell had no input at or above the floor, so it never fires. To
+  keep the simulated cell set equal to the uncut one (m5), it keeps a zero-weight self-edge. Its readouts and
+  the network's dynamics are unchanged; only the cell counts in the denominators stay as in the uncut network.
+  On the pinned data a cut that removes no edge refuses to run.
+- **Open, Jayson's call: "+" PN types.** 16 ALPN types not starting M_, MZ_ or CB have two glomeruli in their
+  name (for example VP1m+VP5_ilPN, VP2+Z_lvPN). The B2 rule counts them as uniglomerular, so cut (ii) removes
+  their cholinergic PN -> PN/LN edges too. Keep them in (the rule as written) or exclude names containing "+".
 
 **B3. The mirror.** Adopted, with one change to the sign.
 - A function on `load_graph`'s returned edges (signed, at or above the floor), applied before CNSModel, in
@@ -370,7 +402,12 @@ output is kept with the registration as context.
 4. ~~Q4 and Q6~~: signed off (Q4 high, Q6 moderate, reasons logged).
 5. ~~Code~~: `data/gen6_phaseA_celltypes.json`, `fit/gen6_phaseA.py`, `fit/gen6_phaseA_score.py` written and
    smoke-tested on the toy data (B2, B4). Both scripts are hashed into the registration.
-6. **Preflight on the pinned data** (no simulation, a few minutes): `python fit/gen6_phaseA.py preflight`. It
+6. **Preflight on the pinned data.** First run (18 October, on the first cell-type list): mirror 5,651 onto
+   MN9_R from 100 cells, kept 3 / 71, 11 split edges below the floor (21 synapses), sign mismatch 0, no
+   edgeless opposite cell; normalise factor 15.525; drive (b) zeroes 696 of 1,575 driven cells (603 ol_sensory,
+   all non-cholinergic), drive (c) also 260 ORN/HRN cells, 619 kept; cuts remove LH 401,341 synapses, LH + MB
+   726,000, (i) 590,486, (ii) 390,181, and isolate 4, 6, 6, 1 cells (now kept by placeholders). **To rerun on
+   the corrected list before registering.** Command: `python fit/gen6_phaseA.py preflight`. It
    writes `results/gen6_phaseA/preflight.json`: the mirror and normalise logs, what each cut removes and
    whether it would drop a cell, the AL PN out-weight by post ROI, and the drive (b)/(c) counts, including
    whether any ORN is driven. It is committed with the registration as context.

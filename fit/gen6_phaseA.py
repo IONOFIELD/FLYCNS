@@ -26,6 +26,9 @@ Scoring is fit/gen6_phaseA_score.py; both files are hashed into this registratio
                                                             data before registering; its numbers go into the
                                                             registration's context)
     python fit/gen6_phaseA.py selftest                      the transforms on a hand-made table, with exact checks
+
+A smoke arm (and parts, preflight, selftest) reads and writes no registration, so it runs before the registration
+exists and never leaves a registration file behind.
 """
 import hashlib
 import json
@@ -46,7 +49,7 @@ LABEL = "gen6_phaseA"
 OUT = ROOT / "results" / LABEL
 SCORE_SCRIPT = ROOT / "fit" / "gen6_phaseA_score.py"
 CELLTYPES = ROOT / "data" / "gen6_phaseA_celltypes.json"
-CELLTYPES_SHA256 = "1a323378cf081c45a673f84d8d8b2aa7dcee05cd46ad4139c4a40de224e733fe"   # data/gen6_phaseA_celltypes.json as committed
+CELLTYPES_SHA256 = "7d5e0846538a078490f83fee6418c138eeae446c71f199e22501bff204029e05"   # data/gen6_phaseA_celltypes.json as committed
 MN9_L_ID, MN9_R_ID = 10331, 16949          # MaleCNS v1.0; asserted against type == "MN9" and soma side
 LADDER_TRIALS, LADDER_MS = 30, 1000         # as M1 (phase 1, phase 1b)
 SWEEP_TRIALS, SETTLE_MS, DRIVE_MS, TAIL_MS = 10, 200, 1000, 500
@@ -194,14 +197,41 @@ CRITERIA = dict(
                    "MN9_R's), both from load_graph's edges (M8); partners unchanged")),
     cuts=dict(
         rule=("A4 (B2): applied to load_graph's signed edges; defined by cell type (the committed lists) and the post "
-              "cell's dominant_roi (data/roi_membership.parquet). Every cut arm asserts the simulated cell set equals the "
-              "uncut one (m5)"),
+              "cell's dominant_roi (data/roi_membership.parquet). A cell whose every edge is cut keeps a zero-weight "
+              "self-edge, so the simulated cell set equals the uncut one (m5); such a cell has no input at or above the "
+              "floor and never fires either way. On the pinned data a cut that removes no edge refuses to run"),
         lh="remove edges with pre an AL PN (type in ALPN) and post dominant_roi in LH(L), LH(R)",
         lhmb=("as lh, and also edges with pre an AL PN and post type in Kenyon_Cell or post dominant_roi in CA(L), "
               "CA(R)"),
         i="remove every out-edge of cells with type in ALLN whose transmitter (the edge's nt) is acetylcholine",
         ii=("remove edges with pre a uniglomerular ALPN (type not starting M_, MZ_ or CB) with nt acetylcholine, and "
             "post type in ALPN or ALLN")),
+    thresholds=dict(
+        responds_hz=0.5, rate_bar_hz=1.0, fraction_bar=0.10, li_bar=0.8, function_q_min_trials=5,
+        function_q_need=0.5, wstar_min_self_sustained=5, null_pass_draws=95, alive_fraction=ALIVE_FRACTION,
+        tail_share_factor=2.0, bimodal_factor=2.0,
+        meaning=("FUNCTION (screen): sugar MN9 two-cell-mean interval wholly above responds_hz (lower edge exclusive). "
+                 "FUNCTION-q: of the non-self-sustained sugar trials, the fraction with MN9 > responds_hz is at least "
+                 "function_q_need, with at least function_q_min_trials such trials, else UNRESOLVED. STABILITY (a)/(b): "
+                 "0 self-sustained trials; (c): blind intervals of whole-CNS rate and fraction active wholly below "
+                 "rate_bar_hz and fraction_bar (PASS iff upper edge < bar; FAIL iff lower edge >= bar). LATERALITY: "
+                 "median sugar LI < li_bar. W*: grid w with at least wstar_min_self_sustained of 10 baseline blind "
+                 "trials self-sustained. A3: PASS iff real > draw (strict) for at least null_pass_draws valid draws "
+                 "(absolute; with fewer valid draws it cannot pass). M9: tail share >= tail_share_factor x drive "
+                 "share. m3: bimodal iff max n_active > bimodal_factor x min n_active")),
+    decision=dict(
+        viable=("a grid w at which FUNCTION (screen), FUNCTION-q and STABILITY (a), (b), (c) all PASS; the decision w is "
+                "the smallest such w"),
+        table=("c1 viable: stop for review (Phase 1b's C not replicated). Else c2 viable: mirror at c2's w (c3 reported "
+               "if also viable). c3 only: v-and-g reset at c3's w. c4 only: both at c4's w. None: C"),
+        laterality=("M7: an outcome that adopts the mirror (mirror, both) also needs LATERALITY PASS in its cell (c2, c4) "
+                    "at its decision w; otherwise the outcome is H (rule v2 section 2): no default changes; v-and-g, "
+                    "if viable, is reported"),
+        top_up=("a candidate w (no component FAILs, at least one UNRESOLVED) in a deciding cell names its arm(s) for "
+                "ONE top-up (seed 7000 + the pair index, 10 trials); the scorer pools the 10 + 10 trials for every "
+                "component of that arm (STABILITY (a)/(b) then need 0 of 20; FUNCTION-q counts over the 20); after "
+                "it, UNRESOLVED counts as not passing"),
+        provisional="an adopted w is provisional until gen6_rule.md's refine and confirm steps (both nulls) pass"),
     scoring=("fit/gen6_phaseA_score.py, hashed into this registration: B1 decision table over cells 1-4; FUNCTION "
              "(screen), FUNCTION-q, STABILITY (a), (b), (c), LATERALITY for c2/c4 (M7); A3 null at 95 of 100 (M4); A4 "
              "readings against W* (M1, M2, M9); the top-up rule; every verdict as the draft defines it"),
@@ -403,15 +433,25 @@ def cut_mask(edges, neurons, roi, cut, ct):
 
 
 def apply_cut(edges, neurons, roi, cut, ct):
+    """The cut, keeping the simulated cell set (m5): a cell whose every edge is cut would leave the network (the
+    model simulates the cells its edges name), so it keeps a zero-weight self-edge. Such a cell had no input at or
+    above the floor, so it never fires with or without the placeholder; the placeholder only keeps it in every
+    readout's cell count, as in the uncut network."""
+    import pandas as pd
     m = cut_mask(edges, neurons, roi, cut, ct).fillna(False).to_numpy(dtype=bool)
     before = set(edges["pre"]) | set(edges["post"])
     out = edges[~m].reset_index(drop=True)
     after = set(out["pre"]) | set(out["post"])
     lost = sorted(before - after)
+    if lost:
+        ph = pd.DataFrame(dict(pre=lost, post=lost, weight=0.0, sign=1.0))
+        if "nt" in out:
+            ph["nt"] = "placeholder"
+        out = pd.concat([out, ph[[c for c in out.columns if c in ph.columns]]], ignore_index=True)
     log = dict(removed_edges=int(m.sum()), removed_synapses=float(edges.loc[m, "weight"].sum()),
                removed_exc=float(edges.loc[m & (edges["sign"] > 0).to_numpy(), "weight"].sum()),
                removed_inh=float(edges.loc[m & (edges["sign"] < 0).to_numpy(), "weight"].sum()),
-               cells_lost=len(lost), cells_lost_ids=lost[:20])
+               placeholders=len(lost), placeholder_ids=lost[:20])
     return out, log
 
 
@@ -427,9 +467,8 @@ def transform(spec, neurons, edges, roi, smoke):
     if spec.get("cut"):
         ct, _ = celltypes(check=not smoke)
         edges, log = apply_cut(edges, neurons, roi, spec["cut"], ct)
-        if log["cells_lost"]:
-            raise SystemExit(f"[phaseA] cut {spec['cut']} removes every edge of {log['cells_lost']} cells; the "
-                             f"simulated cell set would change (m5): {log['cells_lost_ids']}")
+        if not smoke and log["removed_edges"] == 0:
+            raise SystemExit(f"[phaseA] cut {spec['cut']} removes no edge on the pinned data")
     return edges, log
 
 
@@ -653,8 +692,9 @@ def preflight(data_dir="data"):
     n_all = len(set(edges["pre"]) | set(edges["post"]))
     cuts = {}
     for cut in CUTS:
-        _, log = apply_cut(edges, neurons, roi, cut, ct)
+        cut_edges, log = apply_cut(edges, neurons, roi, cut, ct)
         log["cells_before"] = n_all
+        log["cells_after"] = len(set(cut_edges["pre"]) | set(cut_edges["post"]))
         cuts[cut] = log
     out["cuts"] = cuts
     pn = edges[edges["pre"].map(meta["type"]).isin(ct["ALPN"])]
@@ -719,13 +759,18 @@ def selftest():
            for c in CUTS}
     want = dict(lh=[(60, 81)], lhmb=[(60, 80), (60, 81), (60, 82)], i=[(70, 60)], ii=[(60, 70)])
     checks.append(("cuts", got == want))
+    cl, clog = apply_cut(E, nrn, roi, "lh", ct)     # 81's only edge is 60 -> 81: it keeps a zero-weight self-edge
+    ph = cl[(cl.pre == 81) & (cl.post == 81)]
+    checks.append(("cut keeps the cell set", (set(cl.pre) | set(cl.post)) == (set(E.pre) | set(E.post))
+                   and len(ph) == 1 and float(ph.weight.iloc[0]) == 0.0 and clog["placeholders"] == 1))
     bad = [n for n, ok in checks if not ok]
     return not bad, ("mirror, normalise and the four cuts give the hand-computed tables" if not bad
                      else f"failed: {bad}; cuts {got}")
 
 
 _mode = sys.argv[1] if __name__ == "__main__" and len(sys.argv) > 1 else ""
-if _mode in ("parts", "preflight", "selftest") or __name__ not in ("__main__", "gen6_phaseA"):
+_smoke_arm = _mode == "arm" and ((len(sys.argv) > 3 and sys.argv[3] != "data") or len(sys.argv) > 4)
+if _mode in ("parts", "preflight", "selftest") or _smoke_arm or __name__ not in ("__main__", "gen6_phaseA"):
     REG = None             # these modes compute nothing that is scored; no registration is read or written
 else:
     REG = registry.register(LABEL, CRITERIA, scripts=[__file__, str(SCORE_SCRIPT)])   # exits under FLYCNS_REGISTER_ONLY
