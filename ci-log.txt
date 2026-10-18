@@ -1,0 +1,14 @@
+--- ML7_amines_dropped
+[phase1b] ML7_amines_dropped 27/30 (836 s)
+[phase1b] ML7_amines_dropped 28/30 (864 s)
+[phase1b] ML7_amines_dropped 29/30 (893 s)
+[phase1b] ML7_amines_dropped 30/30 (922 s)
+[phase1b] ML7_amines_dropped: 30 runs in 921.7 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\ML7_amines_dropped.json
+
+--- ML_all
+[phase1b] ML_all 27/30 (270 s)
+[phase1b] ML_all 28/30 (279 s)
+[phase1b] ML_all 29/30 (287 s)
+[phase1b] ML_all 30/30 (295 s)
+[phase1b] ML_all: 30 runs in 294.8 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\ML_all.json
+
