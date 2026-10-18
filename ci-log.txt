@@ -1,0 +1,7 @@
+--- null_dc
+[phase1b] null_dc draw 17/20 (1295 s)
+[phase1b] null_dc draw 18/20 (1367 s)
+[phase1b] null_dc draw 19/20 (1442 s)
+[phase1b] null_dc draw 20/20 (1513 s)
+[phase1b] null_dc: 20 runs in 1512.6 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\null_dc.json
+
