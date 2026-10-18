@@ -1,0 +1,35 @@
+--- sw_male_shiu_drop_blind_w040
+[phase1b] sw_male_shiu_drop_blind_w040 7/10 (1004 s)
+[phase1b] sw_male_shiu_drop_blind_w040 8/10 (1100 s)
+[phase1b] sw_male_shiu_drop_blind_w040 9/10 (1201 s)
+[phase1b] sw_male_shiu_drop_blind_w040 10/10 (1306 s)
+[phase1b] sw_male_shiu_drop_blind_w040: 10 runs in 1306.4 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\sw_male_shiu_drop_blind_w040.json
+
+--- sw_male_shiu_drop_blind_w050
+[phase1b] sw_male_shiu_drop_blind_w050 7/10 (1010 s)
+[phase1b] sw_male_shiu_drop_blind_w050 8/10 (1106 s)
+[phase1b] sw_male_shiu_drop_blind_w050 9/10 (1209 s)
+[phase1b] sw_male_shiu_drop_blind_w050 10/10 (1317 s)
+[phase1b] sw_male_shiu_drop_blind_w050: 10 runs in 1316.8 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\sw_male_shiu_drop_blind_w050.json
+
+--- sw_male_shiu_drop_blind_w060
+[phase1b] sw_male_shiu_drop_blind_w060 7/10 (984 s)
+[phase1b] sw_male_shiu_drop_blind_w060 8/10 (1068 s)
+[phase1b] sw_male_shiu_drop_blind_w060 9/10 (1150 s)
+[phase1b] sw_male_shiu_drop_blind_w060 10/10 (1233 s)
+[phase1b] sw_male_shiu_drop_blind_w060: 10 runs in 1233.0 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\sw_male_shiu_drop_blind_w060.json
+
+--- sw_male_shiu_drop_blind_w080
+[phase1b] sw_male_shiu_drop_blind_w080 7/10 (993 s)
+[phase1b] sw_male_shiu_drop_blind_w080 8/10 (1077 s)
+[phase1b] sw_male_shiu_drop_blind_w080 9/10 (1160 s)
+[phase1b] sw_male_shiu_drop_blind_w080 10/10 (1244 s)
+[phase1b] sw_male_shiu_drop_blind_w080: 10 runs in 1243.6 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\sw_male_shiu_drop_blind_w080.json
+
+--- sw_male_shiu_drop_blind_w100
+[phase1b] sw_male_shiu_drop_blind_w100 7/10 (852 s)
+[phase1b] sw_male_shiu_drop_blind_w100 8/10 (931 s)
+[phase1b] sw_male_shiu_drop_blind_w100 9/10 (1010 s)
+[phase1b] sw_male_shiu_drop_blind_w100 10/10 (1089 s)
+[phase1b] sw_male_shiu_drop_blind_w100: 10 runs in 1088.9 s -> D:\a\FLYCNS\FLYCNS\results\shiu2024_phase1b\arms\sw_male_shiu_drop_blind_w100.json
+
