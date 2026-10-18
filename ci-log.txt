@@ -1,0 +1,7 @@
+--- A3_real_m1
+[phaseA] A3_real_m1 27/30 (1687 s)
+[phaseA] A3_real_m1 28/30 (1745 s)
+[phaseA] A3_real_m1 29/30 (1803 s)
+[phaseA] A3_real_m1 30/30 (1861 s)
+[phaseA] A3_real_m1: 30 runs in 1861.1 s -> D:\a\FLYCNS\FLYCNS\results\gen6_phaseA\arms\A3_real_m1.json
+
