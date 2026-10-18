@@ -1,0 +1,118 @@
+# Generation 7: change of synapse model (DRAFT plan, not registered)
+
+Status: DRAFT, 18 October 2026, written **while gen-6 phase A (runs 33-36) is still running and before any of
+its results exist**. The commit time of this file precedes every `rerun-out/33..36/*` result push, so its
+design is provably independent of phase A's outcome. It is conditional: it applies if phase A ends in outcome C
+(no deciding cell viable; prediction Q5), which is the registered trigger in `docs/gen6_phaseA_DRAFT.md`
+("the next phase is a change of synapse model (conductance-based), in its own plan"). If phase A adopts the
+reset or the MN9_R mirror, this plan is revised before anything is registered, and the revision is a new dated
+file. Sources: `docs/lit/synapse_model_lit_2026-10-18.md` (Grok, read-only literature review, 22 sources read
+in full; every value tagged VERIFIED / VERIFIED-fig / INFERRED / CAN'T VERIFY). Only VERIFIED or VERIFIED-fig
+values are cited as measurements below; everything else is labelled an assumption.
+
+## Why this is a new generation
+
+The synapse equations live in `flycns/model.py`, a hashed model file (`registry.MODEL_FILES`). Any change here
+changes the simulator-model hash (`df7e16022378` for generations 5 and 6), so it is a refreeze: a new
+`registry.VERSION` (6), new registrations for every benchmark that is rerun, and a refit of every calibration
+chosen under the current synapse model (`docs/CALIBRATION.md`; the list is fixed in the gen-7 registration
+before any refit). The two pending gen-6-freeze items ride along and are declared separately so their effect
+can be read alone: the `"unclear"` transmitter fallback (`scripts/fetch_malecns.py` / `load_graph`) and the
+`flycns/protocols.py` loom comment.
+
+## What the current model is (and why it can run away)
+
+`flycns/model.py`: `dv/dt = (v_rest + I_base - v + g + I_gap + g_shunt(v_rest - v) - a)/tau_m`,
+`dg/dt = -g/tau_syn`, one current-like `g` (volts), `tau_syn` 5 ms shared by excitation and inhibition, no
+reversal potentials, no slow inhibition, no short-term plasticity; gap junctions only for the declared
+giant-fibre pairs. v_rest -52 mV, threshold -45 mV, tau_m 20 ms (Shiu et al. 2024). Phase 1b: outcome C; the
+blind-drive tail sits inside the antennal lobe (AL -> AL 84% excitatory by synapse count; LH net inhibitory).
+
+Three properties of this model each allow runaway (literature synthesis, INFERRED from VERIFIED quotes):
+1. Current-based synapses: a PSP does not depend on v, so summed excitation is limited only by refractoriness
+   (Brunel 2000, the "H state" near 1/tau_rp at g < 4).
+2. Inhibition is subtractive and as fast as excitation (shared 5 ms). In the fly it is 2-3x slower for
+   GABA_A (mIPSC decay 3.3-5.4 ms vs mEPSC 1.4-1.7 ms in the same culture preparation, Su & O'Dowd 2003;
+   Lee et al. 2003) and about 200x slower for GABA_B (about 1-2 s, Wilson & Laurent 2005; Olsen & Wilson 2008).
+3. No short-term depression, although ORN -> PN depresses strongly (recovery tau about 0.9-1 s, Nagel et al.
+   2015).
+
+**The caution that shapes this plan (VERIFIED in the full text, Huang et al. 2018, Front Neuroinform,
+doi:10.3389/fninf.2018.00099):** in a conductance-based LIF of the whole fly brain (FlyCircuit; reversals 0 and
+-70 mV), raising the inhibition/excitation factor up to 100 "did not completely eliminate" seizure-like
+activity, and "once the seizure-like activity occurred, it never stopped". Short-term depression in every
+synapse brought prevalence to 50% or lower for recovery tau > 125 ms, but did not stabilise a randomized
+brain. So conductance-based synapses alone are not expected to be enough; STD is an arm in its own right, not
+a control.
+
+## Hypotheses (registered as a set; each is a separate verdict)
+
+- **H7a (driving force):** conductance-based synapses alone (E_e 0 mV, E_i at the primary value) give at
+  least one w that is functional and stable. *Prediction: FAILS* (Huang 2018). Falsified if no w passes
+  STABILITY at any E_i in the sweep.
+- **H7b (slow inhibition):** separate time constants with tau_i > tau_e, on top of H7a, give a viable w.
+- **H7c (short-term depression):** STD on every chemical synapse, on the CURRENT synapse model, gives a viable
+  w. Tests whether depression alone is the missing mechanism, independent of conductances.
+- **H7d (both):** conductance-based + STD gives a viable w where neither alone does.
+- **H7e (AL presynaptic GABA_B):** a slow divisive depression of ORN -> PN efficacy driven by AL local-neuron
+  activity removes the AL tail (A4-style reading), on top of the best of H7a-H7d.
+- **H7f (AL gap junctions):** eLN-PN and sister PN-PN coupling restores the fly's main eLN -> PN route; reported
+  for its effect on the AL tail and on cut (i)'s reading from phase A, not a viability arm.
+
+"Viable", FUNCTION, FUNCTION-q, STABILITY (a), (b), (c), LATERALITY, the self-sustained rule, the sugar and
+blind drives, the sweep protocol and the grid are **reused unchanged** from phase A's registered criteria.
+Only the synapse model and its declared parameters change.
+
+## Design (staged, with stop rules fixed in advance)
+
+**Stage 1, the 2 x 2 core:** {current-based, conductance-based} x {no STD, STD}, everything else at the gen-6
+settings (or phase A's adopted settings, if any), each swept over the w grid under sugar and blind drives.
+Cell (current, no STD) replicates phase A's cell 1 (positive control for the replication).
+
+**Stage 2, inside the conductance-based arms only:** E_i sweep {-55, -65, -75} mV x tau_i {5, 10} ms. Run only
+the conductance-based arms of stage 1 that are not already viable.
+
+**Stage 3, AL mechanisms (H7e, H7f):** on the best stage-1/2 arm, add AL presynaptic GABA_B; then AL gap
+junctions. Scored with phase A's A4 readings (W*, "stops it").
+
+**Stop rules:** a stage runs only if the previous stage leaves no viable deciding arm, except stage 3, which runs
+in any case as mechanism reporting. Adoption follows phase A's B1 logic (smallest viable w, top-up rule,
+LATERALITY -> H), with a fixed preference order fixed now: the simplest viable arm wins (fewest added
+mechanisms; ties: current-based before conductance-based).
+
+**Weight conversion (fixed in advance, so arm differences are not a rescaling):** a conductance per synapse
+g_syn = w_syn_mV / (V_cal - E_syn), with V_cal = v_rest (-52 mV), so that one synapse gives the same initial
+PSP at rest as in the current model (Cavallari et al. 2014 matching rule). With E_e = 0 mV and E_i = -65 mV this
+gives an inhibitory conductance 4x the excitatory per synapse, by construction rather than by fit.
+
+## Parameters (measured / modelled / assumed)
+
+| parameter | value | status | source |
+|---|---|---|---|
+| E_e (nicotinic ACh) | 0 mV (sensitivity -10, +10) | measured in culture only (+8.9 mV; about 0 mV) | Su & O'Dowd 2003; Lee et al. 2003 |
+| E_i (GABA_A / GluCl / HisCl) | **-65 mV primary**, sweep -55 / -65 / -75 | **assumed**: no physiological adult in vivo measurement exists; larval VNC -56 +/- 3 mV; in vivo whole-cell values are pipette-imposed (about -120 mV, an artefact) | Rohrbough & Broadie 2002 (excerpt only); models -70 (Nagel 2015; Huang 2018) |
+| tau_e | 5 ms (sweep 2-5) | modelled: mEPSC half-decay about 2.1-2.5 ms in PNs in vivo; KC 5.2 ms in situ | Kazama & Wilson 2008; Gu & O'Dowd 2006 |
+| tau_i (GABA_A) | 5 ms primary, 10 ms in stage 2 | measured in culture only (3.3-5.4 ms); no in vivo AL IPSC kinetics | Su & O'Dowd 2003; Lee et al. 2003 |
+| STD | U 0.3, tau_D 0.8 s on every chemical synapse | modelled: ORN -> PN recovery about 0.9-1 s; Huang needed tau_D > 125 ms | Nagel 2015; Huang 2018 |
+| GABA_B (AL, presynaptic) | divisive on ORN -> PN efficacy, onset alpha tau 25 ms, decay 1 s, driven by AL LN spikes; none on LNs | modelled from in vivo pharmacology | Olsen & Wilson 2008; Nagel 2015; Wilson & Laurent 2005; Root et al. 2008 |
+| AL gap junctions | g_gap / g_L 0.02 for sister PN-PN and eLN-PN (eLN = cholinergic ALLN types, INFERRED mapping) | modelled from coupling coefficients 0.003-0.034, which are lower bounds | Yaksi & Wilson 2010; Kazama & Wilson 2009 |
+| v_rest, threshold, tau_m | unchanged (-52, -45 mV, 20 ms) | modelled (Shiu); PN rest in vivo -55 to -60 mV is noted, not adopted, so only the synapse model changes | Gouwens & Wilson 2009 |
+
+Two numerics risks are designed out in advance: the GABA driving-force artefact Huang 2018 hit (v pushed below
+E_i makes inhibition depolarizing) is avoided because conductances cannot drive v past E_i; it is checked by
+asserting v >= E_i - 1 mV in a smoke run. Integration stays Euler at dt 0.1 ms with the existing dt 0.05 ms
+numerics check.
+
+## Open choices for Jayson (before anything is registered)
+
+1. Primary E_i: -65 mV (shunting-leaning, between larval VNC and the -70 used by fly models) or -70 mV (matches
+   Nagel and Huang).
+2. Whether stage 1 is a full 2 x 2 or STD alone first (cheaper; Huang predicts it is the decisive arm).
+3. Whether the AL mechanisms (stage 3) run in gen 7 or wait for a viable core model.
+4. Whether to fold the `"unclear"` fallback fix into the same freeze (declared and measured separately) or
+   leave it for its own generation.
+
+## Not in this plan
+
+Neuropeptides, neuromodulators (amines stay dropped), non-spiking neurons, dendritic compartments, temperature
+correction (every in vivo kinetic value is at an unstated, presumably room, temperature).
