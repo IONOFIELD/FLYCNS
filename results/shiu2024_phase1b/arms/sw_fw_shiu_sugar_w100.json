@@ -1,0 +1,1078 @@
+{
+ "arm": "sw_fw_shiu_sugar_w100",
+ "spec": {
+  "seed": 245,
+  "kind": "sweep",
+  "data": "flywire",
+  "settings": {
+   "reset": "v_and_g",
+   "stimulation": "kick",
+   "integration": "exact",
+   "adaptation": false,
+   "w_scale": 1.0,
+   "floor": 1,
+   "amines": "column",
+   "electrical": false
+  },
+  "drive": "sugar",
+  "trials": 10
+ },
+ "options": {
+  "reset": "v_and_g",
+  "stimulation": "kick",
+  "stim_kick_mV": 68.75,
+  "integration": "exact",
+  "adaptation": false
+ },
+ "reduced": false,
+ "data_dir": "data",
+ "n_lif": 127400,
+ "n_recurrent": 14687178,
+ "n_stimulated": 21,
+ "n_driven": 21,
+ "pool": 21,
+ "drive_hz": 100.0,
+ "group_sizes": {
+  "superclass": {
+   "": 127377,
+   "cb_motor": 2
+  }
+ },
+ "unknown_transmitter": null,
+ "build_s": 3.6,
+ "wall_s": 601.3,
+ "trials": [
+  {
+   "k": 0,
+   "n_active": 338,
+   "n_spikes": 7608,
+   "cns_rate_hz": 0.059727270586203376,
+   "fraction_active": 0.002653498614371286,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    177,
+    369,
+    526,
+    330,
+    467,
+    298,
+    398,
+    337,
+    498,
+    271,
+    441,
+    420,
+    268,
+    365,
+    453,
+    302,
+    355,
+    339,
+    481,
+    513,
+    182,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     7497,
+     336
+    ],
+    "cb_motor": [
+     111,
+     2
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     7497,
+     336,
+     0.058856779481382036
+    ],
+    "cb_motor": [
+     111,
+     2,
+     55.5
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 63.0,
+   "mn9_ipsi_hz": 48.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    63.0,
+    48.0
+   ],
+   "mn9_max_cell_hz": 63.0,
+   "mn9_li": 0.13513513513513514
+  },
+  {
+   "k": 1,
+   "n_active": 346,
+   "n_spikes": 7711,
+   "cns_rate_hz": 0.060535881110701135,
+   "fraction_active": 0.0027163033153031505,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    212,
+    476,
+    486,
+    300,
+    533,
+    502,
+    266,
+    232,
+    474,
+    404,
+    132,
+    457,
+    370,
+    333,
+    400,
+    301,
+    477,
+    512,
+    397,
+    447,
+    41,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     7600,
+     344
+    ],
+    "cb_motor": [
+     111,
+     2
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     7600,
+     344,
+     0.05966540270221469
+    ],
+    "cb_motor": [
+     111,
+     2,
+     55.5
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 61.0,
+   "mn9_ipsi_hz": 50.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    61.0,
+    50.0
+   ],
+   "mn9_max_cell_hz": 61.0,
+   "mn9_li": 0.0990990990990991
+  },
+  {
+   "k": 2,
+   "n_active": 341,
+   "n_spikes": 7926,
+   "cns_rate_hz": 0.062223757448245,
+   "fraction_active": 0.002677050377220735,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    299,
+    329,
+    418,
+    420,
+    556,
+    334,
+    391,
+    339,
+    515,
+    359,
+    448,
+    336,
+    301,
+    420,
+    431,
+    238,
+    447,
+    485,
+    441,
+    419,
+    109,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     7807,
+     339
+    ],
+    "cb_motor": [
+     119,
+     2
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     7807,
+     339,
+     0.06129049985476185
+    ],
+    "cb_motor": [
+     119,
+     2,
+     59.5
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 72.0,
+   "mn9_ipsi_hz": 47.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    72.0,
+    47.0
+   ],
+   "mn9_max_cell_hz": 72.0,
+   "mn9_li": 0.21008403361344538
+  },
+  {
+   "k": 3,
+   "n_active": 338,
+   "n_spikes": 7832,
+   "cns_rate_hz": 0.06148580221229559,
+   "fraction_active": 0.002653498614371286,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    129,
+    319,
+    483,
+    485,
+    473,
+    320,
+    517,
+    413,
+    322,
+    395,
+    462,
+    471,
+    498,
+    279,
+    328,
+    368,
+    485,
+    445,
+    286,
+    354,
+    35,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     7728,
+     336
+    ],
+    "cb_motor": [
+     104,
+     2
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     7728,
+     336,
+     0.060670293695094094
+    ],
+    "cb_motor": [
+     104,
+     2,
+     52.0
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 61.0,
+   "mn9_ipsi_hz": 43.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    61.0,
+    43.0
+   ],
+   "mn9_max_cell_hz": 61.0,
+   "mn9_li": 0.17307692307692307
+  },
+  {
+   "k": 4,
+   "n_active": 347,
+   "n_spikes": 8431,
+   "cns_rate_hz": 0.06618830419456896,
+   "fraction_active": 0.0027241539029196336,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    144,
+    546,
+    592,
+    517,
+    283,
+    409,
+    435,
+    477,
+    258,
+    496,
+    457,
+    543,
+    190,
+    607,
+    535,
+    237,
+    469,
+    438,
+    458,
+    340,
+    177,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     8296,
+     345
+    ],
+    "cb_motor": [
+     135,
+     2
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     8296,
+     345,
+     0.06512949747599645
+    ],
+    "cb_motor": [
+     135,
+     2,
+     67.5
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 75.0,
+   "mn9_ipsi_hz": 60.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    75.0,
+    60.0
+   ],
+   "mn9_max_cell_hz": 75.0,
+   "mn9_li": 0.1111111111111111
+  },
+  {
+   "k": 5,
+   "n_active": 334,
+   "n_spikes": 7584,
+   "cns_rate_hz": 0.05953885648340778,
+   "fraction_active": 0.0026220962639053533,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    178,
+    408,
+    413,
+    276,
+    271,
+    345,
+    311,
+    474,
+    392,
+    349,
+    532,
+    427,
+    411,
+    267,
+    540,
+    293,
+    384,
+    518,
+    362,
+    433,
+    25,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     7474,
+     332
+    ],
+    "cb_motor": [
+     110,
+     2
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     7474,
+     332,
+     0.05867621313109902
+    ],
+    "cb_motor": [
+     110,
+     2,
+     55.0
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 65.0,
+   "mn9_ipsi_hz": 45.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    65.0,
+    45.0
+   ],
+   "mn9_max_cell_hz": 65.0,
+   "mn9_li": 0.18181818181818182
+  },
+  {
+   "k": 6,
+   "n_active": 335,
+   "n_spikes": 7587,
+   "cns_rate_hz": 0.059562408246257234,
+   "fraction_active": 0.0026299468515218363,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    140,
+    496,
+    268,
+    405,
+    282,
+    459,
+    577,
+    499,
+    404,
+    386,
+    382,
+    392,
+    306,
+    490,
+    459,
+    348,
+    460,
+    227,
+    348,
+    259,
+    258,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     7463,
+     333
+    ],
+    "cb_motor": [
+     124,
+     2
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     7463,
+     333,
+     0.058589855311398445
+    ],
+    "cb_motor": [
+     124,
+     2,
+     62.0
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 71.0,
+   "mn9_ipsi_hz": 53.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    71.0,
+    53.0
+   ],
+   "mn9_max_cell_hz": 71.0,
+   "mn9_li": 0.14516129032258066
+  },
+  {
+   "k": 7,
+   "n_active": 337,
+   "n_spikes": 8054,
+   "cns_rate_hz": 0.06322863266315484,
+   "fraction_active": 0.002645648026754803,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    219,
+    513,
+    581,
+    421,
+    317,
+    490,
+    252,
+    437,
+    506,
+    259,
+    424,
+    450,
+    420,
+    346,
+    469,
+    372,
+    352,
+    404,
+    367,
+    455,
+    254,
+    9,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     7935,
+     335
+    ],
+    "cb_motor": [
+     119,
+     2
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     7935,
+     335,
+     0.062295390847641255
+    ],
+    "cb_motor": [
+     119,
+     2,
+     59.5
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 64.0,
+   "mn9_ipsi_hz": 55.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    64.0,
+    55.0
+   ],
+   "mn9_max_cell_hz": 64.0,
+   "mn9_li": 0.07563025210084033
+  },
+  {
+   "k": 8,
+   "n_active": 336,
+   "n_spikes": 8154,
+   "cns_rate_hz": 0.06401369142480315,
+   "fraction_active": 0.0026377974391383193,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    248,
+    560,
+    269,
+    443,
+    441,
+    378,
+    402,
+    456,
+    454,
+    534,
+    298,
+    460,
+    477,
+    361,
+    358,
+    431,
+    335,
+    399,
+    407,
+    443,
+    96,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     8032,
+     334
+    ],
+    "cb_motor": [
+     122,
+     2
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     8032,
+     334,
+     0.06305690980318268
+    ],
+    "cb_motor": [
+     122,
+     2,
+     61.0
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 70.0,
+   "mn9_ipsi_hz": 52.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    70.0,
+    52.0
+   ],
+   "mn9_max_cell_hz": 70.0,
+   "mn9_li": 0.14754098360655737
+  },
+  {
+   "k": 9,
+   "n_active": 342,
+   "n_spikes": 7510,
+   "cns_rate_hz": 0.05895791299978803,
+   "fraction_active": 0.002684900964837218,
+   "settle_spikes": 0,
+   "tail_spikes": 0,
+   "tail_active": 0,
+   "tail_rate_hz": 0.0,
+   "self_sustained": false,
+   "bins_ms": 50,
+   "spikes_per_bin": [
+    0,
+    0,
+    0,
+    0,
+    326,
+    467,
+    289,
+    450,
+    451,
+    344,
+    289,
+    435,
+    553,
+    378,
+    326,
+    378,
+    291,
+    284,
+    412,
+    362,
+    254,
+    370,
+    419,
+    432,
+    50,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "by_superclass": {
+    "": [
+     7399,
+     340
+    ],
+    "cb_motor": [
+     111,
+     2
+    ]
+   },
+   "drive_by_superclass": {
+    "": [
+     7399,
+     340,
+     0.058087409814958746
+    ],
+    "cb_motor": [
+     111,
+     2,
+     55.5
+    ]
+   },
+   "tail_by_superclass": {
+    "": [
+     0,
+     0,
+     0.0
+    ],
+    "cb_motor": [
+     0,
+     0,
+     0.0
+    ]
+   },
+   "mn9_contra_hz": 63.0,
+   "mn9_ipsi_hz": 48.0,
+   "mn9_cells": [
+    720575940660219265,
+    720575940645521262
+   ],
+   "mn9_sides": [
+    "contra",
+    "ipsi"
+   ],
+   "mn9_per_cell_hz": [
+    63.0,
+    48.0
+   ],
+   "mn9_max_cell_hz": 63.0,
+   "mn9_li": 0.13513513513513514
+  }
+ ],
+ "registration": {
+  "file": "results/shiu2024_phase1b/registration_v5.json",
+  "version": 5,
+  "supersedes": null,
+  "git_commit": "1710398",
+  "model_hash": "b4e59cc8dcc29c2a0e0a0e693175a32c8e954940e1b3e01550b50e6c7ad21197",
+  "registered_at": "2026-10-18T01:34:15",
+  "matches": true,
+  "problems": []
+ },
+ "provenance": {
+  "written_at": "2026-10-18T09:34:04",
+  "git_commit": "6e50cba",
+  "git_is_repo": true,
+  "git_dirty": false,
+  "dirty_files": [],
+  "allow_dirty": false,
+  "env": {},
+  "python": "3.12.10",
+  "versions": {
+   "brian2": "2.10.1",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6"
+  },
+  "engine": "cython",
+  "platform": "win32",
+  "machine": "AMD64",
+  "float_dtype": "float64",
+  "graph": {
+   "data_dir": "D:\\a\\_temp\\shiu",
+   "min_weight": 1,
+   "n_neurons": 127400,
+   "n_signed_edges": 14687178,
+   "n_signed_synapses": 52793639,
+   "dataset": "FlyWire v630"
+  },
+  "data": {
+   "dir": "D:\\a\\_temp\\shiu",
+   "digests": {},
+   "manifest": "no-manifest"
+  }
+ }
+}
