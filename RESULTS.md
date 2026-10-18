@@ -1255,12 +1255,18 @@ doi:10.5061/dryad.h44j0zpp8) by `fit/extract_turner_loom.py`: 21 flies, 1,510 lo
 glomeruli, epoch onsets taken from the per-epoch clock stamps rather than the photodiode.
 
 Trials are split by the authors' own 50 Hz walking classification, carried in the datafiles, so no
-video download is needed. Every glomerulus except LC12 is relatively larger when the fly walks
-(LC6 0.64 against 0.40, LC21 0.59 against 0.39, LC26 0.93 against 0.69, LC4 0.73 against 0.52,
-LPLC2 1.00 against 0.83) and the trial-gain sigma is higher too (0.442 against 0.357). That is the
-locomotor enhancement the original paper reports, recovered by an independent extraction. Because
-the benchmarks simulate a fly that is not walking, the **stationary** amplitudes are the default;
-`FLYCNS_LOOM_STATE=walking|all` selects the others.
+video download is needed. Each state's amplitudes are normalised to that state's own largest
+glomerulus (`fit/extract_turner_loom.py`, LC12 = 1.0 in both), so the per-state numbers give the
+*shape* of the loom profile in each state, not its size: they cannot say whether loom responses are
+larger or smaller when the fly walks, and no such claim is made here. (Corrected 17 October 2026: this
+paragraph used to read the walking-vs-stationary differences, e.g. LC6 0.64 against 0.40, as a
+locomotor enhancement; that comparison is an artefact of the per-state normalisation. The extractor
+does not store absolute per-state amplitudes.) The two states also come largely from different days
+and protocols (8 walking and 13 stationary series; the LoomingSpot series are the walking-fly days),
+so state is confounded with protocol. The trial-gain sigma is 0.442 walking and 0.357 stationary.
+Because the benchmarks simulate a fly that is not walking, the **stationary** profile is the default;
+`FLYCNS_LOOM_STATE=walking|all` selects the others. The same wrong claim sits in a comment in
+`flycns/protocols.py`, a hashed model file; it is corrected at the generation-6 freeze.
 
 The dF/F-to-rate scale (5 Hz for the strongest glomerulus) is the one remaining free parameter of
 the stimulus and is declared as such.
