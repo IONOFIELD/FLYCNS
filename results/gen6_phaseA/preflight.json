@@ -1,0 +1,223 @@
+{
+ "data_dir": "data",
+ "celltypes": {
+  "sha256": "ea8bad7dccde7e714efdb5a882f73fe5391659415130bde57e71f1d7e5585504",
+  "registered": "ea8bad7dccde7e714efdb5a882f73fe5391659415130bde57e71f1d7e5585504",
+  "counts": {
+   "ALPN": 180,
+   "ALLN": 79,
+   "Kenyon_Cell": 15
+  },
+  "source": {
+   "repository": "https://github.com/reiserlab/celltype-explorer-drosophila-male-cns",
+   "commit": "789cc6c105798ce2fd70ba85dab394f90899616b",
+   "commit_date": "2026-09-10T09:32:56-04:00",
+   "file": "types.html",
+   "sha256": "321364238d96aae90ce0723677bcf6dcf44ca1641494dc7cddec980ef0eb9bd9",
+   "type_cards": 11751,
+   "names_by_source": {
+    "link": 11282,
+    "span_title": 469
+   }
+  }
+ },
+ "unknown_transmitter": {
+  "edges": 160051,
+  "synapses": 1980492,
+  "silent_presynaptic": 8020
+ },
+ "celltypes_in_data": {
+  "ALPN": {
+   "types": 180,
+   "cells": 682,
+   "types_missing": []
+  },
+  "ALLN": {
+   "types": 79,
+   "cells": 399,
+   "types_missing": []
+  },
+  "Kenyon_Cell": {
+   "types": 15,
+   "cells": 4064,
+   "types_missing": []
+  }
+ },
+ "mn9": {
+  "L": 10331,
+  "R": 16949,
+  "status": {
+   "10331": "Traced",
+   "16949": "Traced"
+  }
+ },
+ "mirror": {
+  "partners": 93,
+  "weight_in": 5651.0,
+  "kept": 3,
+  "kept_w": 71.0,
+  "split_partners": 5,
+  "below_floor_edges": 11,
+  "below_floor_w": 21.0,
+  "sign_mismatch_w": 0.0,
+  "no_signed_output_w": 2.5,
+  "mn9_swap": 1,
+  "opposite_not_in_network": 0,
+  "removed_partners": 25,
+  "removed_w": 364.0,
+  "new_partners": 100,
+  "weight_out": 5651.0,
+  "weight_out_exc": 2805.0,
+  "weight_out_inh": 2846.0,
+  "weight_in_exc": 2805.0,
+  "weight_in_inh": 2846.0,
+  "no_signed_output_cells": 1,
+  "placeholders": 0,
+  "placeholder_ids": [],
+  "cells_before": 170175,
+  "cells_after": 170175
+ },
+ "normalise": {
+  "factor": 15.524725274725276,
+  "mn9_L_in": 5651.0,
+  "mn9_R_in_before": 364.0,
+  "mn9_R_in_after": 5651.0
+ },
+ "cuts": {
+  "lh": {
+   "removed_edges": 25995,
+   "removed_synapses": 413873.0,
+   "removed_exc": 359833.0,
+   "removed_inh": 54040.0,
+   "placeholders": 5,
+   "placeholder_ids": [
+    441701,
+    554115,
+    565798179,
+    648921149,
+    655080349
+   ],
+   "cells_before": 170175,
+   "cells_after": 170175
+  },
+  "lhmb": {
+   "removed_edges": 46117,
+   "removed_synapses": 801529.0,
+   "removed_exc": 746753.0,
+   "removed_inh": 54776.0,
+   "placeholders": 7,
+   "placeholder_ids": [
+    274767,
+    376504,
+    441701,
+    554115,
+    565798179,
+    648921149,
+    655080349
+   ],
+   "cells_before": 170175,
+   "cells_after": 170175
+  },
+  "i": {
+   "removed_edges": 21909,
+   "removed_synapses": 588606.0,
+   "removed_exc": 588606.0,
+   "removed_inh": 0.0,
+   "placeholders": 6,
+   "placeholder_ids": [
+    923698,
+    249366993,
+    446154401,
+    522734724,
+    651274242,
+    1034713447
+   ],
+   "cells_before": 170175,
+   "cells_after": 170175
+  },
+  "ii": {
+   "removed_edges": 19379,
+   "removed_synapses": 473474.0,
+   "removed_exc": 473474.0,
+   "removed_inh": 0.0,
+   "placeholders": 2,
+   "placeholder_ids": [
+    167893,
+    551050
+   ],
+   "from_plus_types": {
+    "types": 15,
+    "edges": 1612,
+    "synapses": 36687.0,
+    "share": 0.07748471932988929
+   },
+   "from_m_mz_cb_types": {
+    "types": 49,
+    "edges": 3189,
+    "synapses": 49606.0,
+    "share": 0.10477027249648344
+   },
+   "cells_before": 170175,
+   "cells_after": 170175
+  }
+ },
+ "al_to_al_by_sender": {
+  "other acetylcholine exc": 1200153.0,
+  "ALLN acetylcholine exc": 587339.0,
+  "ALPN acetylcholine exc": 495371.0,
+  "ALLN gaba inh": 337755.0,
+  "ALLN glutamate inh": 41117.0,
+  "other gaba inh": 27261.0,
+  "ALPN gaba inh": 8359.0,
+  "other glutamate inh": 6105.0,
+  "ALPN glutamate inh": 121.0
+ },
+ "al_pn_out_weight_by_post_roi": {
+  "AL(R)": 263512.0,
+  "AL(L)": 243330.0,
+  "LH(R)": 233271.0,
+  "LH(L)": 180602.0,
+  "gL(R)": 93092.0,
+  "gL(L)": 92282.0,
+  "aL(R)": 71003.0,
+  "aL(L)": 48958.0,
+  "SLP(R)": 36531.0,
+  "SLP(L)": 32610.0,
+  "PLP(R)": 31551.0,
+  "b'L(R)": 27628.0,
+  "PLP(L)": 27621.0,
+  "b'L(L)": 26555.0,
+  "bL(L)": 22498.0,
+  "AVLP(R)": 11806.0,
+  "AVLP(L)": 10258.0,
+  "WED(R)": 9363.0,
+  "WED(L)": 8245.0,
+  "SMP(R)": 7882.0,
+  "SMP(L)": 7197.0,
+  "SIP(L)": 6117.0,
+  "SIP(R)": 5910.0,
+  "GNG": 5572.0,
+  "CA(R)": 5351.0
+ },
+ "blind": {
+  "pool": 15757,
+  "driven": 1575
+ },
+ "compositions": {
+  "b": {
+   "driven": 1575,
+   "ol_sensory": 603,
+   "non_acetylcholine": 696,
+   "zeroed": 696,
+   "kept": 879
+  },
+  "c": {
+   "driven": 1575,
+   "ol_sensory": 603,
+   "non_acetylcholine": 696,
+   "orn_hrn": 260,
+   "zeroed": 956,
+   "kept": 619
+  }
+ }
+}

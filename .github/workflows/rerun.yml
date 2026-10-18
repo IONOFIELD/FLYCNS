@@ -10,6 +10,9 @@ name: real-data rerun
 #   p1b-*         phase 1b (fit/shiu2024_phase1b.py): manual, so name them, e.g.
 #                 rerun/gen5p1b--p1b-ladder-a+p1b-ladder-b+p1b-ladder-c+p1b-null-weightperm+p1b-null-dc;
 #                 only the two p1b-sw-fw-* jobs need the reference repository
+#   pa-*          gen-6 phase A (fit/gen6_phaseA.py): manual; 23 parts, split over several short branch names
+#                 (Windows path limit), e.g. rerun/gen6pa--pa-c1-sugar+pa-c1-blind+pa-c2-sugar+pa-c2-blind;
+#                 the 8 pa-topup-* parts (deciding cells c1-c4) run only when fit/gen6_phaseA_score.py names them
 #   fingerprint/<label>[--a+b]  the identity check (scripts/fingerprint.py): every rerun with a few trials,
 #                 recording a fingerprint of every simulation; each job pushes fingerprints/<job>.jsonl to
 #                 fingerprint-out/<run number>/<job>. Compare two such runs with scripts/fingerprint.py compare.
@@ -127,7 +130,38 @@ env:
       {"name": "p1b-sw-male-flycns-sugar",          "run": "fit/shiu2024_phase1b.py part p1b-sw-male-flycns-sugar", "manual": true},
       {"name": "p1b-sw-male-flycns-blind",          "run": "fit/shiu2024_phase1b.py part p1b-sw-male-flycns-blind", "manual": true},
       {"name": "p1b-sw-fw-shiu-sugar",              "run": "fit/shiu2024_phase1b.py part p1b-sw-fw-shiu-sugar", "manual": true, "shiu": true},
-      {"name": "p1b-sw-fw-shiu-blind",              "run": "fit/shiu2024_phase1b.py part p1b-sw-fw-shiu-blind", "manual": true, "shiu": true}
+      {"name": "p1b-sw-fw-shiu-blind",              "run": "fit/shiu2024_phase1b.py part p1b-sw-fw-shiu-blind", "manual": true, "shiu": true},
+      {"name": "pa-c1-sugar",                   "run": "fit/gen6_phaseA.py part pa-c1-sugar", "manual": true},
+      {"name": "pa-topup-c1-sugar",             "run": "fit/gen6_phaseA.py part pa-topup-c1-sugar", "manual": true},
+      {"name": "pa-c1-blind",                   "run": "fit/gen6_phaseA.py part pa-c1-blind", "manual": true},
+      {"name": "pa-topup-c1-blind",             "run": "fit/gen6_phaseA.py part pa-topup-c1-blind", "manual": true},
+      {"name": "pa-c2-sugar",                   "run": "fit/gen6_phaseA.py part pa-c2-sugar", "manual": true},
+      {"name": "pa-topup-c2-sugar",             "run": "fit/gen6_phaseA.py part pa-topup-c2-sugar", "manual": true},
+      {"name": "pa-c2-blind",                   "run": "fit/gen6_phaseA.py part pa-c2-blind", "manual": true},
+      {"name": "pa-topup-c2-blind",             "run": "fit/gen6_phaseA.py part pa-topup-c2-blind", "manual": true},
+      {"name": "pa-c2b-sugar",                  "run": "fit/gen6_phaseA.py part pa-c2b-sugar", "manual": true},
+      {"name": "pa-c2b-blind",                  "run": "fit/gen6_phaseA.py part pa-c2b-blind", "manual": true},
+      {"name": "pa-c3-sugar",                   "run": "fit/gen6_phaseA.py part pa-c3-sugar", "manual": true},
+      {"name": "pa-topup-c3-sugar",             "run": "fit/gen6_phaseA.py part pa-topup-c3-sugar", "manual": true},
+      {"name": "pa-c3-blind",                   "run": "fit/gen6_phaseA.py part pa-c3-blind", "manual": true},
+      {"name": "pa-topup-c3-blind",             "run": "fit/gen6_phaseA.py part pa-topup-c3-blind", "manual": true},
+      {"name": "pa-c4-sugar",                   "run": "fit/gen6_phaseA.py part pa-c4-sugar", "manual": true},
+      {"name": "pa-topup-c4-sugar",             "run": "fit/gen6_phaseA.py part pa-topup-c4-sugar", "manual": true},
+      {"name": "pa-c4-blind",                   "run": "fit/gen6_phaseA.py part pa-c4-blind", "manual": true},
+      {"name": "pa-topup-c4-blind",             "run": "fit/gen6_phaseA.py part pa-topup-c4-blind", "manual": true},
+      {"name": "pa-c4b-sugar",                  "run": "fit/gen6_phaseA.py part pa-c4b-sugar", "manual": true},
+      {"name": "pa-c4b-blind",                  "run": "fit/gen6_phaseA.py part pa-c4b-blind", "manual": true},
+      {"name": "pa-a3-real",                    "run": "fit/gen6_phaseA.py part pa-a3-real", "manual": true},
+      {"name": "pa-a3-null-0",                  "run": "fit/gen6_phaseA.py part pa-a3-null-0", "manual": true},
+      {"name": "pa-a3-null-1",                  "run": "fit/gen6_phaseA.py part pa-a3-null-1", "manual": true},
+      {"name": "pa-a3-null-2",                  "run": "fit/gen6_phaseA.py part pa-a3-null-2", "manual": true},
+      {"name": "pa-a3-null-3",                  "run": "fit/gen6_phaseA.py part pa-a3-null-3", "manual": true},
+      {"name": "pa-a4-drive-b",                 "run": "fit/gen6_phaseA.py part pa-a4-drive-b", "manual": true},
+      {"name": "pa-a4-drive-c",                 "run": "fit/gen6_phaseA.py part pa-a4-drive-c", "manual": true},
+      {"name": "pa-a4-cut-lh",                  "run": "fit/gen6_phaseA.py part pa-a4-cut-lh", "manual": true},
+      {"name": "pa-a4-cut-lhmb",                "run": "fit/gen6_phaseA.py part pa-a4-cut-lhmb", "manual": true},
+      {"name": "pa-a4-cut-i",                   "run": "fit/gen6_phaseA.py part pa-a4-cut-i", "manual": true},
+      {"name": "pa-a4-cut-ii",                  "run": "fit/gen6_phaseA.py part pa-a4-cut-ii", "manual": true}
     ]
 
 jobs:

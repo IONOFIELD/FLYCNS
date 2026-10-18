@@ -1,0 +1,123 @@
+"""Write data/gen6_phaseA_celltypes.json: the cell-type lists that define the gen-6 phase A edge cuts.
+
+    python scripts/make_gen6_celltypes.py <explorer_repo>
+
+<explorer_repo> is a clone of github.com/reiserlab/celltype-explorer-drosophila-male-cns. Its types.html is the
+public MaleCNS Cell Type Explorer catalogue; each type card carries the MaleCNS `class` as data-class.
+data/neurons.parquet has no class column, so phase A defines "AL PN", "AL local neuron" and "Kenyon cell" by type,
+from this catalogue (docs/gen6_phaseA_DRAFT.md, B2). The output records the source commit, the sha256 of
+types.html and the extraction rule, so the list can be rebuilt and checked. Run once, before registering; the
+phase A registration records the JSON's sha256 and the run refuses a different file.
+"""
+import hashlib
+import json
+import re
+import subprocess
+import sys
+from html.parser import HTMLParser
+from pathlib import Path
+from urllib.parse import unquote
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "data" / "gen6_phaseA_celltypes.json"
+CLASSES = ("ALPN", "ALLN", "Kenyon_Cell")
+
+
+class _Cards(HTMLParser):
+    """Every type card: its data-class and its type name. A card names its type in one of two ways: a
+    neuron-name-link (name from the href, types/<name>.html, because the link text truncates long names with an
+    ellipsis and some cards quote the href), or, on cards without a link (469 at 789cc6c), a
+    <span class=neuron-name title="<name> has N cells. ..."> (name from the title, else the span text)."""
+    SPAN_TITLE = re.compile(r"^(.+?) has \d+ cells?\b")
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.cards, self._cls, self._in_link, self._text = [], None, False, ""
+        self._in_span, self._span_text = False, ""
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if tag == "div" and "neuron-card-wrapper" in (a.get("class") or ""):
+            self._cls = a.get("data-class") or ""
+            self.cards.append(dict(cls=self._cls, name=None, text=None, how=None))
+        elif tag == "a" and "neuron-name-link" in (a.get("class") or "").split() and self.cards:
+            href = a.get("href") or ""
+            m = re.match(r"^types/(.+)\.html$", href)
+            if m:
+                self.cards[-1]["name"] = unquote(m.group(1))
+                self.cards[-1]["how"] = "link"
+            self._in_link, self._text = True, ""
+        elif tag == "span" and "neuron-name" in (a.get("class") or "").split() and self.cards \
+                and self.cards[-1]["name"] is None:
+            m = self.SPAN_TITLE.match(a.get("title") or "")
+            if m:
+                self.cards[-1]["name"] = m.group(1)
+                self.cards[-1]["how"] = "span_title"
+            self._in_span, self._span_text = True, ""
+
+    def handle_data(self, data):
+        if self._in_link:
+            self._text += data
+        if self._in_span:
+            self._span_text += data
+
+    def handle_endtag(self, tag):
+        if tag == "span" and self._in_span:
+            self._in_span = False
+            if self.cards and self.cards[-1]["name"] is None and self._span_text.strip():
+                self.cards[-1]["name"], self.cards[-1]["how"] = self._span_text.strip(), "span_text"
+        if tag == "a" and self._in_link:
+            self._in_link = False
+            if self.cards and self.cards[-1]["text"] is None:
+                self.cards[-1]["text"] = self._text.strip()
+
+
+def main(repo):
+    repo = Path(repo)
+    page = repo / "types.html"
+    if not page.exists():
+        raise SystemExit(f"[celltypes] {page} not found: pass a clone of the Cell Type Explorer repository")
+    raw = page.read_bytes()
+    commit = subprocess.run(["git", "-C", str(repo), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    when = subprocess.run(["git", "-C", str(repo), "log", "-1", "--format=%cI"], capture_output=True, text=True).stdout.strip()
+    parser = _Cards()
+    parser.feed(raw.decode("utf-8"))
+    lists = {c: set() for c in CLASSES}
+    n_cards, truncated, how = len(parser.cards), [], {}
+    unnamed = [c for c in parser.cards if not c["name"]]
+    if unnamed:       # never skip a card silently: every card must yield a name
+        raise SystemExit(f"[celltypes] {len(unnamed)} cards yield no type name (classes "
+                         f"{sorted({c['cls'] for c in unnamed})[:10]}); the page layout changed")
+    for c in parser.cards:
+        name = c["name"]
+        how[c["how"]] = how.get(c["how"], 0) + 1
+        if "\u2026" in name:
+            truncated.append(name)
+        if c["cls"] in lists:
+            lists[c["cls"]].add(name.strip())
+    if truncated:
+        raise SystemExit(f"[celltypes] {len(truncated)} names still truncated: {truncated[:5]}")
+    if not all(lists.values()):
+        raise SystemExit(f"[celltypes] a class came out empty: { {c: len(v) for c, v in lists.items()} }")
+    rec = dict(
+        purpose="gen-6 phase A edge cuts (docs/gen6_phaseA_DRAFT.md, B2): AL PN = type in ALPN; AL local neuron = "
+                "type in ALLN; Kenyon cell = type in Kenyon_Cell",
+        source=dict(repository="https://github.com/reiserlab/celltype-explorer-drosophila-male-cns", commit=commit,
+                    commit_date=when, file="types.html", sha256=hashlib.sha256(raw).hexdigest(), type_cards=n_cards,
+                    names_by_source=how),
+        rule=("every type card (div.neuron-card-wrapper) in types.html whose data-class attribute is exactly the class "
+              "name; type name = the card's neuron-name-link href, types/<name>.html, URL-decoded (the link text "
+              "truncates long names), or, on a card without that link, its span.neuron-name title ('<name> has N "
+              "cells'); a card that yields no name stops the build; parsed with html.parser "
+              "(scripts/make_gen6_celltypes.py)"),
+        classes={c: sorted(v) for c, v in lists.items()},
+        counts={c: len(v) for c, v in lists.items()})
+    OUT.write_text(json.dumps(rec, indent=1) + "\n", encoding="utf-8")
+    print(f"[celltypes] {OUT.relative_to(ROOT)}: " + ", ".join(f"{c} {len(v)}" for c, v in lists.items())
+          + f" (from {n_cards} cards, commit {commit[:10]})")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        raise SystemExit(__doc__)
+    main(sys.argv[1])
