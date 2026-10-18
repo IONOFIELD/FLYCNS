@@ -8,8 +8,9 @@ Score generation 6, phase A (fit/gen6_phaseA.py) exactly as docs/gen6_phaseA_DRA
 This file is hashed into phase A's registration (fit/gen6_phaseA.py registers both), so a threshold changed here is a
 changed registration. Every verdict is PASS, FAIL or UNRESOLVED; UNRESOLVED is never read as PASS.
 
-B1   Viable(cell): a grid w at which FUNCTION (screen), FUNCTION-q, STABILITY (a), (b), (c) all PASS, plus LATERALITY
-     for c2 and c4 (M7); the decision w is the smallest such w. The outcome table over c1-c4 is B1's. A candidate w
+B1   Viable(cell): a grid w at which FUNCTION (screen), FUNCTION-q, STABILITY (a), (b), (c) all PASS; the decision w
+     is the smallest such w. LATERALITY is not a viability component: an outcome that adopts the mirror (mirror,
+     both) also needs LATERALITY PASS in its cell at its decision w, else the outcome is H (M7). The outcome table over c1-c4 is B1's. A candidate w
      (no component FAILs, at least one UNRESOLVED) asks for ONE top-up of the arm(s) whose component is UNRESOLVED;
      the top-up trials are pooled only for an arm this rule names; after that, UNRESOLVED counts as not passing.
 A3   M4: PASS iff #(real > draw) >= 95 of 100 and the null is alive; FAIL iff real <= null median; else UNRESOLVED.
@@ -365,6 +366,8 @@ def main():
         Q4=None if None in cut_stops.values() else (not cut_stops["lh"] and not cut_stops["lhmb"]),
         Q5=decision == "C",
         Q6=None if None in cut_stops.values() else bool(cut_stops["i"] or cut_stops["ii"]))
+    if decision in ("reset", "both"):      # m8
+        A4["caveat"] = A.CRITERIA["definitions"]["a4_reset"]
     report = dict(benchmark=A.LABEL, smoke=SMOKE, criteria=A.CRITERIA, cells=cells, decision=decision, decision_why=why,
                   decision_cell=d_cell, decision_w=d_w,
                   topups_named=sorted(named), topups_missing=missing_topups, laterality_mirror_only=mirror_only,

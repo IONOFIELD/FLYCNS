@@ -1,6 +1,8 @@
-# Generation 6, phase A: DRAFT plan (not registered)
+# Generation 6, phase A: plan (final for registration; not yet registered)
 
-Status: DRAFT for review, 18 October 2026. Nothing here is registered and no code exists for it yet.
+Status: final for registration, 18 October 2026. The code is `fit/gen6_phaseA.py` and `fit/gen6_phaseA_score.py`
+(both hashed into the registration), with `data/gen6_phaseA_celltypes.json` (sha256 pinned in the code). Nothing
+is registered yet. The file name keeps "DRAFT" because the registration's criteria cite this path.
 Revised 18 October 2026 (05:19 PDT): the three open choices are decided by Jayson (section "Decisions");
 findings from Grok's read-only signing audit are added (section "Signing audit"). It
 follows from Phase 1b's outcome C (`RESULTS.md`, 18 October; `results/gen6_screen/screen_v2.json`): on the male
@@ -44,7 +46,7 @@ to later runs.
     same `type`, side taken from `instance`/`somaSide`.
   - **Partners with no opposite-side match, or on the midline:** kept on the same partner (P -> MN9_R, weight
     w). Their count and total weight are logged in the registration.
-  - **Several cells of the same type on the opposite side:** to fix before registering (see open items).
+  - **Several cells of the same type on the opposite side:** equal split (B3, decided by the audit).
   - **Normalise:** MN9_R's existing input weights scaled by (MN9_L total / MN9_R total), partners unchanged.
   - **Reported under both fixes:** LI. If LI falls below 0.8 under mirroring only, that is direct evidence the
     asymmetry came from the reconstruction.
@@ -217,7 +219,8 @@ wins.
 
 **B1. Decision rule (replaces rules 1-4 of "Decision rule").** Adopted.
 - Viable(c): there is a grid w at which FUNCTION (screen), FUNCTION-q, STABILITY (a), (b) and (c) all PASS.
-  The cell's decision w is the smallest such w. LATERALITY joins this list for cells 2 and 4 (M7).
+  The cell's decision w is the smallest such w. (LATERALITY is not on this list; see M7 and the answers
+  below: it decides H for an outcome that adopts the mirror.)
 - Outcomes over V1-V4 (2b and 4b never enter):
   - V1: Phase 1b's outcome C is not replicated. Stop for review; no default changes.
   - not V1, V2, not V3: adopt the MN9_R mirror.
@@ -247,7 +250,7 @@ wins.
   3213642...). **Corrected the same day after the preflight:** the first extractor read names from the card
   text, which truncates long names ("M_l2PN10t..."), and skipped cards whose link is quoted (472 of 11,751),
   which also hid the alpha'/beta' Kenyon cells. It now parses the page with html.parser and takes each name
-  from the link target. Result: **ALPN 177 types, ALLN 76, Kenyon_Cell 14** (KCa'b'-ap1, -ap2 and -m
+  from the link target. Result: ALPN 177 types, ALLN 76, Kenyon_Cell 14 (KCa'b'-ap1, -ap2 and -m
   included), no truncated names, no overlap between the lists. Earlier class tables built with the same
   pattern (the AL/LH sign audit's class counts) carry the same error; its region-level numbers do not depend
   on it.
@@ -269,7 +272,15 @@ wins.
   keep the simulated cell set equal to the uncut one (m5), it keeps a zero-weight self-edge. Its readouts and
   the network's dynamics are unchanged; only the cell counts in the denominators stay as in the uncut network.
   On the pinned data a cut that removes no edge refuses to run.
-- **Decided (Jayson, 18 October): the 16 "+" PN types stay in cut (ii).** They have two glomeruli in their name
+- **Corrected again after Grok's acceptance check (18 October):** 469 cards have no name link; they name the
+  type in `<span class=neuron-name title="<name> has N cells...">`, and the extractor skipped them silently
+  (the `names_from_link_text: 469` counter counted skipped cards). It now reads that span, and stops if any card
+  yields no name. **Final list: ALPN 180, ALLN 79, Kenyon_Cell 15** (added: CB3383 and M_lvPNm27, both
+  cholinergic, and M_vPNml78; CB3679, lLN14, OA-VUMa5; KCg). Grok's independent lxml extraction gives the same
+  three lists. Names by source: 11,282 from the link, 469 from the span title.
+- **Decided (Jayson, 18 October): the "+" PN types stay in cut (ii)** (16 counted at the time among the types
+  then called uniglomerular; the corrected list has 18 "+" ALPN types, 15 cholinergic, 1 glutamatergic, 2
+  GABAergic, by the Explorer's transmitter; only the cholinergic ones are cut). They have two glomeruli in their name
   (for example VP1m+VP5_ilPN, VP2+Z_lvPN); a cholinergic PN covering two glomeruli is still part of the
   excitatory recurrence the cut tests.
 - **Decided (Jayson, 18 October, same logic): the cholinergic M_/MZ_/CB (multiglomerular mlACT) PN types go in
@@ -413,11 +424,27 @@ output is kept with the registration as context.
 5. ~~Code~~: `data/gen6_phaseA_celltypes.json`, `fit/gen6_phaseA.py`, `fit/gen6_phaseA_score.py` written and
    smoke-tested on the toy data (B2, B4). Both scripts are hashed into the registration.
 6. ~~Preflight on the pinned data~~: done on ddd9230 (`results/gen6_phaseA/preflight.json`, committed as
-   registration context). Every listed type is found in the data (ALPN 177 types / 679 cells, ALLN 76 / 394,
+   registration context) on the 177/76/14 list. **Superseded: rerun on the 180/79/15 list before registering.**
+   Every listed type was found in the data (ALPN 177 types / 679 cells, ALLN 76 / 394,
    Kenyon_Cell 14 / 4,063). MN9 10331 (L) and 16949 (R), both Traced. Mirror: 5,651 onto MN9_R from 100 cells,
    kept 3 / 71, 11 split edges below the floor (21 synapses), sign mismatch 0, no edgeless opposite cell.
    Normalise factor 15.525. Drive (b) zeroes 696 of 1,575 driven cells (603 ol_sensory, all non-cholinergic);
    drive (c) also 260 ORN/HRN cells, 619 kept. Cuts, synapses removed (placeholders): LH 413,772 (5); LH + MB
    801,428 (7); (i) 588,118 (6); (ii) 472,413 (2), of which the "+" types 36,687 (7.8%, 15 types) and the
    M_/MZ_/CB types 48,985 (10.4%, 47 types). Every cut keeps all 170,175 simulated cells.
-7. `rerun.yml` jobs for the 23 unconditional parts (and the 12 top-up parts, run only if the scorer names them).
+7. ~~`rerun.yml` jobs~~: 23 unconditional parts, plus 8 top-up parts (deciding cells c1-c4 only; the c2b/c4b
+   top-ups were dropped, since B1 never names them), run only if the scorer names them.
+8. **Fixes from Grok's acceptance check of ddd9230 (18 October), all in one commit:**
+   - BL1, the cell-type list (above).
+   - MJ1, the laterality wording (above; the scorer's docstring is fixed too).
+   - MJ2: the mirror removes every edge into MN9_R, so a cell whose only edge went there would leave the
+     network and stop every c2/c4 arm at the m5 guard. Such a cell now keeps a zero-weight self-edge, as in the
+     cuts. The mirror log reports cells before and after, and the placeholder count.
+   - mi1: the swapped MN9_L -> MN9_R edge takes MN9_L's own sign (B3 read literally).
+   - mi2: the mirror log adds the exc/inh split, in and out, and the count of P' cells with no signed output.
+   - mi3: the bimodality rule is max > 2 x max(1, min), stated in the criteria.
+   - mi4: the report carries the "A4 describes gen-5 dynamics" caveat when B1 adopts v-and-g.
+   - mi7: the self-sustained rule, the A3 statistic and the pair-index formula are written into the criteria.
+   - mi8: a missing arm refuses scoring (fails safe, never PASS); stated in the criteria.
+9. **Rerun the preflight** on the corrected list. Expected `from_m_mz_cb_types.types` 47 -> 49 and a
+   `mirror.placeholders` count (0 if no MN9_R-only cell).

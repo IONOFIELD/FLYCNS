@@ -1337,7 +1337,7 @@ def t_gen6_phaseA_design():
     cond = all(p.startswith("pa-topup-") for p in A.CONDITIONAL_PARTS) and all(
         all(a.endswith("_topup") for a in A.PARTS[p]) for p in A.CONDITIONAL_PARTS)
     n = len([a for a in A.ARMS if not a.endswith("_topup")])
-    ok = one and paired and disjoint and cond and n == 95
+    ok = one and paired and disjoint and cond and n == 95 and len(A.ARMS) - n == 40
     return ok, (f"{n} arms (+{len(A.ARMS) - n} top-ups) in {len(A.PARTS)} parts; paired seeds; blocks disjoint" if ok
                 else f"one-part {one}, paired {paired}, disjoint {disjoint}, conditional {cond}, arms {n}")
 

@@ -7,9 +7,12 @@
   "file": "types.html",
   "sha256": "321364238d96aae90ce0723677bcf6dcf44ca1641494dc7cddec980ef0eb9bd9",
   "type_cards": 11751,
-  "names_from_link_text": 469
+  "names_by_source": {
+   "link": 11282,
+   "span_title": 469
+  }
  },
- "rule": "every type card (div.neuron-card-wrapper) in types.html whose data-class attribute is exactly the class name; type name = the card's neuron-name-link href, types/<name>.html, URL-decoded (the link text truncates long names); parsed with html.parser (scripts/make_gen6_celltypes.py)",
+ "rule": "every type card (div.neuron-card-wrapper) in types.html whose data-class attribute is exactly the class name; type name = the card's neuron-name-link href, types/<name>.html, URL-decoded (the link text truncates long names), or, on a card without that link, its span.neuron-name title ('<name> has N cells'); a card that yields no name stops the build; parsed with html.parser (scripts/make_gen6_celltypes.py)",
  "classes": {
   "ALPN": [
    "CB0650",
@@ -21,6 +24,7 @@
    "CB2711",
    "CB2772",
    "CB3228",
+   "CB3383",
    "CB3447",
    "DA1_lPN",
    "DA1_vPN",
@@ -83,6 +87,7 @@
    "M_lvPNm24",
    "M_lvPNm25",
    "M_lvPNm26",
+   "M_lvPNm27",
    "M_lvPNm28",
    "M_lvPNm29",
    "M_lvPNm30",
@@ -124,6 +129,7 @@
    "M_vPNml75",
    "M_vPNml76",
    "M_vPNml77",
+   "M_vPNml78",
    "M_vPNml79",
    "M_vPNml80",
    "M_vPNml83",
@@ -203,8 +209,10 @@
    "CB3202",
    "CB3326",
    "CB3417",
+   "CB3679",
    "CB4083",
    "LN60",
+   "OA-VUMa5",
    "il3LN6",
    "l2LN19",
    "l2LN20",
@@ -214,6 +222,7 @@
    "lLN10",
    "lLN12A",
    "lLN13",
+   "lLN14",
    "lLN15",
    "lLN1_a",
    "lLN1_bc",
@@ -277,6 +286,7 @@
    "KCab-m",
    "KCab-p",
    "KCab-s",
+   "KCg",
    "KCg-d",
    "KCg-m",
    "KCg-s1",
@@ -286,8 +296,8 @@
   ]
  },
  "counts": {
-  "ALPN": 177,
-  "ALLN": 76,
-  "Kenyon_Cell": 14
+  "ALPN": 180,
+  "ALLN": 79,
+  "Kenyon_Cell": 15
  }
 }

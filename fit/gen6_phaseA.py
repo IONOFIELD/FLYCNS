@@ -49,7 +49,7 @@ LABEL = "gen6_phaseA"
 OUT = ROOT / "results" / LABEL
 SCORE_SCRIPT = ROOT / "fit" / "gen6_phaseA_score.py"
 CELLTYPES = ROOT / "data" / "gen6_phaseA_celltypes.json"
-CELLTYPES_SHA256 = "7d5e0846538a078490f83fee6418c138eeae446c71f199e22501bff204029e05"   # data/gen6_phaseA_celltypes.json as committed
+CELLTYPES_SHA256 = "ea8bad7dccde7e714efdb5a882f73fe5391659415130bde57e71f1d7e5585504"   # data/gen6_phaseA_celltypes.json as committed
 MN9_L_ID, MN9_R_ID = 10331, 16949          # MaleCNS v1.0; asserted against type == "MN9" and soma side
 LADDER_TRIALS, LADDER_MS = 30, 1000         # as M1 (phase 1, phase 1b)
 SWEEP_TRIALS, SETTLE_MS, DRIVE_MS, TAIL_MS = 10, 200, 1000, 500
@@ -99,7 +99,9 @@ def _arms():
                 st = {**FLY, "reset": c["reset"], "w_scale": w}
                 base = dict(kind="sweep", settings=st, drive=drive, mn9=c["mn9"], trials=SWEEP_TRIALS)
                 arms[f"{cell}_{drive}_{_w(w)}"] = dict(seed=SEED_BASE + i, **base)
-                arms[f"{cell}_{drive}_{_w(w)}_topup"] = dict(seed=TOPUP_BASE + i, topup_of=f"{cell}_{drive}_{_w(w)}", **base)
+                if cell in DECIDING:     # B1 names top-ups only for deciding cells; 2b and 4b never decide
+                    arms[f"{cell}_{drive}_{_w(w)}_topup"] = dict(seed=TOPUP_BASE + i, topup_of=f"{cell}_{drive}_{_w(w)}",
+                                                               **base)
     arms["A3_real_m1"] = dict(kind="ladder", settings=M1, seed=A3_REAL_SEED, trials=LADDER_TRIALS, mn9="data")
     for j in range(NULL_DRAWS // NULL_PER_ARM):
         arms[f"A3_null_dc_{j}"] = dict(kind="null_dc", settings=M1, seed=A3_NULL_BUILD_SEED, mn9="data",
@@ -121,7 +123,8 @@ PARTS = {}
 for _cell in CELLS:
     for _drive in DRIVES:
         PARTS[f"pa-{_cell}-{_drive}"] = [f"{_cell}_{_drive}_{_w(w)}" for w in GRID_W]
-        PARTS[f"pa-topup-{_cell}-{_drive}"] = [f"{_cell}_{_drive}_{_w(w)}_topup" for w in GRID_W]
+        if _cell in DECIDING:
+            PARTS[f"pa-topup-{_cell}-{_drive}"] = [f"{_cell}_{_drive}_{_w(w)}_topup" for w in GRID_W]
 PARTS["pa-a3-real"] = ["A3_real_m1"]
 for _j in range(NULL_DRAWS // NULL_PER_ARM):
     PARTS[f"pa-a3-null-{_j}"] = [f"A3_null_dc_{_j}"]
@@ -191,8 +194,9 @@ CRITERIA = dict(
                 "kept as a float even below the floor. Side = flycns.graph.infer_side without the soma-x fallback "
                 "(somaSide, then instance _L/_R); anything else is midline. Untyped, midline and no-match partners stay "
                 "on P (P -> MN9_R, w). A mirrored edge takes P''s own model sign (the model signs every edge by its "
-                "sender); if P' has no signed output, P's sign. MN9_R -> MN9_L becomes MN9_L -> MN9_R. MN9_R's "
-                "outputs are unchanged. Repeated (pre, post) pairs are summed"),
+                "sender); if P' has no signed output, P's sign. MN9_R -> MN9_L becomes MN9_L -> MN9_R, with MN9_L's "
+                "own sign. MN9_R's outputs are unchanged. Repeated (pre, post) pairs are summed. A cell whose only "
+                "edge went into MN9_R keeps a zero-weight self-edge, so the simulated cell set is unchanged (m5)"),
         normalise=("cells c2b and c4b: MN9_R's existing input weights multiplied by (MN9_L's signed input total / "
                    "MN9_R's), both from load_graph's edges (M8); partners unchanged")),
     cuts=dict(
@@ -220,7 +224,8 @@ CRITERIA = dict(
                  "median sugar LI < li_bar. W*: grid w with at least wstar_min_self_sustained of 10 baseline blind "
                  "trials self-sustained. A3: PASS iff real > draw (strict) for at least null_pass_draws valid draws "
                  "(absolute; with fewer valid draws it cannot pass). M9: tail share >= tail_share_factor x drive "
-                 "share. m3: bimodal iff max n_active > bimodal_factor x min n_active")),
+                 "share. m3: bimodal iff max n_active > bimodal_factor x max(1, min n_active) (the max(1, .) keeps a "
+                 "zero minimum from making every arm with one active trial bimodal), split at the largest gap")),
     decision=dict(
         viable=("a grid w at which FUNCTION (screen), FUNCTION-q and STABILITY (a), (b), (c) all PASS; the decision w is "
                 "the smallest such w"),
@@ -244,6 +249,16 @@ CRITERIA = dict(
         "Q4": ["the antennal-lobe tail persists after both projection cuts (they do not stop it by the M1 rule)", "high"],
         "Q5": ["No cell is viable, so the outcome stays C", "moderate"],
         "Q6": ["At least one in-AL cut stops it by the M1 rule", "moderate"]},
+    definitions=dict(
+        self_sustained=("per trial: whole-CNS rate in the last half of the tail >= 0.1 x the rate during the drive, "
+                        "and >= 0.01 Hz (Phase 1b, fit/shiu2024_phase1b.py:474)"),
+        a3_statistic="real = mean over the 30 A3_real_m1 trials of mn9_hz; each null draw = its one trial's mn9_hz",
+        pair_index=("index(drive, w) = DRIVES.index(drive) x 5 + GRID_W.index(w), DRIVES = (sugar, blind); drive and "
+                    "cut arms are blind"),
+        missing_arm="the scorer refuses to score if a registered (non-top-up) arm is missing: it fails safe, never PASS",
+        a4_reset="A4 runs under the v-only reset only; if B1 adopts v-and-g, the A4 readings describe the gen-5 dynamics",
+        context="results/gen6_phaseA/preflight.json: every transform and cut on the pinned data, committed before "
+                "registering"),
     deviation=("A3's bar (at least 95 of 100 draws) differs from Phase 1b's MS2 (every one of 20), and was proposed after "
                "MS2 came out at 19 of 20; MS2 is not re-scored (M4)"),
 )
@@ -352,12 +367,17 @@ def mirror_mn9(edges, neurons, L, R):
     rows, log = [], dict(partners=int(len(into_L)), weight_in=float(into_L["weight"].sum()), kept=0, kept_w=0.0,
                          split_partners=0, below_floor_edges=0, below_floor_w=0.0, sign_mismatch_w=0.0,
                          no_signed_output_w=0.0, mn9_swap=0, opposite_not_in_network=0)
+    silent = set()
     floor = float(edges["weight"].min()) if len(edges) else 0.0
     for e in into_L.itertuples(index=False):
         P, w, sgn = int(e.pre), float(e.weight), float(e.sign)
         nt = getattr(e, "nt", None)
-        if P == R:                                   # MN9_R -> MN9_L becomes MN9_L -> MN9_R
-            rows.append(dict(pre=L, post=R, weight=w, sign=sgn, nt=nt))
+        if P == R:                                   # MN9_R -> MN9_L becomes MN9_L -> MN9_R, with MN9_L's own
+            sL = float(sign_of[L]) if L in sign_of.index else sgn      # model sign (B3: P' = MN9_L)
+            if sL != sgn:
+                log["sign_mismatch_w"] += w
+            rows.append(dict(pre=L, post=R, weight=w, sign=sL,
+                             nt=(nt_of.get(L, nt) if nt_of is not None else nt)))
             log["mn9_swap"] += 1
             continue
         t, s = typ.get(P), side.get(P)
@@ -382,6 +402,7 @@ def mirror_mn9(edges, neurons, L, R):
             else:
                 sq = sgn
                 log["no_signed_output_w"] += wq
+                silent.add(q)
             if wq < floor:
                 log["below_floor_edges"] += 1
                 log["below_floor_w"] += wq
@@ -397,6 +418,18 @@ def mirror_mn9(edges, neurons, L, R):
     cols = [c for c in keep.columns if c in new.columns]
     out = pd.concat([keep, new[cols]], ignore_index=True)
     out["weight"] = out["weight"].astype(float)
+    # a cell whose only edge went into MN9_R would leave the network: it keeps a zero-weight self-edge (m5), as
+    # in the cuts. Such a cell had no input at or above the floor, so it never fires either way
+    lost = sorted(in_net - (set(out["pre"]) | set(out["post"])))
+    if lost:
+        ph = pd.DataFrame(dict(pre=lost, post=lost, weight=0.0, sign=1.0, nt="placeholder"))
+        out = pd.concat([out, ph[[c for c in out.columns if c in ph.columns]]], ignore_index=True)
+    log.update(weight_out_exc=float(new.loc[new["sign"] > 0, "weight"].sum()),
+               weight_out_inh=float(new.loc[new["sign"] < 0, "weight"].sum()),
+               weight_in_exc=float(into_L.loc[into_L["sign"] > 0, "weight"].sum()),
+               weight_in_inh=float(into_L.loc[into_L["sign"] < 0, "weight"].sum()),
+               no_signed_output_cells=len(silent), placeholders=len(lost), placeholder_ids=lost[:20],
+               cells_before=len(in_net), cells_after=len(set(out["pre"]) | set(out["post"])))
     return out, log
 
 
@@ -772,6 +805,18 @@ def selftest():
     checks.append(("mirror log", log["kept"] == 4 and log["mn9_swap"] == 1 and log["split_partners"] == 1
                    and log["no_signed_output_w"] == 15.0 and log["opposite_not_in_network"] == 1))
     checks.append(("mirror keeps the cell set", (set(m.pre) | set(m.post)) == (set(E.pre) | set(E.post))))
+    # 90 sends only to MN9_R: the mirror removes that edge, so 90 keeps a zero-weight self-edge; with MN9_L
+    # inhibitory (sign -1 on its outputs), the swapped MN9_L -> MN9_R edge takes -1
+    E2 = pd.concat([E, pd.DataFrame(dict(pre=[90, 1], post=[2, 3], weight=[9, 5], sign=[1.0, -1.0],
+                                         nt=["acetylcholine", "gaba"]))], ignore_index=True)
+    nrn2 = pd.concat([nrn, pd.DataFrame(dict(bodyId=[90], type=["F"], somaSide=["R"], instance=["F_R"],
+                                             superclass=["cb_intrinsic"]))], ignore_index=True)
+    m2, log2 = mirror_mn9(E2, nrn2, 1, 2)
+    ph90 = m2[(m2.pre == 90) & (m2.post == 90)]
+    sw = m2[(m2.pre == 1) & (m2.post == 2)]
+    checks.append(("mirror placeholder and swap sign", len(ph90) == 1 and float(ph90.weight.iloc[0]) == 0.0
+                   and log2["placeholders"] == 1 and log2["cells_before"] == log2["cells_after"]
+                   and float(sw.sign.iloc[0]) == -1.0))
     a = m[m.post == 1][["pre", "post", "weight", "sign"]].astype(float).reset_index(drop=True)
     b = E[E.post == 1][["pre", "post", "weight", "sign"]].astype(float).reset_index(drop=True)
     checks.append(("mirror leaves MN9_L", a.equals(b)))

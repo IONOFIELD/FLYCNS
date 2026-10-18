@@ -12,7 +12,7 @@ name: real-data rerun
 #                 only the two p1b-sw-fw-* jobs need the reference repository
 #   pa-*          gen-6 phase A (fit/gen6_phaseA.py): manual; 23 parts, split over several short branch names
 #                 (Windows path limit), e.g. rerun/gen6pa--pa-c1-sugar+pa-c1-blind+pa-c2-sugar+pa-c2-blind;
-#                 the 12 pa-topup-* parts run only when fit/gen6_phaseA_score.py names them
+#                 the 8 pa-topup-* parts (deciding cells c1-c4) run only when fit/gen6_phaseA_score.py names them
 #   fingerprint/<label>[--a+b]  the identity check (scripts/fingerprint.py): every rerun with a few trials,
 #                 recording a fingerprint of every simulation; each job pushes fingerprints/<job>.jsonl to
 #                 fingerprint-out/<run number>/<job>. Compare two such runs with scripts/fingerprint.py compare.
@@ -140,9 +140,7 @@ env:
       {"name": "pa-c2-blind",                   "run": "fit/gen6_phaseA.py part pa-c2-blind", "manual": true},
       {"name": "pa-topup-c2-blind",             "run": "fit/gen6_phaseA.py part pa-topup-c2-blind", "manual": true},
       {"name": "pa-c2b-sugar",                  "run": "fit/gen6_phaseA.py part pa-c2b-sugar", "manual": true},
-      {"name": "pa-topup-c2b-sugar",            "run": "fit/gen6_phaseA.py part pa-topup-c2b-sugar", "manual": true},
       {"name": "pa-c2b-blind",                  "run": "fit/gen6_phaseA.py part pa-c2b-blind", "manual": true},
-      {"name": "pa-topup-c2b-blind",            "run": "fit/gen6_phaseA.py part pa-topup-c2b-blind", "manual": true},
       {"name": "pa-c3-sugar",                   "run": "fit/gen6_phaseA.py part pa-c3-sugar", "manual": true},
       {"name": "pa-topup-c3-sugar",             "run": "fit/gen6_phaseA.py part pa-topup-c3-sugar", "manual": true},
       {"name": "pa-c3-blind",                   "run": "fit/gen6_phaseA.py part pa-c3-blind", "manual": true},
@@ -152,9 +150,7 @@ env:
       {"name": "pa-c4-blind",                   "run": "fit/gen6_phaseA.py part pa-c4-blind", "manual": true},
       {"name": "pa-topup-c4-blind",             "run": "fit/gen6_phaseA.py part pa-topup-c4-blind", "manual": true},
       {"name": "pa-c4b-sugar",                  "run": "fit/gen6_phaseA.py part pa-c4b-sugar", "manual": true},
-      {"name": "pa-topup-c4b-sugar",            "run": "fit/gen6_phaseA.py part pa-topup-c4b-sugar", "manual": true},
       {"name": "pa-c4b-blind",                  "run": "fit/gen6_phaseA.py part pa-c4b-blind", "manual": true},
-      {"name": "pa-topup-c4b-blind",            "run": "fit/gen6_phaseA.py part pa-topup-c4b-blind", "manual": true},
       {"name": "pa-a3-real",                    "run": "fit/gen6_phaseA.py part pa-a3-real", "manual": true},
       {"name": "pa-a3-null-0",                  "run": "fit/gen6_phaseA.py part pa-a3-null-0", "manual": true},
       {"name": "pa-a3-null-1",                  "run": "fit/gen6_phaseA.py part pa-a3-null-1", "manual": true},
