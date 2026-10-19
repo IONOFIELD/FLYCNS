@@ -64,10 +64,19 @@ a control.
     not by limiting recurrence. H7c is therefore split (open choice 5): **H7c-in**, STD on sensory-afferent
     synapses only; **H7c-all**, STD on every chemical synapse. If only H7c-all is viable, depression of the
     recurrent synapses is the operative mechanism (in the model; the extrapolation above applies).
+  - **Scope, decided (Jayson, 18 Oct): H7c-in is primary and means the measured synapses only**, no
+    extrapolation: presynaptic type starting `ORN_` (not `HRN_`) onto a postsynaptic type in the ALPN or ALLN
+    list (`data/gen6_phaseA_celltypes.json`). These are exactly the ORN -> PN and ORN -> LN classes with
+    measured depression. Gustatory, hygrosensory, other sensory and all central synapses stay undepressed in
+    H7c-in. Consequence, stated in advance: the model has no spontaneous activity, so under the sugar drive
+    (no ORN driven) ORN synapses act only if ORNs fire through recurrent input; the number of ORN spikes per
+    sugar trial is reported. Otherwise H7c-in's sugar arms equal the no-STD arms', and H7c-in acts only on the
+    blind drive's olfactory share. H7c-all stays as the secondary, explicitly extrapolating arm,
+    reported, so the two readings above can be told apart.
 - **H7d (both):** conductance-based + STD gives a viable w where neither alone does.
-- **H7e (AL presynaptic GABA_B):** a slow divisive depression of ORN -> PN efficacy driven by AL local-neuron
+- **H7e (AL presynaptic GABA_B), deferred to generation 8 (decided 18 Oct):** a slow divisive depression of ORN -> PN efficacy driven by AL local-neuron
   activity removes the AL tail (A4-style reading), on top of the best of H7a-H7d.
-- **H7f (AL gap junctions):** eLN-PN and sister PN-PN coupling restores the fly's main eLN -> PN route; reported
+- **H7f (AL gap junctions), deferred to generation 8 (decided 18 Oct):** eLN-PN and sister PN-PN coupling restores the fly's main eLN -> PN route; reported
   for its effect on the AL tail and on cut (i)'s reading from phase A, not a viability arm.
 
 "Viable", FUNCTION, FUNCTION-q, STABILITY (a), (b), (c), LATERALITY, the self-sustained rule, the sugar and
@@ -76,35 +85,42 @@ Only the synapse model and its declared parameters change.
 
 ## Design (staged, with stop rules fixed in advance)
 
-**Stage 1, the 2 x 2 core:** {current-based, conductance-based} x {no STD, STD}, everything else at the gen-6
-settings (or phase A's adopted settings, if any), each swept over the w grid under sugar and blind drives.
-Cell (current, no STD) replicates phase A's cell 1 (positive control for the replication).
+**Stage 1, the core, all under one registration (decided 18 Oct):** {current-based, conductance-based} x
+{no STD, STD-in, STD-all}, everything else at the gen-6 settings (v-only reset, MN9_R as in the data), each swept
+over the w grid under sugar and blind drives. No arm of stage 1 is gated on another: all six run, and every
+verdict is registered in advance. Prediction written now (from Huang 2018): conductance-based without STD fails;
+an STD arm is the first viable one, if any is.
+- **Baselines for the `"unclear"` fix (decided: fold it in):** cell (current, no STD) runs twice, without the
+  fix (replicates phase A's cell 1; positive control) and with it (isolates the fix). Every other stage-1 arm
+  runs with the fix, so its difference from the with-fix baseline is the synapse change alone.
 
-**Stage 2, inside the conductance-based arms only:** E_i sweep {-55, -65, -75} mV x tau_i {5, 10} ms. Run only
+**Stage 2, inside the conductance-based arms only:** E_i sweep {-55, -70, -80} mV x tau_i {5, 10} ms. Run only
 the conductance-based arms of stage 1 that are not already viable.
 
-**Stage 3, AL mechanisms (H7e, H7f):** on the best stage-1/2 arm, add AL presynaptic GABA_B; then AL gap
-junctions. Scored with phase A's A4 readings (W*, "stops it").
+**Stage 3, AL mechanisms (H7e, H7f): not in generation 7** (decided 18 Oct). Adding them here would mix a
+second change into the synapse comparison. They move to generation 8, on gen 7's outcome.
 
-**Stop rules:** a stage runs only if the previous stage leaves no viable deciding arm, except stage 3, which runs
-in any case as mechanism reporting. Adoption follows phase A's B1 logic (smallest viable w, top-up rule,
-LATERALITY -> H), with a fixed preference order fixed now: the simplest viable arm wins (fewest added
-mechanisms; ties: current-based before conductance-based).
+**Stop rules:** stage 2 runs only if stage 1 leaves no viable deciding arm. Adoption follows phase A's B1 logic
+(smallest viable w, top-up rule, LATERALITY -> H), with a preference order fixed now: the simplest viable arm
+wins (fewest added mechanisms; ties: current-based before conductance-based, STD-in before STD-all, because
+STD-in uses measured synapses only).
 
 **Weight conversion (fixed in advance, so arm differences are not a rescaling):** a conductance per synapse
 g_syn = w_syn_mV / (V_cal - E_syn), with V_cal = v_rest (-52 mV), so that one synapse gives the same initial
-PSP at rest as in the current model (Cavallari et al. 2014 matching rule). With E_e = 0 mV and E_i = -65 mV this
-gives an inhibitory conductance 4x the excitatory per synapse, by construction rather than by fit.
+PSP at rest as in the current model (Cavallari et al. 2014 matching rule). With E_e = 0 mV and E_i = -70 mV this
+gives an inhibitory conductance about 2.9x the excitatory per synapse (52 / 18), by construction rather than by
+fit. Across the E_i sweep the PSP at rest is matched; what differs is how inhibition scales as a cell
+depolarizes, which is the variable under test.
 
 ## Parameters (measured / modelled / assumed)
 
 | parameter | value | status | source |
 |---|---|---|---|
 | E_e (nicotinic ACh) | 0 mV (sensitivity -10, +10) | measured in culture only: +8.9 +/- 1.7 mV (pupal), "0 mV" (embryonic); VERIFIED | Su & O'Dowd 2003; Lee et al. 2003 |
-| E_i (GABA_A / GluCl / HisCl) | **-65 mV primary**, sweep -55 / -65 / -75 (open choice 1: add -45) | **assumed**: no adult in vivo measurement exists for any inhibitory transmitter. VERIFIED values are from cultured developing neurons only, GABA -37 +/- 3 (pupal) and -41.5 +/- 2.1 mV (embryonic; calculated E_Cl -45), and developing neurons tend to have high E_Cl. Larval VNC GABA -56 +/- 3 and glutamate (GluCl) -55 +/- 2 mV are UNVERIFIED (excerpt only; full text blocked). In vivo whole-cell values are pipette-imposed | Su & O'Dowd 2003; Lee et al. 2003; Rohrbough & Broadie 2002 (excerpt); models -70 (Nagel 2015; Huang 2018) |
+| E_i (GABA_A / GluCl / HisCl) | **-70 mV primary, sweep -55 / -70 / -80** (decided 18 Oct). No -45 arm: at or above threshold (-45) inhibition depolarizes from rest (-52), a different question (depolarizing GABA), left for its own test. -70 is chosen for comparability, not from adult data: it is the value of Huang et al. 2018, whose result H7a's prediction rests on, and of Nagel et al. 2015's AL model. The culture values below sit above threshold in this model and cannot be used as they are | **assumed**: no adult in vivo measurement exists for any inhibitory transmitter. VERIFIED values are from cultured developing neurons only, GABA -37 +/- 3 (pupal) and -41.5 +/- 2.1 mV (embryonic; calculated E_Cl -45), and developing neurons tend to have high E_Cl. Larval VNC GABA -56 +/- 3 and glutamate (GluCl) -55 +/- 2 mV are UNVERIFIED (excerpt only; full text blocked). In vivo whole-cell values are pipette-imposed | Su & O'Dowd 2003; Lee et al. 2003; Rohrbough & Broadie 2002 (excerpt); models -70 (Nagel 2015; Huang 2018) |
 | tau_e | 5 ms (sweep 2-5) | modelled: mEPSC half-decay about 2.1-2.5 ms in PNs in vivo; KC 5.2 ms in situ | Kazama & Wilson 2008; Gu & O'Dowd 2006 |
 | tau_i (GABA_A) | 5 ms primary, 10 ms in stage 2 | measured in culture only (3.3-5.4 ms); no in vivo AL IPSC kinetics | Su & O'Dowd 2003; Lee et al. 2003 |
-| STD | **primary: decrement U 0.22 (retained f 0.78), recovery tau_D 893 ms**; sensitivity U 0.28, tau_D 2.4 s. Model as in the sources: A -> f*A per spike, tau_D dA/dt = 1 - A. (The earlier placeholder U 0.3, tau_D 0.8 s was outside the measured range and is replaced.) Scope: H7c-in / H7c-all | primary (proposed; Jayson confirms): fit to evoked ORN -> PN EPSCs at 10 Hz, n = 19 PNs, in vivo, female (Nagel 2015 Fig 1c legend; VERIFIED by Grok; the legend is not in the PubMed text extract, whose own values, f 0.77 / tau 1006 ms for the fast component, do match). Sensitivity: Kazama & Wilson 2009 fit (alpha 0.72, tau 2.4 s; VERIFIED). On any synapse other than ORN -> PN / ORN -> LN: **assumed** (no data). Huang needed tau_D > 125 ms | Nagel 2015; Kazama & Wilson 2009; Nagel & Wilson 2016 (ORN -> LN f 0.75, tau 1566 ms); Huang 2018 |
+| STD | **primary: decrement U 0.22 (retained f 0.78), recovery tau_D 893 ms**; sensitivity U 0.28, tau_D 2.4 s. Model as in the sources: A -> f*A per spike, tau_D dA/dt = 1 - A. (The earlier placeholder U 0.3, tau_D 0.8 s was outside the measured range and is replaced.) Scope: H7c-in = ORN_ -> ALPN/ALLN only (primary); H7c-all = every chemical synapse (secondary, extrapolated) | primary (proposed; Jayson confirms): fit to evoked ORN -> PN EPSCs at 10 Hz, n = 19 PNs, in vivo, female (Nagel 2015 Fig 1c legend; VERIFIED by Grok; the legend is not in the PubMed text extract, whose own values, f 0.77 / tau 1006 ms for the fast component, do match). Sensitivity: Kazama & Wilson 2009 fit (alpha 0.72, tau 2.4 s; VERIFIED). On any synapse other than ORN -> PN / ORN -> LN: **assumed** (no data). Huang needed tau_D > 125 ms | Nagel 2015; Kazama & Wilson 2009; Nagel & Wilson 2016 (ORN -> LN f 0.75, tau 1566 ms); Huang 2018 |
 | GABA_B (AL, presynaptic) | divisive on ORN -> PN efficacy, onset alpha tau 25 ms, decay 1 s, driven by AL LN spikes; none on LNs | modelled from in vivo pharmacology | Olsen & Wilson 2008; Nagel 2015; Wilson & Laurent 2005; Root et al. 2008 |
 | AL gap junctions | g_gap / g_L 0.02 for sister PN-PN and eLN-PN (eLN = cholinergic ALLN types, INFERRED mapping) | modelled from coupling coefficients 0.003-0.034, which are lower bounds | Yaksi & Wilson 2010; Kazama & Wilson 2009 |
 | v_rest, threshold, tau_m | unchanged (-52, -45 mV, 20 ms) | modelled (Shiu); PN rest in vivo -55 to -60 mV is noted, not adopted, so only the synapse model changes | Gouwens & Wilson 2009 |
@@ -119,12 +135,14 @@ numerics check.
 Phase A's criteria test the model against itself (function, stability, laterality). Gen 7 adds one check against
 recorded physiology, scored but not part of viability (open choice 6 decides whether it should be). Targets,
 from `docs/lit/gen7_lit_std_validation_2026-10-18.md`, ranked by how directly they map onto a model readout:
-- **V7a, primary: the ORN -> PN input-output curve.** Driving one glomerulus's ORNs at a set of rates, PN rate
+- **V7a, primary, report-only in generation 7 (decided 18 Oct): the ORN -> PN input-output curve.** Driving one glomerulus's ORNs at a set of rates, PN rate
   follows PN = R_max * ORN^1.5 / (ORN^1.5 + sigma^1.5) with R_max 165 spikes/s and sigma 12 spikes/s (Olsen,
   Bhandawat & Wilson 2010, Eq 1, fitted; VERIFIED). Near threshold PN rate is about 3x ORN rate (Jeanne & Wilson
   2015; VERIFIED). Direct (spike rates, same cell types). Caveats: the curve includes ORN -> PN depression, and it
   comes from the same lab as the STD values, so it is not fully independent of the primary STD parameters; and
-  the glomeruli, the ORN rates and the tolerance must be fixed in the registration (open choice 6).
+  the glomeruli, the ORN rates and the tolerance must be fixed in the registration. Glomeruli: DM4, DL5, VM7 and
+  DM1, the four in Olsen et al. 2010 Fig 1B (VERIFIED-fig). It joins viability in a later generation, once a
+  tolerance has been fixed in advance and seen once.
 - **V7b, ordinal: MN9.** No MN9 firing rate has been recorded; the only measurement is calcium (Gordon & Scott
   2009). So only orderings are testable: sucrose > water (about 48% vs 2% dF/F); sucrose plus caffeine or
   denatonium is not different from water; 1 M sucrose gives about twice the 100 mM response; both MN9 somata
@@ -135,29 +153,28 @@ from `docs/lit/gen7_lit_std_validation_2026-10-18.md`, ranked by how directly th
   measurement exists. **STABILITY (c)'s 1 Hz bar is therefore a judgment, not a measured value**, and is
   reported as such.
 
-## Open choices for Jayson (before anything is registered)
+## Decided (Jayson, 18 October), and what is still open
 
-1. Primary E_i: -65 mV (shunting-leaning, between larval VNC and the -70 used by fly models) or -70 mV (matches
-   Nagel and Huang). New (18 Oct): the only VERIFIED fly values are -37 to -42 mV, in cultured developing
-   neurons; the larval -55/-56 mV values are UNVERIFIED. Whether to extend the stage-2 sweep to include -45 mV, so
-   the bracket covers the verified value as well as the model convention.
-2. Whether stage 1 is a full 2 x 2 or STD alone first (cheaper; Huang predicts it is the decisive arm).
-3. Whether the AL mechanisms (stage 3) run in gen 7 or wait for a viable core model.
-4. Whether to fold the `"unclear"` fallback fix into the same freeze (declared and measured separately) or
-   leave it for its own generation. **Size (18 October, read-only script on the pinned data, floor 5):**
-   9,793 cells have consensusNt "unclear"; their predictedNt is unclear for 8,673, an amine for 404 (stay
-   dropped), and signable for 716 (ACh 329, Glu 320, GABA 53, histamine 14). The fix adds 20,428 edges and
-   253,733 synapses (about 0.3% of the signed graph): 111,043 excitatory, 142,690 inhibitory. AL -> AL goes from
-   2,282,863 exc / 420,718 inh to 2,292,250 / 469,396 (inhibition +12%; excitatory share 84.4% -> 83.0%), so it
-   does not by itself remove the AL loop. Caveat: these cells are signed from their per-cell prediction because
-   the type-level consensus was unclear, the lower-confidence label. Recommendation: fold into the freeze,
-   declared and measured as its own arm.
-5. STD scope: whether H7c runs as H7c-in and H7c-all (two arms; separates weaker drive from limited recurrence),
-   or H7c-all only (cheaper; cannot tell the two apart).
-6. Validation: the glomeruli, ORN rates and tolerance for V7a; whether V7a/V7b are reported only or join
-   viability.
+**Decided:**
+1. E_i primary -70 mV, sweep -55 / -70 / -80 mV, no -45 mV arm.
+2. Stage 1 as one full registration (no gating inside it): 2 synapse models x 3 STD settings.
+3. Stage 3 (AL GABA_B, AL gap junctions) deferred to generation 8.
+4. The `"unclear"` fix is folded in, with paired current/no-STD baselines (with and without the fix). Size
+   (18 October, read-only script on the pinned data, floor 5): 9,793 cells have consensusNt "unclear"; their
+   predictedNt is unclear for 8,673, an amine for 404 (stay dropped), and signable for 716 (ACh 329, Glu 320,
+   GABA 53, histamine 14). The fix adds 20,428 edges and 253,733 synapses (about 0.3% of the signed graph):
+   111,043 excitatory, 142,690 inhibitory. AL -> AL goes from 2,282,863 exc / 420,718 inh to 2,292,250 /
+   469,396 (inhibition +12%; excitatory share 84.4% -> 83.0%). Caveat: these cells are signed from their per-cell
+   prediction because the type-level consensus was unclear, the lower-confidence label.
+5. STD scope: H7c-in (ORN_ -> ALPN/ALLN, the measured synapses only) primary; H7c-all secondary.
+6. V7a report-only in generation 7, on DM4 / DL5 / VM7 / DM1.
+
+**Still open (fix before registering):**
+- V7a: the ORN rates to drive, the tolerance, and how a glomerulus's ORNs are driven in the model.
+- The STD primary (Nagel 2015, f 0.78 / 893 ms) rests on a figure legend read by Grok only; confirm it, or make
+  the text-verified fast-component fit (f 0.77 / 1006 ms) the primary.
 
 ## Not in this plan
 
-Neuropeptides, neuromodulators (amines stay dropped), non-spiking neurons, dendritic compartments, temperature
+AL presynaptic GABA_B and AL gap junctions (generation 8). Neuropeptides, neuromodulators (amines stay dropped), non-spiking neurons, dendritic compartments, temperature
 correction (every in vivo kinetic value is at an unstated, presumably room, temperature).
