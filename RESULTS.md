@@ -1,6 +1,6 @@
 # flycns: results note
 
-*Status v0.13, registration generation 5 (Shiu-compatible options, off by default; phase 1: the simulator reproduces Shiu et al. 2024's model; phase 1b: no synaptic scale is both functional and stable on the male data), 18 October 2026. A working note, not a manuscript. Every number is reproducible
+*Status v0.14, registration generation 6 (phase A: neither the v-and-g reset nor the MN9_R correction makes the male network viable; the runaway loop sits inside the antennal lobe; M1 is specific to the wiring), 18 October 2026. A working note, not a manuscript. Every number is reproducible
 from the scripts named beside it; run `./fly` and use the menu. Where the model disagrees with a
 measurement, the model is presumed wrong.*
 
@@ -34,6 +34,139 @@ every check re-registered before run 14 (below).
 
 (Earlier summaries that described the auditory result as "reproducing published physiology" are
 superseded by its registered tests.)
+
+---
+
+## 18 October 2026: generation 6, phase A: neither the reset rule nor the MN9_R correction makes the male network viable; the runaway loop sits inside the antennal lobe (runs 33-36)
+
+**The question.** Phase 1b ended in outcome C: on the male data no synaptic scale is both functional (MN9
+responds to sugar) and stable (the network does not keep firing after the drive stops). Phase A asked whether
+either of the two cheapest changes rescues it: the reset rule (v-only, as now, against resetting v and g), and a
+correction for MN9_R's under-reconstructed input (mirror MN9_L's input onto it). It also re-asked phase 1b's
+open specificity question with a larger null, and located the runaway loop with targeted edge cuts.
+- **Registered** at `3227975` (registration `registration_v5.json`, git `ff816c1`, model `dcb44bf09a88`), with
+  the plan `docs/gen6_phaseA_DRAFT.md` and the scorer `fit/gen6_phaseA_score.py` hashed in. The simulator files
+  hash to `df7e16022378`, the same as phase 1b; the registration hash differs only because it covers the phase
+  A scripts.
+- **Run once:** cloud runs 33-36, 23 jobs, 95 arms (`46e7d25`), every arm stamped with the registration.
+- **Scored once:** `c1e6e62`. No top-up was named, so none was run.
+
+**Design.** Six cells: c1 (v-only reset, data as is), c2 (v-only, mirror), c3 (v-and-g reset, data), c4
+(v-and-g, mirror), plus c2b and c4b (MN9_R input scaled up 15.5x instead of mirrored; reported, never
+deciding).
+- Each cell runs w_scale 0.4, 0.5, 0.6, 0.8 and 1.0 under sugar and under the blind drive, 10 trials each.
+- A cell is **viable** at a w if FUNCTION, FUNCTION-q (MN9 responds in at least half of the trials that do
+  not self-sustain), and STABILITY (a), (b) and (c) all pass there.
+- B1 adopts the smallest viable w: c1 alone means stop, c2 means mirror, c3 means reset, c4 means both, none
+  means C.
+
+**The mirror, as run** (`results/gen6_phaseA/preflight.json`): MN9_R's input rises from 364 to 5,651 synapses
+(MN9_L's own), 2,805 excitatory and 2,846 inhibitory, spread over 100 same-type partners on the opposite side.
+Three partners with no opposite-side match stay on their original target. No cell lost its last connection.
+
+**B1: outcome C. No deciding cell is viable at any w.** Each cell fails the same way: where the network is
+quiet, MN9 is silent; where MN9 responds, the network runs away.
+
+| cell | w 0.4 | w 0.5 | w 0.6 | w 0.8 | w 1.0 |
+|---|---|---|---|---|---|
+| c1 v-only, data | MN9 0; stable | MN9 0; blind 7/10 self-sustained | MN9 1.05 Hz; FUNCTION-q fails (3 of 8); blind 10/10 | MN9 6.75 Hz; 10/10 and 10/10 | MN9 55 Hz; 10/10 and 10/10 |
+| c2 v-only, mirror | MN9 0; stable | MN9 0; blind 7/10 | MN9 2.05 Hz; blind 10/10 | MN9 12.3 Hz; 10/10 and 10/10 | MN9 66 Hz; 10/10 and 10/10 |
+| c3 v-and-g, data | MN9 0; blind 9/10 | MN9 0; blind 10/10 | MN9 1.25 Hz; blind 10/10 | MN9 12.9 Hz; blind 10/10 | MN9 12.7 Hz; 10/10 and 10/10 |
+| c4 v-and-g, mirror | MN9 0; blind 9/10 | MN9 0; blind 10/10 | MN9 1.65 Hz; blind 10/10 | MN9 22.6 Hz; blind 10/10 | MN9 24.4 Hz; 10/10 and 10/10 |
+
+"10/10 and 10/10" means sugar and blind trials both self-sustain. The blind whole-CNS rate (STABILITY (c), bar
+1 Hz) fails at every w of 0.6 and up, in every cell.
+- **The v-and-g reset lowers the rates** (blind 1.2-2.3 Hz against 2.9-7.0 Hz under v-only) **but does not
+  stop the reverberation.** Under it, the blind drive self-sustains in 9 of 10 trials at w 0.4, where v-only
+  self-sustains in none.
+- **c2b and c4b** behave like c2 and c4 and are also not viable.
+
+**The mirror removes the one-sidedness; it is not the bottleneck.**
+
+| w | 0.6 | 0.8 | 1.0 |
+|---|---|---|---|
+| c1 median sugar LI | 1.00 | 0.88 | 0.87 |
+| c2 median sugar LI | 0.31 | 0.13 | 0.07 |
+
+At w 0.4 and 0.5, MN9 is silent and LI is undefined. LI does not enter viability. M7 makes it decide outcome H
+only for an outcome that adopts the mirror, and none does.
+
+**A3: the male MN9 response is specific to the wiring. PASS.** Real wiring: MN9 23.98 Hz (30 trials, Shiu's
+settings, as phase 1b's M1). It beats all 100 degree-corrected rewiring draws (null median 0 Hz; null networks
+alive, whole-CNS median 1.49 Hz against 0.39 Hz real); the bar was 95 of 100, set in advance. This settles
+phase 1b's MS2 (19 of 20), which is not re-scored. A3's bar differs from MS2's and was proposed after MS2 came
+out; the registration records that (M4).
+
+**A4: the runaway loop lives inside the antennal lobe, and either in-AL cut is enough.** Baseline: c1 blind;
+W* (the w at which it self-sustains in at least 5 of 10) = 0.5, 0.6, 0.8, 1.0. A cut "stops it" at a w in W*
+if the cut arm then has no self-sustained trial and passes STABILITY (c).
+
+| arm | synapses removed | stops it at |
+|---|---|---|
+| cut LH: AL PN outputs to the lateral horn | 413,873 | no w |
+| cut LH + MB: also to the mushroom body | 801,529 | no w |
+| cut (i): cholinergic AL local-neuron outputs | 588,606 | w 0.5, 0.6 |
+| cut (ii): cholinergic AL PN outputs onto AL PNs and LNs | 473,474 | w 0.5, 0.6 |
+| drive (b): photoreceptors removed from the blind drive | (drive change) | no w |
+| drive (c): also ORNs and HRNs removed (non-olfactory) | (drive change) | no w; it reduces the tail (w 0.5: 1/10; 0.6: 6/10) |
+
+- **Projection cuts do nothing:** the LH and MB are downstream, not part of the loop.
+- **Either in-AL cut ends it at moderate w:** 0 of 10 self-sustained trials and a stable rate at 0.5 and 0.6.
+  Neither holds at w 0.8 and above, where something beyond these two excitatory sources sustains it.
+- **M9 does not hold.** Under drive (c) the AL + LH share of the tail is no more than its share of the drive
+  (0.61 vs 0.61 at w 0.5, 0.34 vs 0.35 at w 1.0). With olfactory input removed, the AL is no longer where the
+  tail concentrates.
+
+**Predictions logged before the run** (`fit/gen6_phaseA.py`, CRITERIA):
+
+| | prediction | confidence | outcome |
+|---|---|---|---|
+| Q1 | the v-and-g reset alone makes the blind drive stable at some w | moderate | wrong |
+| Q2 | the MN9_R correction brings laterality below 0.8 | high | right (see the readings below) |
+| Q3 | A3 stays UNRESOLVED at 100 draws | moderate | wrong: PASS |
+| Q4 | the AL tail persists after both projection cuts | high | right |
+| Q5 | no cell is viable; the outcome stays C | moderate | right |
+| Q6 | at least one in-AL cut stops it | moderate | right (both do) |
+
+**Q2 depends on how the rule is read**, and the scorer's code is not changed after the fact.
+- **(a) Registered code:** c2 median LI below 0.8 at any w. Held at w 0.6, 0.8 and 1.0.
+- **(b) M7's wording:** c2 below 0.8 and c1 at least 0.8 at the same w. Also held at 0.6, 0.8 and 1.0
+  (`laterality_mirror_only` in `phaseA.json`).
+- **(c) Reading (b) at c2's decision w:** undetermined, because B1 = C leaves c2 without a decision w.
+
+The registered verdict, held, stands; (c) has no answer on this data.
+
+**Independent checks.**
+- **Reproduction:** every arm was rerun on Windows from the same commit: identical, 0 differing paths.
+- **Blind recompute:** an independent scorer, written from the registered text without reading `phaseA.json`
+  and frozen before it saw the arms, recomputed every score.
+  - 480 per-cell fields (6 cells x 5 w x 16) match, as do B1, A3, A4 and Q1, Q3-Q6.
+  - Its only difference is reading (c) of Q2 above.
+  - It logs 28 points where the registered text left it a choice.
+
+**What phase A does not show.**
+- **Electrical synapses are missing.** The connectome annotates chemical synapses only (MaleCNS reports no
+  electrical synapses; FlyWire and the hemibrain state that they could not be detected; Shiu et al. 2024 ignore
+  them for that reason).
+  - In the fly, excitatory AL local neurons depolarise PNs largely through electrical coupling (Yaksi & Wilson
+    2010, Fig. 4; PN-PN sister coupling is also electrical, Fig. 6).
+  - This model has no electrical path in the AL, and every cholinergic LN output it carries is chemical.
+  - So cut (i) shows what sustains the loop **in this model**: chemical output that, in the fly, is mostly not
+    how these cells excite PNs. It is a finding about the model's structure, not about fly biology.
+- **The cell-type lists** behind the cuts come from the public MaleCNS Cell Type Explorer (reiserlab
+  `celltype-explorer-drosophila-male-cns` @ `789cc6c`, `types.html` sha256 `3213642…`): ALPN 180 types (682
+  cells), ALLN 79 (399), Kenyon_Cell 15 (4,064). An earlier extraction (177 / 76 / 14) missed cards without a
+  name link; it was corrected before registering, and the final list was checked against an independent
+  extraction.
+- **A4 runs under the v-only reset only.** Since no reset was adopted, it describes the current model.
+
+**Next.** Outcome C points to the synapse model (`docs/gen7_synapse_model_DRAFT.md` on branch `gen7/synapse-model-draft`, not registered).
+- **The plan:** current against conductance-based synapses, each with and without short-term depression.
+- **Prior evidence:** in a published spiking model, conductance-based synapses alone did not stop runaway
+  activity; depression with recovery slower than 125 ms did (Huang et al. 2018, *Front. Neuroinform.*,
+  doi 10.3389/fninf.2018.00099).
+- **Also planned:** restore the `"unclear"`-transmitter outputs at the freeze (716 cells, 253,733 synapses,
+  about 0.3% of all; AL -> AL inhibition rises 12%).
 
 ---
 
