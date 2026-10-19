@@ -2,8 +2,8 @@
 
 Status: DRAFT, 18 October 2026. Not registered. Pre-registration for generation 7 happens in its own
 registration, committed before any generation-7 run; until then this plan may be revised. **Its trigger has
-fired:** phase A ended in outcome C (scored `c1e6e62`; no deciding cell viable; reproduced on Windows and by an
-independent blind recompute), the registered trigger in `docs/gen6_phaseA_DRAFT.md` ("the next phase is a change
+fired:** phase A ended in outcome C (scored `c1e6e62`; no deciding cell viable; confirmed by an independent
+blind recompute), the registered trigger in `docs/gen6_phaseA_DRAFT.md` ("the next phase is a change
 of synapse model (conductance-based), in its own plan"). Phase A adopted neither the reset nor the MN9_R
 mirror, so the gen-6 settings (v-only reset, MN9_R as in the data) are the baseline below.
 Sources: `docs/lit/synapse_model_lit_2026-10-18.md` (Grok, read-only literature review, 22 sources read in full)
