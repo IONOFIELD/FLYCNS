@@ -120,7 +120,7 @@ depolarizes, which is the variable under test.
 | E_i (GABA_A / GluCl / HisCl) | **-70 mV primary, sweep -55 / -70 / -80** (decided 18 Oct). No -45 arm: at or above threshold (-45) inhibition depolarizes from rest (-52), a different question (depolarizing GABA), left for its own test. -70 is chosen for comparability, not from adult data: it is the value of Huang et al. 2018, whose result H7a's prediction rests on, and of Nagel et al. 2015's AL model. The culture values below sit above threshold in this model and cannot be used as they are | **assumed**: no adult in vivo measurement exists for any inhibitory transmitter. VERIFIED values are from cultured developing neurons only, GABA -37 +/- 3 (pupal) and -41.5 +/- 2.1 mV (embryonic; calculated E_Cl -45), and developing neurons tend to have high E_Cl. Larval VNC GABA -56 +/- 3 and glutamate (GluCl) -55 +/- 2 mV are UNVERIFIED (excerpt only; full text blocked). In vivo whole-cell values are pipette-imposed | Su & O'Dowd 2003; Lee et al. 2003; Rohrbough & Broadie 2002 (excerpt); models -70 (Nagel 2015; Huang 2018) |
 | tau_e | 5 ms (sweep 2-5) | modelled: mEPSC half-decay about 2.1-2.5 ms in PNs in vivo; KC 5.2 ms in situ | Kazama & Wilson 2008; Gu & O'Dowd 2006 |
 | tau_i (GABA_A) | 5 ms primary, 10 ms in stage 2 | measured in culture only (3.3-5.4 ms); no in vivo AL IPSC kinetics | Su & O'Dowd 2003; Lee et al. 2003 |
-| STD | **primary: decrement U 0.22 (retained f 0.78), recovery tau_D 893 ms**; sensitivity U 0.28, tau_D 2.4 s. Model as in the sources: A -> f*A per spike, tau_D dA/dt = 1 - A. (The earlier placeholder U 0.3, tau_D 0.8 s was outside the measured range and is replaced.) Scope: H7c-in = ORN_ -> ALPN/ALLN only (primary); H7c-all = every chemical synapse (secondary, extrapolated) | primary (proposed; Jayson confirms): fit to evoked ORN -> PN EPSCs at 10 Hz, n = 19 PNs, in vivo, female (Nagel 2015 Fig 1c legend; VERIFIED by Grok; the legend is not in the PubMed text extract, whose own values, f 0.77 / tau 1006 ms for the fast component, do match). Sensitivity: Kazama & Wilson 2009 fit (alpha 0.72, tau 2.4 s; VERIFIED). On any synapse other than ORN -> PN / ORN -> LN: **assumed** (no data). Huang needed tau_D > 125 ms | Nagel 2015; Kazama & Wilson 2009; Nagel & Wilson 2016 (ORN -> LN f 0.75, tau 1566 ms); Huang 2018 |
+| STD | **primary: decrement U 0.22 (retained f 0.78), recovery tau_D 893 ms**; sensitivity U 0.28, tau_D 2.4 s. Model as in the sources: A -> f*A per spike, tau_D dA/dt = 1 - A. (The earlier placeholder U 0.3, tau_D 0.8 s was outside the measured range and is replaced.) Scope: H7c-in = ORN_ -> ALPN/ALLN only (primary); H7c-all = every chemical synapse (secondary, extrapolated) | primary: fit to evoked ORN -> PN EPSCs at 10 Hz, n = 19 PNs from 19 flies, DM6 or VM2, in vivo, female (Nagel 2015 Fig 1c legend, quoted verbatim in `docs/lit/v7a_nagel_check_2026-10-18.md`; VERIFIED). Sensitivity conditions: DM4, 4 Hz minimal stimulation of one ORN axon, n = 3, female 2-5 d (Kazama & Wilson 2009 Supp Fig 2; VERIFIED). **Implementation, fixed now:** the synaptic weight is scaled by A (w_eff = w x A, A = 1 at rest), exactly as in both papers, with no Tsodyks-Markram U factor on the amplitude and no facilitation. So the first PSP after rest equals the current model's, and only the train dynamics change. U = 1 - f is a depletion fraction, not a release probability (measured p is 0.79, Kazama & Wilson 2008). Sensitivity: Kazama & Wilson 2009 fit (alpha 0.72, tau 2.4 s; VERIFIED). On any synapse other than ORN -> PN / ORN -> LN: **assumed** (no data). Huang needed tau_D > 125 ms | Nagel 2015; Kazama & Wilson 2009; Nagel & Wilson 2016 (ORN -> LN f 0.75, tau 1566 ms); Huang 2018 |
 | GABA_B (AL, presynaptic) | divisive on ORN -> PN efficacy, onset alpha tau 25 ms, decay 1 s, driven by AL LN spikes; none on LNs | modelled from in vivo pharmacology | Olsen & Wilson 2008; Nagel 2015; Wilson & Laurent 2005; Root et al. 2008 |
 | AL gap junctions | g_gap / g_L 0.02 for sister PN-PN and eLN-PN (eLN = cholinergic ALLN types, INFERRED mapping) | modelled from coupling coefficients 0.003-0.034, which are lower bounds | Yaksi & Wilson 2010; Kazama & Wilson 2009 |
 | v_rest, threshold, tau_m | unchanged (-52, -45 mV, 20 ms) | modelled (Shiu); PN rest in vivo -55 to -60 mV is noted, not adopted, so only the synapse model changes | Gouwens & Wilson 2009 |
@@ -136,9 +136,16 @@ Phase A's criteria test the model against itself (function, stability, lateralit
 recorded physiology, scored but not part of viability (open choice 6 decides whether it should be). Targets,
 from `docs/lit/gen7_lit_std_validation_2026-10-18.md`, ranked by how directly they map onto a model readout:
 - **V7a, primary, report-only in generation 7 (decided 18 Oct): the ORN -> PN input-output curve.** Driving one glomerulus's ORNs at a set of rates, PN rate
-  follows PN = R_max * ORN^1.5 / (ORN^1.5 + sigma^1.5) with R_max 165 spikes/s and sigma 12 spikes/s (Olsen,
-  Bhandawat & Wilson 2010, Eq 1, fitted; VERIFIED). Near threshold PN rate is about 3x ORN rate (Jeanne & Wilson
-  2015; VERIFIED). Direct (spike rates, same cell types). Caveats: the curve includes ORN -> PN depression, and it
+  follows PN = R_max * ORN^1.5 / (ORN^1.5 + sigma^1.5), **fitted per glomerulus** (Olsen, Bhandawat & Wilson
+  2010, Methods; VERIFIED): R_max 170, 167, 163, 144 and sigma 16.3, 11.8, 12.4, 44.8 spikes/s for DM4, DL5, VM7
+  and DM1. (165 / 12 are the paper's simulation defaults, not a fit, and are not used.) DM1's large sigma comes
+  from GABA (it reverts with picrotoxin + CGP54626); the model has inhibition, so the control fit is the
+  comparison. Measured input range: baseline-subtracted ORN rate about 0-125 spikes/s over a 500 ms odor; points
+  are means of 6-12 recordings; ORNs and PNs were recorded separately. No goodness of fit or residual scatter is
+  reported for these fits, so the tolerance cannot be taken from the paper; the only empirical scatter scale is
+  Bhandawat et al. 2007 / Kazama & Wilson 2008 Fig 9A (VM2: PN about 64-118 Hz around a plateau of about 90 Hz,
+  VERIFIED-fig). Near threshold PN rate is about 3x ORN rate (Jeanne & Wilson
+  2015, DA1, ChR2 near threshold, ORN about 2-22 Hz, **recorded in males**; VERIFIED). Direct (spike rates, same cell types). Caveats: the curve includes ORN -> PN depression, and it
   comes from the same lab as the STD values, so it is not fully independent of the primary STD parameters; and
   the glomeruli, the ORN rates and the tolerance must be fixed in the registration. Glomeruli: DM4, DL5, VM7 and
   DM1, the four in Olsen et al. 2010 Fig 1B (VERIFIED-fig). It joins viability in a later generation, once a
@@ -171,8 +178,10 @@ from `docs/lit/gen7_lit_std_validation_2026-10-18.md`, ranked by how directly th
 
 **Still open (fix before registering):**
 - V7a: the ORN rates to drive, the tolerance, and how a glomerulus's ORNs are driven in the model.
-- The STD primary (Nagel 2015, f 0.78 / 893 ms) rests on a figure legend read by Grok only; confirm it, or make
-  the text-verified fast-component fit (f 0.77 / 1006 ms) the primary.
+- (Resolved 18 Oct: the STD primary's figure legend is quoted verbatim; f 0.78 / 893 ms stays.)
+- V7a model mapping: drive every `ORN_<glomerulus>` cell in the connectome at the target rate (the real ORN
+  count, not a chosen one) and read the uniglomerular PNs of that glomerulus; the type mapping is listed in the
+  registration.
 
 ## Not in this plan
 
