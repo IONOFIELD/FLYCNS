@@ -11,6 +11,8 @@ registration (results/<label>/registration_v*.json: same model hash, matches tru
 also prints the last lines of ci-log.txt for any job that produced no arm. It never scores, never commits and
 never pushes: the scorer (and its own refusal rules) come after, and the collected files are committed by hand.
 An arm found on two branches is a hard stop (a re-run must be resolved by a person, not by order of fetching).
+Files are written byte-for-byte as committed (LF line endings, also on Windows). Side effect: the branches are
+fetched into refs/remotes/rerun-out-collect/* of this repository; `git update-ref -d` or a prune removes them.
 """
 import json
 import subprocess
@@ -70,7 +72,7 @@ def main(label, runs):
             rec = json.loads(text)
             st = rec.get("registration") or {}
             ok = st.get("model_hash") == want_hash and bool(st.get("matches")) and not rec.get("reduced")
-            (ROOT / p).write_text(text, encoding="utf-8")
+            (ROOT / p).write_text(text, encoding="utf-8", newline="")   # as committed: LF, not CRLF on Windows
             rows.append((arm, ref.split("/")[-1], sha, len(rec.get("trials", [])), "OK" if ok else
                          f"STAMP MISMATCH (model {str(st.get('model_hash'))[:12]}, matches {st.get('matches')}, "
                          f"reduced {rec.get('reduced')})"))
