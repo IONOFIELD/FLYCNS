@@ -42,7 +42,7 @@ Date: 18 Oct 2026. Read-only. No repo edits were made and no messages were sent.
 | **Fast nACh kinetics** | | | | | |
 | mEPSC rise / half-decay | rise ≈1.05–1.12 ms; half-decay ≈2.1–2.45 ms; amplitude ≈1.65–1.85 pA | ORN→PN (DM6, VM2, DL5, DM4) | in vivo voltage clamp, V_hold −65 mV, flies reared at 25 °C | Kazama & Wilson 2008 Neuron Fig 6C (PMC2429849; `kazama2008_fig6.jpg`) | VERIFIED-fig |
 | Evoked ORN→PN EPSC, fast component | τ_g 9.3 ms; k 20 nS/spike; depression r 0.23, τ_A 1006 ms (curare-sensitive) | ORN→PN | in vivo, model fit | Nagel 2015 Methods | VERIFIED |
-| Evoked ORN→PN EPSC, slow component | τ_g 80 ms; k 1.8 nS/spike; r 0.0073, τ_A 33,247 ms (IMI-sensitive) | ORN→PN | in vivo, model fit | Nagel 2015 Methods | VERIFIED |
+| Evoked ORN→PN EPSC, slow component | τ_g 80 ms; k 1.8 nS/spike; r 0.0073, τ_A 33,247 ms (IMI-sensitive) | ORN→PN | in vivo, model fit **to the PN odor-response membrane potential (55% density stimulus), not to evoked EPSCs** (corrected 18 Oct; `gen7_lit_std_validation_2026-10-18.md`) | Nagel 2015 Methods | VERIFIED |
 | Gouwens model synapse | E_syn −10 mV; single site rise 0.01 ms, decay 0.6 ms, gmax 0.1 nS; distributed over 25 branches, rise 0.2 ms, decay 1.1 ms | ORN→PN | compartmental model | Gouwens & Wilson 2009 Methods | VERIFIED |
 | mEPSC rise / decay τ | rise 0.43 ± 0.05 ms, decay 1.4 ± 0.1 ms (KC); decay 1.5 ± 0.1 ms (GFP−); decay 1.7 ± 0.21 ms (Cha-Gal4) | cholinergic | cultured pupal neurons, RT | Su & O'Dowd 2003 Table 1 + Results | VERIFIED |
 | mEPSC rise / decay τ | rise 1.53 ± 0.09 ms, decay 5.23 ± 0.41 ms, amplitude 4.0 pA (OK107 GFP+); WT decay 6.73 ± 1.43 ms; 201Y GFP− decay 4.45 ms | KCs (cholinergic) | adult brain explant, RT | Gu & O'Dowd 2006 Table 1 | VERIFIED |
