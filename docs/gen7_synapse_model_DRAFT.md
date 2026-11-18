@@ -179,9 +179,24 @@ from `docs/lit/gen7_lit_std_validation_2026-10-18.md`, ranked by how directly th
 **Still open (fix before registering):**
 - V7a: the ORN rates to drive, the tolerance, and how a glomerulus's ORNs are driven in the model.
 - (Resolved 18 Oct: the STD primary's figure legend is quoted verbatim; f 0.78 / 893 ms stays.)
-- V7a model mapping: drive every `ORN_<glomerulus>` cell in the connectome at the target rate (the real ORN
-  count, not a chosen one) and read the uniglomerular PNs of that glomerulus; the type mapping is listed in the
-  registration.
+- V7a model mapping, from `docs/lit/v7a_mn9r_check_2026-11-13.md` (MaleCNS Explorer @ 789cc6c and the v1.0
+  release tables; VERIFIED there). Drive every cell of the ORN type at the target rate (the real ORN count,
+  both sides) and read the listed PN type:
+
+  | Olsen 2010 | ORN type (cells) | PN read (cells) | not read, reported |
+  |---|---|---|---|
+  | DM4 | `ORN_DM4` (32) | `DM4_adPN` (2) | `DM4_vPN` (2): GABAergic, driven mainly by DM4_adPN |
+  | DL5 | `ORN_DL5` (43) | `DL5_adPN` (2) | |
+  | VM7 | `ORN_VM7d` (36) (open: see below) | `VM7d_adPN` (7) | `ORN_VM7v` (25) -> `VM7v_adPN` (3) |
+  | DM1 | `ORN_DM1` (74) | `DM1_lPN` (2) | |
+
+  - **VM7 is split in MaleCNS** (VM7d, VM7v); Olsen et al. 2010 report one "VM7", driven with 2-butanone. Open
+    choice: which is the comparison. Proposed: VM7d primary, VM7v reported, on the reading that Olsen's VM7 is the
+    Or42a glomerulus (VM7d = Or42a from the hemibrain table, not re-verified; INFERRED).
+  - Only cholinergic uniglomerular PNs are read: Olsen's curve is for excitatory PNs. `DM4_vPN` is GABAergic.
+  - Known impurities, stated, not corrected: ORN_DL2v supplies 5.3% of DM4_adPN's input; multiglomerular PNs
+    that take the same ORN input are not read; 1 body each of ORN_DM4 and ORN_DL5 has no side; 2, 1, 2 and 2
+    ORN bodies (DM4, DL5, VM7v, DM1) are labelled "RT Hard to trace".
 
 ## Not in this plan
 
