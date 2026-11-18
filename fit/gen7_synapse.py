@@ -517,14 +517,14 @@ def preflight(data_dir="data"):
     neurons, edges, on = tables(data_dir, "predicted")
     meta = neurons.drop_duplicates("bodyId").set_index("bodyId")
     cells0, cells1 = set(e0["pre"]) | set(e0["post"]), set(edges["pre"]) | set(edges["post"])
-    key = lambda e: set(zip(e["pre"].to_numpy(), e["post"].to_numpy()))      # noqa: E731
-    added = key(edges) - key(e0)
-    new = edges[[k in added for k in zip(edges["pre"].to_numpy(), edges["post"].to_numpy())]]
+    pairs = lambda e, flag: e[["pre", "post"]].drop_duplicates().assign(**{flag: True})      # noqa: E731
+    new = edges[edges.merge(pairs(e0, "old"), on=["pre", "post"], how="left")["old"].isna().to_numpy()]
+    removed = int(e0.merge(pairs(edges, "now"), on=["pre", "post"], how="left")["now"].isna().sum())
     out = dict(data_dir=str(data_dir), celltypes=dict(sha256=PA.sha256(PA.CELLTYPES), registered=PA.CELLTYPES_SHA256,
                                                       counts=ctrec["counts"]),
                fix=dict(without=off, with_fix=on, cells_added=int(len(cells1 - cells0)),
-                        cells_removed=int(len(cells0 - cells1)), connections_added=int(len(added)),
-                        connections_removed=int(len(key(e0) - key(edges))),
+                        cells_removed=int(len(cells0 - cells1)), connections_added=int(len(new)),
+                        connections_removed=removed,
                         added_excitatory=dict(edges=int((new["sign"] > 0).sum()),
                                               synapses=float(new.loc[new["sign"] > 0, "weight"].sum())),
                         added_inhibitory=dict(edges=int((new["sign"] < 0).sum()),
