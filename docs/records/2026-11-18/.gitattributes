@@ -1,0 +1,4 @@
+# Records are stored byte-for-byte as produced on 2026-11-18 (several were written with CRLF on Windows, and
+# rescore/phaseA_windows.json's CRLF line endings are themselves part of the finding). Their sha256 values are
+# listed in README.md and in the reports; normalising line endings would break them.
+* -text

@@ -1,0 +1,44 @@
+{
+ "status_all_cells": {
+  "Traced": 165122,
+  "Orphan": 6464,
+  "<missing>": 4214,
+  "Anchor": 611,
+  "Assign": 11
+ },
+ "n_sets": 17,
+ "n_types": 106,
+ "n_cells": 21625,
+ "status_benchmark_cells": {
+  "Traced": 21624,
+  "<missing>": 1
+ },
+ "n_one_to_one_pairs": 19,
+ "n_pairs_flagged": 2,
+ "n_pairs_flag_ratio": 2,
+ "n_pairs_flag_status": 0,
+ "n_types_both_sides": 96,
+ "n_types_side_mean_ratio_gt3": 13,
+ "n_non_traced_cells": 1,
+ "n_within_type_outliers": 475,
+ "MN9": [
+  {
+   "type": "MN9",
+   "L_bodyId": 10331,
+   "R_bodyId": 16949,
+   "L_status": "Traced",
+   "R_status": "Traced",
+   "L_input": 6358,
+   "R_input": 633,
+   "L_over_R": 10.044233807266982,
+   "max_over_min": 10.044233807266982,
+   "L_input_ge5": 5743,
+   "R_input_ge5": 386,
+   "max_over_min_ge5": 14.878238341968911,
+   "sets": "feeding / MN9 readout; taste benchmarks / feeding motor neurons",
+   "flag_ratio": true,
+   "flag_status": false,
+   "flagged": true
+  }
+ ]
+}

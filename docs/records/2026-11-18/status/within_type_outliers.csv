@@ -1,0 +1,476 @@
+bodyId,type,instance,side,status,input_post,input_edges_ge5,superclass,sets,type_side_median,n_type_side
+80330,C2,C2_L,L,Traced,34,5,ol_intrinsic,peptide_asta / AstA receptor targets,103.0,871
+181095,C2,C2_L,L,Traced,29,18,ol_intrinsic,peptide_asta / AstA receptor targets,103.0,871
+189308,C2,C2_L,L,Traced,26,6,ol_intrinsic,peptide_asta / AstA receptor targets,103.0,871
+191013,C2,C2_L,L,Traced,31,23,ol_intrinsic,peptide_asta / AstA receptor targets,103.0,871
+193608,C2,C2_L,L,Traced,27,9,ol_intrinsic,peptide_asta / AstA receptor targets,103.0,871
+202049,C2,C2_L,L,Traced,31,11,ol_intrinsic,peptide_asta / AstA receptor targets,103.0,871
+204179,C2,C2_L,L,Traced,33,17,ol_intrinsic,peptide_asta / AstA receptor targets,103.0,871
+580957,C2,C2_L,L,Traced,25,13,ol_intrinsic,peptide_asta / AstA receptor targets,103.0,871
+144201,C2,C2_R,R,Traced,36,14,ol_intrinsic,peptide_asta / AstA receptor targets,116.0,874
+148317,C2,C2_R,R,Traced,33,20,ol_intrinsic,peptide_asta / AstA receptor targets,116.0,874
+148968,C2,C2_R,R,Traced,34,17,ol_intrinsic,peptide_asta / AstA receptor targets,116.0,874
+149296,C2,C2_R,R,Traced,38,24,ol_intrinsic,peptide_asta / AstA receptor targets,116.0,874
+154827,C2,C2_R,R,Traced,29,16,ol_intrinsic,peptide_asta / AstA receptor targets,116.0,874
+184303,C2,C2_R,R,Traced,33,19,ol_intrinsic,peptide_asta / AstA receptor targets,116.0,874
+500008,C2,C2_R,R,Traced,37,21,ol_intrinsic,peptide_asta / AstA receptor targets,116.0,874
+557516,C2,C2_R,R,Traced,35,23,ol_intrinsic,peptide_asta / AstA receptor targets,116.0,874
+75414,Dm9,Dm9_L,L,Traced,63,35,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+75762,Dm9,Dm9_L,L,Traced,45,7,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+76698,Dm9,Dm9_L,L,Traced,113,28,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+76968,Dm9,Dm9_L,L,Traced,128,46,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+87762,Dm9,Dm9_L,L,Traced,160,56,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+87862,Dm9,Dm9_L,L,Traced,151,93,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+88708,Dm9,Dm9_L,L,Traced,152,51,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+90447,Dm9,Dm9_L,L,Traced,51,19,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+94227,Dm9,Dm9_L,L,Traced,38,0,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+95055,Dm9,Dm9_L,L,Traced,46,11,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+95636,Dm9,Dm9_L,L,Traced,171,55,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+96844,Dm9,Dm9_L,L,Traced,106,14,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+100997,Dm9,Dm9_L,L,Traced,77,31,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+101904,Dm9,Dm9_L,L,Traced,57,10,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+101989,Dm9,Dm9_L,L,Traced,56,11,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+102436,Dm9,Dm9_L,L,Traced,12,0,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+107456,Dm9,Dm9_L,L,Traced,171,83,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+114761,Dm9,Dm9_L,L,Traced,52,5,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+115473,Dm9,Dm9_L,L,Traced,101,33,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+118310,Dm9,Dm9_L,L,Traced,114,15,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+128632,Dm9,Dm9_L,L,Traced,157,44,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+129643,Dm9,Dm9_L,L,Traced,112,28,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+132546,Dm9,Dm9_L,L,Traced,122,17,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+140040,Dm9,Dm9_L,L,Traced,71,21,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+185169,Dm9,Dm9_L,L,Traced,115,94,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+277489,Dm9,Dm9_L,L,Traced,31,0,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+543211,Dm9,Dm9_L,L,Traced,160,89,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+581229,Dm9,Dm9_L,L,Traced,71,37,ol_intrinsic,peptide_asta / AstA receptor targets,550.0,138
+57213,Dm9,Dm9_R,R,Traced,209,82,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+58110,Dm9,Dm9_R,R,Traced,218,91,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+65950,Dm9,Dm9_R,R,Traced,209,91,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+72738,Dm9,Dm9_R,R,Traced,201,73,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+81139,Dm9,Dm9_R,R,Traced,197,74,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+88705,Dm9,Dm9_R,R,Traced,135,80,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+94931,Dm9,Dm9_R,R,Traced,190,74,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+101368,Dm9,Dm9_R,R,Traced,200,78,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+102225,Dm9,Dm9_R,R,Traced,221,99,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+103352,Dm9,Dm9_R,R,Traced,160,36,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+103418,Dm9,Dm9_R,R,Traced,222,55,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+106372,Dm9,Dm9_R,R,Traced,200,56,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+109964,Dm9,Dm9_R,R,Traced,166,81,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+132387,Dm9,Dm9_R,R,Traced,212,92,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+134344,Dm9,Dm9_R,R,Traced,91,40,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+144051,Dm9,Dm9_R,R,Traced,226,63,ol_intrinsic,peptide_asta / AstA receptor targets,713.0,135
+435445,JO-A-unclear,JO-A-unclear_R,R,Traced,23,6,cb_sensory,auditory / JO auditory afferents,0.0,24
+107969133,JO-A-unclear,JO-A-unclear_R,R,Traced,2,0,cb_sensory,auditory / JO auditory afferents,0.0,24
+360761964,JO-A-unclear,JO-A-unclear_R,R,Traced,3,0,cb_sensory,auditory / JO auditory afferents,0.0,24
+648663099,JO-A-unclear,JO-A-unclear_R,R,Traced,2,0,cb_sensory,auditory / JO auditory afferents,0.0,24
+491190,JO-A2,JO-A2_L,L,Traced,38,0,cb_sensory,auditory / JO auditory afferents,201.0,11
+227318,JO-B-unclear,JO-B-unclear_R,R,Traced,9,0,cb_sensory,auditory / JO auditory afferents,0.0,11
+270708,JO-B-unclear,JO-B-unclear_R,R,Traced,90,54,cb_sensory,auditory / JO auditory afferents,0.0,11
+344928887,JO-B-unclear,JO-B-unclear_R,R,Traced,5,0,cb_sensory,auditory / JO auditory afferents,0.0,11
+932780,JO-B1_a,JO-B1_a_R,R,Traced,112,57,cb_sensory,auditory / JO auditory afferents; auditory / wind control; declared electrical synapses (both ends),22.0,5
+296920599,JO-B1_a,JO-B1_a_R,R,Traced,1,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control; declared electrical synapses (both ends),22.0,5
+750369552,JO-B3,JO-B3_L,L,Traced,42,6,cb_sensory,auditory / JO auditory afferents; auditory / wind control,133.0,10
+610917351,JO-B4_b,JO-B4_b_R,R,Traced,5,0,cb_sensory,auditory / wind control,22.0,3
+512239,JO-CL,JO-CL_R,R,Traced,22,0,cb_sensory,auditory / wind control,66.5,6
+435223099,JO-CM,JO-CM_L,L,Traced,22,0,cb_sensory,auditory / wind control,119.5,16
+354677,JO-CM,JO-CM_R,R,Traced,4,0,cb_sensory,auditory / wind control,21.5,14
+512629,JO-CM,JO-CM_R,R,Traced,136,51,cb_sensory,auditory / wind control,21.5,14
+171730006,JO-CM,JO-CM_R,R,Traced,82,21,cb_sensory,auditory / wind control,21.5,14
+631555080,JO-CM,JO-CM_R,R,Traced,6,0,cb_sensory,auditory / wind control,21.5,14
+235503501,JO-ED2_a,JO-ED2_a_R,R,Traced,15,0,cb_sensory,auditory / wind control,99.0,15
+727839014,JO-ED2_c,JO-ED2_c_R,R,Traced,15,0,cb_sensory,auditory / wind control,113.0,5
+377495,JO-EV1,JO-EV1_R,R,Traced,4,0,cb_sensory,auditory / wind control,76.0,19
+417419,JO-EV1,JO-EV1_R,R,Traced,9,0,cb_sensory,auditory / wind control,76.0,19
+483594,JO-EV1,JO-EV1_R,R,Traced,11,0,cb_sensory,auditory / wind control,76.0,19
+222873418,JO-EV1,JO-EV1_R,R,Traced,5,0,cb_sensory,auditory / wind control,76.0,19
+929909,JO-EV2,JO-EV2_L,L,Traced,46,12,cb_sensory,auditory / wind control,182.0,20
+327202,JO-EV2,JO-EV2_R,R,Traced,11,0,cb_sensory,auditory / wind control,63.0,16
+487107,JO-EV2,JO-EV2_R,R,Traced,11,0,cb_sensory,auditory / wind control,63.0,16
+512237,JO-EV2,JO-EV2_R,R,Traced,18,7,cb_sensory,auditory / wind control,63.0,16
+516907,JO-EV2,JO-EV2_R,R,Traced,286,215,cb_sensory,auditory / wind control,63.0,16
+536217,JO-EV2,JO-EV2_R,R,Traced,252,176,cb_sensory,auditory / wind control,63.0,16
+918039,JO-EV2,JO-EV2_R,R,Traced,9,0,cb_sensory,auditory / wind control,63.0,16
+273974394,JO-EV2,JO-EV2_R,R,Traced,15,0,cb_sensory,auditory / wind control,63.0,16
+545973,JO-EV3,JO-EV3_R,R,Traced,30,6,cb_sensory,auditory / wind control,123.0,23
+145088940,JO-EV3,JO-EV3_R,R,Traced,36,0,cb_sensory,auditory / wind control,123.0,23
+432633950,JO-EV3,JO-EV3_R,R,Traced,28,10,cb_sensory,auditory / wind control,123.0,23
+593749891,JO-EV3,JO-EV3_R,R,Traced,35,6,cb_sensory,auditory / wind control,123.0,23
+701436290,JO-EV3,JO-EV3_R,R,Traced,27,0,cb_sensory,auditory / wind control,123.0,23
+1004833528,JO-EV5,JO-EV5_L,L,Traced,46,0,cb_sensory,auditory / wind control,252.0,13
+922113,JO-EV5,JO-EV5_R,R,Traced,13,0,cb_sensory,auditory / wind control,48.0,10
+785980083,JO-EV5,JO-EV5_R,R,Traced,146,52,cb_sensory,auditory / wind control,48.0,10
+900949,JO-EV6,JO-EV6_L,L,Traced,37,5,cb_sensory,auditory / wind control,123.0,14
+238817349,JO-FV,JO-FV_L,L,Traced,14,0,cb_sensory,auditory / wind control,64.5,36
+26519,JO-FV,JO-FV_R,R,Traced,273,121,cb_sensory,auditory / wind control,66.5,34
+31055,JO-FV,JO-FV_R,R,Traced,365,139,cb_sensory,auditory / wind control,66.5,34
+89002,JO-FV,JO-FV_R,R,Traced,265,129,cb_sensory,auditory / wind control,66.5,34
+183993,JO-FV,JO-FV_R,R,Traced,246,124,cb_sensory,auditory / wind control,66.5,34
+306607,JO-FV,JO-FV_R,R,Traced,8,0,cb_sensory,auditory / wind control,66.5,34
+363027,JO-FV,JO-FV_R,R,Traced,2,0,cb_sensory,auditory / wind control,66.5,34
+413003,JO-FV,JO-FV_R,R,Traced,5,0,cb_sensory,auditory / wind control,66.5,34
+535510,JO-FV,JO-FV_R,R,Traced,273,151,cb_sensory,auditory / wind control,66.5,34
+556073,JO-FV,JO-FV_R,R,Traced,262,81,cb_sensory,auditory / wind control,66.5,34
+920330,JO-FV,JO-FV_R,R,Traced,8,0,cb_sensory,auditory / wind control,66.5,34
+102456926,JO-FV,JO-FV_R,R,Traced,1,0,cb_sensory,auditory / wind control,66.5,34
+627794952,JO-FV,JO-FV_R,R,Traced,2,0,cb_sensory,auditory / wind control,66.5,34
+839090650,JO-FV,JO-FV_R,R,Traced,9,0,cb_sensory,auditory / wind control,66.5,34
+944434730,JO-FV,JO-FV_R,R,Traced,6,0,cb_sensory,auditory / wind control,66.5,34
+480695,JO-unclear,JO-unclear_L,L,Traced,25,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,131.0,7
+1031549774,JO-unclear,JO-unclear_L,L,Traced,40,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,131.0,7
+255964,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+277619,JO-unclear,JO-unclear_R,R,Traced,7,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+281017,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+301305,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+310422,JO-unclear,JO-unclear_R,R,Traced,19,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+321241,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+341661,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+377394,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+397089,JO-unclear,JO-unclear_R,R,Traced,15,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+398462,JO-unclear,JO-unclear_R,R,Traced,12,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+406920,JO-unclear,JO-unclear_R,R,Traced,5,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+415959,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+416552,JO-unclear,JO-unclear_R,R,Traced,5,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+439338,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+453447,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+473437,JO-unclear,JO-unclear_R,R,Traced,9,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+924040,JO-unclear,JO-unclear_R,R,Traced,22,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+930236,JO-unclear,JO-unclear_R,R,Traced,7,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+941989,JO-unclear,JO-unclear_R,R,Traced,9,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+954304,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+102730610,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+102829180,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+125446087,JO-unclear,JO-unclear_R,R,Traced,4,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+149899714,JO-unclear,JO-unclear_R,R,Traced,11,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+165307335,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+182055376,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+187467801,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+190960183,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+203988386,JO-unclear,JO-unclear_R,R,Traced,4,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+229159256,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+237125523,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+267864463,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+285504310,JO-unclear,JO-unclear_R,R,Traced,10,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+311389836,JO-unclear,JO-unclear_R,R,Traced,5,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+324769133,JO-unclear,JO-unclear_R,R,Traced,6,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+325721459,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+345369828,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+373925118,JO-unclear,JO-unclear_R,R,Traced,5,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+387136270,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+407382048,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+482981517,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+528648152,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+608346676,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+631826146,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+635361007,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+650169251,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+675422459,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+692373758,JO-unclear,JO-unclear_R,R,Traced,8,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+702682768,JO-unclear,JO-unclear_R,R,Traced,4,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+710268570,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+719581118,JO-unclear,JO-unclear_R,R,Traced,14,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+785169039,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+821578166,JO-unclear,JO-unclear_R,R,Traced,6,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+827993838,JO-unclear,JO-unclear_R,R,Traced,8,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+842715518,JO-unclear,JO-unclear_R,R,Traced,61,16,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+852693854,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+856796036,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+865642428,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+871118340,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+893816063,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+898227417,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+933869224,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+985068924,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+999210425,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+1003164788,JO-unclear,JO-unclear_R,R,Traced,0,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+1039063503,JO-unclear,JO-unclear_R,R,Traced,5,0,cb_sensory,auditory / JO auditory afferents; auditory / wind control,1.0,95
+14405,L1,L1_L,L,Traced,450,377,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+18064,L1,L1_L,L,Traced,449,389,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+18919,L1,L1_L,L,Traced,441,376,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+20840,L1,L1_L,L,Traced,475,395,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+21320,L1,L1_L,L,Traced,489,427,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+21922,L1,L1_L,L,Traced,448,387,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+22613,L1,L1_L,L,Traced,449,363,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+22934,L1,L1_L,L,Traced,444,368,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+22999,L1,L1_L,L,Traced,463,375,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+23016,L1,L1_L,L,Traced,458,358,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+23018,L1,L1_L,L,Traced,434,357,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+23074,L1,L1_L,L,Traced,448,381,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+23133,L1,L1_L,L,Traced,440,360,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+23207,L1,L1_L,L,Traced,472,421,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+23252,L1,L1_L,L,Traced,460,379,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+24141,L1,L1_L,L,Traced,444,367,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+32436,L1,L1_L,L,Traced,447,343,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+35880,L1,L1_L,L,Traced,446,334,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+37124,L1,L1_L,L,Traced,46,27,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+39568,L1,L1_L,L,Traced,452,375,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+40103,L1,L1_L,L,Traced,34,17,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+50015,L1,L1_L,L,Traced,497,368,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+53394,L1,L1_L,L,Traced,42,19,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+54674,L1,L1_L,L,Traced,45,25,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+55455,L1,L1_L,L,Traced,44,24,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+60825,L1,L1_L,L,Traced,435,328,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+62802,L1,L1_L,L,Traced,46,29,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+83378,L1,L1_L,L,Traced,48,28,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+85796,L1,L1_L,L,Traced,45,35,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+92118,L1,L1_L,L,Traced,40,30,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+95475,L1,L1_L,L,Traced,40,24,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+96808,L1,L1_L,L,Traced,47,28,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+103911,L1,L1_L,L,Traced,47,12,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+115716,L1,L1_L,L,Traced,48,29,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+149889,L1,L1_L,L,Traced,25,11,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+516061,L1,L1_L,L,Traced,473,408,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+516729,L1,L1_L,L,Traced,450,407,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+533351,L1,L1_L,L,Traced,451,399,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+533622,L1,L1_L,L,Traced,434,377,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+534137,L1,L1_L,L,Traced,434,342,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+534384,L1,L1_L,L,Traced,476,318,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+535237,L1,L1_L,L,Traced,448,382,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+542897,L1,L1_L,L,Traced,47,40,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+551006,L1,L1_L,L,Traced,44,26,ol_intrinsic,peptide_asta / AstA receptor targets,144.5,884
+39977,L1,L1_R,R,Traced,51,39,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+42977,L1,L1_R,R,Traced,56,32,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+43583,L1,L1_R,R,Traced,69,42,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+49097,L1,L1_R,R,Traced,57,47,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+50695,L1,L1_R,R,Traced,50,35,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+51162,L1,L1_R,R,Traced,65,58,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+51448,L1,L1_R,R,Traced,53,42,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+52066,L1,L1_R,R,Traced,49,34,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+52073,L1,L1_R,R,Traced,54,35,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+59628,L1,L1_R,R,Traced,42,29,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+60601,L1,L1_R,R,Traced,51,44,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+61581,L1,L1_R,R,Traced,53,42,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+64389,L1,L1_R,R,Traced,44,24,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+65625,L1,L1_R,R,Traced,68,44,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+65920,L1,L1_R,R,Traced,47,42,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+69847,L1,L1_R,R,Traced,52,36,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+70306,L1,L1_R,R,Traced,68,45,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+72756,L1,L1_R,R,Traced,47,35,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+73408,L1,L1_R,R,Traced,41,27,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+74193,L1,L1_R,R,Traced,49,41,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+77697,L1,L1_R,R,Traced,56,38,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+82524,L1,L1_R,R,Traced,64,46,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+82908,L1,L1_R,R,Traced,65,48,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+83649,L1,L1_R,R,Traced,63,42,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+89387,L1,L1_R,R,Traced,41,17,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+90008,L1,L1_R,R,Traced,58,36,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+94444,L1,L1_R,R,Traced,53,41,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+94899,L1,L1_R,R,Traced,55,37,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+95979,L1,L1_R,R,Traced,46,26,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+98752,L1,L1_R,R,Traced,50,38,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+98851,L1,L1_R,R,Traced,57,43,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+101296,L1,L1_R,R,Traced,38,26,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+107494,L1,L1_R,R,Traced,36,21,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+115681,L1,L1_R,R,Traced,51,39,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+116058,L1,L1_R,R,Traced,47,34,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+123857,L1,L1_R,R,Traced,41,31,ol_intrinsic,peptide_asta / AstA receptor targets,210.0,892
+45159,L2,L2_L,L,Traced,75,54,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+65474,L2,L2_L,L,Traced,80,50,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+97507,L2,L2_L,L,Traced,58,36,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+102550,L2,L2_L,L,Traced,78,55,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+105573,L2,L2_L,L,Traced,73,38,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+116620,L2,L2_L,L,Traced,70,40,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+117939,L2,L2_L,L,Traced,69,45,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+118186,L2,L2_L,L,Traced,74,43,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+128510,L2,L2_L,L,Traced,75,44,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+182847,L2,L2_L,L,Traced,45,21,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+517566,L2,L2_L,L,Traced,80,38,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+544704,L2,L2_L,L,Traced,79,57,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+546930,L2,L2_L,L,Traced,75,51,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+551005,L2,L2_L,L,Traced,80,37,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+551034,L2,L2_L,L,Traced,80,68,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+551645,L2,L2_L,L,Traced,71,40,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+551710,L2,L2_L,L,Traced,78,53,ol_intrinsic,peptide_asta / AstA receptor targets,241.5,886
+32942,L2,L2_R,R,Traced,98,58,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+43130,L2,L2_R,R,Traced,72,37,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+45271,L2,L2_R,R,Traced,88,61,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+53927,L2,L2_R,R,Traced,104,82,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+56150,L2,L2_R,R,Traced,105,86,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+60324,L2,L2_R,R,Traced,87,72,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+61901,L2,L2_R,R,Traced,97,77,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+64810,L2,L2_R,R,Traced,101,70,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+68327,L2,L2_R,R,Traced,75,55,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+68675,L2,L2_R,R,Traced,95,56,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+77495,L2,L2_R,R,Traced,83,46,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+84062,L2,L2_R,R,Traced,62,41,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+95973,L2,L2_R,R,Traced,99,63,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+97977,L2,L2_R,R,Traced,100,89,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+102679,L2,L2_R,R,Traced,92,60,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+104423,L2,L2_R,R,Traced,73,38,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+107398,L2,L2_R,R,Traced,88,76,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+110883,L2,L2_R,R,Traced,83,54,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+112557,L2,L2_R,R,Traced,98,67,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+113727,L2,L2_R,R,Traced,91,67,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+116963,L2,L2_R,R,Traced,81,54,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+120667,L2,L2_R,R,Traced,79,60,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+124450,L2,L2_R,R,Traced,76,57,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+142992,L2,L2_R,R,Traced,78,54,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+153022,L2,L2_R,R,Traced,71,46,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+160837,L2,L2_R,R,Traced,92,73,ol_intrinsic,peptide_asta / AstA receptor targets,322.0,893
+83526,L3,L3_L,L,Traced,43,19,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",136.5,880
+187064,L3,L3_L,L,Traced,43,18,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",136.5,880
+400017,L3,L3_L,L,Traced,35,22,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",136.5,880
+475997,L3,L3_L,L,Traced,38,22,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",136.5,880
+900842,L3,L3_L,L,Traced,39,30,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",136.5,880
+687921699,L3,L3_L,L,Traced,44,18,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",136.5,880
+744179791,L3,L3_L,L,Traced,43,24,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",136.5,880
+959291025,L3,L3_L,L,Traced,43,17,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",136.5,880
+25122,L3,L3_R,R,Traced,18,6,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+43022,L3,L3_R,R,Traced,410,333,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+62580,L3,L3_R,R,Traced,38,27,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+63255,L3,L3_R,R,Traced,38,8,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+64227,L3,L3_R,R,Traced,31,13,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+66229,L3,L3_R,R,Traced,21,12,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+66748,L3,L3_R,R,Traced,32,12,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+72934,L3,L3_R,R,Traced,39,16,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+73103,L3,L3_R,R,Traced,34,21,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+73577,L3,L3_R,R,Traced,32,14,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+73611,L3,L3_R,R,Traced,36,15,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+73809,L3,L3_R,R,Traced,31,12,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+73905,L3,L3_R,R,Traced,42,18,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+74758,L3,L3_R,R,Traced,34,22,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+75772,L3,L3_R,R,Traced,29,16,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+79008,L3,L3_R,R,Traced,44,18,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+79608,L3,L3_R,R,Traced,29,13,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+79734,L3,L3_R,R,Traced,26,10,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+82936,L3,L3_R,R,Traced,20,8,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+82985,L3,L3_R,R,Traced,43,23,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+83030,L3,L3_R,R,Traced,25,6,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+85863,L3,L3_R,R,Traced,31,9,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+86381,L3,L3_R,R,Traced,31,10,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+86585,L3,L3_R,R,Traced,26,0,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+87175,L3,L3_R,R,Traced,15,0,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+87252,L3,L3_R,R,Traced,23,12,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+88620,L3,L3_R,R,Traced,19,0,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+89146,L3,L3_R,R,Traced,15,6,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+90743,L3,L3_R,R,Traced,32,15,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+91672,L3,L3_R,R,Traced,33,17,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+92255,L3,L3_R,R,Traced,19,6,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+94122,L3,L3_R,R,Traced,24,18,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+96209,L3,L3_R,R,Traced,13,0,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+100245,L3,L3_R,R,Traced,9,0,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+104258,L3,L3_R,R,Traced,39,11,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+110589,L3,L3_R,R,Traced,21,8,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+111056,L3,L3_R,R,Traced,24,5,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+111400,L3,L3_R,R,Traced,12,0,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+121423,L3,L3_R,R,Traced,20,0,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+128626,L3,L3_R,R,Traced,13,0,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+129101,L3,L3_R,R,Traced,28,22,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+131201,L3,L3_R,R,Traced,15,8,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+134307,L3,L3_R,R,Traced,20,6,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+141326,L3,L3_R,R,Traced,11,5,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+149753,L3,L3_R,R,Traced,34,23,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+155439,L3,L3_R,R,Traced,17,5,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+156588,L3,L3_R,R,Traced,24,8,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+156701,L3,L3_R,R,Traced,27,18,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+170336,L3,L3_R,R,Traced,29,14,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+176065,L3,L3_R,R,Traced,23,0,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+281952,L3,L3_R,R,Traced,14,0,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+317930,L3,L3_R,R,Traced,16,11,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+349812,L3,L3_R,R,Traced,12,0,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+399617,L3,L3_R,R,Traced,17,5,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+477558,L3,L3_R,R,Traced,13,0,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+493605,L3,L3_R,R,Traced,10,0,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+531384,L3,L3_R,R,Traced,40,25,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+548798,L3,L3_R,R,Traced,24,8,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+554639,L3,L3_R,R,Traced,43,16,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+557526,L3,L3_R,R,Traced,7,0,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",135.0,892
+92256,L4,L4_L,L,Traced,224,62,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+125645,L4,L4_L,L,Traced,14,5,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+165189,L4,L4_L,L,Traced,16,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+168016,L4,L4_L,L,Traced,12,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+172217,L4,L4_L,L,Traced,15,8,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+175103,L4,L4_L,L,Traced,13,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+176377,L4,L4_L,L,Traced,14,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+178002,L4,L4_L,L,Traced,12,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+178044,L4,L4_L,L,Traced,15,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+180055,L4,L4_L,L,Traced,14,6,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+184594,L4,L4_L,L,Traced,14,5,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+185765,L4,L4_L,L,Traced,9,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+188868,L4,L4_L,L,Traced,16,7,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+188971,L4,L4_L,L,Traced,10,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+192265,L4,L4_L,L,Traced,12,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+192875,L4,L4_L,L,Traced,11,6,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+194004,L4,L4_L,L,Traced,14,5,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+195493,L4,L4_L,L,Traced,10,7,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+196434,L4,L4_L,L,Traced,16,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+203565,L4,L4_L,L,Traced,16,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+235861,L4,L4_L,L,Traced,14,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+236157,L4,L4_L,L,Traced,15,10,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+289712,L4,L4_L,L,Traced,16,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+362375,L4,L4_L,L,Traced,14,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+488516,L4,L4_L,L,Traced,16,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+523011,L4,L4_L,L,Traced,14,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+531236,L4,L4_L,L,Traced,16,8,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+549348,L4,L4_L,L,Traced,16,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+552774,L4,L4_L,L,Traced,13,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+338610753,L4,L4_L,L,Traced,14,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+558649477,L4,L4_L,L,Traced,9,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+731568836,L4,L4_L,L,Traced,8,0,ol_intrinsic,peptide_asta / AstA receptor targets,51.0,879
+67319,L4,L4_R,R,Traced,20,0,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+80872,L4,L4_R,R,Traced,21,0,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+100533,L4,L4_R,R,Traced,10,0,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+112529,L4,L4_R,R,Traced,20,5,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+114496,L4,L4_R,R,Traced,20,6,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+117299,L4,L4_R,R,Traced,21,0,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+137584,L4,L4_R,R,Traced,16,0,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+150400,L4,L4_R,R,Traced,19,0,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+170460,L4,L4_R,R,Traced,20,8,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+176352,L4,L4_R,R,Traced,16,0,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+176843,L4,L4_R,R,Traced,20,7,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+188529,L4,L4_R,R,Traced,18,11,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+204142,L4,L4_R,R,Traced,13,7,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+230903,L4,L4_R,R,Traced,16,0,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+369113,L4,L4_R,R,Traced,19,0,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+493309,L4,L4_R,R,Traced,14,0,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+566551,L4,L4_R,R,Traced,20,5,ol_intrinsic,peptide_asta / AstA receptor targets,64.0,891
+198682,L5,L5_L,L,Traced,88,60,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",283.0,889
+212282,L5,L5_L,L,Traced,93,65,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",283.0,889
+217226,L5,L5_L,L,Traced,85,62,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",283.0,889
+233553,L5,L5_L,L,Traced,56,30,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",283.0,889
+316813,L5,L5_L,L,Traced,86,49,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",283.0,889
+318472,L5,L5_L,L,Traced,76,45,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",283.0,889
+458181,L5,L5_L,L,Traced,71,43,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",283.0,889
+543591,L5,L5_L,L,Traced,71,37,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",283.0,889
+544036,L5,L5_L,L,Traced,69,38,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",283.0,889
+549367,L5,L5_L,L,Traced,85,53,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",283.0,889
+552841,L5,L5_L,L,Traced,81,51,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",283.0,889
+818546639,L5,L5_L,L,Traced,81,50,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",283.0,889
+117753,L5,L5_R,R,Traced,82,40,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",305.0,898
+137512,L5,L5_R,R,Traced,94,49,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",305.0,898
+149061,L5,L5_R,R,Traced,100,66,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",305.0,898
+165530,L5,L5_R,R,Traced,100,60,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",305.0,898
+199924,L5,L5_R,R,Traced,95,68,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",305.0,898
+212939,L5,L5_R,R,Traced,85,37,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",305.0,898
+215683,L5,L5_R,R,Traced,81,51,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",305.0,898
+216660,L5,L5_R,R,Traced,91,52,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",305.0,898
+221549,L5,L5_R,R,Traced,98,71,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",305.0,898
+225164,L5,L5_R,R,Traced,96,49,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",305.0,898
+551070,L5,L5_R,R,Traced,73,52,ol_intrinsic,"peptide_asta / drive (L3, L5); peptide_asta / AstA receptor targets",305.0,898
+144295263,LB1a,LB1a_L,L,Traced,28,0,cb_sensory,taste benchmarks / labellar types,207.0,6
+456838775,LB3a,LB3a_L,L,Traced,34,8,cb_sensory,feeding / MN9-driving gustatory subset; taste benchmarks / labellar types,110.0,9
+553738738,LB3a,LB3a_L,L,Traced,29,8,cb_sensory,feeding / MN9-driving gustatory subset; taste benchmarks / labellar types,110.0,9
+786482749,LB3a,LB3a_L,L,Traced,27,0,cb_sensory,feeding / MN9-driving gustatory subset; taste benchmarks / labellar types,110.0,9
+174444965,LB3b,LB3b_L,L,Traced,25,0,cb_sensory,feeding / MN9-driving gustatory subset; taste benchmarks / labellar types,170.0,5
+766547228,LB3b,LB3b_L,L,Traced,48,5,cb_sensory,feeding / MN9-driving gustatory subset; taste benchmarks / labellar types,170.0,5
+262567,LB3c,LB3c_L,L,Traced,62,5,cb_sensory,feeding / MN9-driving gustatory subset; taste benchmarks / labellar types,194.5,12
+933317,LB3c,LB3c_L,L,Traced,592,423,cb_sensory,feeding / MN9-driving gustatory subset; taste benchmarks / labellar types,194.5,12
+349137284,LB3c,LB3c_L,L,Traced,17,0,cb_sensory,feeding / MN9-driving gustatory subset; taste benchmarks / labellar types,194.5,12
+475202322,LB3c,LB3c_L,L,Traced,33,0,cb_sensory,feeding / MN9-driving gustatory subset; taste benchmarks / labellar types,194.5,12
+93290,LB3d,LB3d_L,L,Traced,530,327,cb_sensory,feeding / MN9-driving gustatory subset; taste benchmarks / labellar types,166.0,11
+201075,LB3d,LB3d_R,R,Traced,56,0,cb_sensory,feeding / MN9-driving gustatory subset; taste benchmarks / labellar types,184.0,15
+147619274,LB3d,LB3d_R,R,Traced,36,6,cb_sensory,feeding / MN9-driving gustatory subset; taste benchmarks / labellar types,184.0,15
+245892505,LB3d,LB3d_R,R,Traced,15,0,cb_sensory,feeding / MN9-driving gustatory subset; taste benchmarks / labellar types,184.0,15
+885642755,LB3d,LB3d_R,R,Traced,24,0,cb_sensory,feeding / MN9-driving gustatory subset; taste benchmarks / labellar types,184.0,15
+548296,Mi1,Mi1_L,L,Traced,139,48,ol_intrinsic,peptide_asta / AstA receptor targets,419.0,886
+144138,Mi15,Mi15_R,R,Traced,29,6,ol_intrinsic,peptide_asta / AstA receptor targets,145.0,582
+244716,Mi15,Mi15_R,R,Traced,44,22,ol_intrinsic,peptide_asta / AstA receptor targets,145.0,582
+56174,Tm2,Tm2_L,L,Traced,128,65,ol_intrinsic,peptide_asta / AstA receptor targets,399.0,883
+87768,Tm2,Tm2_L,L,Traced,129,53,ol_intrinsic,peptide_asta / AstA receptor targets,399.0,883
+115165,Tm2,Tm2_L,L,Traced,128,59,ol_intrinsic,peptide_asta / AstA receptor targets,399.0,883
+139859,Tm2,Tm2_L,L,Traced,110,48,ol_intrinsic,peptide_asta / AstA receptor targets,399.0,883
+153229,Tm2,Tm2_L,L,Traced,118,37,ol_intrinsic,peptide_asta / AstA receptor targets,399.0,883
+183966,Tm2,Tm2_L,L,Traced,123,67,ol_intrinsic,peptide_asta / AstA receptor targets,399.0,883
+137091,Tm2,Tm2_R,R,Traced,116,61,ol_intrinsic,peptide_asta / AstA receptor targets,408.0,883
+924606,aPhM2a,aPhM2a_L,L,Traced,120,41,cb_sensory,feeding / MN9-driving gustatory subset,443.0,3
+777730219,claw_tpGRN,claw_tpGRN_L,L,Traced,39,6,cb_sensory,feeding / MN9-driving gustatory subset,129.0,25
+934523007,claw_tpGRN,claw_tpGRN_L,L,Traced,37,0,cb_sensory,feeding / MN9-driving gustatory subset,129.0,25
