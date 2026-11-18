@@ -1401,7 +1401,28 @@ def t_gen7_synapse_options():
     m = _gen7_toy(-1, SimOptions(synapse="conductance", std="all"), n=5000)
     _gen7_spikes(m, [5.0 + 3 * k for k in range(60)], 250)
     v_min = float(np.array(m.vmon.v / mV)[0].min())
-    bounded = cond.e_inh_mV <= v_min < m.p.v_rest_mV
+    bounded = (cond.e_inh_mV <= v_min < m.p.v_rest_mV and abs(m.lowest_v_mV() - v_min) < 1e-9
+               and _gen7_toy(-1, SimOptions()).lowest_v_mV() is None)
+    # an adapting cell goes below E_i by its own adaptation current; the guard reads the other cells only
+    from flycns.model import CNSModel, LIFParams
+    na = pd.DataFrame(dict(bodyId=[1, 2, 3], type=["src", "tgt", "other"],
+                           superclass=["cb_sensory", "cb_motor", "cb_intrinsic"], somaSide=["L"] * 3))
+    ea = pd.DataFrame(dict(pre=[1, 1], post=[2, 3], weight=[200, 10], nt=["x", "x"], sign=[1.0, 1.0]))
+    ad = CNSModel(na, ea, ["src"], LIFParams(), electrical=False, monitor_types=("tgt",),
+                  options=SimOptions(synapse="conductance", e_inh_mV=-55.0))
+    _gen7_spikes(ad, [10.0, 20.0, 30.0], 150)
+    adapting = float(np.array(ad.vmon.v / mV)[0].min())
+    guard_ok = adapting < -56.0 and ad.lowest_v_mV() >= -55.0 and ad.n_numerics_cells == 1
+    bounded = bounded and guard_ok
+    # restore brings a depressing synapse back to rest: the same train gives the same first and last PSP twice
+    r = _gen7_toy(+1, SimOptions(synapse="conductance", std="all"))
+    r.store()
+    twice = []
+    for _ in range(2):
+        r.restore()
+        _gen7_spikes(r, [10.0 + 100.0 * k for k in range(4)], 400)
+        twice.append(np.array(r.vmon.v / mV)[0].copy())
+    restored = np.array_equal(twice[0], twice[1]) and r.lowest_v_mV() is not None
 
     # depression at 10 Hz: the jump of g at each delivery, relative to the first, against the recurrence
     f, tau, times = 0.78, 893.0, [10.0 + 100.0 * k for k in range(8)]
@@ -1449,13 +1470,15 @@ def t_gen7_synapse_options():
               and refused(SimOptions(std="marked"), std=[True, None])
               and refused(SimOptions(std="all", std_f=0.0))
               and refused(SimOptions(synapse="plastic")))
-    ok = dflt and matched and bounded and std_ok and refuse
+    ok = dflt and matched and bounded and restored and std_ok and refuse
     return ok, (f"defaults are the current-based model; conductance PSP at rest / current PSP: exc {r_exc:.4f}, "
-                f"inh {r_inh:.4f}; v stays above E_i (min {v_min:.2f} mV); depression at 10 Hz follows "
-                f"A -> 0.78 A, tau 893 ms ({', '.join(f'{x:.3f}' for x in expect[:4])}, ...); marked edges only; "
+                f"inh {r_inh:.4f}; v stays above E_i (min {v_min:.2f} mV; the guard leaves out an adapting cell at "
+                f"{adapting:.1f} mV); depression at 10 Hz follows "
+                f"A -> 0.78 A, tau 893 ms ({', '.join(f'{x:.3f}' for x in expect[:4])}, ...); marked edges only; restore "
+                f"returns depression to rest; "
                 f"7 undefined combinations refused" if ok else
                 f"default {dflt} matched {matched} (exc {r_exc:.4f}, inh {r_inh:.4f}) bounded {bounded} "
-                f"(min {v_min:.2f}) std {std_ok} ({np.round(all_a, 4).tolist()} vs {np.round(expect, 4).tolist()}; "
+                f"(min {v_min:.2f}; adapting cell {adapting:.1f}, guard {guard_ok}) restored {restored} std {std_ok} ({np.round(all_a, 4).tolist()} vs {np.round(expect, 4).tolist()}; "
                 f"marked {np.round(mk_b, 4).tolist()}) refuse {refuse}")
 
 
@@ -1490,6 +1513,90 @@ def t_gen7_unclear_option(tmp):
                 "cell with a signable prediction, leaves unclear, missing and amine predictions dropped, and "
                 "records it; an unknown value is refused" if ok else
                 f"default {dflt} fixed {fixed} ({rows(e1)}) logged {logged} refused {refused}")
+
+
+def _gen7_modules():
+    import importlib.util
+    out = []
+    for name, f in (("gen7_unit", "gen7_synapse.py"), ("gen7_score_unit", "gen7_synapse_score.py")):
+        spec = importlib.util.spec_from_file_location(name, ROOT / "fit" / f)
+        mod = importlib.util.module_from_spec(spec)      # any name but gen7_synapse: no registration is read or written
+        spec.loader.exec_module(mod)
+        out.append(mod)
+    return out
+
+
+def t_gen7_design_and_toy_run():
+    """Gen 7 (fit/gen7_synapse.py selftest): the depression-marking rule and the V7a curve fit on hand-made inputs;
+    the design (17 arm sets, 170 sweep arms, 30 V7a arms, 80 conditional arms); every sweep arm has phase A's seed;
+    P0 is phase A's cell 1; EXPECT_C1 is the committed phase A table; then eight arms on a hand-made network run end
+    to end and score (S-in equals B exactly when no ORN fires)."""
+    G, _ = _gen7_modules()
+    return G.selftest(run=True)
+
+
+def t_gen7_scoring_rules():
+    """Gen 7's outcome order (R, F, the first viable of S-in, C, CS-in, C7), the PROVISIONAL rule, the hypothesis
+    verdicts and the arm-set states, on hand-made inputs."""
+    _, S = _gen7_modules()
+    G = S.G
+    V, N, Un = "viable", "not viable", "undetermined"
+    base = {s: N for s in G.SETS}
+    w = {s: 0.6 for s in G.SETS}
+    dec = lambda st, rep=True, miss=(): S.decide({**base, **st}, w, rep, list(miss))      # noqa: E731
+    order = (dec({}, rep=False)["code"] == "R" and dec({"b": V, "sin": V, "c": V})["code"] == "F"
+             and dec({"sin": V, "c": V, "csin": V})["code"] == "sin" and dec({"c": V, "csin": V})["code"] == "c"
+             and dec({"csin": V, "sall": V})["code"] == "csin" and dec({"sall": V, "cti10": V, "sal": V})["code"] == "C7"
+             and dec({"b": Un, "c": V})["code"] == "c")
+    prov = (dec({"c": V})["final"] is True and dec({"c": V}, miss=["sin_sugar_w050"])["final"] is False
+            and "PROVISIONAL" in dec({}, miss=["b_sugar_w040"])["why"] and dec({}, rep=False)["candidate"] is None)
+    hyp = lambda st, rep=True, miss=(): {k: v["verdict"] for k, v in                           # noqa: E731
+                                         S.hypotheses({**base, **st}, dec(st, rep, miss), rep).items()}
+    h0 = hyp({})
+    all_fail = (h0 == {"H7-P": "held", "H7-F": "not held", "H7a": "not held", "H7b": "not held", "H7c-in": "not held",
+                       "H7d": "not held", "H7c-al": "not held", "H7c-all": "not held", "overall": "held"})
+    h1 = hyp({"cti10": V, "csin": V, "sal": V, "csall": Un})
+    mixed = (h1["H7b"] == "held" and h1["H7d"] == "held" and h1["H7c-al"] == "held" and h1["H7c-all"] == "undetermined"
+             and h1["overall"] == "not held")
+    h2 = hyp({"c": V, "cti10": V, "csin": V})
+    not_where = h2["H7a"] == "held" and h2["H7b"] == "not held" and h2["H7d"] == "not held"
+    h3 = hyp({"sin": Un, "c": Un, "csin": V, "cti10": V}, miss=["sin_sugar_w050"])
+    undet = (h3["H7c-in"] == "undetermined" and h3["H7a"] == "undetermined" and h3["H7d"] == "undetermined"
+             and h3["H7b"] == "undetermined" and h3["overall"] == "undetermined" and h3["H7-F"] == "not held")
+    hr = hyp({"c": V}, rep=False)
+    review = hr["H7-P"] == "not held" and all(v == "undetermined" for k, v in hr.items() if k != "H7-P")
+    correct = S.hypotheses(base, dec({}), True)
+    scored = (correct["H7-F"]["prediction_correct"] is True and correct["H7c-al"]["prediction_correct"] is False
+              and S.hypotheses({**base, "sal": Un}, dec({}), True)["H7c-al"]["prediction_correct"] is None)
+    row = lambda st: dict(status=st)                                                          # noqa: E731
+    states = (S.state([row("fails"), row("viable")]) == V and S.state([row("fails"), row("candidate")]) == Un
+              and S.state([row("fails"), row("not passing (UNRESOLVED after its top-up)")]) == N and S.state([]) == Un)
+    num = (S.numerics([dict(lowest_v_mV=-70.9), dict(lowest_v_mV=-60.0)], -70.0)["verdict"] == "PASS"
+           and S.numerics([dict(lowest_v_mV=-71.1)], -70.0)["verdict"] == "FAIL")
+    try:
+        S.numerics([dict(lowest_v_mV=None)], -70.0)
+        refused = False
+    except SystemExit:
+        refused = True
+    ok = order and prov and all_fail and mixed and not_where and undet and review and scored and states and num and refused
+    return ok, ("outcome order R > F > S-in > C > CS-in > C7; a missing top-up makes it PROVISIONAL; hypothesis verdicts "
+                "held / not held / undetermined as written; the numerics guard fails below E_i - 1 mV and refuses a "
+                "missing record" if ok else
+                f"order {order}, provisional {prov}, all-fail {all_fail}, mixed {mixed}, not-where {not_where}, "
+                f"undetermined {undet}, review {review}, scored {scored}, states {states}, numerics {num}, refused {refused}")
+
+
+def t_gen7_parts_match_rerun_jobs():
+    """Every gen-7 part is a manual rerun.yml job with the matching command, and every g7-* job is a part."""
+    G, _ = _gen7_modules()
+    wf = (ROOT / ".github/workflows/rerun.yml").read_text(encoding="utf-8")
+    jobs = re.findall(r'\{"name": "(g7-[^"]+)",\s*"run": "fit/gen7_synapse\.py part ([^"]+)", "manual": true\}', wf)
+    named = {j for j, _ in jobs}
+    bad = [j for j, p in jobs if j != p.strip()]
+    ok = named == set(G.PARTS) and not bad and len(jobs) == len(named)
+    return ok, (f"all {len(named)} gen-7 parts are manual rerun jobs ({len(G.CONDITIONAL_PARTS)} of them conditional)" if ok else
+                f"only in script: {sorted(set(G.PARTS) - named)[:6]}; only in rerun.yml: {sorted(named - set(G.PARTS))[:6]}; "
+                f"command mismatch: {bad[:6]}")
 
 
 def t_phase1b_laterality_and_vnc_group():
@@ -1567,6 +1674,9 @@ def run_all():
                          ("gen-6 phase A parts are the rerun jobs", t_gen6_phaseA_parts_match_rerun_jobs),
                          ("gen-7 synapse options", t_gen7_synapse_options),
                          ("gen-7 unclear-transmitter option", lambda: t_gen7_unclear_option(tmp)),
+                         ("gen-7 design and toy run", t_gen7_design_and_toy_run),
+                         ("gen-7 scoring rules", t_gen7_scoring_rules),
+                         ("gen-7 parts are the rerun jobs", t_gen7_parts_match_rerun_jobs),
                          ("menu input guards", lambda: t_menu_guards(tmp)),
                          ("token file is private", lambda: t_token_private(tmp)),
                          ("messages use neutral wording", t_neutral_wording)]:

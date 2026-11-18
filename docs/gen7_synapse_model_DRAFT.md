@@ -190,7 +190,9 @@ from `docs/lit/gen7_lit_std_validation_2026-10-18.md`, ranked by how directly th
 - Anything the pre-registration audit (Grok, requested 18 Nov) finds.
 - (Resolved 18 Oct: the STD primary's figure legend is quoted verbatim; f 0.78 / 893 ms stays.)
 - Code (18 Nov, branch `gen7/model-code`, not registered): `SimOptions.synapse`, `SimOptions.std`,
-  `load_graph(unclear=...)`, all off by default; the arms script and scorer are not written yet.
+  `load_graph(unclear=...)`, all off by default; `fit/gen7_synapse.py` (arms, preflight, selftest),
+  `fit/gen7_synapse_score.py` (scorer) and the `g7-*` jobs in `rerun.yml`. Toy regression 101/101 with all
+  13,892 golden values unchanged (before the scripts were added; they touch no hashed file).
 - V7a model mapping, from `docs/lit/v7a_mn9r_check_2026-11-13.md` (MaleCNS Explorer @ 789cc6c and the v1.0
   release tables; VERIFIED there). Drive every cell of the ORN type at the target rate (the real ORN count,
   both sides) and read the listed PN type:
@@ -219,8 +221,8 @@ correction (every in vivo kinetic value is at an unstated, presumably room, temp
 
 Written 18 November 2026 in answer to the pre-registration audit (`docs/lit/gen7_prereg_audit_2026-11-18.md`,
 74 findings, 14 blockers; finding numbers in brackets). Where this section and the text above disagree, this
-section is the plan. Items marked **(proposed)** are Claude's and wait for Jayson's yes; everything else follows
-from decisions already made.
+section is the plan. Jayson agreed to every item of this section on 18 November 2026 (choices A-F: the reported-only arms, the
+sensitivity arms, the AL-depression arm, no V7b, the V7a drive rates and the predictions).
 
 ### D1. What is inherited, pinned [F7, F13, F25, F27, F28]
 - Criteria: FUNCTION (screen), FUNCTION-q, STABILITY (a), (b), (c), LATERALITY, the self-sustained rule, the
@@ -247,12 +249,12 @@ Every arm is a sweep: 5 w x {sugar, blind} x 10 trials, v-only reset, MN9_R as i
 | S-in | current | in | on | **deciding** |
 | C | conductance | none | on | **deciding** |
 | CS-in | conductance | in | on | **deciding** |
-| S-al, CS-al | current / conductance | AL | on | reported **(proposed)** |
-| S-all, CS-all | current / conductance | all | on | reported **(proposed: never adopted)** |
-| sensitivity | C and CS-in at E_i -55, at E_i -80, and at tau_i 10 ms; S-in and CS-in at f 0.72 / tau 2.4 s | | on | reported **(proposed: always run, never adopted)** |
+| S-al, CS-al | current / conductance | AL | on | reported |
+| S-all, CS-all | current / conductance | all | on | reported, never adopted |
+| sensitivity | C and CS-in at E_i -55, at E_i -80, and at tau_i 10 ms; S-in and CS-in at f 0.72 / tau 2.4 s | | on | reported: always run, never adopted |
 
 - **STD scopes.** "in": presynaptic type starts `ORN_`, postsynaptic type in the ALPN or ALLN list (the two
-  synapse classes with measured depression). "AL" **(proposed)**: presynaptic type starts `ORN_` or is in the
+  synapse classes with measured depression). "AL": presynaptic type starts `ORN_` or is in the
   ALPN or ALLN list, postsynaptic type in the ALPN or ALLN list; it adds the antennal-lobe recurrent synapses
   phase A's cuts point to, and nothing else. "all": every chemical synapse. "AL" and "all" extrapolate the
   ORN -> PN values to synapses with no measurement; that is why they are reported and cannot be adopted.
@@ -278,13 +280,17 @@ Every arm is a sweep: 5 w x {sugar, blind} x 10 trials, v-only reset, MN9_R as i
   registration (fresh seeds, both nulls, a specificity test as phase A's A3) and after the calibrations listed in
   `docs/CALIBRATION.md` are refit under it. **No calibration is refit before or during generation 7** [F10, F22,
   F45]: every arm uses the generation-6 values, and the grid w is `w_scale` itself.
-- Top-ups: as phase A (an UNRESOLVED component at a w that could become a deciding arm's decision w names 10
-  more trials of both drives at that (arm, w)); deciding arms only.
+- Top-ups: as phase A (an UNRESOLVED component at a w that could become a decision w names 10 more trials of
+  both drives at that (arm, w)). They exist for the four arms whose viability enters the outcome: B (outcome F
+  rests on it) and the three deciding arms. Reported and sensitivity arms get none.
 
 ### D4. Hypotheses, verdicts and predictions [F54-F58, F19]
-Verdicts are *held*, *not held*, or *undetermined* (a named top-up is missing, or outcome R).
+Verdicts are *held*, *not held*, or *undetermined* (a named top-up is missing, or outcome R). An arm is
+"viable" if some w is; "not viable" if every w has a FAIL or stayed UNRESOLVED after its top-up; otherwise
+"undetermined". A reported arm gets no top-up, so an UNRESOLVED w without any viable w leaves its hypothesis
+undetermined: UNRESOLVED is never read as "not viable" either.
 
-| | claim | scored on | prediction **(proposed)** | confidence |
+| | claim | scored on | prediction | confidence |
 |---|---|---|---|---|
 | H7-P | P0 replicates phase A's c1 | D3.1 | held | high |
 | H7-F | the fix alone gives a viable w | B | not held | high |
@@ -323,13 +329,20 @@ is the only depression arm that uses measured synapses only.
 
 ### D6. Fail-safes [F16, F17, F51, F63, F64, F65]
 - A missing or crashed arm refuses scoring. A deciding arm cannot PASS on missing data.
-- Numerics: every conductance arm records the lowest v reached by any cell. Below E_i - 1 mV, the arm's
-  STABILITY is FAIL (flag NUMERICS). The candidate's sweep at its decision w is repeated at dt 0.05 ms; if a
-  component verdict differs, the candidate is flagged numerics-sensitive and stays provisional.
+- Numerics: every conductance arm records, per trial, the lowest v reached by any cell that inhibition alone
+  cannot take below E_i: cells without spike-triggered adaptation and without electrical coupling. (Corrected
+  18 Nov, before registering, after the toy run: the adaptation current legitimately pulls v below E_i, 10 mV
+  per motor-neuron spike and 45 mV per giant-fibre spike, so a guard over every cell would have failed every
+  conductance arm in which MN9 fires.) Below E_i - 1 mV in any
+  sugar or blind trial at a w, that w is not viable (a sixth component, NUMERICS, FAIL; a conductance arm
+  without the record refuses scoring). The candidate's two arms at its decision w are repeated at dt 0.05 ms
+  with the same seeds; if a component verdict differs from the main arms' (10 trials each, unpooled), the
+  candidate is flagged numerics-sensitive and stays provisional.
 - The fix is applied in `load_graph` to the pinned edges (already at the 5-synapse floor). The simulated cell
   count is recorded with and without it; each arm's rates use its own cell count.
 - Per sugar trial of S-in and CS-in, the number of spikes of `ORN_` cells is recorded (mean per w reported). If
-  it is zero, S-in's sugar arms must equal B's exactly; that is checked and reported.
+  it is zero, S-in's sugar arms must equal B's exactly (and CS-in's must equal C's); that is checked field by
+  field and reported, with a flag if they differ.
 - Seeds: 6000 + index(drive, w), phase A's, in every sweep arm, so all arms are paired with each other and with
   phase A. Top-ups 7000 + index. V7a 9000 + index.
 - Process, as phase A: the arms script and the scorer are hashed into the registration; toy-data smoke tests; a
@@ -339,13 +352,13 @@ is the only depression arm that uses measured synapses only.
 ### D7. Validation [F5, F6, F42, F69-F74]
 - **V7a, report-only.** Arms B, S-in, C, CS-in, S-all, CS-all, at each grid w. For each glomerulus in the
   mapping table above: every simulated cell of the ORN type becomes a Poisson source at 5, 10, 20, 40, 80 and
-  120 spikes/s **(proposed)** for 500 ms, 2 trials; the readout is the mean rate of the PN type's cells over the
+  120 spikes/s for 500 ms, 2 trials; the readout is the mean rate of the PN type's cells over the
   same 500 ms, mean of the trials (the model's rate before the drive is 0). R_max and sigma are fitted with the
   exponent fixed at 1.5. "Consistent" per glomerulus: R_max within +/-25% and sigma within a factor of 2 of
   Olsen's fit. Reported: the count of consistent glomeruli per (arm, w), the fits, and the rates beside Olsen's
   points. No verdict enters the outcome. The driven count is the simulated count; side-unknown ORNs are driven
   with the rest.
-- **V7b is not run in generation 7 (proposed).** The model has no water, bitter or concentration stimulus, and
+- **V7b is not run in generation 7.** The model has no water, bitter or concentration stimulus, and
   a mapping from sugar concentration to receptor-neuron rate would be an assumption. The bilateral item cannot
   be read while MN9_R is under-reconstructed.
 - Also reported per arm, with no verdict: the antennal-lobe share of the blind tail (phase A's M9 measure) and
@@ -361,3 +374,16 @@ is the only depression arm that uses measured synapses only.
 - "No MN9 firing rate has been recorded" and "no whole-brain spike rate exists" are search results ("none
   found"), not established absences. The 1.5 Hz ORN rate is DA1's.
 
+
+### D9. Files, jobs and the order of steps
+- Arms and preflight: `fit/gen7_synapse.py`. Scorer: `fit/gen7_synapse_score.py`. Both, and
+  `fit/gen6_phaseA.py` (its drives, sweep trial, readouts and seeds are used unchanged), are hashed into the
+  registration.
+- Arm names: `<set>_<drive>_<w>`; sets `p0, b, sin, c, csin, sal, csal, sall, csall, cei55, cei80, cti10,
+  csinei55, csinei80, csinti10, sinkw, csinkw`. V7a: `v7a_<set>_<w>`.
+- Cloud jobs: 17 sweep parts `g7-<set>` (10 arms each), 6 V7a parts `g7-v7a-<set>` (5 arms each); conditional,
+  only when the scorer names them: `g7-topup-<set>-<w>` and `g7-dt-<set>-<w>` (2 arms each, 20 + 20 parts).
+- Order: (1) preflight on the pinned data, committed; (2) the identity check (`fingerprint/` run of the old and
+  the new model files: every default simulation unchanged); (3) the freeze commit: `registry.VERSION` 6 with its
+  note; (4) register generation 7 and commit the registration; (5) run the 23 parts; (6) score; run any named
+  top-up and dt parts; score again; (7) independent blind recompute; (8) write-up, reviewed before merge.

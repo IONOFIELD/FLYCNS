@@ -203,8 +203,11 @@ class CNSModel:
         # and change the post cell's excitability (it confounded the A2 arms before 2026-10-10).
         # pep: peptide level, copied each step from a shared per-peptide pool when modulation is on, else 0.
         syn_drive = "ge * (E_e - v) + gi * (E_i - v)" if cond else "g"
-        syn_eqs = (f"dge/dt = -ge / tau_syn : 1{g_flag}\n        dgi/dt = -gi / tau_inh : 1{g_flag}" if cond
-                   else f"dg/dt = -g / tau_syn : volt{g_flag}")
+        # v_low (conductance model only): the lowest v each cell has reached, for the numerics guard
+        # (lowest_v_mV). In continuous time inhibition cannot carry v below E_i; an Euler step with a very
+        # large gi could.
+        syn_eqs = (f"dge/dt = -ge / tau_syn : 1{g_flag}\n        dgi/dt = -gi / tau_inh : 1{g_flag}\n        v_low : volt"
+                   if cond else f"dg/dt = -g / tau_syn : volt{g_flag}")
         eqs = f"""
         dv/dt = (v_rest + I_base - v + {syn_drive} + I_gap + g_shunt * (v_rest - v) - a) / tau_m {noise} : volt (unless refractory)
         {syn_eqs}
@@ -230,6 +233,10 @@ class CNSModel:
                         refractory="ref_i", method="linear" if opt.integration == "exact" else "euler",
                         namespace=ns)
         G.v = p.v_rest_mV * mV
+        self._v_low_op = None
+        if cond:
+            G.v_low = p.v_rest_mV * mV
+            self._v_low_op = G.run_regularly("v_low = v_low + (v - v_low) * int(v < v_low)", when="end")
         G.b_adapt = 0 * mV
         G.tau_m_i = p.tau_m_ms * ms
         G.v_thresh_i = p.v_thresh_mV * mV
@@ -339,7 +346,7 @@ class CNSModel:
         se = edges[edges["pre"].isin(self.stim_index.index) & edges["post"].isin(self.lif_index.index)]
         if kick:     # the stimulated cells' own synapses are among the recurrent ones (rec)
             se = se.iloc[:0]
-        objs = [G, P] + rec_layers
+        objs = [G, P] + rec_layers + ([self._v_low_op] if self._v_low_op is not None else [])
         if len(se) and (cond or opt.std != "off"):
             objs += chem(P, se, self.stim_index[se["pre"]].values, self.lif_index[se["post"]].values)
         elif len(se):
@@ -481,6 +488,22 @@ class CNSModel:
             m = (t >= on) & (t < on + window_ms)
             out.append((v[:, m].max(axis=1) - self.p.v_rest_mV).mean() if m.any() else np.nan)
         return np.array(out)
+
+    def lowest_v_mV(self):
+        """Conductance model only: the lowest membrane potential reached since the last restore by any cell
+        that inhibition alone cannot take below E_i (None in the current-based model, where v has no floor to
+        check; None if there is no such cell). Cells with spike-triggered adaptation or electrical coupling are
+        left out: the adaptation current, or a hyperpolarised coupled partner, pulls v below E_i by the model's
+        own equations (one motor-neuron spike adds 10 mV of adaptation), which says nothing about the numerics.
+        For every other cell dv/dt > 0 at v = E_i, so a value below E_i can only come from the Euler step."""
+        if self.options.synapse != "conductance":
+            return None
+        keep = np.asarray(self.G.b_adapt / mV) == 0
+        if len(self.electrical_table):
+            coupled = pd.unique(pd.concat([self.electrical_table["pre"], self.electrical_table["post"]]))
+            keep[[self.lif_index[b] for b in coupled if b in self.lif_index.index]] = False
+        self.n_numerics_cells = int(keep.sum())
+        return float(np.min(np.asarray(self.G.v_low / mV)[keep])) if keep.any() else None
 
     def population_rate_hz(self):
         return len(self.spikes.i) / len(self.lif_ids) / (self.t_ms / 1000.0)
