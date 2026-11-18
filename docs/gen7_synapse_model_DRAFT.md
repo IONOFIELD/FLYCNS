@@ -176,9 +176,19 @@ from `docs/lit/gen7_lit_std_validation_2026-10-18.md`, ranked by how directly th
 5. STD scope: H7c-in (ORN_ -> ALPN/ALLN, the measured synapses only) primary; H7c-all secondary.
 6. V7a report-only in generation 7, on DM4 / DL5 / VM7 / DM1.
 
+**Decided (Jayson, 18 Nov):**
+- V7a tolerance, report-only: per glomerulus, fit the model's own R_max and sigma (exponent fixed at 1.5, as
+  Olsen) to its PN rate against the driven ORN rate; "consistent" if R_max is within +/-25% and sigma within a
+  factor of 2 of Olsen's fitted values for that glomerulus. The model's PN rate at each driven ORN rate is also
+  reported next to Olsen's Fig 1B points (VERIFIED-fig), with no verdict attached.
+- V7a drive: ORN rates 5, 10, 20, 40, 80 and 120 spikes/s (inside Olsen's measured range of about 0-125), each
+  as a 500 ms Poisson drive of every cell of the ORN type, PN rate over the same 500 ms, as in the paper.
+
 **Still open (fix before registering):**
-- V7a: the ORN rates to drive, the tolerance, and how a glomerulus's ORNs are driven in the model.
+- Anything the pre-registration audit (Grok, requested 18 Nov) finds.
 - (Resolved 18 Oct: the STD primary's figure legend is quoted verbatim; f 0.78 / 893 ms stays.)
+- Code (18 Nov, branch `gen7/model-code`, not registered): `SimOptions.synapse`, `SimOptions.std`,
+  `load_graph(unclear=...)`, all off by default; the arms script and scorer are not written yet.
 - V7a model mapping, from `docs/lit/v7a_mn9r_check_2026-11-13.md` (MaleCNS Explorer @ 789cc6c and the v1.0
   release tables; VERIFIED there). Drive every cell of the ORN type at the target rate (the real ORN count,
   both sides) and read the listed PN type:
@@ -190,8 +200,8 @@ from `docs/lit/gen7_lit_std_validation_2026-10-18.md`, ranked by how directly th
   | VM7 | `ORN_VM7d` (36) (open: see below) | `VM7d_adPN` (7) | `ORN_VM7v` (25) -> `VM7v_adPN` (3) |
   | DM1 | `ORN_DM1` (74) | `DM1_lPN` (2) | |
 
-  - **VM7 is split in MaleCNS** (VM7d, VM7v); Olsen et al. 2010 report one "VM7", driven with 2-butanone. Open
-    choice: which is the comparison. Proposed: VM7d primary, VM7v reported, on the reading that Olsen's VM7 is the
+  - **VM7 is split in MaleCNS** (VM7d, VM7v); Olsen et al. 2010 report one "VM7", driven with 2-butanone.
+    **Decided (Jayson, 18 Nov): VM7d is the comparison, VM7v is reported**, on the reading that Olsen's VM7 is the
     Or42a glomerulus (VM7d = Or42a from the hemibrain table, not re-verified; INFERRED).
   - Only cholinergic uniglomerular PNs are read: Olsen's curve is for excitatory PNs. `DM4_vPN` is GABAergic.
   - Known impurities, stated, not corrected: ORN_DL2v supplies 5.3% of DM4_adPN's input; multiglomerular PNs

@@ -226,14 +226,19 @@ MIN_WEIGHT_DEFAULT = 5   # synapses per connection; FLYCNS_MIN_WEIGHT overrides 
 AMINES = ("dopamine", "octopamine", "serotonin")
 
 
-def load_graph(data_dir="data", min_weight=None, amines="dropped"):
+def load_graph(data_dir="data", min_weight=None, amines="dropped", unclear="dropped"):
     """neurons, signed edges. amines: "dropped" (declared: modulatory, not modelled, as SIGN_MAP says) or
-    "excitatory" (Shiu et al. 2024's rule; used only by the phase-1 M1 arm, fit/shiu2024_phase1.py)."""
+    "excitatory" (Shiu et al. 2024's rule; used only by the phase-1 M1 arm, fit/shiu2024_phase1.py).
+    unclear: "dropped" (declared: a connection whose transmitter label is "unclear" is not signed) or
+    "predicted" (generation 7: such a connection takes its presynaptic cell's own predictedNt, the per-cell
+    call, where the type-level consensus was unclear; it stays dropped if that is unclear or an amine too)."""
     import os
     from .integrity import announce_overrides, LOADED
     announce_overrides()
     if amines not in ("dropped", "excitatory"):
         raise SystemExit(f"[graph] amines={amines!r}; choose dropped or excitatory")
+    if unclear not in ("dropped", "predicted"):
+        raise SystemExit(f"[graph] unclear={unclear!r}; choose dropped or predicted")
     if min_weight is None:
         min_weight = int(os.environ.get("FLYCNS_MIN_WEIGHT", MIN_WEIGHT_DEFAULT))
     neurons = pd.read_parquet(f"{data_dir}/neurons.parquet")
@@ -245,8 +250,23 @@ def load_graph(data_dir="data", min_weight=None, amines="dropped"):
         raise SystemExit(f"[graph] min_weight {min_weight} is below this dataset's floor of {floor} synapses "
                          f"(scripts/fetch_malecns.py keeps only connections >= {floor}); use {floor} or more")
     edges = edges[edges["weight"] >= min_weight].copy()
+    n_resigned = n_resigned_syn = n_resigned_cells = 0
+    if unclear == "predicted":
+        if "predictedNt" not in neurons.columns:
+            raise SystemExit("[graph] unclear='predicted' needs a predictedNt column in neurons.parquet")
+        pred = neurons.drop_duplicates("bodyId").set_index("bodyId")["predictedNt"]
+        m = edges["nt"].fillna("").str.lower() == "unclear"
+        new = edges.loc[m, "pre"].map(pred)
+        use = new.notna() & (new.str.lower() != "unclear")
+        edges.loc[use[use].index, "nt"] = new[use]
     edges["sign"] = edges["nt"].str.lower().map(SIGN_MAP if amines == "dropped" else {**SIGN_MAP, **dict.fromkeys(AMINES, 1)})
     unsigned = edges["sign"].isna() | (edges["sign"] == 0)
+    if unclear == "predicted":      # the connections that this option signed
+        got = use[use].index[~unsigned.loc[use[use].index].to_numpy()]
+        n_resigned, n_resigned_syn = int(len(got)), int(edges.loc[got, "weight"].sum())
+        n_resigned_cells = int(edges.loc[got, "pre"].nunique())
+        print(f"[graph] UNCLEAR -> PREDICTED: {n_resigned:,} connections ({n_resigned_syn:,} synapses) from "
+              f"{n_resigned_cells:,} cells signed by the cell's own predicted transmitter")
     n_unknown, n_unknown_syn = int(unsigned.sum()), int(edges.loc[unsigned, "weight"].sum())
     # their presynaptic neurons keep their inputs but lose every output: count the silent sinks
     signed_pre = set(edges.loc[~unsigned, "pre"])
@@ -305,6 +325,9 @@ def load_graph(data_dir="data", min_weight=None, amines="dropped"):
                   n_glu_vnc_flipped=n_glu, jon_mode=jon_mode(), jon_compound_mv=jon_compound_mv())
     if amines != "dropped":      # recorded only when set, so the declared model's provenance is as before
         LOADED.update(amines=amines)
+    if unclear != "dropped":
+        LOADED.update(unclear=unclear, n_resigned_edges=n_resigned, n_resigned_synapses=n_resigned_syn,
+                      n_resigned_cells=n_resigned_cells)
     _LAST["neurons"] = neurons
     return neurons, edges
 

@@ -1355,6 +1355,143 @@ def t_gen6_phaseA_parts_match_rerun_jobs():
                 f"command mismatch: {bad}")
 
 
+def _gen7_toy(sign, opt, n=10, std=None):
+    """Three cells: a stimulated source onto two targets with n synapses each."""
+    from flycns.model import CNSModel, LIFParams
+    nrn = pd.DataFrame(dict(bodyId=[1, 2, 3], type=["src", "tgt", "other"],
+                            superclass=["cb_sensory", "cb_intrinsic", "cb_intrinsic"], somaSide=["L"] * 3))
+    e = pd.DataFrame(dict(pre=[1, 1], post=[2, 3], weight=[n, n], nt=["x", "x"], sign=[float(sign)] * 2))
+    if std is not None:
+        e["std"] = std
+    return CNSModel(nrn, e, ["src"], LIFParams(), electrical=False, monitor_types=("tgt",), options=opt)
+
+
+def _gen7_spikes(m, times_ms, total_ms):
+    """One presynaptic spike at each time: the Poisson source fires with certainty for one 0.1 ms step."""
+    t = 0.0
+    for s in times_ms:
+        m.set_stim_rates([0]); m.run(round(s - t, 1))
+        m.set_stim_rates([1e4]); m.run(0.1)
+        t = s + 0.1
+    m.set_stim_rates([0]); m.run(round(total_ms - t, 1))
+
+
+def t_gen7_synapse_options():
+    """Generation-7 synapse options (flycns.model.SimOptions): the defaults build the earlier model; a
+    conductance-based synapse gives the same PSP at rest as the current-based one, excitatory and inhibitory;
+    inhibition cannot push v below E_i; depression follows A -> f*A per spike with recovery tau (Nagel et al.
+    2015, Eq 1) and the first PSP is undepressed; std='marked' depresses only the marked edges; the
+    combinations that are not defined are refused."""
+    from brian2 import mV, ms, StateMonitor
+    from flycns.model import SimOptions
+    eqs = str(_gen7_toy(+1, SimOptions()).G.equations)
+    dflt = "dg/dt" in eqs and "ge" not in eqs and SimOptions().synapse == "current" and SimOptions().std == "off"
+
+    def peak(sign, opt):
+        m = _gen7_toy(sign, opt)
+        _gen7_spikes(m, [5.0], 60)
+        v = np.array(m.vmon.v / mV)[0] - m.p.v_rest_mV
+        return float(v[np.abs(v).argmax()])
+    cond = SimOptions(synapse="conductance")
+    r_exc = peak(+1, cond) / peak(+1, SimOptions())
+    r_inh = peak(-1, cond) / peak(-1, SimOptions())
+    matched = abs(r_exc - 1) < 0.01 and abs(r_inh - 1) < 0.01 and peak(-1, cond) < 0 < peak(+1, cond)
+
+    # heavy inhibition: 5,000 synapses, 60 spikes at 333 Hz; v must stay above E_i
+    m = _gen7_toy(-1, SimOptions(synapse="conductance", std="all"), n=5000)
+    _gen7_spikes(m, [5.0 + 3 * k for k in range(60)], 250)
+    v_min = float(np.array(m.vmon.v / mV)[0].min())
+    bounded = cond.e_inh_mV <= v_min < m.p.v_rest_mV
+
+    # depression at 10 Hz: the jump of g at each delivery, relative to the first, against the recurrence
+    f, tau, times = 0.78, 893.0, [10.0 + 100.0 * k for k in range(8)]
+    A, expect = 1.0, []
+    for _ in times:
+        expect.append(A)
+        A = 1 - (1 - A * f) * np.exp(-100.0 / tau)
+
+    def jumps(opt, std=None):
+        m = _gen7_toy(+1, opt, std=std)
+        mon = StateMonitor(m.G, "g", record=[m.lif_index[2], m.lif_index[3]])
+        m.net.add(mon)
+        _gen7_spikes(m, times, 900)
+        g, t = np.array(mon.g / mV), np.array(mon.t / ms)
+        out = []
+        for row in (0, 1):
+            j = np.array([g[row][np.searchsorted(t, s + 2.05)] - g[row][np.searchsorted(t, s + 1.75)] for s in times])
+            out.append(j / j[0])
+        return out, m
+    (all_a, all_b), m_all = jumps(SimOptions(std="all"))
+    (mk_a, mk_b), m_mk = jumps(SimOptions(std="marked"), std=[True, False])
+    (off_a, _), m_off = jumps(SimOptions())
+    std_ok = (np.allclose(all_a, expect, rtol=1e-6) and np.allclose(all_b, expect, rtol=1e-6)
+              and np.allclose(mk_a, expect, rtol=1e-6) and np.allclose(mk_b, 1.0, rtol=1e-9)
+              and np.allclose(off_a, 1.0, rtol=1e-9)
+              and (m_all.n_std_syn, m_mk.n_std_syn, m_off.n_std_syn) == (2, 1, 0))
+
+    def refused(opt, std=None, **par):
+        try:
+            if par:
+                from flycns.model import CNSModel, LIFParams
+                nrn = pd.DataFrame(dict(bodyId=[1, 2], type=["src", "tgt"], superclass=["cb_sensory", "cb_intrinsic"],
+                                        somaSide=["L"] * 2))
+                e = pd.DataFrame(dict(pre=[1], post=[2], weight=[10], nt=["x"], sign=[1.0]))
+                CNSModel(nrn, e, ["src"], LIFParams(**par), electrical=False, options=opt)
+            else:
+                _gen7_toy(+1, opt, std=std)
+        except ValueError:
+            return True
+        return False
+    refuse = (refused(SimOptions(synapse="conductance", integration="exact"))
+              and refused(SimOptions(synapse="conductance", e_inh_mV=-52.0))
+              and refused(SimOptions(synapse="conductance", e_exc_mV=-50.0))
+              and refused(SimOptions(std="marked"))
+              and refused(SimOptions(std="marked"), std=[True, None])
+              and refused(SimOptions(std="all", std_f=0.0))
+              and refused(SimOptions(synapse="plastic")))
+    ok = dflt and matched and bounded and std_ok and refuse
+    return ok, (f"defaults are the current-based model; conductance PSP at rest / current PSP: exc {r_exc:.4f}, "
+                f"inh {r_inh:.4f}; v stays above E_i (min {v_min:.2f} mV); depression at 10 Hz follows "
+                f"A -> 0.78 A, tau 893 ms ({', '.join(f'{x:.3f}' for x in expect[:4])}, ...); marked edges only; "
+                f"7 undefined combinations refused" if ok else
+                f"default {dflt} matched {matched} (exc {r_exc:.4f}, inh {r_inh:.4f}) bounded {bounded} "
+                f"(min {v_min:.2f}) std {std_ok} ({np.round(all_a, 4).tolist()} vs {np.round(expect, 4).tolist()}; "
+                f"marked {np.round(mk_b, 4).tolist()}) refuse {refuse}")
+
+
+def t_gen7_unclear_option(tmp):
+    """load_graph(unclear="predicted") signs an "unclear" connection by its presynaptic cell's own predicted
+    transmitter, leaves it dropped when that is unclear, missing or an amine, changes no other connection, and
+    records what it did; the default drops them all and records nothing new."""
+    from flycns import load_graph
+    from flycns.integrity import LOADED
+    d = tmp / "unclear"; d.mkdir()
+    pd.DataFrame(dict(bodyId=[1, 2, 3, 4, 5], type=list("abcde"), superclass=["cb_intrinsic"] * 5, somaSide=["L"] * 5,
+                      consensusNt=["unclear", "unclear", "unclear", "acetylcholine", "unclear"],
+                      predictedNt=["gaba", "unclear", "dopamine", "acetylcholine", None])).to_parquet(d / "neurons.parquet")
+    pd.DataFrame(dict(pre=[1, 2, 3, 4, 5, 1], post=[2, 3, 4, 5, 1, 3], weight=[10, 10, 10, 10, 10, 5],
+                      nt=["unclear", "unclear", "unclear", "acetylcholine", "unclear", "unclear"])).to_parquet(d / "edges.parquet")
+    _, e0 = load_graph(str(d))
+    rec0 = dict(LOADED)
+    _, e1 = load_graph(str(d), unclear="predicted")
+    rec1 = dict(LOADED)
+    rows = lambda e: sorted(map(tuple, e[["pre", "post", "weight", "sign"]].values.tolist()))
+    dflt = rows(e0) == [(4, 5, 10, 1.0)] and "unclear" not in rec0 and "n_resigned_edges" not in rec0
+    fixed = rows(e1) == [(1, 2, 10, -1.0), (1, 3, 5, -1.0), (4, 5, 10, 1.0)]
+    logged = (rec1.get("unclear"), rec1.get("n_resigned_edges"), rec1.get("n_resigned_synapses"),
+              rec1.get("n_resigned_cells")) == ("predicted", 2, 15, 1)
+    try:
+        load_graph(str(d), unclear="guess")
+        refused = False
+    except SystemExit:
+        refused = True
+    ok = dflt and fixed and logged and refused
+    return ok, ("default drops every unclear connection; 'predicted' signs 2 connections (15 synapses) of the one "
+                "cell with a signable prediction, leaves unclear, missing and amine predictions dropped, and "
+                "records it; an unknown value is refused" if ok else
+                f"default {dflt} fixed {fixed} ({rows(e1)}) logged {logged} refused {refused}")
+
+
 def t_phase1b_laterality_and_vnc_group():
     """The phase-1b MN9 laterality index and the Outcome-B VNC grouping do what docs/gen6_rule.md says."""
     src = (ROOT / "fit" / "shiu2024_phase1b.py").read_text(encoding="utf-8")
@@ -1428,6 +1565,8 @@ def run_all():
                          ("gen-6 phase A transforms", t_gen6_phaseA_transforms),
                          ("gen-6 phase A design", t_gen6_phaseA_design),
                          ("gen-6 phase A parts are the rerun jobs", t_gen6_phaseA_parts_match_rerun_jobs),
+                         ("gen-7 synapse options", t_gen7_synapse_options),
+                         ("gen-7 unclear-transmitter option", lambda: t_gen7_unclear_option(tmp)),
                          ("menu input guards", lambda: t_menu_guards(tmp)),
                          ("token file is private", lambda: t_token_private(tmp)),
                          ("messages use neutral wording", t_neutral_wording)]:
