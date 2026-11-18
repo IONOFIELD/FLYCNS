@@ -214,3 +214,150 @@ from `docs/lit/gen7_lit_std_validation_2026-10-18.md`, ranked by how directly th
 
 AL presynaptic GABA_B and AL gap junctions (generation 8). Neuropeptides, neuromodulators (amines stay dropped), non-spiking neurons, dendritic compartments, temperature
 correction (every in vivo kinetic value is at an unstated, presumably room, temperature).
+
+## Definitions fixed before registering (these win over anything above)
+
+Written 18 November 2026 in answer to the pre-registration audit (`docs/lit/gen7_prereg_audit_2026-11-18.md`,
+74 findings, 14 blockers; finding numbers in brackets). Where this section and the text above disagree, this
+section is the plan. Items marked **(proposed)** are Claude's and wait for Jayson's yes; everything else follows
+from decisions already made.
+
+### D1. What is inherited, pinned [F7, F13, F25, F27, F28]
+- Criteria: FUNCTION (screen), FUNCTION-q, STABILITY (a), (b), (c), LATERALITY, the self-sustained rule, the
+  sugar and blind drives, the sweep protocol (10 trials, 1,000 ms drive, 500 ms tail, restore between trials),
+  the grid w 0.4 / 0.5 / 0.6 / 0.8 / 1.0 and the thresholds (responds 0.5 Hz, rate bar 1.0 Hz, fraction bar
+  0.10, li bar 0.8), exactly as in `results/gen6_phaseA/registration_v5.json` (git `ff816c1`).
+- Intervals: percentile bootstrap over trials, 2,000 resamples, seed 0 (`docs/gen6_rule.md`), also for pooled
+  top-ups.
+- Cell types: `data/gen6_phaseA_celltypes.json`, sha256 `ea8bad7d...`, from the MaleCNS Cell Type Explorer @
+  `789cc6c`. ORN types are taken from `neurons.parquet`'s `type` column by exact name. Connectome: MaleCNS v1.0,
+  as pinned by `data/MANIFEST.json`.
+- Scorer readings: those of `fit/gen6_phaseA_score.py`, with the two points the blind scorer read differently
+  fixed here: a top-up counts only if both drives of that (arm, w) were topped up, otherwise scoring is refused;
+  while a named top-up is missing the outcome is PROVISIONAL, never final.
+- The refreeze is compared against the simulator hash `df7e16022378` (generations 5 and 6).
+
+### D2. Arms [F1, F3, F4, F11, F15, F26, F46]
+Every arm is a sweep: 5 w x {sugar, blind} x 10 trials, v-only reset, MN9_R as in the data.
+
+| arm | synapse | STD | "unclear" fix | role |
+|---|---|---|---|---|
+| P0 | current | none | off | positive control: replicates phase A's c1 |
+| B | current | none | on | baseline for every comparison |
+| S-in | current | in | on | **deciding** |
+| C | conductance | none | on | **deciding** |
+| CS-in | conductance | in | on | **deciding** |
+| S-al, CS-al | current / conductance | AL | on | reported **(proposed)** |
+| S-all, CS-all | current / conductance | all | on | reported **(proposed: never adopted)** |
+| sensitivity | C and CS-in at E_i -55, at E_i -80, and at tau_i 10 ms; S-in and CS-in at f 0.72 / tau 2.4 s | | on | reported **(proposed: always run, never adopted)** |
+
+- **STD scopes.** "in": presynaptic type starts `ORN_`, postsynaptic type in the ALPN or ALLN list (the two
+  synapse classes with measured depression). "AL" **(proposed)**: presynaptic type starts `ORN_` or is in the
+  ALPN or ALLN list, postsynaptic type in the ALPN or ALLN list; it adds the antennal-lobe recurrent synapses
+  phase A's cuts point to, and nothing else. "all": every chemical synapse. "AL" and "all" extrapolate the
+  ORN -> PN values to synapses with no measurement; that is why they are reported and cannot be adopted.
+- **Replaces stages 1 and 2 above.** There is no conditional stage: every arm in the table runs under one
+  registration. The E_i and tau_i variants are sensitivity arms, so H7a can be scored at every E_i. E_e +/-10 mV
+  and tau_e 2 ms are **not run** in generation 7.
+- 17 arm sets, 170 sweep arms (phase A had 60 sweep arms and 35 others).
+
+### D3. Outcome, in this order [F1, F2, F3, F8, F60, F61, F62]
+1. **R (stop for review).** P0's per-w component verdicts and self-sustained counts differ from phase A's c1
+   (`results/gen6_phaseA/phaseA.json`). P0 uses phase A's seeds and the default code path, so they should be
+   identical. Nothing is adopted.
+2. **F (the fix alone).** B is viable. Candidate: the fix, at B's smallest viable w.
+3. Otherwise the first viable arm in the order **S-in, C, CS-in** is the candidate, at its own smallest viable
+   w. The order is by arm first, then by w within the arm.
+4. **C7 (none).** No deciding arm is viable. The reported arms then say where a mechanism would have to act:
+   whether S-al / CS-al or S-all / CS-all are viable is stated, with the label "extrapolated". Generation 8
+   takes the antennal-lobe mechanisms (H7e, H7f), in its own plan.
+- "Viable" is phase A's: FUNCTION, FUNCTION-q and STABILITY (a), (b), (c) all PASS at the same w.
+- **LATERALITY is reported for every arm and gates nothing** in generation 7: no arm adopts the MN9_R
+  correction, and MN9_R is labelled "RT Hard to trace" in the release.
+- A candidate is **provisional**. It becomes the model's default only after a confirm step in its own
+  registration (fresh seeds, both nulls, a specificity test as phase A's A3) and after the calibrations listed in
+  `docs/CALIBRATION.md` are refit under it. **No calibration is refit before or during generation 7** [F10, F22,
+  F45]: every arm uses the generation-6 values, and the grid w is `w_scale` itself.
+- Top-ups: as phase A (an UNRESOLVED component at a w that could become a deciding arm's decision w names 10
+  more trials of both drives at that (arm, w)); deciding arms only.
+
+### D4. Hypotheses, verdicts and predictions [F54-F58, F19]
+Verdicts are *held*, *not held*, or *undetermined* (a named top-up is missing, or outcome R).
+
+| | claim | scored on | prediction **(proposed)** | confidence |
+|---|---|---|---|---|
+| H7-P | P0 replicates phase A's c1 | D3.1 | held | high |
+| H7-F | the fix alone gives a viable w | B | not held | high |
+| H7a | conductance-based synapses alone give a viable w | C (primary); the E_i variants are reported beside it | not held | moderate |
+| H7b | slower inhibition (tau_i 10 ms) gives a viable w where 5 ms does not | C at tau_i 10 vs C | not held | moderate |
+| H7c-in | depression of the ORN input synapses alone gives a viable w | S-in | not held | high |
+| H7d | conductance-based with input depression gives a viable w where neither C nor S-in does | CS-in, C, S-in | not held | moderate |
+| H7c-al | (reported) depression of the antennal-lobe synapses gives a viable w | S-al, CS-al | held for at least one | low |
+| H7c-all | (reported) depression of every synapse gives a viable w | S-all, CS-all | held for at least one | low |
+| overall | the outcome | D3 | C7 | moderate |
+
+Why S-in is predicted to fail: under the sugar drive no ORN is driven, and phase A placed the loop in the
+antennal lobe's own recurrent synapses, which S-in does not touch. The arm is still the primary one, because it
+is the only depression arm that uses measured synapses only.
+- "H7c" alone has no verdict; H7c-in, H7c-al and H7c-all do.
+- This is an uncorrected screen, as phase A's M6 [F18].
+
+### D5. The synapse model, as implemented [F9, F14, F47-F52]
+(`flycns/model.py` on `gen7/model-code`; unit test "gen-7 synapse options".)
+- Weights. The kick per connection is w_mV = n_synapses x 0.275 mV x w x gain, signed. Current-based: g += w_mV.
+  Conductance-based: ge += w_mV / (E_e - V_rest) for w_mV > 0, gi += |w_mV| / (V_rest - E_i) for w_mV < 0 (both
+  positive). ge decays with tau_syn (5 ms), gi with tau_i.
+- The stimulus sources' synapses follow the same rule as the recurrent ones. Electrical coupling is unchanged.
+- Depression is per connection (pre -> post pair), on recurrent and stimulus-source synapses alike. A spike is
+  delivered with w x A, **then** A -> f x A; A recovers to 1 with tau_D. A is advanced at delivery; every
+  chemical synapse has the same delay, so the values equal those at the spike. The per-trial restore returns A
+  to 1.
+- **What co-varies, stated:** across E_i the PSP at rest is matched, so the inhibitory conductance per synapse
+  is 17.3x, 2.9x and 1.9x the excitatory at E_i -55, -70 and -80 (shunting changes with E_i). At tau_i 10 ms
+  the peak is matched and the inhibitory charge is about doubled. Any depression lowers the mean weight as well
+  as changing its dynamics. S-all and CS-all also depress the sugar -> MN9 pathway. So each arm's component
+  verdicts (FUNCTION, FUNCTION-q, STABILITY a, b, c) are reported separately, and a non-viable arm is read by
+  which component failed.
+- The self-sustained test is read as in phase A in every arm; with tau_D 893 ms, A has not recovered by the
+  end of the 500 ms tail. That is the model under test, not a correction to make.
+
+### D6. Fail-safes [F16, F17, F51, F63, F64, F65]
+- A missing or crashed arm refuses scoring. A deciding arm cannot PASS on missing data.
+- Numerics: every conductance arm records the lowest v reached by any cell. Below E_i - 1 mV, the arm's
+  STABILITY is FAIL (flag NUMERICS). The candidate's sweep at its decision w is repeated at dt 0.05 ms; if a
+  component verdict differs, the candidate is flagged numerics-sensitive and stays provisional.
+- The fix is applied in `load_graph` to the pinned edges (already at the 5-synapse floor). The simulated cell
+  count is recorded with and without it; each arm's rates use its own cell count.
+- Per sugar trial of S-in and CS-in, the number of spikes of `ORN_` cells is recorded (mean per w reported). If
+  it is zero, S-in's sugar arms must equal B's exactly; that is checked and reported.
+- Seeds: 6000 + index(drive, w), phase A's, in every sweep arm, so all arms are paired with each other and with
+  phase A. Top-ups 7000 + index. V7a 9000 + index.
+- Process, as phase A: the arms script and the scorer are hashed into the registration; toy-data smoke tests; a
+  preflight on the pinned data committed before registering (it also reproduces the fix's sizes, which until
+  then rest on an uncommitted script [F44]); an independent blind recompute before the write-up.
+
+### D7. Validation [F5, F6, F42, F69-F74]
+- **V7a, report-only.** Arms B, S-in, C, CS-in, S-all, CS-all, at each grid w. For each glomerulus in the
+  mapping table above: every simulated cell of the ORN type becomes a Poisson source at 5, 10, 20, 40, 80 and
+  120 spikes/s **(proposed)** for 500 ms, 2 trials; the readout is the mean rate of the PN type's cells over the
+  same 500 ms, mean of the trials (the model's rate before the drive is 0). R_max and sigma are fitted with the
+  exponent fixed at 1.5. "Consistent" per glomerulus: R_max within +/-25% and sigma within a factor of 2 of
+  Olsen's fit. Reported: the count of consistent glomeruli per (arm, w), the fits, and the rates beside Olsen's
+  points. No verdict enters the outcome. The driven count is the simulated count; side-unknown ORNs are driven
+  with the rest.
+- **V7b is not run in generation 7 (proposed).** The model has no water, bitter or concentration stimulus, and
+  a mapping from sugar concentration to receptor-neuron rate would be an assumption. The bilateral item cannot
+  be read while MN9_R is under-reconstructed.
+- Also reported per arm, with no verdict: the antennal-lobe share of the blind tail (phase A's M9 measure) and
+  the by-mode summaries of phase A [F67, F68].
+
+### D8. Corrections to the text above [F29-F44]
+- V7a's numbers come from `docs/lit/v7a_nagel_check_2026-10-18.md`; the "165 / 12, fitted" lines in
+  `gen7_lit_std_validation_2026-10-18.md` are superseded.
+- "ORNs and PNs were recorded separately" is INFERRED (the supplement was not obtained). "No goodness of fit is
+  reported" holds for the main text; the supplement was not read.
+- "Recovery takes 0.9-2.4 s" means recovery time constants of 0.9-2.4 s.
+- mIPSC decay 3.3-5.4 ms spans two culture preparations; only Su & O'Dowd 2003 measured both mEPSC and mIPSC.
+- "No MN9 firing rate has been recorded" and "no whole-brain spike rate exists" are search results ("none
+  found"), not established absences. The 1.5 Hz ORN rate is DA1's.
+
