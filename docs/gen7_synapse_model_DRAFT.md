@@ -181,6 +181,8 @@ from `docs/lit/gen7_lit_std_validation_2026-10-18.md`, ranked by how directly th
   Olsen) to its PN rate against the driven ORN rate; "consistent" if R_max is within +/-25% and sigma within a
   factor of 2 of Olsen's fitted values for that glomerulus. The model's PN rate at each driven ORN rate is also
   reported next to Olsen's Fig 1B points (VERIFIED-fig), with no verdict attached.
+
+**Proposed (Claude, 18 Nov; Jayson to confirm):**
 - V7a drive: ORN rates 5, 10, 20, 40, 80 and 120 spikes/s (inside Olsen's measured range of about 0-125), each
   as a 500 ms Poisson drive of every cell of the ORN type, PN rate over the same 500 ms, as in the paper.
 
