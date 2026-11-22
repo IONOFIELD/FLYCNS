@@ -184,7 +184,11 @@ from `docs/lit/gen7_lit_std_validation_2026-10-18.md`, ranked by how directly th
 
 **Proposed (Claude, 18 Nov; Jayson to confirm):**
 - V7a drive: ORN rates 5, 10, 20, 40, 80 and 120 spikes/s (inside Olsen's measured range of about 0-125), each
-  as a 500 ms Poisson drive of every cell of the ORN type, PN rate over the same 500 ms, as in the paper.
+  as a 500 ms Poisson drive of every cell of the ORN type, PN rate over the same 500 ms. Only the window
+  length is the paper's (corrected 21 Nov): Olsen's ORN and PN responses are single-cell spike counts in the
+  500 ms odor period minus the baseline of the preceding 500 ms (VERIFIED, Experimental Procedures, Data
+  Analysis). The model's ORN rate is a commanded Poisson rate and its PN rate a cell-type mean, both from
+  silence. The two agree only if spontaneous activity does not change the evoked increment (INFERRED).
 
 **Still open (fix before registering):**
 - Anything the pre-registration audit (Grok, requested 18 Nov) finds.
@@ -226,7 +230,7 @@ sensitivity arms, the AL-depression arm, no V7b, the V7a drive rates and the pre
 
 ### D1. What is inherited, pinned [F7, F13, F25, F27, F28]
 - Criteria: FUNCTION (screen), FUNCTION-q, STABILITY (a), (b), (c), LATERALITY, the self-sustained rule, the
-  sugar and blind drives, the sweep protocol (10 trials, 1,000 ms drive, 500 ms tail, restore between trials),
+  sugar and blind drives, the sweep protocol (10 trials; 200 ms settle, 1,000 ms drive, 500 ms tail; restore between trials),
   the grid w 0.4 / 0.5 / 0.6 / 0.8 / 1.0 and the thresholds (responds 0.5 Hz, rate bar 1.0 Hz, fraction bar
   0.10, li bar 0.8), exactly as in `results/gen6_phaseA/registration_v5.json` (git `ff816c1`).
 - Intervals: percentile bootstrap over trials, 2,000 resamples, seed 0 (`docs/gen6_rule.md`), also for pooled
@@ -273,7 +277,11 @@ Every arm is a sweep: 5 w x {sugar, blind} x 10 trials, v-only reset, MN9_R as i
 4. **C7 (none).** No deciding arm is viable. The reported arms then say where a mechanism would have to act:
    whether S-al / CS-al or S-all / CS-all are viable is stated, with the label "extrapolated". Generation 8
    takes the antennal-lobe mechanisms (H7e, H7f), in its own plan.
-- "Viable" is phase A's: FUNCTION, FUNCTION-q and STABILITY (a), (b), (c) all PASS at the same w.
+- "Viable" is phase A's: FUNCTION, FUNCTION-q and STABILITY (a), (b), (c) all PASS at the same w. In a
+  conductance arm a sixth component, NUMERICS (D6), must PASS too.
+- Outcome codes in the scorer's output: `R`, `F`, `sin`, `c`, `csin` (the candidate's arm), `C7`. A reported or
+  sensitivity arm that is viable is listed with the label "extrapolated: never adopted" or "sensitivity: never
+  adopted".
 - **LATERALITY is reported for every arm and gates nothing** in generation 7: no arm adopts the MN9_R
   correction, and MN9_R is labelled "RT Hard to trace" in the release.
 - A candidate is **provisional**. It becomes the model's default only after a confirm step in its own
@@ -283,6 +291,12 @@ Every arm is a sweep: 5 w x {sugar, blind} x 10 trials, v-only reset, MN9_R as i
 - Top-ups: as phase A (an UNRESOLVED component at a w that could become a decision w names 10 more trials of
   both drives at that (arm, w)). They exist for the four arms whose viability enters the outcome: B (outcome F
   rests on it) and the three deciding arms. Reported and sensitivity arms get none.
+  - "Could become a decision w" (made exact 21 Nov, after the code audit): a candidate w below that arm's
+    smallest viable w, or any candidate w of an arm with no viable w. It is judged on the main arms alone.
+  - Going through the order B, S-in, C, CS-in: up to and including the first arm that is already viable, a
+    named top-up can change the outcome, and the outcome is PROVISIONAL until it is run.
+  - After that arm the outcome cannot change. A later arm gets a top-up only if it has no viable w, because
+    its hypothesis verdict rests on it; that top-up does not hold the outcome.
 
 ### D4. Hypotheses, verdicts and predictions [F54-F58, F19]
 Verdicts are *held*, *not held*, or *undetermined* (a named top-up is missing, or outcome R). An arm is
@@ -338,13 +352,19 @@ is the only depression arm that uses measured synapses only.
   without the record refuses scoring). The candidate's two arms at its decision w are repeated at dt 0.05 ms
   with the same seeds; if a component verdict differs from the main arms' (10 trials each, unpooled), the
   candidate is flagged numerics-sensitive and stays provisional.
+  - In the scorer (made exact 21 Nov, after the code audit): until the repeat has run, the outcome is
+    PROVISIONAL. If it differs, the outcome is not final, the candidate's arm is "undetermined" for the
+    hypothesis verdicts, and the result stops for review.
+  - The repeat uses the same seeds, but the Poisson input is drawn per time step, so it is also a new draw of
+    the input. A differing verdict is flagged whichever caused it.
+  - A lowest-v record that is not a number is NUMERICS FAIL.
 - The fix is applied in `load_graph` to the pinned edges (already at the 5-synapse floor). The simulated cell
   count is recorded with and without it; each arm's rates use its own cell count.
 - Per sugar trial of S-in and CS-in, the number of spikes of `ORN_` cells is recorded (mean per w reported). If
   it is zero, S-in's sugar arms must equal B's exactly (and CS-in's must equal C's); that is checked field by
   field and reported, with a flag if they differ.
 - Seeds: 6000 + index(drive, w), phase A's, in every sweep arm, so all arms are paired with each other and with
-  phase A. Top-ups 7000 + index. V7a 9000 + index.
+  phase A. Top-ups 7000 + index. V7a 9000 + index(w), the same in every V7a arm.
 - Process, as phase A: the arms script and the scorer are hashed into the registration; toy-data smoke tests; a
   preflight on the pinned data committed before registering (it also reproduces the fix's sizes, which until
   then rest on an uncommitted script [F44]); an independent blind recompute before the write-up.
@@ -354,9 +374,11 @@ is the only depression arm that uses measured synapses only.
   mapping table above: every simulated cell of the ORN type becomes a Poisson source at 5, 10, 20, 40, 80 and
   120 spikes/s for 500 ms, 2 trials; the readout is the mean rate of the PN type's cells over the
   same 500 ms, mean of the trials (the model's rate before the drive is 0). R_max and sigma are fitted with the
-  exponent fixed at 1.5. "Consistent" per glomerulus: R_max within +/-25% and sigma within a factor of 2 of
+  exponent fixed at 1.5. "Consistent" per glomerulus: sigma not at an edge of the fit's grid, R_max within +/-25% and sigma within a factor of 2 of
   Olsen's fit. Reported: the count of consistent glomeruli per (arm, w), the fits, and the rates beside Olsen's
-  points. No verdict enters the outcome. The driven count is the simulated count; side-unknown ORNs are driven
+  fitted curve at the six rates (the paper's data points are not tabulated; corrected 21 Nov), the RMS residual
+  and whether the model's rates rise monotonically. A glomerulus with an incomplete record refuses scoring. No
+  verdict enters the outcome. The driven count is the simulated count; side-unknown ORNs are driven
   with the rest.
 - **V7b is not run in generation 7.** The model has no water, bitter or concentration stimulus, and
   a mapping from sugar concentration to receptor-neuron rate would be an assumption. The bilateral item cannot
@@ -383,7 +405,37 @@ is the only depression arm that uses measured synapses only.
   csinei55, csinei80, csinti10, sinkw, csinkw`. V7a: `v7a_<set>_<w>`.
 - Cloud jobs: 17 sweep parts `g7-<set>` (10 arms each), 6 V7a parts `g7-v7a-<set>` (5 arms each); conditional,
   only when the scorer names them: `g7-topup-<set>-<w>` and `g7-dt-<set>-<w>` (2 arms each, 20 + 20 parts).
-- Order: (1) preflight on the pinned data, committed; (2) the identity check (`fingerprint/` run of the old and
+- Order: (1) preflight and build probe on the pinned data (`fit/gen7_synapse.py probe`, the cloud job
+  `g7-preflight`), committed; (2) the identity check (`fingerprint/` run of the old and
   the new model files: every default simulation unchanged); (3) the freeze commit: `registry.VERSION` 6 with its
   note; (4) register generation 7 and commit the registration; (5) run the 23 parts; (6) score; run any named
   top-up and dt parts; score again; (7) independent blind recompute; (8) write-up, reviewed before merge.
+
+### D10. Code audit of 18 Nov (docs/lit/gen7_code_audit_2026-11-18.md) and what changed, 21 Nov
+The audit read commit 80c5501: 95 checklist rows (87 match), 24 findings, 1 blocker. All changes are in the
+arms script, the scorer and this plan; no model file changed.
+
+| Finding | Change |
+|---|---|
+| F1 (blocker): the dt repeat never affected finality | A candidate is final only after its repeat has run and agrees (`finalize`). |
+| F2: top-ups named where they cannot matter | Named only below an arm's smallest viable w; only those up to the first viable arm hold the outcome (`name_topups`). |
+| F3: a not-a-number lowest v passed | It is NUMERICS FAIL. |
+| F4: "same seeds" is not the same input at dt 0.05 ms | Stated; a differing verdict is flagged whichever caused it. |
+| F5: "Olsen's points" were Olsen's fitted curve | Renamed and stated. |
+| F6: V7a quantities are not the paper's | Stated in the plan and in the registered limits. |
+| F7, F8, F18, F19, F21: plan text | Corrected (NUMERICS in "viable"; grid-edge rule; V7a seed; outcome codes; 200 ms settle). |
+| F9: no goodness of fit | RMS residual and monotonicity reported. "Consistent" is unchanged. |
+| F10: an incomplete V7a glomerulus was dropped | A registered arm refuses scoring; the compared count is always 4. |
+| F11: weak ORN-check diagnostics | Lists the differing fields; a missing `orn_spikes` refuses scoring. |
+| F12: zero trials passed STABILITY (a)/(b) | UNRESOLVED. |
+| F14: no "extrapolated" label | Viable reported and sensitivity arms are listed with their label. |
+| F16: V7a lowest v unused | Flagged (report-only). |
+| F22: hypotheses carried no components | Each names its arms and their states; each arm lists its non-passing components per w. |
+| F23: dt comparison weak when both sides are UNRESOLVED | Those components are listed. |
+
+Not changed, with the reason:
+- F13 (a top-up duplicating the main rows): two silent arms have identical rows by right, so comparing rows
+  would refuse valid data. A registered top-up must carry its own registered seed, which `load` checks.
+- F15 (the guard leaves out adapting cells, including MN9): by design; the dt repeat covers them.
+- F17 (all five ORN types are sources in V7a), F20 (refreeze comparison is the fingerprint step), F24 (the R
+  test is coarse; row identity is reported): stated, not changed.

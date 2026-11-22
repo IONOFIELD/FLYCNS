@@ -16,6 +16,8 @@ name: real-data rerun
 #   g7-*          gen 7 (fit/gen7_synapse.py): manual; 17 sweep parts (g7-<arm set>, 10 arms each) and 6 V7a parts
 #                 (g7-v7a-<arm set>), split over several short branch names, e.g. rerun/gen7a--g7-p0+g7-b+g7-sin+g7-c;
 #                 the 40 g7-topup-* and g7-dt-* parts run only when fit/gen7_synapse_score.py names them
+#                 g7-preflight (before registering; no simulation): the preflight and four arms built with 0
+#                 trials, e.g. rerun/g7pre--g7-preflight; results/gen7_synapse/preflight.json and probe.json
 #   fingerprint/<label>[--a+b]  the identity check (scripts/fingerprint.py): every rerun with a few trials,
 #                 recording a fingerprint of every simulation; each job pushes fingerprints/<job>.jsonl to
 #                 fingerprint-out/<run number>/<job>. Compare two such runs with scripts/fingerprint.py compare.
@@ -165,6 +167,7 @@ env:
       {"name": "pa-a4-cut-lhmb",                "run": "fit/gen6_phaseA.py part pa-a4-cut-lhmb", "manual": true},
       {"name": "pa-a4-cut-i",                   "run": "fit/gen6_phaseA.py part pa-a4-cut-i", "manual": true},
       {"name": "pa-a4-cut-ii",                  "run": "fit/gen6_phaseA.py part pa-a4-cut-ii", "manual": true},
+      {"name": "g7-preflight",                  "run": "fit/gen7_synapse.py probe", "manual": true},
       {"name": "g7-p0",                         "run": "fit/gen7_synapse.py part g7-p0", "manual": true},
       {"name": "g7-b",                          "run": "fit/gen7_synapse.py part g7-b", "manual": true},
       {"name": "g7-sin",                        "run": "fit/gen7_synapse.py part g7-sin", "manual": true},

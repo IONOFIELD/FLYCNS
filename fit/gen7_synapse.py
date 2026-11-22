@@ -30,10 +30,13 @@ are used here unchanged), are hashed into this registration.
                                                              the V7a mapping are on the given data; writes
                                                              results/gen7_synapse/preflight.json (run on the pinned
                                                              data and committed before registering)
+    python fit/gen7_synapse.py probe                         the preflight, then four arms built with 0 trials (no
+                                                             simulation): build time and memory on this machine, and
+                                                             P0's network against phase A's; the cloud job g7-preflight
     python fit/gen7_synapse.py selftest                      the marking rule, the curve fit and the design, with
                                                              exact checks; then a few arms on a hand-made network
 
-A smoke arm (and parts, preflight, selftest) reads and writes no registration.
+A smoke arm (and parts, preflight, probe, selftest) reads and writes no registration.
 """
 import importlib.util
 import json
@@ -215,7 +218,7 @@ CRITERIA = dict(
     protocol=dict(
         seeds=(f"sweep arms {SEED_BASE} + index(drive, w), phase A's, in every arm set (all arms paired with each other "
                f"and with phase A); top-ups {TOPUP_BASE} + the same index; the dt repeat uses its main arm's seed; V7a "
-               f"{V7A_BASE} + index(w)"),
+               f"{V7A_BASE} + index(w), the same in every V7a arm set"),
         dt=f"{DT_MS} ms; the candidate's repeat {DT_CHECK_MS} ms",
         recorded_per_trial=("phase A's sweep readouts, and: orn_spikes (spikes of simulated cells whose type starts "
                             "'ORN_', whole trial), lowest_v_mV (conductance arms: the lowest v reached by any cell "
@@ -223,7 +226,7 @@ CRITERIA = dict(
     decision=dict(
         viable=("a grid w at which FUNCTION (screen), FUNCTION-q and STABILITY (a), (b), (c) all PASS, as phase A; in a "
                 "conductance arm also NUMERICS; the decision w is the smallest such w"),
-        numerics=(f"conductance arms: FAIL iff lowest_v_mV in any sugar or blind trial at that w is below "
+        numerics=(f"conductance arms: FAIL iff lowest_v_mV in any sugar or blind trial at that w is not a number or below "
                   f"E_i - {NUMERICS_MARGIN_MV} mV (for the cells it covers dv/dt > 0 at v = E_i, so a lower value can "
                   "only come from the integration step); a conductance arm without the record refuses scoring"),
         order=["R: P0's table (five component verdicts and the two self-sustained counts per w) differs from "
@@ -235,14 +238,24 @@ CRITERIA = dict(
         laterality="reported for every arm set; gates nothing",
         provisional=("a candidate is provisional: it becomes a default only after a confirm step in its own "
                      "registration and a refit of the calibrations under it"),
-        top_up=("decision sets (B, S-in, C, CS-in) only: a candidate w (no component FAILs, at least one UNRESOLVED) "
-                "names 10 more trials of BOTH drives at that (set, w), seeds 7000 + index; the 10 + 10 trials are "
-                "pooled for every component; a top-up counts only if both drives were run, otherwise scoring is "
-                "refused; after it UNRESOLVED counts as not passing; while a named top-up is missing the outcome is "
-                "PROVISIONAL"),
-        dt_check=(f"the candidate's two arms at its decision w are repeated at dt {DT_CHECK_MS} ms (same seeds); if a "
-                  "component verdict of the repeat differs from the main arms' (10 trials each, unpooled) the "
-                  "candidate is flagged numerics-sensitive"),
+        top_up=("decision sets (B, S-in, C, CS-in) only. A candidate w (no component FAILs, at least one UNRESOLVED) "
+                "that lies below its set's smallest viable w (or in a set with no viable w) names 10 more trials of "
+                "BOTH drives at that (set, w), seeds 7000 + index, judged on the main arms alone. Through the outcome "
+                "order, up to and including the first set that is already viable, a named top-up can change the "
+                "outcome: while one of those is missing the outcome is PROVISIONAL. In a later set a top-up is named "
+                "only if the set has no viable w (its hypothesis verdict rests on it); it does not hold the outcome. "
+                "The 10 + 10 trials are pooled for every component; a top-up counts only if both drives were run, "
+                "otherwise scoring is refused; after it UNRESOLVED counts as not "
+                "passing"),
+        dt_check=(f"the candidate's two arms at its decision w are repeated at dt {DT_CHECK_MS} ms with the same seeds "
+                  "(the Poisson input is drawn per time step, so the repeat is also a new draw of the input). Until "
+                  "the repeat has run the outcome is PROVISIONAL. If a component verdict of the repeat differs from "
+                  "the main arms' (10 trials each, unpooled), whatever the cause, the candidate is flagged "
+                  "numerics-sensitive, the outcome is not final and the candidate's arm set is undetermined for the "
+                  "hypothesis verdicts: stop for review"),
+        codes="R, F, sin, c, csin (the candidate's arm set), C7",
+        not_adoptable=("a reported or sensitivity arm set that is viable is listed with the label 'extrapolated: never "
+                       "adopted' or 'sensitivity: never adopted'"),
         missing_arm="a missing or crashed registered arm refuses scoring: it fails safe, never PASS"),
     hypotheses={
         "H7-P": ["P0 replicates phase A's cell 1", "held", "high"],
@@ -274,8 +287,16 @@ CRITERIA = dict(
             consistent=(f"per compared glomerulus: R_max within +/-{V7A_RMAX_TOL:.0%} and sigma within a factor of "
                         f"{V7A_SIGMA_FACTOR:g} of Olsen et al. 2010's fit, and sigma not at an edge of the grid"),
             source="Olsen, Bhandawat & Wilson 2010, Methods (docs/lit/v7a_nagel_check_2026-10-18.md)",
-            limits=("VM7d is compared with Olsen's VM7 (INFERRED: the Or42a glomerulus); only cholinergic "
-                    "uniglomerular PNs are read; the model has no presynaptic inhibition of ORN terminals")),
+            reported=("the fits, the model's rates beside Olsen's FITTED curve at the six rates (the paper's data points "
+                      "are not tabulated), the RMS residual of the model's fit, whether the model's rates rise "
+                      "monotonically, and for conductance arms the lowest v"),
+            limits=("not the paper's quantities, only the same window length: Olsen's ORN and PN responses are "
+                    "single-cell spike counts in the 500 ms odor period minus the baseline rate of the preceding 500 ms; "
+                    "the model's ORN rate is the commanded Poisson rate of every source of the type and its PN rate is "
+                    "the mean over the type's cells, both from silence (baseline 0, no spontaneous activity). VM7d is "
+                    "compared with Olsen's VM7 (INFERRED: the Or42a glomerulus); only cholinergic uniglomerular PNs "
+                    "are read; all five ORN types are sources in every V7a trial (the undriven ones silent); the model "
+                    "has no presynaptic inhibition of ORN terminals. 'Consistent' has no goodness-of-fit term")),
         also_reported="per arm set: the AL and LH share of the blind tail (phase A's M9 measure), by-mode summaries"),
     integrity_checks=dict(
         orn_under_sugar=("per sugar trial the ORN spikes are recorded; where S-in's (CS-in's) sugar arm has none at a "
@@ -298,7 +319,7 @@ def tables(data, unclear):
     else:
         neurons, edges = load_graph(data, min_weight=FLY["floor"], amines=FLY["amines"], unclear=unclear)
     info = dict(unclear=unclear, edges=int(len(edges)), synapses=float(edges["weight"].sum()),
-                cells=int(len(set(edges["pre"]) | set(edges["post"]))),
+                cells=int(len(np.union1d(edges["pre"].unique(), edges["post"].unique()))),
                 dropped_unsigned=dict(edges=LOADED.get("n_dropped_unsigned_edges"),
                                       synapses=LOADED.get("n_dropped_unsigned_synapses"),
                                       silent_presynaptic=LOADED.get("n_silent_presynaptic")),
@@ -309,25 +330,36 @@ def tables(data, unclear):
 
 
 def std_marks(edges, neurons, scope, ct):
-    """D2: which connections depress under scope "in" or "al". Returns (boolean array over the edge rows, log)."""
+    """D2: which connections depress under scope "in" or "al". Returns (boolean array over the edge rows, log).
+    Works on per-cell flags looked up by position, so no per-connection string column is built."""
     if scope not in ("in", "al"):
         raise ValueError(f"[gen7] no marking rule for scope {scope!r}")
-    t = neurons.drop_duplicates("bodyId").set_index("bodyId")["type"]
-    pre_t = edges["pre"].map(t).fillna("").astype(str)
-    post_t = edges["post"].map(t).fillna("").astype(str)
-    al = set(ct["ALPN"]) | set(ct["ALLN"])
-    pre_orn, pre_al, post_al = pre_t.str.startswith("ORN_"), pre_t.isin(al), post_t.isin(al)
+    n = neurons.drop_duplicates("bodyId")
+    ids = n["bodyId"].to_numpy()
+    t = n["type"].fillna("").astype(str)
+    order = np.argsort(ids, kind="stable")
+    ids_s = ids[order]
+
+    def look(col, flag):                          # flag: one boolean per row of n -> one per connection
+        x = edges[col].to_numpy()
+        if not len(ids_s):
+            return np.zeros(len(x), dtype=bool)
+        pos = np.minimum(np.searchsorted(ids_s, x), len(ids_s) - 1)
+        return (ids_s[pos] == x) & flag[order][pos]
+    is_orn = t.str.startswith("ORN_").to_numpy()
+    is_pn, is_ln = t.isin(set(ct["ALPN"])).to_numpy(), t.isin(set(ct["ALLN"])).to_numpy()
+    pre_orn, pre_al = look("pre", is_orn), look("pre", is_pn | is_ln)
+    post_pn, post_ln = look("post", is_pn), look("post", is_ln)
+    post_al = post_pn | post_ln
     m = (pre_orn & post_al) if scope == "in" else ((pre_orn | pre_al) & post_al)
-    wsum = lambda k: float(edges.loc[k.to_numpy(), "weight"].sum())     # noqa: E731
-    log = dict(scope=scope, edges=int(m.sum()), synapses=wsum(m), of_edges=int(len(edges)),
-               of_synapses=float(edges["weight"].sum()),
-               orn_to_pn=dict(edges=int((pre_orn & post_t.isin(ct["ALPN"])).sum()),
-                              synapses=wsum(pre_orn & post_t.isin(ct["ALPN"]))),
-               orn_to_ln=dict(edges=int((pre_orn & post_t.isin(ct["ALLN"])).sum()),
-                              synapses=wsum(pre_orn & post_t.isin(ct["ALLN"]))),
-               al_to_al=dict(edges=int((pre_al & post_al).sum()), synapses=wsum(pre_al & post_al)),
-               orn_types=int(pre_t[pre_orn].nunique()))
-    return m.to_numpy(), log
+    w = edges["weight"].to_numpy()
+    part = lambda k: dict(edges=int(k.sum()), synapses=float(w[k].sum()))     # noqa: E731
+    marked_orn = np.unique(edges["pre"].to_numpy()[pre_orn & m])
+    log = dict(scope=scope, **part(m), of_edges=int(len(edges)), of_synapses=float(w.sum()),
+               orn_to_pn=part(pre_orn & post_pn), orn_to_ln=part(pre_orn & post_ln), al_to_al=part(pre_al & post_al),
+               orn_types=int(t[np.isin(ids, np.unique(edges["pre"].to_numpy()[pre_orn]))].nunique()),
+               orn_cells_marked=int(len(marked_orn)))
+    return m, log
 
 
 def sim_options(st):
@@ -476,6 +508,7 @@ def run_arm(name, data_dir="data", trials=None, out_dir=None):
     rec = dict(arm=name, spec=spec, options=dict(m.options.__dict__), reduced=reduced, data_dir=str(data_dir),
                n_lif=int(len(m.lif_ids)), n_recurrent=int(m.n_chem), n_stimulated=int(len(exclude)),
                n_std_syn=int(m.n_std_syn), std_marks=mlog, graph=info, **extra,
+               peak_memory_mb=_peak_mb() if reduced else None,
                wall_s=round(time.time() - t0, 1), trials=rows,
                registration=registry.stamp(REG) if REG else None, provenance=provenance(data_dir))
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -506,6 +539,73 @@ def run_part(part, parallel=2):
 
 
 # ------------------------------------------------------------------------------------------------ preflight
+def _peak_mb():
+    """Peak memory of this process in MB, best effort (None if it cannot be read). Used in smoke and probe runs only."""
+    try:
+        if sys.platform == "win32":
+            import ctypes
+            from ctypes import wintypes
+
+            class Counters(ctypes.Structure):
+                _fields_ = [("cb", wintypes.DWORD), ("PageFaultCount", wintypes.DWORD)] + [
+                    (k, ctypes.c_size_t) for k in ("PeakWorkingSetSize", "WorkingSetSize", "QuotaPeakPagedPoolUsage",
+                                                   "QuotaPagedPoolUsage", "QuotaPeakNonPagedPoolUsage",
+                                                   "QuotaNonPagedPoolUsage", "PagefileUsage", "PeakPagefileUsage")]
+            c = Counters()
+            c.cb = ctypes.sizeof(Counters)
+            kernel, psapi = ctypes.WinDLL("kernel32"), ctypes.WinDLL("psapi")
+            kernel.GetCurrentProcess.restype = wintypes.HANDLE
+            psapi.GetProcessMemoryInfo.argtypes = [wintypes.HANDLE, ctypes.POINTER(Counters), wintypes.DWORD]
+            psapi.GetProcessMemoryInfo.restype = wintypes.BOOL
+            if not psapi.GetProcessMemoryInfo(kernel.GetCurrentProcess(), ctypes.byref(c), c.cb):
+                return None
+            return round(c.PeakWorkingSetSize / 2 ** 20, 1)
+        import resource
+        return round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024, 1)
+    except Exception:
+        return None
+
+
+PROBE_ARMS = ("p0_sugar_w040", "sin_blind_w100", "csall_blind_w100", "v7a_csall_w100")
+
+
+def probe(data_dir="data"):
+    """The preflight, then PROBE_ARMS built with 0 trials, each in its own process: no simulation, so nothing that
+    could be scored. Records build time and peak memory on this machine, and checks that P0's network is phase A's
+    (cell and synapse counts of results/gen6_phaseA/arms/c1_sugar_w040.json). Exits 1 if it is not."""
+    smoke = data_dir != "data"
+    preflight(data_dir)
+    out = dict(data_dir=str(data_dir), arms={})
+    for a in PROBE_ARMS:
+        t0 = time.time()
+        r = subprocess.run([sys.executable, __file__, "arm", a, data_dir, "0"], cwd=ROOT, capture_output=True, text=True,
+                           encoding="utf-8", errors="replace")
+        f = OUT / "smoke" / f"{a}.json"
+        if r.returncode or not f.exists():
+            print((r.stdout or "")[-1500:] + (r.stderr or "")[-3000:])
+            raise SystemExit(f"[gen7] probe: {a} did not build (exit {r.returncode})")
+        rec = json.loads(f.read_text(encoding="utf-8"))
+        out["arms"][a] = dict(wall_s=round(time.time() - t0, 1), peak_memory_mb=rec.get("peak_memory_mb"),
+                              n_lif=rec["n_lif"], n_recurrent=rec["n_recurrent"], n_stimulated=rec["n_stimulated"],
+                              n_std_syn=rec["n_std_syn"], std_marks=rec.get("std_marks"), v7a_cells=rec.get("v7a_cells"))
+        print(f"[gen7] probe {a}: {out['arms'][a]['wall_s']} s, peak {out['arms'][a]['peak_memory_mb']} MB, "
+              f"{rec['n_lif']} cells, {rec['n_recurrent']} recurrent synapses, {rec['n_std_syn']} depressing", flush=True)
+    ref = ROOT / "results" / "gen6_phaseA" / "arms" / "c1_sugar_w040.json"
+    ok = None
+    if ref.exists() and not smoke:
+        old = json.loads(ref.read_text(encoding="utf-8"))
+        got = out["arms"]["p0_sugar_w040"]
+        ok = bool((got["n_lif"], got["n_recurrent"], got["n_stimulated"]) == (old["n_lif"], old["n_recurrent"], old["n_stimulated"]))
+        out["p0_network_is_phase_a"] = dict(ok=ok, phase_a=dict(n_lif=old["n_lif"], n_recurrent=old["n_recurrent"],
+                                                                n_stimulated=old["n_stimulated"]))
+    f = (OUT / "smoke" / "probe.json") if smoke else (OUT / "probe.json")
+    f.write_text(json.dumps(out, indent=1, default=float) + "\n", encoding="utf-8")
+    if ok is False:
+        raise SystemExit(f"[gen7] probe: P0's network is not phase A's: {out['p0_network_is_phase_a']} against {got}")
+    print(f"done: probe ({len(PROBE_ARMS)} arms built, P0 network equals phase A's: {ok}) -> {f.relative_to(ROOT)}")
+    return out
+
+
 def preflight(data_dir="data"):
     """What the fix, the depression scopes and the V7a mapping are on the given data, without simulating. Its numbers
     go into the registration's context; a scope that marks nothing, or a V7a type without cells, shows here."""
@@ -513,17 +613,24 @@ def preflight(data_dir="data"):
     if not smoke:
         require_data(data_dir, LABEL, ["neurons.parquet", "edges.parquet", "roi_membership.parquet"])
     ct, ctrec = PA.celltypes(check=not smoke)
-    n0, e0, off = tables(data_dir, "dropped")
+    import gc
+    _, e0, off = tables(data_dir, "dropped")       # one table in memory at a time: keep only its pairs and cells
+    old = e0[["pre", "post"]].drop_duplicates().assign(old=True)
+    cells0 = np.union1d(e0["pre"].unique(), e0["post"].unique())
+    del e0, _
+    gc.collect()
     neurons, edges, on = tables(data_dir, "predicted")
     meta = neurons.drop_duplicates("bodyId").set_index("bodyId")
-    cells0, cells1 = set(e0["pre"]) | set(e0["post"]), set(edges["pre"]) | set(edges["post"])
-    pairs = lambda e, flag: e[["pre", "post"]].drop_duplicates().assign(**{flag: True})      # noqa: E731
-    new = edges[edges.merge(pairs(e0, "old"), on=["pre", "post"], how="left")["old"].isna().to_numpy()]
-    removed = int(e0.merge(pairs(edges, "now"), on=["pre", "post"], how="left")["now"].isna().sum())
+    cells1 = np.union1d(edges["pre"].unique(), edges["post"].unique())
+    now = edges[["pre", "post"]]
+    new = edges[now.merge(old, on=["pre", "post"], how="left")["old"].isna().to_numpy()]
+    removed = int(old.merge(now.drop_duplicates().assign(now=True), on=["pre", "post"], how="left")["now"].isna().sum())
+    del old, now
+    gc.collect()
     out = dict(data_dir=str(data_dir), celltypes=dict(sha256=PA.sha256(PA.CELLTYPES), registered=PA.CELLTYPES_SHA256,
                                                       counts=ctrec["counts"]),
-               fix=dict(without=off, with_fix=on, cells_added=int(len(cells1 - cells0)),
-                        cells_removed=int(len(cells0 - cells1)), connections_added=int(len(new)),
+               fix=dict(without=off, with_fix=on, cells_added=int(len(np.setdiff1d(cells1, cells0))),
+                        cells_removed=int(len(np.setdiff1d(cells0, cells1))), connections_added=int(len(new)),
                         connections_removed=removed,
                         added_excitatory=dict(edges=int((new["sign"] > 0).sum()),
                                               synapses=float(new.loc[new["sign"] > 0, "weight"].sum())),
@@ -535,7 +642,7 @@ def preflight(data_dir="data"):
     out["std_scopes"] = {s: std_marks(edges, neurons, s, ct)[1] for s in ("in", "al")}
     t = meta["type"].fillna("").astype(str)
     orn = t[t.str.startswith("ORN_")]
-    out["orn"] = dict(types=int(orn.nunique()), cells=int(len(orn)), simulated=int(orn.index.isin(list(cells1)).sum()))
+    out["orn"] = dict(types=int(orn.nunique()), cells=int(len(orn)), simulated=int(orn.index.isin(cells1).sum()))
     v7a = {}
     for g, ref in V7A.items():
         o = meta.index[meta["type"] == ref["orn"]]
@@ -543,7 +650,7 @@ def preflight(data_dir="data"):
         into = edges[edges["post"].isin(p)]
         own = into[into["pre"].isin(o)]
         v7a[g] = dict(orn_type=ref["orn"], orn_cells=int(len(o)), orn_with_output=int(o.isin(edges["pre"]).sum()),
-                      pn_type=ref["pn"], pn_cells=int(len(p)), pn_simulated=int(p.isin(list(cells1)).sum()),
+                      pn_type=ref["pn"], pn_cells=int(len(p)), pn_simulated=int(p.isin(cells1).sum()),
                       orn_to_pn=dict(edges=int(len(own)), synapses=float(own["weight"].sum())),
                       pn_input_synapses=float(into["weight"].sum()),
                       own_orn_share=(float(own["weight"].sum() / into["weight"].sum()) if len(into) else None),
@@ -701,7 +808,7 @@ def selftest(run=True, tmp=None):
 
 _mode = sys.argv[1] if __name__ == "__main__" and len(sys.argv) > 1 else ""
 _smoke_arm = _mode == "arm" and ((len(sys.argv) > 3 and sys.argv[3] != "data") or len(sys.argv) > 4)
-if _mode in ("parts", "preflight", "selftest") or _smoke_arm or __name__ not in ("__main__", "gen7_synapse"):
+if _mode in ("parts", "preflight", "probe", "selftest") or _smoke_arm or __name__ not in ("__main__", "gen7_synapse"):
     REG = None             # these modes compute nothing that is scored; no registration is read or written
 else:
     REG = registry.register(LABEL, CRITERIA, scripts=[__file__, str(SCORE_SCRIPT), str(PHASEA_SCRIPT)])
@@ -717,6 +824,8 @@ if __name__ == "__main__":
         sys.exit(0 if ok else 1)
     elif _mode == "preflight":
         preflight(sys.argv[2] if len(sys.argv) > 2 else "data")
+    elif _mode == "probe":
+        probe(sys.argv[2] if len(sys.argv) > 2 else "data")
     elif _mode in ("part", "arm"):
         data_dir = sys.argv[3] if _mode == "arm" and len(sys.argv) > 3 else "data"
         trials = int(sys.argv[4]) if _mode == "arm" and len(sys.argv) > 4 else None

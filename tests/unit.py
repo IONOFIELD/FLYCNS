@@ -1573,17 +1573,49 @@ def t_gen7_scoring_rules():
               and S.state([row("fails"), row("not passing (UNRESOLVED after its top-up)")]) == N and S.state([]) == Un)
     num = (S.numerics([dict(lowest_v_mV=-70.9), dict(lowest_v_mV=-60.0)], -70.0)["verdict"] == "PASS"
            and S.numerics([dict(lowest_v_mV=-71.1)], -70.0)["verdict"] == "FAIL")
+    num = (num and S.numerics([dict(lowest_v_mV=float("nan")), dict(lowest_v_mV=-60.0)], -70.0)["verdict"] == "FAIL"
+           and S.numerics([dict(lowest_v_mV=-60.0), dict(lowest_v_mV=float("nan"))], -70.0)["verdict"] == "FAIL"
+           and S.numerics([], -70.0)["verdict"] == "FAIL" and S.count_zero([], "x")["verdict"] == "UNRESOLVED")
     try:
         S.numerics([dict(lowest_v_mV=None)], -70.0)
         refused = False
     except SystemExit:
         refused = True
-    ok = order and prov and all_fail and mixed and not_where and undet and review and scored and states and num and refused
+    # which candidate w get a top-up (name_topups): rows are (row, [the two arm names])
+    def grid(spec):                       # spec: set -> {w: status}; everything else "fails"
+        return {(s_, w_): (dict(w_scale=w_, status=spec.get(s_, {}).get(w_, "fails")), [f"{s_}_sugar_{G._w(w_)}", f"{s_}_blind_{G._w(w_)}"])
+                for s_ in G.DECISION for w_ in G.GRID_W}
+    C = "candidate"
+    b1, e1 = S.name_topups(grid({"sin": {0.4: V, 0.8: C}, "csin": {0.6: C}}))          # above a viable w; a later set
+    b2, e2 = S.name_topups(grid({"b": {0.6: C}, "sin": {0.5: C, 0.8: V}, "c": {0.4: C, 0.6: V}}))
+    b3, e3 = S.name_topups(grid({"c": {0.5: C}}))
+    naming = (b1 == [] and e1 == ["csin_sugar_w060", "csin_blind_w060"]
+              and b2 == ["b_sugar_w060", "b_blind_w060", "sin_sugar_w050", "sin_blind_w050"] and e2 == []
+              and b3 == ["c_sugar_w050", "c_blind_w050"] and e3 == [])
+    # the dt repeat decides whether a candidate is final (finalize)
+    o_sin = dec({"sin": V})
+    st = {**base, "sin": V}
+    f_missing, s_missing = S.finalize(o_sin, dict(needed=True, done=False, part="g7-dt-sin-w060"), st)
+    f_diff, s_diff = S.finalize(o_sin, dict(needed=True, done=True, numerics_sensitive=True, differs=["function"]), st)
+    f_ok, s_ok = S.finalize(o_sin, dict(needed=True, done=True, numerics_sensitive=False, differs=[]), st)
+    f_c7, s_c7 = S.finalize(dec({}), dict(needed=False), base)
+    hv = lambda o, st_: {k: v["verdict"] for k, v in S.hypotheses(st_, o, True).items()}       # noqa: E731
+    final = (o_sin["final"] is True and f_missing["final"] is False and "PROVISIONAL" in f_missing["why"]
+             and s_missing["sin"] == Un and hv(f_missing, s_missing)["H7c-in"] == "undetermined"
+             and hv(f_missing, s_missing)["overall"] == "undetermined"
+             and f_diff["final"] is False and f_diff.get("numerics_sensitive") is True and s_diff["sin"] == Un
+             and hv(f_diff, s_diff)["H7c-in"] == "undetermined"
+             and f_ok["final"] is True and s_ok["sin"] == V and hv(f_ok, s_ok)["H7c-in"] == "held"
+             and hv(f_ok, s_ok)["overall"] == "not held" and f_c7["final"] is True and s_c7 == base)
+    ok = (order and prov and all_fail and mixed and not_where and undet and review and scored and states and num
+          and refused and naming and final)
     return ok, ("outcome order R > F > S-in > C > CS-in > C7; a missing top-up makes it PROVISIONAL; hypothesis verdicts "
-                "held / not held / undetermined as written; the numerics guard fails below E_i - 1 mV and refuses a "
-                "missing record" if ok else
+                "held / not held / undetermined as written; the numerics guard fails below E_i - 1 mV and on a value "
+                "that is not a number, and refuses a missing record; top-ups are named only where they can change a "
+                "set's viability or decision w; a candidate is final only after its dt repeat agrees" if ok else
                 f"order {order}, provisional {prov}, all-fail {all_fail}, mixed {mixed}, not-where {not_where}, "
-                f"undetermined {undet}, review {review}, scored {scored}, states {states}, numerics {num}, refused {refused}")
+                f"undetermined {undet}, review {review}, scored {scored}, states {states}, numerics {num}, refused {refused}, "
+                f"naming {naming}, final {final}")
 
 
 def t_gen7_parts_match_rerun_jobs():

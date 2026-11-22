@@ -12,8 +12,9 @@ D3   Outcome, in order: R (P0 does not replicate phase A's cell 1) -> F (B viabl
      CS-in -> C7. Viable(set): a grid w at which FUNCTION (screen), FUNCTION-q, STABILITY (a), (b), (c) and, in a
      conductance arm, NUMERICS all PASS; the decision w is the smallest such w. LATERALITY is reported only.
      A candidate w (no FAIL, at least one UNRESOLVED) in a decision set (B, S-in, C, CS-in) names ONE top-up of BOTH
-     drives; the trials are pooled; after it UNRESOLVED counts as not passing. While a named top-up is missing the
-     outcome is PROVISIONAL.
+     drives, where it could change that set's viability or decision w (name_topups); the trials are pooled; after
+     it UNRESOLVED counts as not passing. While a top-up that can change the outcome is missing, or the candidate's
+     dt 0.05 ms repeat is missing or differs, the outcome is not final.
 D4   Hypothesis verdicts: held, not held, undetermined.
 D6   Numerics guard, the dt repeat of the candidate, the ORN-under-sugar check, cell counts.
 D7   V7a (report-only), the AL/LH share of the blind tail, by-mode summaries.
@@ -103,8 +104,8 @@ def function_q(su):
 
 def count_zero(trials, label):
     n = int(sum(t["self_sustained"] for t in trials))
-    return dict(estimate=n, of=len(trials), verdict="PASS" if n == 0 else "FAIL",
-                rule=f"{label}: 0 self-sustained trials")
+    return dict(estimate=n, of=len(trials), verdict="UNRESOLVED" if not trials else ("PASS" if n == 0 else "FAIL"),
+                rule=f"{label}: 0 self-sustained trials (no trials: UNRESOLVED)")
 
 
 def stability_c(bl):
@@ -118,9 +119,15 @@ def numerics(trials, e_inh):
     lows = [t.get("lowest_v_mV") for t in trials]
     if any(x is None for x in lows):
         raise SystemExit("[score] a conductance arm has a trial without lowest_v_mV; scoring refused")
-    lo = float(min(lows))
-    return dict(estimate=lo, bar=e_inh - G.NUMERICS_MARGIN_MV, verdict="FAIL" if lo < e_inh - G.NUMERICS_MARGIN_MV else "PASS",
-                rule=f"NUMERICS: the lowest v of any cell in any trial is not below E_i - {G.NUMERICS_MARGIN_MV} mV")
+    x = np.array(lows, dtype=float)
+    bar = e_inh - G.NUMERICS_MARGIN_MV
+    rule = (f"NUMERICS: lowest_v_mV is not below E_i - {G.NUMERICS_MARGIN_MV} mV in any trial; a value that is not a "
+            "number, or no trial, is FAIL")
+    if not len(x) or np.isnan(x).any():
+        return dict(estimate=None, bar=bar, verdict="FAIL", rule=rule, note="a trial's lowest_v_mV is not a number, or "
+                                                                             "there is no trial: fails safe")
+    lo = float(x.min())
+    return dict(estimate=lo, bar=bar, verdict="FAIL" if lo < bar else "PASS", rule=rule)
 
 
 def li_summary(trials, min_spikes=0):
@@ -210,6 +217,9 @@ def set_at(D, s, w, pool, smoke=SMOKE):
             raise SystemExit(f"[score] {s} at w {w}: the top-up of only one drive exists; a top-up counts only if "
                              "both drives were run (D1). Scoring refused")
         if ts is not None:
+            # (a top-up's rows are not compared with the main arm's: two silent arms have identical rows by right.
+            #  That a top-up is a new run is checked in load(): its specification, with its own seed, must be the
+            #  registered one.)
             S, B, used = S + list(ts["trials"]), B + list(tb["trials"]), [name("sugar") + "_topup", name("blind") + "_topup"]
     comp = components(s, S, B)
     vs = [c["verdict"] for c in comp.values()]
@@ -222,6 +232,27 @@ def set_at(D, s, w, pool, smoke=SMOKE):
                 mn9_per_cell_mean_hz=[float(np.mean([t["mn9_per_cell_hz"][i] for t in S])) for i in range(len(per))] if per else None,
                 mn9_cells=S[0].get("mn9_cells") if S else None, sugar=arm_summary(su, S), blind=arm_summary(bl, B),
                 blind_al_lh_share=al_share(B)), need
+
+
+def name_topups(first):
+    """D3: which candidate w get a top-up, from the main arms alone. first: (set, w) -> (row, both arm names).
+    In a decision set, a candidate w is named only below that set's smallest viable w: above it, the top-up could
+    change neither whether the set is viable nor its decision w. Going through the outcome order (B, S-in, C,
+    CS-in): up to and including the first set that is already viable, a named top-up can change the outcome
+    ('blocking': the outcome is PROVISIONAL until it is run). After that set, the outcome cannot change; a later
+    set is named only if it has no viable w, because its hypothesis verdict still rests on the top-up ('for the
+    hypothesis')."""
+    blocking, extra, decided = [], [], False
+    for s in G.DECISION:
+        rows = [first[(s, w)] for w in G.GRID_W if (s, w) in first]
+        viable = [r["w_scale"] for r, _ in rows if r["status"] == "viable"]
+        below = [need for r, need in rows if r["status"] == "candidate" and (not viable or r["w_scale"] < min(viable))]
+        if not decided:
+            blocking += [a for need in below for a in need]
+        elif not viable:
+            extra += [a for need in below for a in need]
+        decided = decided or bool(viable)
+    return blocking, extra
 
 
 def state(grid):
@@ -275,8 +306,27 @@ def decide(states, w_of, replicated, missing_topups):
     if cand:
         why += f"; the candidate is {cand} at w {w}. " + G.CRITERIA["decision"]["provisional"].capitalize()
     if missing_topups:
-        why += f" (PROVISIONAL: top-ups named by the rule are not yet run: {missing_topups})"
+        why += f" (PROVISIONAL: top-ups that can change the outcome are not yet run: {missing_topups})"
     return dict(code=code, candidate=cand, w=w, final=final, why=why)
+
+
+def finalize(outcome, dt, states):
+    """D6: a candidate is final only after its dt 0.05 ms repeat has run and agrees. Until then, and if the repeat
+    differs (numerics-sensitive), the outcome is not final and the candidate's arm set is 'undetermined' for the
+    hypothesis verdicts. Returns (outcome, states)."""
+    if outcome.get("candidate") is None:
+        return outcome, states
+    s = outcome["candidate"]
+    if not dt.get("done"):
+        return (dict(outcome, final=False, why=outcome["why"] + f" (PROVISIONAL: the dt 0.05 ms repeat is not yet run: "
+                                                                 f"{dt.get('part')})"),
+                dict(states, **{s: "undetermined"}))
+    if dt.get("numerics_sensitive"):
+        return (dict(outcome, final=False, numerics_sensitive=True,
+                     why=outcome["why"] + f" (NOT FINAL: the candidate is numerics-sensitive; components "
+                                          f"{dt['differs']} differ at dt 0.05 ms. Stop for review)"),
+                dict(states, **{s: "undetermined"}))
+    return outcome, states
 
 
 def hypotheses(states, outcome, replicated):
@@ -298,8 +348,11 @@ def hypotheses(states, outcome, replicated):
            "overall": ("undetermined" if not outcome["final"] else "held" if outcome["code"] == "C7" else "not held")}
     if not replicated:
         got = {k: (v if k == "H7-P" else "undetermined") for k, v in got.items()}
+    about = {"H7-P": ["p0"], "H7-F": ["b"], "H7a": ["c"], "H7b": ["cti10", "c"], "H7c-in": ["sin"],
+             "H7d": ["csin", "c", "sin"], "H7c-al": ["sal", "csal"], "H7c-all": ["sall", "csall"], "overall": list(G.DECISION)}
     return {k: dict(text=G.CRITERIA["hypotheses"][k][0], predicted=G.CRITERIA["hypotheses"][k][1],
-                    confidence=G.CRITERIA["hypotheses"][k][2], verdict=v,
+                    confidence=G.CRITERIA["hypotheses"][k][2], verdict=v, arm_sets=about[k],
+                    arm_set_states={a: states.get(a, "undetermined") for a in about[k]},
                     prediction_correct=None if v == "undetermined" else bool(v == G.CRITERIA["hypotheses"][k][1]))
             for k, v in got.items()}
 
@@ -314,15 +367,17 @@ def orn_check(D, smoke=SMOKE):
             b = load(D, f"{ref}_sugar_{G._w(w)}", required=False, smoke=smoke)
             if a is None or b is None:
                 continue
+            if any("orn_spikes" not in t for t in a["trials"]):
+                raise SystemExit(f"[score] {s}_sugar_{G._w(w)}: a trial has no orn_spikes; scoring refused")
             n = int(sum(t["orn_spikes"] for t in a["trials"]))
             rec = dict(orn_spikes_total=n, orn_spikes_mean=n / len(a["trials"]), compared_with=ref)
             if n == 0:
                 same = json.dumps(a["trials"], sort_keys=True, default=float) == json.dumps(b["trials"], sort_keys=True, default=float)
                 rec["equals_reference"] = bool(same)
                 if not same:
-                    keys = ("mn9_hz", "cns_rate_hz", "n_spikes", "tail_spikes")
-                    rec["max_abs_difference"] = {k: float(max(abs(x[k] - y[k]) for x, y in zip(a["trials"], b["trials"])))
-                                                 for k in keys}
+                    pairs = list(zip(a["trials"], b["trials"]))
+                    rec["differing_fields"] = sorted({k for x, y in pairs for k in set(x) | set(y) if x.get(k) != y.get(k)})
+                    rec["trials_differing"] = int(sum(x != y for x, y in pairs)) + abs(len(a["trials"]) - len(b["trials"]))
             out[f"{s}_{G._w(w)}"] = rec
     flags = sorted(k for k, v in out.items() if v.get("equals_reference") is False)
     return dict(per_arm=out, unexpected_differences=flags,
@@ -330,28 +385,45 @@ def orn_check(D, smoke=SMOKE):
 
 
 def v7a(D, smoke=SMOKE):
-    arms = {}
+    """D7, report-only. Every compared glomerulus counts; one whose record is incomplete is 'missing' (a registered
+    arm with an incomplete record refuses scoring), never dropped from the count."""
+    arms, low = {}, []
+    n_compared = sum(1 for v in G.V7A.values() if v["compared"])
     for s in G.V7A_SETS:
         for w in G.GRID_W:
             name = f"v7a_{s}_{G._w(w)}"
             rec = load(D, name, smoke=smoke)
             if rec is None:
                 continue
-            per = {}
+            per, missing = {}, []
             for g, ref in G.V7A.items():
                 y = [[t["pn_hz"] for t in rec["trials"] if t["glomerulus"] == g and t["orn_hz"] == r] for r in G.V7A_RATES]
+                if not smoke and any(len(v) != G.V7A_TRIALS for v in y):
+                    raise SystemExit(f"[score] {name}: glomerulus {g} has {[len(v) for v in y]} runs per rate, not "
+                                     f"{G.V7A_TRIALS}; scoring refused")
                 if not all(y):
+                    missing.append(g)
                     continue
                 mean = [float(np.mean(v)) for v in y]
                 fit = G.hill_fit(G.V7A_RATES, mean)
-                per[g] = dict(orn_hz=G.V7A_RATES, pn_hz=mean, olsen_hz=[float(x) for x in G.hill(G.V7A_RATES, ref["r_max"], ref["sigma"])],
-                              fit=fit, olsen=dict(r_max=ref["r_max"], sigma=ref["sigma"]), compared=ref["compared"],
+                per[g] = dict(orn_hz=G.V7A_RATES, pn_hz=mean,
+                              olsen_fit_hz=[float(x) for x in G.hill(G.V7A_RATES, ref["r_max"], ref["sigma"])],
+                              fit=fit, rms_residual_hz=float(np.sqrt(fit["sse"] / len(G.V7A_RATES))),
+                              monotone=bool(all(b >= a for a, b in zip(mean, mean[1:]))),
+                              olsen=dict(r_max=ref["r_max"], sigma=ref["sigma"]), compared=ref["compared"],
                               consistent=G.v7a_consistent(fit, g), cells=rec.get("v7a_cells", {}).get(g))
-            comp = [g for g, v in per.items() if v["compared"]]
-            arms[name] = dict(set=s, w_scale=w, glomeruli=per, compared=len(comp),
-                              consistent=int(sum(per[g]["consistent"] for g in comp)))
-    return dict(status=G.CRITERIA["validation"]["v7a"]["status"], arms=arms,
-                consistent_by_arm={k: f"{v['consistent']} of {v['compared']}" for k, v in arms.items()})
+            rec_low = None
+            if G.SETS[s]["synapse"] == "conductance":
+                lows = [t.get("lowest_v_mV") for t in rec["trials"]]
+                rec_low = (None if not lows or any(x is None or x != x for x in lows) else float(min(lows)))
+                if rec_low is None or rec_low < G.settings_of(s)["e_inh_mV"] - G.NUMERICS_MARGIN_MV:
+                    low.append(name)
+            arms[name] = dict(set=s, w_scale=w, glomeruli=per, missing=missing, compared=n_compared,
+                              consistent=int(sum(v["consistent"] for v in per.values() if v["compared"])),
+                              lowest_v_mV=rec_low)
+    return dict(status=G.CRITERIA["validation"]["v7a"]["status"], arms=arms, numerics_low=sorted(low),
+                consistent_by_arm={k: f"{v['consistent']} of {v['compared']}" + (f" ({len(v['missing'])} missing)" if v["missing"] else "")
+                                   for k, v in arms.items()})
 
 
 def dt_check(D, outcome, sets, smoke=SMOKE):
@@ -368,22 +440,26 @@ def dt_check(D, outcome, sets, smoke=SMOKE):
     a = {k: v["verdict"] for k, v in main["components"].items()}
     b = {k: v["verdict"] for k, v in c.items()}
     return dict(needed=True, done=True, part=part, main=a, dt005=b, differs=sorted(k for k in a if a[k] != b[k]),
-                numerics_sensitive=bool(a != b))
+                numerics_sensitive=bool(a != b),
+                unresolved_in_both=sorted(k for k in a if a[k] == b[k] == "UNRESOLVED"),
+                note="the main arms are read unpooled (10 trials each); the repeat is also a new draw of the Poisson "
+                     "input, because the input is drawn per time step")
 
 
 # ---------------------------------------------------------------------------------- score
 def score(D=None, smoke=SMOKE):
     D = Path(D) if D is not None else G.OUT / ("smoke" if smoke else "arms")
-    first, named = {}, []
-    for s in G.SETS:                      # pass 1: which top-ups the rule names (main arms only)
+    first = {}
+    for s in G.SETS:                      # pass 1: the main arms alone
         for w in G.GRID_W:
             got = set_at(D, s, w, pool=False, smoke=smoke)
             if got is not None:
                 first[(s, w)] = got
-                named.extend(got[1])
-    named = sorted(set(named))
+    blocking, extra = name_topups(first)  # which top-ups the rule names
+    named = sorted(set(blocking + extra))
     have = lambda a: (D / f"{a}_topup.json").exists()          # noqa: E731
     missing = [a for a in named if not have(a)]
+    missing_blocking = [a for a in sorted(set(blocking)) if not have(a)]
     sets = {}
     for s in G.SETS:                      # pass 2: pool the named top-ups that exist
         rows = []
@@ -394,19 +470,28 @@ def score(D=None, smoke=SMOKE):
             rows.append(set_at(D, s, w, pool=True, smoke=smoke)[0] if pooled else first[(s, w)][0])
         viable = [r["w_scale"] for r in rows if r["status"] == "viable"]
         sets[s] = dict(role=G.SETS[s]["role"], settings=G.settings_of(s), grid=rows, state=state(rows),
-                       viable=bool(viable), decision_w=min(viable) if viable else None)
+                       viable=bool(viable), decision_w=min(viable) if viable else None,
+                       not_passing={G._w(r["w_scale"]): {k: c["verdict"] for k, c in r["components"].items()
+                                                         if c["verdict"] != "PASS"} for r in rows})
     p0 = p0_replication(sets)
     states = {s: v["state"] for s, v in sets.items()}
     complete = all(s in sets and len(sets[s]["grid"]) == len(G.GRID_W) for s in G.SETS)
     if complete:
-        outcome = decide(states, {s: v["decision_w"] for s, v in sets.items()}, p0["replicates"], missing)
+        outcome = decide(states, {s: v["decision_w"] for s, v in sets.items()}, p0["replicates"], missing_blocking)
     else:
         outcome = dict(code=None, candidate=None, w=None, final=False, why="arms missing (smoke): no outcome")
         if smoke and "p0" in sets and not p0["replicates"]:
             outcome = dict(outcome, code="R", why="P0 does not replicate phase A's cell 1 (smoke data: expected)")
     dt = dt_check(D, outcome, sets, smoke=smoke)
+    outcome, states_h = finalize(outcome, dt, states)
+    label = {"reported": "extrapolated: never adopted", "sensitivity": "sensitivity: never adopted"}
+    outcome["not_adoptable_but_viable"] = {s: dict(decision_w=v["decision_w"], label=label[v["role"]])
+                                           for s, v in sets.items() if v["viable"] and v["role"] in label}
     orn = orn_check(D, smoke=smoke)
+    val = v7a(D, smoke=smoke)
     flags = []
+    if val["numerics_low"]:
+        flags.append(f"V7a (report-only): lowest v below E_i - {G.NUMERICS_MARGIN_MV} mV, or not recorded, in {val['numerics_low']}")
     if orn["unexpected_differences"]:
         flags.append(f"ORN-under-sugar check: arms differ from their reference although no ORN fired: {orn['unexpected_differences']}")
     if dt.get("numerics_sensitive"):
@@ -423,9 +508,11 @@ def score(D=None, smoke=SMOKE):
     report = dict(benchmark=G.LABEL, smoke=bool(smoke), criteria=G.CRITERIA, outcome=outcome, flags=flags,
                   p0_replication=p0, p0_rows=p0_rows(D, smoke=smoke), sets=sets,
                   topups_named=[a + "_topup" for a in named], topups_missing=[a + "_topup" for a in missing],
+                  topups_blocking_missing=[a + "_topup" for a in missing_blocking],
+                  topups_for_hypothesis_only=[a + "_topup" for a in sorted(set(extra))],
                   topup_parts=sorted({f"g7-topup-{a.split('_')[0]}-{a.split('_')[2]}" for a in missing}),
-                  hypotheses=hypotheses(states, outcome, p0["replicates"]) if complete else None,
-                  dt_check=dt, orn_check=orn, cell_counts=counts, v7a=v7a(D, smoke=smoke),
+                  hypotheses=hypotheses(states_h, outcome, p0["replicates"]) if complete else None,
+                  dt_check=dt, orn_check=orn, cell_counts=counts, v7a=val,
                   registration=registry.stamp(G.REG) if G.REG else None)
     return report
 
