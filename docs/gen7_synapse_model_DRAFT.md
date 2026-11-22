@@ -439,3 +439,21 @@ Not changed, with the reason:
 - F15 (the guard leaves out adapting cells, including MN9): by design; the dt repeat covers them.
 - F17 (all five ORN types are sources in V7a), F20 (refreeze comparison is the fingerprint step), F24 (the R
   test is coarse; row identity is reported): stated, not changed.
+
+### D11. Preflight and build probe on the pinned data (21 Nov; no simulation)
+Records: `results/gen7_synapse/preflight.json` and `probe.json`, written by the cloud job `g7-preflight`
+(Actions run 37, script at commit 33aae64). Claude B's laptop run of the same preflight gave the same numbers.
+
+- **The fix.** 20,428 connections and 253,733 synapses are signed, from 715 cells; 23 cells join the network;
+  nothing is removed. Excitatory: 111,043 synapses (all acetylcholine). Inhibitory: 142,690 (glutamate 83,081,
+  GABA 58,448, histamine 1,161). Signed graph: 6,127,738 -> 6,148,166 connections; 170,175 -> 170,198 cells.
+  Still dropped: 139,623 connections, 1,726,759 synapses.
+- **Depression scopes.** "in": 55,527 connections, 937,946 synapses (ORN -> PN 469,621; ORN -> LN 468,325),
+  from 2,634 of the 2,635 ORNs, 53 types. "al": 105,651 connections, 2,286,894 synapses.
+- **V7a.** All five glomeruli have their ORNs and PNs in the network. ORN -> PN synapses, summed over the
+  type's PNs: DM4 4,781 (2 PNs), DL5 6,944 (2), VM7d 10,251 (7), DM1 13,384 (2), VM7v 5,182 (3).
+- **Drives.** 34 sugar cells. The blind pool is 15,757 annotated cells, of which 1,575 are drawn; these two
+  counts are over the annotation table. In the network, phase A's blind arms had 14,555 source cells of which
+  1,470 were driven; the gen 7 blind probe has the same 14,555 sources.
+- **Build probe (0 trials).** P0's network equals phase A's cell 1 (170,141 cells, 6,126,736 recurrent
+  synapses, 34 sources). Each arm builds in 7 to 15 s with a peak of about 2 GB on the cloud machine.

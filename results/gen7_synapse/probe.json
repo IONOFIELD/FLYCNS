@@ -1,0 +1,125 @@
+{
+ "data_dir": "data",
+ "arms": {
+  "p0_sugar_w040": {
+   "wall_s": 15.2,
+   "peak_memory_mb": 1791.0,
+   "n_lif": 170141,
+   "n_recurrent": 6126736,
+   "n_stimulated": 34,
+   "n_std_syn": 0,
+   "std_marks": null,
+   "v7a_cells": null
+  },
+  "sin_blind_w100": {
+   "wall_s": 13.2,
+   "peak_memory_mb": 1817.1,
+   "n_lif": 155970,
+   "n_recurrent": 5851693,
+   "n_stimulated": 14555,
+   "n_std_syn": 55527,
+   "std_marks": {
+    "scope": "in",
+    "edges": 55527,
+    "synapses": 937946.0,
+    "of_edges": 6148166,
+    "of_synapses": 88570540.0,
+    "orn_to_pn": {
+     "edges": 16234,
+     "synapses": 469621.0
+    },
+    "orn_to_ln": {
+     "edges": 39293,
+     "synapses": 468325.0
+    },
+    "al_to_al": {
+     "edges": 50124,
+     "synapses": 1348948.0
+    },
+    "orn_types": 53,
+    "orn_cells_marked": 2634
+   },
+   "v7a_cells": null
+  },
+  "csall_blind_w100": {
+   "wall_s": 6.8,
+   "peak_memory_mb": 1957.2,
+   "n_lif": 155970,
+   "n_recurrent": 5851693,
+   "n_stimulated": 14555,
+   "n_std_syn": 6075365,
+   "std_marks": null,
+   "v7a_cells": null
+  },
+  "v7a_csall_w100": {
+   "wall_s": 6.9,
+   "peak_memory_mb": 1993.1,
+   "n_lif": 169988,
+   "n_recurrent": 6139738,
+   "n_stimulated": 210,
+   "n_std_syn": 6145416,
+   "std_marks": null,
+   "v7a_cells": {
+    "DM4": {
+     "orn_cells": 32,
+     "orn_with_output": 32,
+     "pn_cells": 2,
+     "pn_ids": [
+      10613,
+      10670
+     ]
+    },
+    "DL5": {
+     "orn_cells": 43,
+     "orn_with_output": 43,
+     "pn_cells": 2,
+     "pn_ids": [
+      10767,
+      525105
+     ]
+    },
+    "VM7d": {
+     "orn_cells": 36,
+     "orn_with_output": 36,
+     "pn_cells": 7,
+     "pn_ids": [
+      13225,
+      14430,
+      14895,
+      18084,
+      18834,
+      511807,
+      527523
+     ]
+    },
+    "DM1": {
+     "orn_cells": 74,
+     "orn_with_output": 74,
+     "pn_cells": 2,
+     "pn_ids": [
+      10176,
+      10208
+     ]
+    },
+    "VM7v": {
+     "orn_cells": 25,
+     "orn_with_output": 25,
+     "pn_cells": 3,
+     "pn_ids": [
+      13386,
+      13972,
+      16524
+     ]
+    }
+   }
+  }
+ },
+ "p0_network_is_phase_a": {
+  "ok": true,
+  "phase_a": {
+   "n_lif": 170141,
+   "n_recurrent": 6126736,
+   "n_stimulated": 34
+  }
+ }
+}
