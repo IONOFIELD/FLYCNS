@@ -404,7 +404,8 @@ is the only depression arm that uses measured synapses only.
 - Arm names: `<set>_<drive>_<w>`; sets `p0, b, sin, c, csin, sal, csal, sall, csall, cei55, cei80, cti10,
   csinei55, csinei80, csinti10, sinkw, csinkw`. V7a: `v7a_<set>_<w>`.
 - Cloud jobs: 17 sweep parts `g7-<set>` (10 arms each), 6 V7a parts `g7-v7a-<set>` (5 arms each); conditional,
-  only when the scorer names them: `g7-topup-<set>-<w>` and `g7-dt-<set>-<w>` (2 arms each, 20 + 20 parts).
+  only when the scorer names them: `g7-topup-<set>-<w>`, `g7-dt-<set>-<w>` and `g7-dtt-<set>-<w>` (the dt
+  repeat's own top-up), 2 arms each, 20 + 20 + 20 parts.
 - Order: (1) preflight and build probe on the pinned data (`fit/gen7_synapse.py probe`, the cloud job
   `g7-preflight`), committed; (2) the identity check (`fingerprint/` run of the old and
   the new model files: every default simulation unchanged); (3) the freeze commit: `registry.VERSION` 6 with its
@@ -457,3 +458,40 @@ Records: `results/gen7_synapse/preflight.json` and `probe.json`, written by the 
   1,470 were driven; the gen 7 blind probe has the same 14,555 sources.
 - **Build probe (0 trials).** P0's network equals phase A's cell 1 (170,141 cells, 6,126,736 recurrent
   synapses, 34 sources). Each arm builds in 7 to 15 s with a peak of about 2 GB on the cloud machine.
+
+### D12. Re-audit of 21 Nov (docs/lit/gen7_code_reaudit_2026-11-21.md) and what changed
+The re-audit read 33aae64: every probe of the first audit is closed, no blocker, one should-fix, seven notes.
+An exhaustive check of the top-up naming rule (6,561 configurations) found no top-up that could change the
+outcome left unnamed.
+
+| Finding | Change |
+|---|---|
+| R1 (should-fix): a candidate that is viable only through its top-up became final when the 10-trial dt repeat was UNRESOLVED on the same component as the unpooled main arms | The dt repeat now has as many trials as the candidate's verdict rests on. If the decision w was reached with a top-up, the repeat's own top-up (`g7-dtt-<set>-<w>`, seeds 7000 + index, dt 0.05 ms) is run and pooled the same way. The repeat's verdicts are compared with the candidate's, which are all PASS. |
+| R2: false alarm when the repeat PASSes and the unpooled main arms do not | Gone with R1: like is compared with like. |
+| R3: a missing top-up kept the outcome PROVISIONAL after another top-up had already fixed it | Which missing top-ups hold the outcome is judged again after pooling the ones that were run. Naming is still from the main arms alone. |
+| R4 (the first audit's F13): copied rows are accepted | Flagged, not refused: a top-up or dt repeat whose rows equal its main arm's, when that arm is not silent. |
+| R5: a missing repeat makes the candidate "undetermined" for the hypotheses, which the plan did not say | Now stated (D6 below and the registered text). |
+| R6: viable arms other than the candidate are not dt-checked | Stated. Only the candidate is repeated. |
+| R8: the build probe passed silently without phase A's file | It now stops. |
+
+D6, made exact: until the candidate's dt repeat has run, the outcome is PROVISIONAL and the candidate's arm is
+"undetermined" for the hypothesis verdicts. Another viable arm (for example C when S-in is the candidate) keeps
+its verdict without a repeat; its hypothesis is read with that limit.
+
+### D13. Density literature (docs/lit/gen7_density_lit_2026-11-21.md): context only, nothing in generation 7 changes
+- Shiu et al. 2024 set W_syn = 0.275 mV as the model's single free parameter, on FlyWire public
+  materialization v.630, so that 100 Hz sugar input gave about 80% of maximal MN9 firing (VERIFIED, Methods).
+- Berg et al. 2026 scale male edge weights by 0.79 to compare with FAFB/FlyWire, "i.e. there are generally
+  more synapses in the male CNS" (VERIFIED, STAR Methods). Scheffer 2025 (preprint) puts MaleCNS at 1.26 times
+  FAFB's human-visible synapses in overlapping compartments and attributes the gap mainly to the imaging
+  method (VERIFIED).
+- Dorkenwald et al. 2024: the synapse detection FlyWire used is weaker for some cell types, "and we are aware
+  that sensory neurons are particularly affected" (VERIFIED, Discussion).
+- No published source gives a per-cell or ORN-specific MaleCNS-to-FlyWire ratio. Our own measurement
+  (docs/records/2026-11-18/density/, on PR #27): about 2.1 times per cell on matched types, ORN -> LN 5.8 times,
+  ORN -> PN 3.2 times.
+- Reading (INFERRED, for the generation 8 plan): the per-synapse weight is a free parameter tied to a graph
+  with fewer synapses, and fewest where ORNs connect. Two explanations of the wall follow, and they point to
+  different fixes. Either the weight is simply too large here (a density correction), or FlyWire undercounted
+  the ORN input and thereby hid an instability that the fly controls with mechanisms the model lacks
+  (depression at ORN synapses, presynaptic inhibition). Generation 7's S-in arm tests the second directly.

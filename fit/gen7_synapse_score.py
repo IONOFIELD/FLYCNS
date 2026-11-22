@@ -14,7 +14,7 @@ D3   Outcome, in order: R (P0 does not replicate phase A's cell 1) -> F (B viabl
      A candidate w (no FAIL, at least one UNRESOLVED) in a decision set (B, S-in, C, CS-in) names ONE top-up of BOTH
      drives, where it could change that set's viability or decision w (name_topups); the trials are pooled; after
      it UNRESOLVED counts as not passing. While a top-up that can change the outcome is missing, or the candidate's
-     dt 0.05 ms repeat is missing or differs, the outcome is not final.
+     dt 0.05 ms repeat (with as many trials as its verdict rests on) is missing or differs, the outcome is not final.
 D4   Hypothesis verdicts: held, not held, undetermined.
 D6   Numerics guard, the dt repeat of the candidate, the ORN-under-sugar check, cell counts.
 D7   V7a (report-only), the AL/LH share of the blind tail, by-mode summaries.
@@ -196,6 +196,13 @@ def arm_summary(rec, trials):
 
 
 # ---------------------------------------------------------------------------------- viability
+def copied(a, b):
+    """True if two arms' trial rows are identical although the arm is not silent. Arms with different seeds or
+    time steps cannot give identical rows unless nothing spikes; this is flagged, not refused (D10, F13)."""
+    same = json.dumps(a, sort_keys=True, default=float) == json.dumps(b, sort_keys=True, default=float)
+    return bool(same and any(t.get("n_spikes", 0) for t in a))
+
+
 def components(s, S, B):
     comp = dict(function=function_screen(S), function_q=function_q(S), stability_a=count_zero(S, "sugar"),
                 stability_b=count_zero(B, "blind"), stability_c=stability_c(B))
@@ -210,7 +217,7 @@ def set_at(D, s, w, pool, smoke=SMOKE):
     su, bl = load(D, name("sugar"), smoke=smoke), load(D, name("blind"), smoke=smoke)
     if su is None or bl is None:
         return None
-    S, B, used = list(su["trials"]), list(bl["trials"]), []
+    S, B, used, dup = list(su["trials"]), list(bl["trials"]), [], []
     if pool:
         ts, tb = (load(D, name(d) + "_topup", required=False, smoke=smoke) for d in ("sugar", "blind"))
         if (ts is None) != (tb is None):
@@ -221,6 +228,7 @@ def set_at(D, s, w, pool, smoke=SMOKE):
             #  That a top-up is a new run is checked in load(): its specification, with its own seed, must be the
             #  registered one.)
             S, B, used = S + list(ts["trials"]), B + list(tb["trials"]), [name("sugar") + "_topup", name("blind") + "_topup"]
+            dup = [name(d) + "_topup" for d, t, m in (("sugar", ts, su), ("blind", tb, bl)) if copied(t["trials"], m["trials"])]
     comp = components(s, S, B)
     vs = [c["verdict"] for c in comp.values()]
     status = "viable" if all(v == "PASS" for v in vs) else ("fails" if "FAIL" in vs else "candidate")
@@ -228,7 +236,7 @@ def set_at(D, s, w, pool, smoke=SMOKE):
         status = "not passing (UNRESOLVED after its top-up)"
     need = [name("sugar"), name("blind")] if status == "candidate" and s in G.DECISION else []
     per = S[0].get("mn9_per_cell_hz") if S else None
-    return dict(w_scale=w, status=status, components=comp, topups_used=used, laterality=laterality(S),
+    return dict(w_scale=w, status=status, components=comp, topups_used=used, identical_rows=dup, laterality=laterality(S),
                 mn9_per_cell_mean_hz=[float(np.mean([t["mn9_per_cell_hz"][i] for t in S])) for i in range(len(per))] if per else None,
                 mn9_cells=S[0].get("mn9_cells") if S else None, sugar=arm_summary(su, S), blind=arm_summary(bl, B),
                 blind_al_lh_share=al_share(B)), need
@@ -319,7 +327,7 @@ def finalize(outcome, dt, states):
     s = outcome["candidate"]
     if not dt.get("done"):
         return (dict(outcome, final=False, why=outcome["why"] + f" (PROVISIONAL: the dt 0.05 ms repeat is not yet run: "
-                                                                 f"{dt.get('part')})"),
+                                                                 f"{dt.get('parts_to_run')})"),
                 dict(states, **{s: "undetermined"}))
     if dt.get("numerics_sensitive"):
         return (dict(outcome, final=False, numerics_sensitive=True,
@@ -427,23 +435,37 @@ def v7a(D, smoke=SMOKE):
 
 
 def dt_check(D, outcome, sets, smoke=SMOKE):
-    """D6: the candidate's arms at its decision w, repeated at dt 0.05 ms, against the main arms (unpooled)."""
+    """D6: the candidate at its decision w, repeated at dt 0.05 ms with as many trials as its verdict rests on: the
+    two main arms, and the two top-up arms too when the decision w was reached with a top-up. The repeat's
+    component verdicts are compared with the candidate's (all PASS)."""
     s, w = outcome["candidate"], outcome["w"]
     if s is None:
         return dict(needed=False)
-    part = f"g7-dt-{s}-{G._w(w)}"
-    rep = [load(D, f"{s}_{d}_{G._w(w)}_dt005", required=False, smoke=smoke) for d in G.DRIVES]
-    if any(r is None for r in rep):
-        return dict(needed=True, done=False, part=part, note=f"run {part}; until then the candidate is unchecked at dt 0.05 ms")
-    main, _ = set_at(D, s, w, pool=False, smoke=smoke)
-    c = components(s, list(rep[0]["trials"]), list(rep[1]["trials"]))
-    a = {k: v["verdict"] for k, v in main["components"].items()}
+    row = next(r for r in sets[s]["grid"] if r["w_scale"] == w)
+    pooled = bool(row["topups_used"])
+    base = {d: f"{s}_{d}_{G._w(w)}" for d in G.DRIVES}
+    want = {f"g7-dt-{s}-{G._w(w)}": [base[d] + "_dt005" for d in G.DRIVES]}
+    if pooled:
+        want[f"g7-dtt-{s}-{G._w(w)}"] = [base[d] + "_dt005_topup" for d in G.DRIVES]
+    got = {a: load(D, a, required=False, smoke=smoke) for arms in want.values() for a in arms}
+    todo = sorted(p for p, arms in want.items() if any(got[a] is None for a in arms))
+    if todo:
+        return dict(needed=True, done=False, pooled=pooled, parts=sorted(want), parts_to_run=todo,
+                    note=f"run {', '.join(todo)}; until then the candidate is unchecked at dt 0.05 ms")
+    trials = {d: [t for a in arms_of for t in got[a]["trials"]]
+              for d, arms_of in ((d, [base[d] + "_dt005"] + ([base[d] + "_dt005_topup"] if pooled else [])) for d in G.DRIVES)}
+    c = components(s, trials["sugar"], trials["blind"])
+    a = {k: v["verdict"] for k, v in row["components"].items()}
     b = {k: v["verdict"] for k, v in c.items()}
-    return dict(needed=True, done=True, part=part, main=a, dt005=b, differs=sorted(k for k in a if a[k] != b[k]),
-                numerics_sensitive=bool(a != b),
-                unresolved_in_both=sorted(k for k in a if a[k] == b[k] == "UNRESOLVED"),
-                note="the main arms are read unpooled (10 trials each); the repeat is also a new draw of the Poisson "
-                     "input, because the input is drawn per time step")
+    dup = []
+    for name, rec in got.items():
+        main = load(D, name.replace("_dt005", ""), required=False, smoke=smoke)
+        if main is not None and copied(rec["trials"], main["trials"]):
+            dup.append(name)
+    return dict(needed=True, done=True, pooled=pooled, parts=sorted(want), parts_to_run=[],
+                trials_per_drive=len(trials["sugar"]), candidate=a, dt005=b, differs=sorted(k for k in a if a[k] != b[k]),
+                numerics_sensitive=bool(a != b), identical_rows=sorted(dup),
+                note="the repeat is also a new draw of the Poisson input, because the input is drawn per time step")
 
 
 # ---------------------------------------------------------------------------------- score
@@ -459,7 +481,6 @@ def score(D=None, smoke=SMOKE):
     named = sorted(set(blocking + extra))
     have = lambda a: (D / f"{a}_topup.json").exists()          # noqa: E731
     missing = [a for a in named if not have(a)]
-    missing_blocking = [a for a in sorted(set(blocking)) if not have(a)]
     sets = {}
     for s in G.SETS:                      # pass 2: pool the named top-ups that exist
         rows = []
@@ -473,6 +494,11 @@ def score(D=None, smoke=SMOKE):
                        viable=bool(viable), decision_w=min(viable) if viable else None,
                        not_passing={G._w(r["w_scale"]): {k: c["verdict"] for k, c in r["components"].items()
                                                          if c["verdict"] != "PASS"} for r in rows})
+    # which still-missing top-ups hold the outcome, judged again on the pooled rows (a row is still a candidate
+    # only where its top-up is missing): a top-up that made an earlier set viable releases the later ones
+    second = {(s, r["w_scale"]): (r, [f"{s}_sugar_{G._w(r['w_scale'])}", f"{s}_blind_{G._w(r['w_scale'])}"])
+              for s in G.DECISION if s in sets for r in sets[s]["grid"]}
+    missing_blocking = sorted(set(name_topups(second)[0]) & set(missing))
     p0 = p0_replication(sets)
     states = {s: v["state"] for s, v in sets.items()}
     complete = all(s in sets and len(sets[s]["grid"]) == len(G.GRID_W) for s in G.SETS)
@@ -498,6 +524,9 @@ def score(D=None, smoke=SMOKE):
         flags.append(f"the candidate is numerics-sensitive: components {dt['differs']} differ at dt 0.05 ms")
     if dt.get("needed") and not dt.get("done"):
         flags.append(dt["note"])
+    dup = sorted(a for v in sets.values() for r in v["grid"] for a in r["identical_rows"]) + list(dt.get("identical_rows") or [])
+    if dup:
+        flags.append(f"rows identical to the main arm's although the arm is not silent (a copy, not a new run?): {dup}")
     num = sorted(f"{s}_{G._w(r['w_scale'])}" for s, v in sets.items() for r in v["grid"]
                  if r["components"].get("numerics", {}).get("verdict") == "FAIL")
     if num:
@@ -511,6 +540,7 @@ def score(D=None, smoke=SMOKE):
                   topups_blocking_missing=[a + "_topup" for a in missing_blocking],
                   topups_for_hypothesis_only=[a + "_topup" for a in sorted(set(extra))],
                   topup_parts=sorted({f"g7-topup-{a.split('_')[0]}-{a.split('_')[2]}" for a in missing}),
+                  dt_parts=dt.get("parts_to_run") or [],
                   hypotheses=hypotheses(states_h, outcome, p0["replicates"]) if complete else None,
                   dt_check=dt, orn_check=orn, cell_counts=counts, v7a=val,
                   registration=registry.stamp(G.REG) if G.REG else None)
@@ -533,6 +563,8 @@ def main():
         print(f"FLAG: {f}")
     if report["topup_parts"]:
         print(f"top-ups to run: {', '.join(report['topup_parts'])}")
+    if report["dt_parts"]:
+        print(f"dt repeat to run: {', '.join(report['dt_parts'])}")
     if report["hypotheses"]:
         print("hypotheses: " + ", ".join(f"{k} {v['verdict']}" for k, v in report["hypotheses"].items()))
     print("V7a consistent glomeruli: " + ", ".join(f"{k} {v}" for k, v in report["v7a"]["consistent_by_arm"].items()))

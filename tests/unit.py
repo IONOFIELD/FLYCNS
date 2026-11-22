@@ -1528,7 +1528,7 @@ def _gen7_modules():
 
 def t_gen7_design_and_toy_run():
     """Gen 7 (fit/gen7_synapse.py selftest): the depression-marking rule and the V7a curve fit on hand-made inputs;
-    the design (17 arm sets, 170 sweep arms, 30 V7a arms, 80 conditional arms); every sweep arm has phase A's seed;
+    the design (17 arm sets, 170 sweep arms, 30 V7a arms, 120 conditional arms); every sweep arm has phase A's seed;
     P0 is phase A's cell 1; EXPECT_C1 is the committed phase A table; then eight arms on a hand-made network run end
     to end and score (S-in equals B exactly when no ORN fires)."""
     G, _ = _gen7_modules()
@@ -1595,7 +1595,7 @@ def t_gen7_scoring_rules():
     # the dt repeat decides whether a candidate is final (finalize)
     o_sin = dec({"sin": V})
     st = {**base, "sin": V}
-    f_missing, s_missing = S.finalize(o_sin, dict(needed=True, done=False, part="g7-dt-sin-w060"), st)
+    f_missing, s_missing = S.finalize(o_sin, dict(needed=True, done=False, parts_to_run=["g7-dt-sin-w060"]), st)
     f_diff, s_diff = S.finalize(o_sin, dict(needed=True, done=True, numerics_sensitive=True, differs=["function"]), st)
     f_ok, s_ok = S.finalize(o_sin, dict(needed=True, done=True, numerics_sensitive=False, differs=[]), st)
     f_c7, s_c7 = S.finalize(dec({}), dict(needed=False), base)

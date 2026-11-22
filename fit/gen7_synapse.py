@@ -15,8 +15,8 @@ functional and stable, and the blind-drive loop sits in the antennal lobe's own 
                CS-in decide; the rest are reported and can never be adopted.
   V7a          report-only validation: the ORN -> PN input-output curve of four glomeruli against Olsen et al.
                2010's fits, for six arm sets at each w (D7).
-  conditional  top-ups (10 more trials of both drives at one (arm set, w)) and the dt 0.05 ms repeat of the
-               candidate, each run only when the scorer names it (D3, D6).
+  conditional  top-ups (10 more trials of both drives at one (arm set, w)), the dt 0.05 ms repeat of the candidate
+               and that repeat's own top-up, each run only when the scorer names it (D3, D6).
 
 Scoring is fit/gen7_synapse_score.py. Both files, and fit/gen6_phaseA.py (whose drives, sweep protocol and readouts
 are used here unchanged), are hashed into this registration.
@@ -155,6 +155,8 @@ def _arms():
                 if s in DECISION:
                     arms[name + "_topup"] = dict(seed=TOPUP_BASE + i, dt_ms=DT_MS, topup_of=name, **base)
                     arms[name + "_dt005"] = dict(seed=SEED_BASE + i, dt_ms=DT_CHECK_MS, dt_check_of=name, **base)
+                    arms[name + "_dt005_topup"] = dict(seed=TOPUP_BASE + i, dt_ms=DT_CHECK_MS,
+                                                       dt_check_of=name + "_topup", **base)
     for s in V7A_SETS:
         for w in GRID_W:
             arms[f"v7a_{s}_{_w(w)}"] = dict(kind="v7a", set=s, w_scale=w, trials=V7A_TRIALS, settings=settings_of(s),
@@ -172,8 +174,9 @@ for _s in DECISION:
     for _wv in GRID_W:
         PARTS[f"g7-topup-{_s}-{_w(_wv)}"] = [f"{_s}_{d}_{_w(_wv)}_topup" for d in DRIVES]
         PARTS[f"g7-dt-{_s}-{_w(_wv)}"] = [f"{_s}_{d}_{_w(_wv)}_dt005" for d in DRIVES]
+        PARTS[f"g7-dtt-{_s}-{_w(_wv)}"] = [f"{_s}_{d}_{_w(_wv)}_dt005_topup" for d in DRIVES]
 assert sorted(a for p in PARTS.values() for a in p) == sorted(ARMS), "every arm in exactly one part"
-CONDITIONAL_PARTS = sorted(p for p in PARTS if p.startswith(("g7-topup-", "g7-dt-")))   # only when the scorer asks
+CONDITIONAL_PARTS = sorted(p for p in PARTS if p.startswith(("g7-topup-", "g7-dt-", "g7-dtt-")))   # only when the scorer asks
 
 
 CRITERIA = dict(
@@ -244,15 +247,22 @@ CRITERIA = dict(
                 "order, up to and including the first set that is already viable, a named top-up can change the "
                 "outcome: while one of those is missing the outcome is PROVISIONAL. In a later set a top-up is named "
                 "only if the set has no viable w (its hypothesis verdict rests on it); it does not hold the outcome. "
+                "Whether a still-missing top-up holds the outcome is judged again, by the same rule, after pooling the "
+                "top-ups that were run (a top-up that made an earlier set viable releases the later ones). "
                 "The 10 + 10 trials are pooled for every component; a top-up counts only if both drives were run, "
                 "otherwise scoring is refused; after it UNRESOLVED counts as not "
                 "passing"),
-        dt_check=(f"the candidate's two arms at its decision w are repeated at dt {DT_CHECK_MS} ms with the same seeds "
-                  "(the Poisson input is drawn per time step, so the repeat is also a new draw of the input). Until "
-                  "the repeat has run the outcome is PROVISIONAL. If a component verdict of the repeat differs from "
-                  "the main arms' (10 trials each, unpooled), whatever the cause, the candidate is flagged "
-                  "numerics-sensitive, the outcome is not final and the candidate's arm set is undetermined for the "
-                  "hypothesis verdicts: stop for review"),
+        dt_check=(f"the candidate's arms at its decision w are repeated at dt {DT_CHECK_MS} ms with the same seeds (the "
+                  "Poisson input is drawn per time step, so the repeat is also a new draw of the input), with as many "
+                  "trials as the candidate's verdict rests on: the two main arms, and the two top-up arms too if the "
+                  "decision w was reached with a top-up (pooled the same way). Until the repeat has run the outcome is "
+                  "PROVISIONAL and the candidate's arm set is undetermined for the hypothesis verdicts. If a component "
+                  "verdict of the repeat differs from the candidate's (which are all PASS), whatever the cause, the "
+                  "candidate is flagged numerics-sensitive, the outcome is not final and the arm set stays "
+                  "undetermined: stop for review. Only the candidate is repeated: another viable arm set is not "
+                  "checked at the smaller step"),
+        identical_rows=("a top-up or a dt repeat whose trial rows equal its main arm's, when that arm is not silent, is "
+                        "flagged (different seeds or steps cannot give identical rows unless nothing spikes)"),
         codes="R, F, sin, c, csin (the candidate's arm set), C7",
         not_adoptable=("a reported or sensitivity arm set that is viable is listed with the label 'extrapolated: never "
                        "adopted' or 'sensitivity: never adopted'"),
@@ -592,7 +602,9 @@ def probe(data_dir="data"):
               f"{rec['n_lif']} cells, {rec['n_recurrent']} recurrent synapses, {rec['n_std_syn']} depressing", flush=True)
     ref = ROOT / "results" / "gen6_phaseA" / "arms" / "c1_sugar_w040.json"
     ok = None
-    if ref.exists() and not smoke:
+    if not smoke and not ref.exists():
+        raise SystemExit(f"[gen7] probe: {ref.relative_to(ROOT)} is missing, so P0's network cannot be checked")
+    if not smoke:
         old = json.loads(ref.read_text(encoding="utf-8"))
         got = out["arms"]["p0_sugar_w040"]
         ok = bool((got["n_lif"], got["n_recurrent"], got["n_stimulated"]) == (old["n_lif"], old["n_recurrent"], old["n_stimulated"]))
@@ -752,8 +764,8 @@ def selftest(run=True, tmp=None):
     main = [a for a, s in ARMS.items() if "topup_of" not in s and "dt_check_of" not in s]
     sweep = [a for a in main if ARMS[a]["kind"] == "sweep"]
     checks.append(("design", len(SETS) == 17 and len(sweep) == 170 and len(main) - len(sweep) == 30
-                   and len(ARMS) - len(main) == 80 and len(PARTS) - len(CONDITIONAL_PARTS) == 23
-                   and len(CONDITIONAL_PARTS) == 40))
+                   and len(ARMS) - len(main) == 120 and len(PARTS) - len(CONDITIONAL_PARTS) == 23
+                   and len(CONDITIONAL_PARTS) == 60))
     checks.append(("seeds are phase A's", all(ARMS[f"{s}_{d}_{_w(w)}"]["seed"] == PA.ARMS[f"c1_{d}_{_w(w)}"]["seed"]
                                               for s in SETS for d in DRIVES for w in GRID_W)))
     checks.append(("P0 is phase A's cell 1", sim_options(settings_of("p0")) == PA._opt(PA.ARMS["c1_sugar_w040"]["settings"])
