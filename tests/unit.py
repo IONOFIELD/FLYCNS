@@ -1355,6 +1355,299 @@ def t_gen6_phaseA_parts_match_rerun_jobs():
                 f"command mismatch: {bad}")
 
 
+def _gen7_toy(sign, opt, n=10, std=None):
+    """Three cells: a stimulated source onto two targets with n synapses each."""
+    from flycns.model import CNSModel, LIFParams
+    nrn = pd.DataFrame(dict(bodyId=[1, 2, 3], type=["src", "tgt", "other"],
+                            superclass=["cb_sensory", "cb_intrinsic", "cb_intrinsic"], somaSide=["L"] * 3))
+    e = pd.DataFrame(dict(pre=[1, 1], post=[2, 3], weight=[n, n], nt=["x", "x"], sign=[float(sign)] * 2))
+    if std is not None:
+        e["std"] = std
+    return CNSModel(nrn, e, ["src"], LIFParams(), electrical=False, monitor_types=("tgt",), options=opt)
+
+
+def _gen7_spikes(m, times_ms, total_ms):
+    """One presynaptic spike at each time: the Poisson source fires with certainty for one 0.1 ms step."""
+    t = 0.0
+    for s in times_ms:
+        m.set_stim_rates([0]); m.run(round(s - t, 1))
+        m.set_stim_rates([1e4]); m.run(0.1)
+        t = s + 0.1
+    m.set_stim_rates([0]); m.run(round(total_ms - t, 1))
+
+
+def t_gen7_synapse_options():
+    """Generation-7 synapse options (flycns.model.SimOptions): the defaults build the earlier model; a
+    conductance-based synapse gives the same PSP at rest as the current-based one, excitatory and inhibitory;
+    inhibition cannot push v below E_i; depression follows A -> f*A per spike with recovery tau (Nagel et al.
+    2015, Eq 1) and the first PSP is undepressed; std='marked' depresses only the marked edges; the
+    combinations that are not defined are refused."""
+    from brian2 import mV, ms, StateMonitor
+    from flycns.model import SimOptions
+    eqs = str(_gen7_toy(+1, SimOptions()).G.equations)
+    dflt = "dg/dt" in eqs and "ge" not in eqs and SimOptions().synapse == "current" and SimOptions().std == "off"
+
+    def peak(sign, opt):
+        m = _gen7_toy(sign, opt)
+        _gen7_spikes(m, [5.0], 60)
+        v = np.array(m.vmon.v / mV)[0] - m.p.v_rest_mV
+        return float(v[np.abs(v).argmax()])
+    cond = SimOptions(synapse="conductance")
+    r_exc = peak(+1, cond) / peak(+1, SimOptions())
+    r_inh = peak(-1, cond) / peak(-1, SimOptions())
+    matched = abs(r_exc - 1) < 0.01 and abs(r_inh - 1) < 0.01 and peak(-1, cond) < 0 < peak(+1, cond)
+
+    # heavy inhibition: 5,000 synapses, 60 spikes at 333 Hz; v must stay above E_i
+    m = _gen7_toy(-1, SimOptions(synapse="conductance", std="all"), n=5000)
+    _gen7_spikes(m, [5.0 + 3 * k for k in range(60)], 250)
+    v_min = float(np.array(m.vmon.v / mV)[0].min())
+    bounded = (cond.e_inh_mV <= v_min < m.p.v_rest_mV and abs(m.lowest_v_mV() - v_min) < 1e-9
+               and _gen7_toy(-1, SimOptions()).lowest_v_mV() is None)
+    # an adapting cell goes below E_i by its own adaptation current; the guard reads the other cells only
+    from flycns.model import CNSModel, LIFParams
+    na = pd.DataFrame(dict(bodyId=[1, 2, 3], type=["src", "tgt", "other"],
+                           superclass=["cb_sensory", "cb_motor", "cb_intrinsic"], somaSide=["L"] * 3))
+    ea = pd.DataFrame(dict(pre=[1, 1], post=[2, 3], weight=[200, 10], nt=["x", "x"], sign=[1.0, 1.0]))
+    ad = CNSModel(na, ea, ["src"], LIFParams(), electrical=False, monitor_types=("tgt",),
+                  options=SimOptions(synapse="conductance", e_inh_mV=-55.0))
+    _gen7_spikes(ad, [10.0, 20.0, 30.0], 150)
+    adapting = float(np.array(ad.vmon.v / mV)[0].min())
+    guard_ok = adapting < -56.0 and ad.lowest_v_mV() >= -55.0 and ad.n_numerics_cells == 1
+    bounded = bounded and guard_ok
+    # restore brings a depressing synapse back to rest: the same train gives the same first and last PSP twice
+    r = _gen7_toy(+1, SimOptions(synapse="conductance", std="all"))
+    r.store()
+    twice = []
+    for _ in range(2):
+        r.restore()
+        _gen7_spikes(r, [10.0 + 100.0 * k for k in range(4)], 400)
+        twice.append(np.array(r.vmon.v / mV)[0].copy())
+    restored = np.array_equal(twice[0], twice[1]) and r.lowest_v_mV() is not None
+
+    # depression at 10 Hz: the jump of g at each delivery, relative to the first, against the recurrence
+    f, tau, times = 0.78, 893.0, [10.0 + 100.0 * k for k in range(8)]
+    A, expect = 1.0, []
+    for _ in times:
+        expect.append(A)
+        A = 1 - (1 - A * f) * np.exp(-100.0 / tau)
+
+    def jumps(opt, std=None):
+        m = _gen7_toy(+1, opt, std=std)
+        mon = StateMonitor(m.G, "g", record=[m.lif_index[2], m.lif_index[3]])
+        m.net.add(mon)
+        _gen7_spikes(m, times, 900)
+        g, t = np.array(mon.g / mV), np.array(mon.t / ms)
+        out = []
+        for row in (0, 1):
+            j = np.array([g[row][np.searchsorted(t, s + 2.05)] - g[row][np.searchsorted(t, s + 1.75)] for s in times])
+            out.append(j / j[0])
+        return out, m
+    (all_a, all_b), m_all = jumps(SimOptions(std="all"))
+    (mk_a, mk_b), m_mk = jumps(SimOptions(std="marked"), std=[True, False])
+    (off_a, _), m_off = jumps(SimOptions())
+    std_ok = (np.allclose(all_a, expect, rtol=1e-6) and np.allclose(all_b, expect, rtol=1e-6)
+              and np.allclose(mk_a, expect, rtol=1e-6) and np.allclose(mk_b, 1.0, rtol=1e-9)
+              and np.allclose(off_a, 1.0, rtol=1e-9)
+              and (m_all.n_std_syn, m_mk.n_std_syn, m_off.n_std_syn) == (2, 1, 0))
+
+    def refused(opt, std=None, **par):
+        try:
+            if par:
+                from flycns.model import CNSModel, LIFParams
+                nrn = pd.DataFrame(dict(bodyId=[1, 2], type=["src", "tgt"], superclass=["cb_sensory", "cb_intrinsic"],
+                                        somaSide=["L"] * 2))
+                e = pd.DataFrame(dict(pre=[1], post=[2], weight=[10], nt=["x"], sign=[1.0]))
+                CNSModel(nrn, e, ["src"], LIFParams(**par), electrical=False, options=opt)
+            else:
+                _gen7_toy(+1, opt, std=std)
+        except ValueError:
+            return True
+        return False
+    refuse = (refused(SimOptions(synapse="conductance", integration="exact"))
+              and refused(SimOptions(synapse="conductance", e_inh_mV=-52.0))
+              and refused(SimOptions(synapse="conductance", e_exc_mV=-50.0))
+              and refused(SimOptions(std="marked"))
+              and refused(SimOptions(std="marked"), std=[True, None])
+              and refused(SimOptions(std="all", std_f=0.0))
+              and refused(SimOptions(synapse="plastic")))
+    ok = dflt and matched and bounded and restored and std_ok and refuse
+    return ok, (f"defaults are the current-based model; conductance PSP at rest / current PSP: exc {r_exc:.4f}, "
+                f"inh {r_inh:.4f}; v stays above E_i (min {v_min:.2f} mV; the guard leaves out an adapting cell at "
+                f"{adapting:.1f} mV); depression at 10 Hz follows "
+                f"A -> 0.78 A, tau 893 ms ({', '.join(f'{x:.3f}' for x in expect[:4])}, ...); marked edges only; restore "
+                f"returns depression to rest; "
+                f"7 undefined combinations refused" if ok else
+                f"default {dflt} matched {matched} (exc {r_exc:.4f}, inh {r_inh:.4f}) bounded {bounded} "
+                f"(min {v_min:.2f}; adapting cell {adapting:.1f}, guard {guard_ok}) restored {restored} std {std_ok} ({np.round(all_a, 4).tolist()} vs {np.round(expect, 4).tolist()}; "
+                f"marked {np.round(mk_b, 4).tolist()}) refuse {refuse}")
+
+
+def t_gen7_unclear_option(tmp):
+    """load_graph(unclear="predicted") signs an "unclear" connection by its presynaptic cell's own predicted
+    transmitter, leaves it dropped when that is unclear, missing or an amine, changes no other connection, and
+    records what it did; the default drops them all and records nothing new."""
+    from flycns import load_graph
+    from flycns.integrity import LOADED
+    d = tmp / "unclear"; d.mkdir()
+    pd.DataFrame(dict(bodyId=[1, 2, 3, 4, 5], type=list("abcde"), superclass=["cb_intrinsic"] * 5, somaSide=["L"] * 5,
+                      consensusNt=["unclear", "unclear", "unclear", "acetylcholine", "unclear"],
+                      predictedNt=["gaba", "unclear", "dopamine", "acetylcholine", None])).to_parquet(d / "neurons.parquet")
+    pd.DataFrame(dict(pre=[1, 2, 3, 4, 5, 1], post=[2, 3, 4, 5, 1, 3], weight=[10, 10, 10, 10, 10, 5],
+                      nt=["unclear", "unclear", "unclear", "acetylcholine", "unclear", "unclear"])).to_parquet(d / "edges.parquet")
+    _, e0 = load_graph(str(d))
+    rec0 = dict(LOADED)
+    _, e1 = load_graph(str(d), unclear="predicted")
+    rec1 = dict(LOADED)
+    rows = lambda e: sorted(map(tuple, e[["pre", "post", "weight", "sign"]].values.tolist()))
+    dflt = rows(e0) == [(4, 5, 10, 1.0)] and "unclear" not in rec0 and "n_resigned_edges" not in rec0
+    fixed = rows(e1) == [(1, 2, 10, -1.0), (1, 3, 5, -1.0), (4, 5, 10, 1.0)]
+    logged = (rec1.get("unclear"), rec1.get("n_resigned_edges"), rec1.get("n_resigned_synapses"),
+              rec1.get("n_resigned_cells")) == ("predicted", 2, 15, 1)
+    try:
+        load_graph(str(d), unclear="guess")
+        refused = False
+    except SystemExit:
+        refused = True
+    ok = dflt and fixed and logged and refused
+    return ok, ("default drops every unclear connection; 'predicted' signs 2 connections (15 synapses) of the one "
+                "cell with a signable prediction, leaves unclear, missing and amine predictions dropped, and "
+                "records it; an unknown value is refused" if ok else
+                f"default {dflt} fixed {fixed} ({rows(e1)}) logged {logged} refused {refused}")
+
+
+def _gen7_modules():
+    import importlib.util
+    out = []
+    for name, f in (("gen7_unit", "gen7_synapse.py"), ("gen7_score_unit", "gen7_synapse_score.py")):
+        spec = importlib.util.spec_from_file_location(name, ROOT / "fit" / f)
+        mod = importlib.util.module_from_spec(spec)      # any name but gen7_synapse: no registration is read or written
+        spec.loader.exec_module(mod)
+        out.append(mod)
+    return out
+
+
+def t_gen7_design_and_toy_run():
+    """Gen 7 (fit/gen7_synapse.py selftest): the depression-marking rule and the V7a curve fit on hand-made inputs;
+    the design (17 arm sets, 170 sweep arms, 30 V7a arms, 120 conditional arms); every sweep arm has phase A's seed;
+    P0 is phase A's cell 1; EXPECT_C1 is the committed phase A table; then eight arms on a hand-made network run end
+    to end and score (S-in equals B exactly when no ORN fires)."""
+    G, _ = _gen7_modules()
+    return G.selftest(run=True)
+
+
+def t_gen7_scoring_rules():
+    """Gen 7's outcome order (R, F, the first viable of S-in, C, CS-in, C7), the PROVISIONAL rule, the hypothesis
+    verdicts and the arm-set states, on hand-made inputs."""
+    _, S = _gen7_modules()
+    G = S.G
+    V, N, Un = "viable", "not viable", "undetermined"
+    base = {s: N for s in G.SETS}
+    w = {s: 0.6 for s in G.SETS}
+    dec = lambda st, rep=True, miss=(): S.decide({**base, **st}, w, rep, list(miss))      # noqa: E731
+    order = (dec({}, rep=False)["code"] == "R" and dec({"b": V, "sin": V, "c": V})["code"] == "F"
+             and dec({"sin": V, "c": V, "csin": V})["code"] == "sin" and dec({"c": V, "csin": V})["code"] == "c"
+             and dec({"csin": V, "sall": V})["code"] == "csin" and dec({"sall": V, "cti10": V, "sal": V})["code"] == "C7"
+             and dec({"b": Un, "c": V})["code"] == "c")
+    prov = (dec({"c": V})["final"] is True and dec({"c": V}, miss=["sin_sugar_w050"])["final"] is False
+            and "PROVISIONAL" in dec({}, miss=["b_sugar_w040"])["why"] and dec({}, rep=False)["candidate"] is None)
+    hyp = lambda st, rep=True, miss=(): {k: v["verdict"] for k, v in                           # noqa: E731
+                                         S.hypotheses({**base, **st}, dec(st, rep, miss), rep).items()}
+    h0 = hyp({})
+    all_fail = (h0 == {"H7-P": "held", "H7-F": "not held", "H7a": "not held", "H7b": "not held", "H7c-in": "not held",
+                       "H7d": "not held", "H7c-al": "not held", "H7c-all": "not held", "overall": "held"})
+    h1 = hyp({"cti10": V, "csin": V, "sal": V, "csall": Un})
+    mixed = (h1["H7b"] == "held" and h1["H7d"] == "held" and h1["H7c-al"] == "held" and h1["H7c-all"] == "undetermined"
+             and h1["overall"] == "not held")
+    h2 = hyp({"c": V, "cti10": V, "csin": V})
+    not_where = h2["H7a"] == "held" and h2["H7b"] == "not held" and h2["H7d"] == "not held"
+    h3 = hyp({"sin": Un, "c": Un, "csin": V, "cti10": V}, miss=["sin_sugar_w050"])
+    undet = (h3["H7c-in"] == "undetermined" and h3["H7a"] == "undetermined" and h3["H7d"] == "undetermined"
+             and h3["H7b"] == "undetermined" and h3["overall"] == "undetermined" and h3["H7-F"] == "not held")
+    hr = hyp({"c": V}, rep=False)
+    review = hr["H7-P"] == "not held" and all(v == "undetermined" for k, v in hr.items() if k != "H7-P")
+    correct = S.hypotheses(base, dec({}), True)
+    scored = (correct["H7-F"]["prediction_correct"] is True and correct["H7c-al"]["prediction_correct"] is False
+              and S.hypotheses({**base, "sal": Un}, dec({}), True)["H7c-al"]["prediction_correct"] is None)
+    row = lambda st: dict(status=st)                                                          # noqa: E731
+    states = (S.state([row("fails"), row("viable")]) == V and S.state([row("fails"), row("candidate")]) == Un
+              and S.state([row("fails"), row("not passing (UNRESOLVED after its top-up)")]) == N and S.state([]) == Un)
+    num = (S.numerics([dict(lowest_v_mV=-70.9), dict(lowest_v_mV=-60.0)], -70.0)["verdict"] == "PASS"
+           and S.numerics([dict(lowest_v_mV=-71.1)], -70.0)["verdict"] == "FAIL")
+    num = (num and S.numerics([dict(lowest_v_mV=float("nan")), dict(lowest_v_mV=-60.0)], -70.0)["verdict"] == "FAIL"
+           and S.numerics([dict(lowest_v_mV=-60.0), dict(lowest_v_mV=float("nan"))], -70.0)["verdict"] == "FAIL"
+           and S.numerics([], -70.0)["verdict"] == "FAIL" and S.count_zero([], "x")["verdict"] == "UNRESOLVED")
+    try:
+        S.numerics([dict(lowest_v_mV=None)], -70.0)
+        refused = False
+    except SystemExit:
+        refused = True
+    # which candidate w get a top-up (name_topups): rows are (row, [the two arm names])
+    def grid(spec):                       # spec: set -> {w: status}; everything else "fails"
+        return {(s_, w_): (dict(w_scale=w_, status=spec.get(s_, {}).get(w_, "fails")), [f"{s_}_sugar_{G._w(w_)}", f"{s_}_blind_{G._w(w_)}"])
+                for s_ in G.DECISION for w_ in G.GRID_W}
+    C = "candidate"
+    b1, e1 = S.name_topups(grid({"sin": {0.4: V, 0.8: C}, "csin": {0.6: C}}))          # above a viable w; a later set
+    b2, e2 = S.name_topups(grid({"b": {0.6: C}, "sin": {0.5: C, 0.8: V}, "c": {0.4: C, 0.6: V}}))
+    b3, e3 = S.name_topups(grid({"c": {0.5: C}}))
+    naming = (b1 == [] and e1 == ["csin_sugar_w060", "csin_blind_w060"]
+              and b2 == ["b_sugar_w060", "b_blind_w060", "sin_sugar_w050", "sin_blind_w050"] and e2 == []
+              and b3 == ["c_sugar_w050", "c_blind_w050"] and e3 == [])
+    # the dt repeat decides whether a candidate is final (finalize)
+    o_sin = dec({"sin": V})
+    st = {**base, "sin": V}
+    f_missing, s_missing = S.finalize(o_sin, dict(needed=True, done=False, parts_to_run=["g7-dt-sin-w060"]), st)
+    f_diff, s_diff = S.finalize(o_sin, dict(needed=True, done=True, numerics_sensitive=True, differs=["function"]), st)
+    f_ok, s_ok = S.finalize(o_sin, dict(needed=True, done=True, numerics_sensitive=False, differs=[]), st)
+    f_c7, s_c7 = S.finalize(dec({}), dict(needed=False), base)
+    hv = lambda o, st_: {k: v["verdict"] for k, v in S.hypotheses(st_, o, True).items()}       # noqa: E731
+    final = (o_sin["final"] is True and f_missing["final"] is False and "PROVISIONAL" in f_missing["why"]
+             and s_missing["sin"] == Un and hv(f_missing, s_missing)["H7c-in"] == "undetermined"
+             and hv(f_missing, s_missing)["overall"] == "undetermined"
+             and f_diff["final"] is False and f_diff.get("numerics_sensitive") is True and s_diff["sin"] == Un
+             and hv(f_diff, s_diff)["H7c-in"] == "undetermined"
+             and f_ok["final"] is True and s_ok["sin"] == V and hv(f_ok, s_ok)["H7c-in"] == "held"
+             and hv(f_ok, s_ok)["overall"] == "not held" and f_c7["final"] is True and s_c7 == base)
+    # the three logged V7a predictions, on hand-made arm records
+    def varm(set_, consistent, pn, sigma):
+        g = {k: dict(compared=v["compared"], orn_hz=G.V7A_RATES, pn_hz=[pn] * 6, olsen_fit_hz=[50.0] * 6,
+                     fit=dict(sigma=sigma), olsen=dict(sigma=v["sigma"])) for k, v in G.V7A.items()}
+        return dict(set=set_, glomeruli=g, missing=[], consistent=consistent)
+    def varms(consistent=0, pn=100.0, sigma=1.0, drop=None):
+        a = {f"v7a_{s_}_{G._w(w_)}": varm(s_, consistent, pn, sigma) for s_ in G.V7A_SETS for w_ in G.GRID_W}
+        if drop:
+            a.pop(drop)
+        return a
+    pv = lambda a: {k: v["verdict"] for k, v in S.v7a_predictions(a).items()}                  # noqa: E731
+    one = varms()
+    one["v7a_c_w100"] = varm("c", 3, 100.0, 1.0)
+    v7 = (pv(varms()) == dict(P1="held", P2="held", P3="held") and pv(one)["P1"] == "not held"
+          and pv(varms(pn=10.0))["P2"] == "not held" and pv(varms(sigma=None))["P3"] == "not held"
+          and pv(varms(sigma=30.0))["P3"] == "not held"
+          and set(pv(varms(drop="v7a_b_w040")).values()) == {"undetermined"})
+    ok = (order and prov and all_fail and mixed and not_where and undet and review and scored and states and num
+          and refused and naming and final and v7)
+    return ok, ("outcome order R > F > S-in > C > CS-in > C7; a missing top-up makes it PROVISIONAL; hypothesis verdicts "
+                "held / not held / undetermined as written; the numerics guard fails below E_i - 1 mV and on a value "
+                "that is not a number, and refuses a missing record; top-ups are named only where they can change a "
+                "set's viability or decision w; a candidate is final only after its dt repeat agrees" if ok else
+                f"order {order}, provisional {prov}, all-fail {all_fail}, mixed {mixed}, not-where {not_where}, "
+                f"undetermined {undet}, review {review}, scored {scored}, states {states}, numerics {num}, refused {refused}, "
+                f"naming {naming}, final {final}, v7a predictions {v7}")
+
+
+def t_gen7_parts_match_rerun_jobs():
+    """Every gen-7 part is a manual rerun.yml job with the matching command, and every g7-* job is a part."""
+    G, _ = _gen7_modules()
+    wf = (ROOT / ".github/workflows/rerun.yml").read_text(encoding="utf-8")
+    jobs = re.findall(r'\{"name": "(g7-[^"]+)",\s*"run": "fit/gen7_synapse\.py part ([^"]+)", "manual": true\}', wf)
+    named = {j for j, _ in jobs}
+    bad = [j for j, p in jobs if j != p.strip()]
+    ok = named == set(G.PARTS) and not bad and len(jobs) == len(named)
+    return ok, (f"all {len(named)} gen-7 parts are manual rerun jobs ({len(G.CONDITIONAL_PARTS)} of them conditional)" if ok else
+                f"only in script: {sorted(set(G.PARTS) - named)[:6]}; only in rerun.yml: {sorted(named - set(G.PARTS))[:6]}; "
+                f"command mismatch: {bad[:6]}")
+
+
 def t_phase1b_laterality_and_vnc_group():
     """The phase-1b MN9 laterality index and the Outcome-B VNC grouping do what docs/gen6_rule.md says."""
     src = (ROOT / "fit" / "shiu2024_phase1b.py").read_text(encoding="utf-8")
@@ -1428,6 +1721,11 @@ def run_all():
                          ("gen-6 phase A transforms", t_gen6_phaseA_transforms),
                          ("gen-6 phase A design", t_gen6_phaseA_design),
                          ("gen-6 phase A parts are the rerun jobs", t_gen6_phaseA_parts_match_rerun_jobs),
+                         ("gen-7 synapse options", t_gen7_synapse_options),
+                         ("gen-7 unclear-transmitter option", lambda: t_gen7_unclear_option(tmp)),
+                         ("gen-7 design and toy run", t_gen7_design_and_toy_run),
+                         ("gen-7 scoring rules", t_gen7_scoring_rules),
+                         ("gen-7 parts are the rerun jobs", t_gen7_parts_match_rerun_jobs),
                          ("menu input guards", lambda: t_menu_guards(tmp)),
                          ("token file is private", lambda: t_token_private(tmp)),
                          ("messages use neutral wording", t_neutral_wording)]:

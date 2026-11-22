@@ -12,6 +12,16 @@ Chemical synapse: g_post += sign * n_synapses * w_syn * w_scale
 Electrical synapse: I_gap_post = g_gap*(v_pre - v_post)  (summed) plus a
          spikelet v_post += A_spikelet with the measured 0.8 ms latency.
 Parameters from Shiu et al. 2024 unless stated; w_scale fitted on MaleCNS.
+
+Generation 7 options (SimOptions; off by default, so every earlier result is unchanged):
+  synapse="conductance"  dv/dt = (V_rest - v + ge*(E_e - v) + gi*(E_i - v) + ...)/tau_m, ge and gi in units of
+                         the leak conductance. A synapse that adds w to g in the current model adds
+                         w/(E_e - V_rest) to ge (or |w|/(V_rest - E_i) to gi), so one synapse gives the same
+                         initial PSP at rest in both models.
+  std="marked" | "all"   short-term depression: each depressing synapse carries A (1 at rest); a spike is
+                         delivered with weight w*A, then A -> f*A, and A recovers to 1 with tau_D
+                         (Nagel et al. 2015, Eq 1; Kazama & Wilson 2009, Eq 5). No facilitation and no
+                         release-probability factor on the amplitude.
 """
 import os
 from dataclasses import dataclass, field
@@ -86,20 +96,45 @@ class SimOptions:
       stim_kick_mV 68.75 = 250 x 0.275 mV, Shiu's value (stimulation="kick" only; not scaled by w_scale).
       integration  "euler" (flycns) or "exact" (Brian2 method 'linear', as Shiu's model.py).
       adaptation   True: the declared intrinsic overrides (graph.INTRINSIC_OVERRIDES: GF and central motor
-                   neuron adaptation). False: none, as Shiu."""
+                   neuron adaptation). False: none, as Shiu.
+    Generation 7 (docs/gen7_synapse_model_DRAFT.md); the defaults are the earlier model:
+      synapse      "current": a spike adds a signed kick to g (flycns, Shiu). "conductance": excitatory and
+                   inhibitory conductances ge and gi with reversal potentials e_exc_mV and e_inh_mV. The
+                   weight is converted so that one synapse gives the same initial PSP at rest as in the
+                   current model: ge += w/(E_e - V_rest), gi += |w|/(V_rest - E_i). ge decays with
+                   LIFParams.tau_syn_ms, gi with tau_inh_ms. Euler integration only (the equation is not linear).
+      std          "off"; "marked": the edges that carry std == True depress (the caller marks them); "all":
+                   every chemical synapse depresses. A depressing synapse delivers w*A and then sets
+                   A -> std_f*A; A recovers to 1 with std_tau_ms. std_f is the fraction that REMAINS after a
+                   spike (Nagel et al. 2015: f 0.78, tau 893 ms), not a release probability."""
     reset: str = "v"
     stimulation: str = "source"
     stim_kick_mV: float = 68.75
     integration: str = "euler"
     adaptation: bool = True
+    synapse: str = "current"
+    e_exc_mV: float = 0.0
+    e_inh_mV: float = -70.0
+    tau_inh_ms: float = 5.0
+    std: str = "off"
+    std_f: float = 0.78
+    std_tau_ms: float = 893.0
 
     def check(self):
         bad = [f"{k}={v!r}" for k, v, ok in (("reset", self.reset, ("v", "v_and_g")),
                                              ("stimulation", self.stimulation, ("source", "kick")),
-                                             ("integration", self.integration, ("euler", "exact")))
+                                             ("integration", self.integration, ("euler", "exact")),
+                                             ("synapse", self.synapse, ("current", "conductance")),
+                                             ("std", self.std, ("off", "marked", "all")))
                if v not in ok]
         if bad:
             raise ValueError(f"[model] unknown SimOptions: {', '.join(bad)}")
+        if self.synapse == "conductance" and self.integration == "exact":
+            raise ValueError("[model] conductance-based synapses need integration='euler' (the equation is not linear)")
+        if self.std != "off" and not (0.0 < self.std_f <= 1.0 and self.std_tau_ms > 0):
+            raise ValueError(f"[model] std_f must be in (0, 1] and std_tau_ms > 0 (got {self.std_f}, {self.std_tau_ms})")
+        if self.synapse == "conductance" and not (self.tau_inh_ms > 0):
+            raise ValueError(f"[model] tau_inh_ms must be > 0 (got {self.tau_inh_ms})")
         return self
 
 
@@ -156,14 +191,26 @@ class CNSModel:
             raise ValueError("[model] exact integration cannot take the membrane noise term; use euler")
         g_flag = " (unless refractory)" if opt.reset == "v_and_g" else ""
         use_pep = bool(p.peptide_gain_scale)
+        cond = opt.synapse == "conductance"
+        if cond and not (opt.e_inh_mV < p.v_rest_mV < p.v_thresh_mV < opt.e_exc_mV):
+            # the weight conversion divides by (E_e - V_rest) and (V_rest - E_i); an E_i at or above rest would
+            # make "inhibition" depolarizing from rest, a different model from the one declared
+            raise ValueError(f"[model] conductance synapses need E_i < V_rest < V_thresh < E_e (got E_i {opt.e_inh_mV}, "
+                             f"V_rest {p.v_rest_mV}, V_thresh {p.v_thresh_mV}, E_e {opt.e_exc_mV} mV)")
         # g_shunt: gap-junction load from electrically coupled partners that are stimulus sources.
         # A simulated partner loads its post cell through I_gap = g(v_pre - v_post); a source has no
         # membrane, so without this term replacing a cell by a source would silently remove that load
         # and change the post cell's excitability (it confounded the A2 arms before 2026-10-10).
         # pep: peptide level, copied each step from a shared per-peptide pool when modulation is on, else 0.
+        syn_drive = "ge * (E_e - v) + gi * (E_i - v)" if cond else "g"
+        # v_low (conductance model only): the lowest v each cell has reached, for the numerics guard
+        # (lowest_v_mV). In continuous time inhibition cannot carry v below E_i; an Euler step with a very
+        # large gi could.
+        syn_eqs = (f"dge/dt = -ge / tau_syn : 1{g_flag}\n        dgi/dt = -gi / tau_inh : 1{g_flag}\n        v_low : volt"
+                   if cond else f"dg/dt = -g / tau_syn : volt{g_flag}")
         eqs = f"""
-        dv/dt = (v_rest + I_base - v + g + I_gap + g_shunt * (v_rest - v) - a) / tau_m {noise} : volt (unless refractory)
-        dg/dt = -g / tau_syn : volt{g_flag}
+        dv/dt = (v_rest + I_base - v + {syn_drive} + I_gap + g_shunt * (v_rest - v) - a) / tau_m {noise} : volt (unless refractory)
+        {syn_eqs}
         da/dt = -a / tau_adapt : volt
         pep : 1
         pep_gain : 1
@@ -175,14 +222,21 @@ class CNSModel:
                   tau_adapt=p.tau_adapt_ms * ms, v_thresh=p.v_thresh_mV * mV,
                   v_reset=p.v_reset_mV * mV, I_base=p.baseline_depol_mV * mV,
                   sigma=p.baseline_noise_mV * mV)
+        if cond:
+            ns.update(E_e=opt.e_exc_mV * mV, E_i=opt.e_inh_mV * mV, tau_inh=opt.tau_inh_ms * ms)
         # per-neuron tau_m, threshold and refractory, so superclasses can differ
         eqs = eqs.replace("/ tau_m ", "/ tau_m_i ").replace("/ tau_m)", "/ tau_m_i)")
         eqs += "        tau_m_i : second\n        v_thresh_i : volt\n        ref_i : second\n"
         G = NeuronGroup(len(self.lif_ids), eqs, threshold="v > v_thresh_i",
-                        reset="v = v_reset; g = 0*mV; a += b_adapt" if opt.reset == "v_and_g" else "v = v_reset; a += b_adapt",
+                        reset=(("v = v_reset; ge = 0; gi = 0; a += b_adapt" if cond else "v = v_reset; g = 0*mV; a += b_adapt")
+                               if opt.reset == "v_and_g" else "v = v_reset; a += b_adapt"),
                         refractory="ref_i", method="linear" if opt.integration == "exact" else "euler",
                         namespace=ns)
         G.v = p.v_rest_mV * mV
+        self._v_low_op = None
+        if cond:
+            G.v_low = p.v_rest_mV * mV
+            self._v_low_op = G.run_regularly("v_low = v_low + (v - v_low) * int(v < v_low)", when="end")
         G.b_adapt = 0 * mV
         G.tau_m_i = p.tau_m_ms * ms
         G.v_thresh_i = p.v_thresh_mV * mV
@@ -220,19 +274,82 @@ class CNSModel:
         self.region_source = region_src
         gain_of = (self.meta["superclass"].map(pre_class).map(p.class_gains).fillna(1.0)
                    * region.reindex(self.meta.index).fillna("other").map(p.region_gains).fillna(1.0))
+        # short-term depression: which chemical edges depress (generation 7; none by default)
+        if opt.std != "off" or cond:
+            edges = edges.reset_index(drop=True)      # the depression marks are looked up by row label below
+        if opt.std == "marked":
+            if "std" not in edges.columns:
+                raise ValueError("[model] std='marked' needs a boolean 'std' column on the edges (True = this "
+                                 "connection depresses); the caller marks them")
+            if edges["std"].isna().any():
+                raise ValueError("[model] the edges' 'std' column has missing values; mark every edge True or False")
+            std_of = edges["std"].astype(bool)
+        else:
+            std_of = pd.Series(opt.std == "all", index=edges.index)
+        self.n_std_syn = 0
+
+        def chem(source, rows, i, j):
+            """The chemical synapses of `rows` from `source` onto G, as one layer, or two when some of them
+            depress. The default (current-based, no depression) builds exactly the earlier object."""
+            w_mV = (rows["weight"] * rows["sign"] * gain_of.loc[rows["pre"]].values).values * (p.w_syn_mV * p.w_scale)
+            d = std_of.loc[rows.index].to_numpy()
+            layers = []
+            for depress in (False, True):
+                m = d == depress
+                if not m.any():
+                    continue
+                gain = "(1 + pep_gain_post * pep_post)"
+                amp = "A * " if depress else ""
+                if cond:
+                    model = "we : 1\nwi : 1"
+                    deliver = f"ge_post += we * {amp}{gain}\ngi_post += wi * {amp}{gain}"
+                else:
+                    model = "w : volt"
+                    deliver = f"g_post += w * {amp}{gain}"
+                if depress:
+                    # A is advanced at delivery. Every synapse of a layer has the same delay, so the intervals
+                    # between deliveries equal the intervals between the presynaptic spikes, and A takes the
+                    # same values as if it were advanced at the spike.
+                    model += "\nA : 1\nlast_t : second"
+                    deliver = (f"A = 1 - (1 - A) * exp(-(t - last_t) / tau_std)\n{deliver}\n"
+                               "A = A * f_std\nlast_t = t")
+                S = Synapses(source, G, model, on_pre=deliver,
+                             namespace=dict(tau_std=opt.std_tau_ms * ms, f_std=opt.std_f) if depress else None)
+                S.connect(i=i[m], j=j[m])
+                if cond:
+                    S.we = np.where(w_mV[m] > 0, w_mV[m], 0.0) / (opt.e_exc_mV - p.v_rest_mV)
+                    S.wi = np.where(w_mV[m] < 0, -w_mV[m], 0.0) / (p.v_rest_mV - opt.e_inh_mV)
+                else:
+                    S.w = w_mV[m] * mV
+                if depress:
+                    S.A = 1.0
+                    S.last_t = 0 * ms
+                    self.n_std_syn += int(m.sum())
+                S.delay = p.chem_delay_ms * ms
+                layers.append(S)
+            return layers
+
         rec = edges[edges["pre"].isin(self.lif_index.index) & edges["post"].isin(self.lif_index.index)]
-        S_rec = Synapses(G, G, "w : volt", on_pre="g_post += w * (1 + pep_gain_post * pep_post)")
-        if len(rec):     # Brian2 cannot connect an empty edge list; an empty layer is simply left out
-            S_rec.connect(i=self.lif_index[rec["pre"]].values, j=self.lif_index[rec["post"]].values)
-            S_rec.w = (rec["weight"] * rec["sign"] * gain_of.loc[rec["pre"]].values).values * w_unit
-            S_rec.delay = p.chem_delay_ms * ms
+        rec_layers = []
+        if cond or opt.std != "off":
+            if len(rec):
+                rec_layers = chem(G, rec, self.lif_index[rec["pre"]].values, self.lif_index[rec["post"]].values)
+        else:
+            S_rec = Synapses(G, G, "w : volt", on_pre="g_post += w * (1 + pep_gain_post * pep_post)")
+            if len(rec):     # Brian2 cannot connect an empty edge list; an empty layer is simply left out
+                S_rec.connect(i=self.lif_index[rec["pre"]].values, j=self.lif_index[rec["post"]].values)
+                S_rec.w = (rec["weight"] * rec["sign"] * gain_of.loc[rec["pre"]].values).values * w_unit
+                S_rec.delay = p.chem_delay_ms * ms
+                rec_layers = [S_rec]
 
         P = PoissonGroup(len(stim), rates=0 * Hz)
         se = edges[edges["pre"].isin(self.stim_index.index) & edges["post"].isin(self.lif_index.index)]
         if kick:     # the stimulated cells' own synapses are among the recurrent ones (rec)
             se = se.iloc[:0]
-        objs = [G, P] + ([S_rec] if len(rec) else [])
-        if len(se):
+        objs = [G, P] + rec_layers + ([self._v_low_op] if self._v_low_op is not None else [])
+        if len(se) and (cond or opt.std != "off"):
+            objs += chem(P, se, self.stim_index[se["pre"]].values, self.lif_index[se["post"]].values)
+        elif len(se):
             S_stim = Synapses(P, G, "w : volt", on_pre="g_post += w * (1 + pep_gain_post * pep_post)")
             S_stim.connect(i=self.stim_index[se["pre"]].values, j=self.lif_index[se["post"]].values)
             S_stim.w = (se["weight"] * se["sign"] * gain_of.loc[se["pre"]].values).values * w_unit
@@ -371,6 +488,22 @@ class CNSModel:
             m = (t >= on) & (t < on + window_ms)
             out.append((v[:, m].max(axis=1) - self.p.v_rest_mV).mean() if m.any() else np.nan)
         return np.array(out)
+
+    def lowest_v_mV(self):
+        """Conductance model only: the lowest membrane potential reached since the last restore by any cell
+        that inhibition alone cannot take below E_i (None in the current-based model, where v has no floor to
+        check; None if there is no such cell). Cells with spike-triggered adaptation or electrical coupling are
+        left out: the adaptation current, or a hyperpolarised coupled partner, pulls v below E_i by the model's
+        own equations (one motor-neuron spike adds 10 mV of adaptation), which says nothing about the numerics.
+        For every other cell dv/dt > 0 at v = E_i, so a value below E_i can only come from the Euler step."""
+        if self.options.synapse != "conductance":
+            return None
+        keep = np.asarray(self.G.b_adapt / mV) == 0
+        if len(self.electrical_table):
+            coupled = pd.unique(pd.concat([self.electrical_table["pre"], self.electrical_table["post"]]))
+            keep[[self.lif_index[b] for b in coupled if b in self.lif_index.index]] = False
+        self.n_numerics_cells = int(keep.sum())
+        return float(np.min(np.asarray(self.G.v_low / mV)[keep])) if keep.any() else None
 
     def population_rate_hz(self):
         return len(self.spikes.i) / len(self.lif_ids) / (self.t_ms / 1000.0)
