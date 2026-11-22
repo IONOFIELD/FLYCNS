@@ -1,0 +1,1001 @@
+{
+ "floor_synapses": 5,
+ "glomeruli": {
+  "DM4": {
+   "orn_types": {
+    "ORN_DM4": {
+     "L": 16,
+     "R": 15,
+     "unknown": 1,
+     "total": 32
+    }
+   },
+   "pn_types": {
+    "DM4_adPN": {
+     "L": 1,
+     "R": 1,
+     "total": 2
+    },
+    "DM4_vPN": {
+     "L": 1,
+     "R": 1,
+     "total": 2
+    }
+   },
+   "pn_type_in_ALPN_list": {
+    "DM4_adPN": true,
+    "DM4_vPN": true
+   },
+   "orn_to_pn": {
+    "edges": 65,
+    "synapses": 4801,
+    "n_pn_cells": 4,
+    "synapses_per_pn": 1200.25,
+    "per_pn": [
+     {
+      "bodyId": 10670,
+      "type": "DM4_adPN",
+      "instance": "DM4_adPN_L",
+      "orn_syn": 2625,
+      "from_orn_L": 1187,
+      "from_orn_R": 1438,
+      "from_orn_unknown": 0,
+      "n_orn_partners": 30,
+      "total_post": 7126,
+      "orn_share_of_input": 0.36836935166994106
+     },
+     {
+      "bodyId": 10613,
+      "type": "DM4_adPN",
+      "instance": "DM4_adPN_R",
+      "orn_syn": 2156,
+      "from_orn_L": 752,
+      "from_orn_R": 1378,
+      "from_orn_unknown": 26,
+      "n_orn_partners": 32,
+      "total_post": 7885,
+      "orn_share_of_input": 0.273430564362714
+     },
+     {
+      "bodyId": 71476,
+      "type": "DM4_vPN",
+      "instance": "DM4_vPN_L",
+      "orn_syn": 0,
+      "from_orn_L": 0,
+      "from_orn_R": 0,
+      "from_orn_unknown": 0,
+      "n_orn_partners": 0,
+      "total_post": 186,
+      "orn_share_of_input": 0.0
+     },
+     {
+      "bodyId": 73492,
+      "type": "DM4_vPN",
+      "instance": "DM4_vPN_R",
+      "orn_syn": 20,
+      "from_orn_L": 12,
+      "from_orn_R": 8,
+      "from_orn_unknown": 0,
+      "n_orn_partners": 3,
+      "total_post": 508,
+      "orn_share_of_input": 0.03937007874015748
+     }
+    ]
+   },
+   "orn_to_any_ALPN": {
+    "edges": 104,
+    "synapses": 5080,
+    "by_post_type_top10": {
+     "DM4_adPN": 4781,
+     "M_l2PNl21": 155,
+     "DM1_lPN": 56,
+     "DM5_lPN": 34,
+     "DM4_vPN": 20,
+     "M_vPNml52": 13,
+     "M_lvPNm24": 11,
+     "M_lvPNm25": 5,
+     "M_lvPNm33": 5
+    }
+   },
+   "orn_to_ln": {
+    "edges": 450,
+    "synapses": 3953,
+    "n_ln_cells": 65,
+    "by_ln_type": {
+     "lLN2F_b": {
+      "synapses": 666,
+      "edges": 62
+     },
+     "lLN2T_b": {
+      "synapses": 639,
+      "edges": 63
+     },
+     "il3LN6": {
+      "synapses": 526,
+      "edges": 39
+     },
+     "lLN2F_a": {
+      "synapses": 511,
+      "edges": 61
+     },
+     "lLN2T_d": {
+      "synapses": 295,
+      "edges": 42
+     },
+     "lLN2P_a": {
+      "synapses": 257,
+      "edges": 27
+     },
+     "lLN2P_b": {
+      "synapses": 216,
+      "edges": 35
+     },
+     "lLN2T_c": {
+      "synapses": 206,
+      "edges": 29
+     },
+     "ALBN1": {
+      "synapses": 172,
+      "edges": 19
+     },
+     "lLN2X02": {
+      "synapses": 156,
+      "edges": 22
+     },
+     "lLN2X04": {
+      "synapses": 53,
+      "edges": 8
+     },
+     "lLN2P_c": {
+      "synapses": 47,
+      "edges": 8
+     },
+     "lLN2X12": {
+      "synapses": 36,
+      "edges": 6
+     },
+     "v2LN3A": {
+      "synapses": 35,
+      "edges": 6
+     },
+     "lLN2X11": {
+      "synapses": 30,
+      "edges": 4
+     },
+     "lLN2T_e": {
+      "synapses": 28,
+      "edges": 5
+     },
+     "lLN2T_a": {
+      "synapses": 26,
+      "edges": 4
+     },
+     "v2LN3A1_b": {
+      "synapses": 22,
+      "edges": 4
+     },
+     "LN60": {
+      "synapses": 11,
+      "edges": 2
+     },
+     "CB3417": {
+      "synapses": 10,
+      "edges": 2
+     },
+     "v2LN3A1_a": {
+      "synapses": 6,
+      "edges": 1
+     },
+     "lLN2X05": {
+      "synapses": 5,
+      "edges": 1
+     }
+    }
+   }
+  },
+  "DL5": {
+   "orn_types": {
+    "ORN_DL5": {
+     "L": 23,
+     "R": 19,
+     "unknown": 1,
+     "total": 43
+    }
+   },
+   "pn_types": {
+    "DL5_adPN": {
+     "L": 1,
+     "R": 1,
+     "total": 2
+    }
+   },
+   "pn_type_in_ALPN_list": {
+    "DL5_adPN": true
+   },
+   "orn_to_pn": {
+    "edges": 85,
+    "synapses": 6944,
+    "n_pn_cells": 2,
+    "synapses_per_pn": 3472.0,
+    "per_pn": [
+     {
+      "bodyId": 10767,
+      "type": "DL5_adPN",
+      "instance": "DL5_adPN_L",
+      "orn_syn": 3540,
+      "from_orn_L": 2137,
+      "from_orn_R": 1278,
+      "from_orn_unknown": 125,
+      "n_orn_partners": 43,
+      "total_post": 7367,
+      "orn_share_of_input": 0.48052124338265234
+     },
+     {
+      "bodyId": 525105,
+      "type": "DL5_adPN",
+      "instance": "DL5_adPN_R",
+      "orn_syn": 3404,
+      "from_orn_L": 1136,
+      "from_orn_R": 2221,
+      "from_orn_unknown": 47,
+      "n_orn_partners": 42,
+      "total_post": 6871,
+      "orn_share_of_input": 0.4954155144811527
+     }
+    ]
+   },
+   "orn_to_any_ALPN": {
+    "edges": 132,
+    "synapses": 7246,
+    "by_post_type_top10": {
+     "DL5_adPN": 6944,
+     "DL1_adPN": 101,
+     "M_ilPNm90": 34,
+     "M_lPNm11D": 33,
+     "M_lPNm11C": 26,
+     "M_lvPNm35": 24,
+     "CB2561": 16,
+     "VP1l+_lvPN": 16,
+     "M_vPNml53": 14,
+     "M_lvPNm25": 11
+    }
+   },
+   "orn_to_ln": {
+    "edges": 1061,
+    "synapses": 11830,
+    "n_ln_cells": 101,
+    "by_ln_type": {
+     "lLN2X02": {
+      "synapses": 1858,
+      "edges": 148
+     },
+     "lLN2F_b": {
+      "synapses": 1680,
+      "edges": 118
+     },
+     "lLN2T_b": {
+      "synapses": 1529,
+      "edges": 102
+     },
+     "il3LN6": {
+      "synapses": 1390,
+      "edges": 61
+     },
+     "lLN2F_a": {
+      "synapses": 1243,
+      "edges": 100
+     },
+     "lLN2X12": {
+      "synapses": 714,
+      "edges": 96
+     },
+     "lLN2P_a": {
+      "synapses": 559,
+      "edges": 69
+     },
+     "lLN2T_c": {
+      "synapses": 512,
+      "edges": 54
+     },
+     "lLN2X11": {
+      "synapses": 504,
+      "edges": 49
+     },
+     "lLN2P_b": {
+      "synapses": 384,
+      "edges": 57
+     },
+     "ALBN1": {
+      "synapses": 252,
+      "edges": 25
+     },
+     "lLN2T_a": {
+      "synapses": 218,
+      "edges": 32
+     },
+     "lLN2X04": {
+      "synapses": 152,
+      "edges": 22
+     },
+     "lLN2X05": {
+      "synapses": 152,
+      "edges": 22
+     },
+     "lLN2P_c": {
+      "synapses": 142,
+      "edges": 22
+     },
+     "lLN2T_e": {
+      "synapses": 131,
+      "edges": 22
+     },
+     "v2LN3A1_b": {
+      "synapses": 123,
+      "edges": 17
+     },
+     "lLN2R_a": {
+      "synapses": 104,
+      "edges": 16
+     },
+     "v2LN3A": {
+      "synapses": 57,
+      "edges": 8
+     },
+     "lLN2T_d": {
+      "synapses": 52,
+      "edges": 8
+     },
+     "CB1824": {
+      "synapses": 35,
+      "edges": 6
+     },
+     "CB2471": {
+      "synapses": 23,
+      "edges": 4
+     },
+     "CB2908": {
+      "synapses": 6,
+      "edges": 1
+     },
+     "lLN1_a": {
+      "synapses": 5,
+      "edges": 1
+     },
+     "vLN24": {
+      "synapses": 5,
+      "edges": 1
+     }
+    }
+   }
+  },
+  "VM7d": {
+   "orn_types": {
+    "ORN_VM7d": {
+     "L": 18,
+     "R": 18,
+     "total": 36
+    }
+   },
+   "pn_types": {
+    "VM7d_adPN": {
+     "L": 3,
+     "R": 4,
+     "total": 7
+    }
+   },
+   "pn_type_in_ALPN_list": {
+    "VM7d_adPN": true
+   },
+   "orn_to_pn": {
+    "edges": 252,
+    "synapses": 10251,
+    "n_pn_cells": 7,
+    "synapses_per_pn": 1464.4285714285713,
+    "per_pn": [
+     {
+      "bodyId": 14895,
+      "type": "VM7d_adPN",
+      "instance": "VM7d_adPN_L",
+      "orn_syn": 1462,
+      "from_orn_L": 994,
+      "from_orn_R": 468,
+      "from_orn_unknown": 0,
+      "n_orn_partners": 36,
+      "total_post": 2674,
+      "orn_share_of_input": 0.5467464472700074
+     },
+     {
+      "bodyId": 14430,
+      "type": "VM7d_adPN",
+      "instance": "VM7d_adPN_L",
+      "orn_syn": 1720,
+      "from_orn_L": 1098,
+      "from_orn_R": 622,
+      "from_orn_unknown": 0,
+      "n_orn_partners": 36,
+      "total_post": 3214,
+      "orn_share_of_input": 0.5351586807716241
+     },
+     {
+      "bodyId": 18834,
+      "type": "VM7d_adPN",
+      "instance": "VM7d_adPN_L",
+      "orn_syn": 1457,
+      "from_orn_L": 1001,
+      "from_orn_R": 456,
+      "from_orn_unknown": 0,
+      "n_orn_partners": 36,
+      "total_post": 2619,
+      "orn_share_of_input": 0.5563192058037418
+     },
+     {
+      "bodyId": 13225,
+      "type": "VM7d_adPN",
+      "instance": "VM7d_adPN_R",
+      "orn_syn": 1614,
+      "from_orn_L": 644,
+      "from_orn_R": 970,
+      "from_orn_unknown": 0,
+      "n_orn_partners": 36,
+      "total_post": 3163,
+      "orn_share_of_input": 0.510275055327221
+     },
+     {
+      "bodyId": 511807,
+      "type": "VM7d_adPN",
+      "instance": "VM7d_adPN_R",
+      "orn_syn": 1385,
+      "from_orn_L": 535,
+      "from_orn_R": 850,
+      "from_orn_unknown": 0,
+      "n_orn_partners": 36,
+      "total_post": 2690,
+      "orn_share_of_input": 0.5148698884758365
+     },
+     {
+      "bodyId": 527523,
+      "type": "VM7d_adPN",
+      "instance": "VM7d_adPN_R",
+      "orn_syn": 1238,
+      "from_orn_L": 434,
+      "from_orn_R": 804,
+      "from_orn_unknown": 0,
+      "n_orn_partners": 36,
+      "total_post": 2342,
+      "orn_share_of_input": 0.5286080273270709
+     },
+     {
+      "bodyId": 18084,
+      "type": "VM7d_adPN",
+      "instance": "VM7d_adPN_R",
+      "orn_syn": 1375,
+      "from_orn_L": 466,
+      "from_orn_R": 909,
+      "from_orn_unknown": 0,
+      "n_orn_partners": 36,
+      "total_post": 2672,
+      "orn_share_of_input": 0.5145958083832335
+     }
+    ]
+   },
+   "orn_to_any_ALPN": {
+    "edges": 358,
+    "synapses": 11169,
+    "by_post_type_top10": {
+     "VM7d_adPN": 10251,
+     "M_l2PNl21": 398,
+     "M_adPNm3": 188,
+     "M_adPNm5": 116,
+     "VM7v_adPN": 85,
+     "CB2561": 29,
+     "VC3_adPN": 27,
+     "M_vPNml73": 23,
+     "M_vPNml72": 17,
+     "M_l2PNl22": 14
+    }
+   },
+   "orn_to_ln": {
+    "edges": 886,
+    "synapses": 10431,
+    "n_ln_cells": 89,
+    "by_ln_type": {
+     "lLN2F_b": {
+      "synapses": 2208,
+      "edges": 131
+     },
+     "il3LN6": {
+      "synapses": 1568,
+      "edges": 69
+     },
+     "lLN2T_b": {
+      "synapses": 1563,
+      "edges": 122
+     },
+     "ALBN1": {
+      "synapses": 974,
+      "edges": 41
+     },
+     "lLN2F_a": {
+      "synapses": 815,
+      "edges": 76
+     },
+     "LN60": {
+      "synapses": 505,
+      "edges": 62
+     },
+     "lLN2T_c": {
+      "synapses": 473,
+      "edges": 57
+     },
+     "lLN2X02": {
+      "synapses": 467,
+      "edges": 62
+     },
+     "lLN2P_a": {
+      "synapses": 377,
+      "edges": 45
+     },
+     "lLN2P_b": {
+      "synapses": 347,
+      "edges": 52
+     },
+     "l2LN19": {
+      "synapses": 218,
+      "edges": 31
+     },
+     "lLN2P_c": {
+      "synapses": 186,
+      "edges": 28
+     },
+     "vLN24": {
+      "synapses": 166,
+      "edges": 22
+     },
+     "lLN2X12": {
+      "synapses": 126,
+      "edges": 20
+     },
+     "lLN10": {
+      "synapses": 73,
+      "edges": 10
+     },
+     "lLN2X04": {
+      "synapses": 66,
+      "edges": 8
+     },
+     "lLN2T_e": {
+      "synapses": 66,
+      "edges": 11
+     },
+     "lLN2T_a": {
+      "synapses": 62,
+      "edges": 10
+     },
+     "lLN2X05": {
+      "synapses": 48,
+      "edges": 7
+     },
+     "lLN2X11": {
+      "synapses": 46,
+      "edges": 8
+     },
+     "lLN2T_d": {
+      "synapses": 46,
+      "edges": 8
+     },
+     "lLN12A": {
+      "synapses": 11,
+      "edges": 2
+     },
+     "CB3202": {
+      "synapses": 10,
+      "edges": 2
+     },
+     "CB2908": {
+      "synapses": 5,
+      "edges": 1
+     },
+     "v2LN30": {
+      "synapses": 5,
+      "edges": 1
+     }
+    }
+   }
+  },
+  "VM7v": {
+   "orn_types": {
+    "ORN_VM7v": {
+     "L": 11,
+     "R": 14,
+     "total": 25
+    }
+   },
+   "pn_types": {
+    "VM7v_adPN": {
+     "L": 2,
+     "R": 1,
+     "total": 3
+    }
+   },
+   "pn_type_in_ALPN_list": {
+    "VM7v_adPN": true
+   },
+   "orn_to_pn": {
+    "edges": 71,
+    "synapses": 5182,
+    "n_pn_cells": 3,
+    "synapses_per_pn": 1727.3333333333333,
+    "per_pn": [
+     {
+      "bodyId": 13972,
+      "type": "VM7v_adPN",
+      "instance": "VM7v_adPN_L",
+      "orn_syn": 1677,
+      "from_orn_L": 845,
+      "from_orn_R": 832,
+      "from_orn_unknown": 0,
+      "n_orn_partners": 24,
+      "total_post": 3008,
+      "orn_share_of_input": 0.5575132978723404
+     },
+     {
+      "bodyId": 16524,
+      "type": "VM7v_adPN",
+      "instance": "VM7v_adPN_L",
+      "orn_syn": 1571,
+      "from_orn_L": 756,
+      "from_orn_R": 815,
+      "from_orn_unknown": 0,
+      "n_orn_partners": 24,
+      "total_post": 2676,
+      "orn_share_of_input": 0.5870702541106129
+     },
+     {
+      "bodyId": 13386,
+      "type": "VM7v_adPN",
+      "instance": "VM7v_adPN_R",
+      "orn_syn": 1934,
+      "from_orn_L": 747,
+      "from_orn_R": 1187,
+      "from_orn_unknown": 0,
+      "n_orn_partners": 23,
+      "total_post": 3845,
+      "orn_share_of_input": 0.5029908972691808
+     }
+    ]
+   },
+   "orn_to_any_ALPN": {
+    "edges": 113,
+    "synapses": 5559,
+    "by_post_type_top10": {
+     "VM7v_adPN": 5182,
+     "M_adPNm3": 106,
+     "DC2_adPN": 69,
+     "VA4_lPN": 66,
+     "VM5d_adPN": 50,
+     "VM7d_adPN": 38,
+     "DM2_lPN": 6,
+     "VC2_lPN": 6,
+     "M_l2PNl21": 6,
+     "CB2711": 5
+    }
+   },
+   "orn_to_ln": {
+    "edges": 444,
+    "synapses": 4884,
+    "n_ln_cells": 67,
+    "by_ln_type": {
+     "lLN2F_b": {
+      "synapses": 1183,
+      "edges": 83
+     },
+     "lLN2T_b": {
+      "synapses": 943,
+      "edges": 80
+     },
+     "il3LN6": {
+      "synapses": 827,
+      "edges": 44
+     },
+     "lLN2F_a": {
+      "synapses": 480,
+      "edges": 48
+     },
+     "lLN10": {
+      "synapses": 220,
+      "edges": 25
+     },
+     "l2LN19": {
+      "synapses": 210,
+      "edges": 30
+     },
+     "vLN24": {
+      "synapses": 195,
+      "edges": 21
+     },
+     "lLN2P_c": {
+      "synapses": 157,
+      "edges": 21
+     },
+     "lLN2T_c": {
+      "synapses": 147,
+      "edges": 17
+     },
+     "lLN2P_a": {
+      "synapses": 112,
+      "edges": 15
+     },
+     "lLN2X12": {
+      "synapses": 99,
+      "edges": 13
+     },
+     "lLN2P_b": {
+      "synapses": 62,
+      "edges": 10
+     },
+     "lLN12A": {
+      "synapses": 59,
+      "edges": 9
+     },
+     "lLN2X11": {
+      "synapses": 44,
+      "edges": 6
+     },
+     "LN60": {
+      "synapses": 43,
+      "edges": 7
+     },
+     "v2LN30": {
+      "synapses": 29,
+      "edges": 2
+     },
+     "lLN2X04": {
+      "synapses": 26,
+      "edges": 5
+     },
+     "lLN2T_e": {
+      "synapses": 15,
+      "edges": 3
+     },
+     "lLN2T_a": {
+      "synapses": 9,
+      "edges": 1
+     },
+     "lLN2T_d": {
+      "synapses": 9,
+      "edges": 1
+     },
+     "ALBN1": {
+      "synapses": 5,
+      "edges": 1
+     },
+     "lLN1_a": {
+      "synapses": 5,
+      "edges": 1
+     },
+     "lLN2X05": {
+      "synapses": 5,
+      "edges": 1
+     }
+    }
+   }
+  },
+  "DM1": {
+   "orn_types": {
+    "ORN_DM1": {
+     "L": 35,
+     "R": 39,
+     "total": 74
+    }
+   },
+   "pn_types": {
+    "DM1_lPN": {
+     "L": 1,
+     "R": 1,
+     "total": 2
+    }
+   },
+   "pn_type_in_ALPN_list": {
+    "DM1_lPN": true
+   },
+   "orn_to_pn": {
+    "edges": 145,
+    "synapses": 13384,
+    "n_pn_cells": 2,
+    "synapses_per_pn": 6692.0,
+    "per_pn": [
+     {
+      "bodyId": 10208,
+      "type": "DM1_lPN",
+      "instance": "DM1_lPN_L",
+      "orn_syn": 6776,
+      "from_orn_L": 3454,
+      "from_orn_R": 3322,
+      "from_orn_unknown": 0,
+      "n_orn_partners": 74,
+      "total_post": 14276,
+      "orn_share_of_input": 0.47464275707481085
+     },
+     {
+      "bodyId": 10176,
+      "type": "DM1_lPN",
+      "instance": "DM1_lPN_R",
+      "orn_syn": 6608,
+      "from_orn_L": 2039,
+      "from_orn_R": 4569,
+      "from_orn_unknown": 0,
+      "n_orn_partners": 71,
+      "total_post": 14169,
+      "orn_share_of_input": 0.46637024490083984
+     }
+    ]
+   },
+   "orn_to_any_ALPN": {
+    "edges": 430,
+    "synapses": 16426,
+    "by_post_type_top10": {
+     "DM1_lPN": 13384,
+     "M_l2PNl20": 1852,
+     "DM2_lPN": 413,
+     "M_l2PNl21": 252,
+     "M_lvPNm33": 152,
+     "M_lvPNm26": 109,
+     "M_lvPNm25": 96,
+     "M_lvPNm24": 71,
+     "DM4_adPN": 41,
+     "M_imPNl92": 19
+    }
+   },
+   "orn_to_ln": {
+    "edges": 1512,
+    "synapses": 17158,
+    "n_ln_cells": 88,
+    "by_ln_type": {
+     "lLN2F_b": {
+      "synapses": 3896,
+      "edges": 246
+     },
+     "lLN2T_d": {
+      "synapses": 2784,
+      "edges": 237
+     },
+     "il3LN6": {
+      "synapses": 2670,
+      "edges": 128
+     },
+     "lLN2T_b": {
+      "synapses": 2566,
+      "edges": 226
+     },
+     "lLN2F_a": {
+      "synapses": 915,
+      "edges": 106
+     },
+     "lLN2T_c": {
+      "synapses": 819,
+      "edges": 105
+     },
+     "lLN2X02": {
+      "synapses": 811,
+      "edges": 101
+     },
+     "ALBN1": {
+      "synapses": 687,
+      "edges": 62
+     },
+     "lLN2P_a": {
+      "synapses": 516,
+      "edges": 68
+     },
+     "lLN2T_e": {
+      "synapses": 255,
+      "edges": 41
+     },
+     "lLN2X04": {
+      "synapses": 220,
+      "edges": 31
+     },
+     "lLN2P_b": {
+      "synapses": 218,
+      "edges": 35
+     },
+     "lLN2X12": {
+      "synapses": 172,
+      "edges": 26
+     },
+     "v2LN3A1_b": {
+      "synapses": 157,
+      "edges": 25
+     },
+     "vLN24": {
+      "synapses": 116,
+      "edges": 16
+     },
+     "lLN2X05": {
+      "synapses": 100,
+      "edges": 17
+     },
+     "lLN2P_c": {
+      "synapses": 81,
+      "edges": 14
+     },
+     "LN60": {
+      "synapses": 63,
+      "edges": 9
+     },
+     "lLN2T_a": {
+      "synapses": 36,
+      "edges": 6
+     },
+     "v2LN30": {
+      "synapses": 32,
+      "edges": 5
+     },
+     "lLN2X11": {
+      "synapses": 27,
+      "edges": 5
+     },
+     "v2LN3A1_a": {
+      "synapses": 7,
+      "edges": 1
+     },
+     "lLN1_bc": {
+      "synapses": 5,
+      "edges": 1
+     },
+     "v2LN3A": {
+      "synapses": 5,
+      "edges": 1
+     }
+    }
+   }
+  }
+ },
+ "VM7_combined_matched": {
+  "orn_to_pn_synapses": 15433,
+  "n_pn_cells": 10,
+  "synapses_per_pn": 1543.3,
+  "orn_to_ln_synapses": 15315,
+  "note": "sum of VM7d ORN->VM7d PN and VM7v ORN->VM7v PN; cross d<->v not included",
+  "cross_d_to_v_pn": 85,
+  "cross_v_to_d_pn": 38
+ },
+ "STD_in_scope": {
+  "n_ORN_cells": 2635,
+  "n_ORN_types": 53,
+  "n_HRN_cells_excluded": 66,
+  "ORN_side": {
+   "R": 1343,
+   "L": 883,
+   "unknown": 409
+  },
+  "all_edges": {
+   "edges": 55527,
+   "synapses": 937946,
+   "onto_ALPN": {
+    "edges": 16234,
+    "synapses": 469621
+   },
+   "onto_ALLN": {
+    "edges": 39293,
+    "synapses": 468325
+   },
+   "n_ORN_cells_with_edge": 2634,
+   "n_target_cells": 809
+  },
+  "edges_ge5": {
+   "edges": 55527,
+   "synapses": 937946,
+   "onto_ALPN": {
+    "edges": 16234,
+    "synapses": 469621
+   },
+   "onto_ALLN": {
+    "edges": 39293,
+    "synapses": 468325
+   },
+   "n_ORN_cells_with_edge": 2634,
+   "n_target_cells": 809
+  }
+ }
+}

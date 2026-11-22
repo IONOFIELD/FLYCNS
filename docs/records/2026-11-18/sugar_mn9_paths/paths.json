@@ -1,0 +1,2072 @@
+{
+ "commit": "c1e6e6244570b47ad799bca092fda985ced9a6d4",
+ "data_sha256": {
+  "neurons.parquet": "b60448d9e2f26bfc0389cada9bb08a1a4d5f4d2149163da3fdd3e48621ee9e21",
+  "edges.parquet": "61f8c2edbb214111073701fa5c4bef835e52925ce742f24e4011ce98d92da958"
+ },
+ "graph_load": "flycns.graph.load_graph('data') defaults (floor 5, amines dropped, unsigned dropped)",
+ "sources": {
+  "types": [
+   "LB3b",
+   "LB3c"
+  ],
+  "n": 34,
+  "by_type": {
+   "LB3c": 23,
+   "LB3b": 11
+  },
+  "by_side": {
+   "L": 17,
+   "R": 17
+  },
+  "in_graph": 34
+ },
+ "targets": {
+  "MN9_L": 10331,
+  "MN9_R": 16949
+ },
+ "observed": {
+  "graph": {
+   "cells_in_graph": 170175,
+   "edges": 6127738,
+   "synapses": 88316807.0
+  },
+  "MN9_L": {
+   "bodyId": 10331,
+   "total_signed_input": 5651.0,
+   "shortest_hops_from_sugar": 2,
+   "layers": [
+    {
+     "hop": 1,
+     "cells": 93,
+     "cells_on_sugar_path": 93,
+     "sugar_cells_at_hop": 0,
+     "exc_all": 2805.0,
+     "inh_all": 2846.0,
+     "edges_all": 93,
+     "exc_on_sugar_path": 2805.0,
+     "inh_on_sugar_path": 2846.0,
+     "edges_on_sugar_path": 93
+    },
+    {
+     "hop": 2,
+     "cells": 2970,
+     "cells_on_sugar_path": 1154,
+     "sugar_cells_at_hop": 13,
+     "exc_all": 141571.0,
+     "inh_all": 113228.0,
+     "edges_all": 8881,
+     "exc_on_sugar_path": 85555.0,
+     "inh_on_sugar_path": 82457.0,
+     "edges_on_sugar_path": 5389
+    },
+    {
+     "hop": 3,
+     "cells": 36361,
+     "cells_on_sugar_path": 66,
+     "sugar_cells_at_hop": 21,
+     "exc_all": 2297521.0,
+     "inh_all": 1332125.0,
+     "edges_all": 196476,
+     "exc_on_sugar_path": 12368.0,
+     "inh_on_sugar_path": 9327.0,
+     "edges_on_sugar_path": 1140
+    },
+    {
+     "hop": 4,
+     "cells": 92492,
+     "cells_on_sugar_path": 0,
+     "sugar_cells_at_hop": 0,
+     "exc_all": 6892392.0,
+     "inh_all": 3053109.0,
+     "edges_all": 781764,
+     "exc_on_sugar_path": 0.0,
+     "inh_on_sugar_path": 0.0,
+     "edges_on_sugar_path": 0
+    }
+   ],
+   "direct_input": {
+    "partners": 93,
+    "exc": 2805.0,
+    "inh": 2846.0,
+    "from_sugar_path_partners": {
+     "partners": 93,
+     "exc": 2805.0,
+     "inh": 2846.0
+    },
+    "from_sugar_cells": 0.0
+   },
+   "top_paths": {
+    "paths": [
+     {
+      "score": 3.3534413736072964e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_R",
+       "GNG232_R",
+       "GNG108_R",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       72059,
+       31018,
+       26764,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_R",
+        "post": "GNG232_R",
+        "synapses": 87.0,
+        "sign": 1,
+        "normalised": 0.07644991212653779,
+        "post_total_input": 1138.0
+       },
+       {
+        "pre": "GNG232_R",
+        "post": "GNG108_R",
+        "synapses": 46.0,
+        "sign": 1,
+        "normalised": 0.00712294828120161,
+        "post_total_input": 6458.0
+       },
+       {
+        "pre": "GNG108_R",
+        "post": "MN9_L",
+        "synapses": 348.0,
+        "sign": 1,
+        "normalised": 0.061582020881259955,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.9174228528953267e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3b_R",
+       "ANXXX462b_R",
+       "DNge062_R",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       213650853,
+       526948,
+       10833,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3b_R",
+        "post": "ANXXX462b_R",
+        "synapses": 56.0,
+        "sign": 1,
+        "normalised": 0.030451332245785754,
+        "post_total_input": 1839.0
+       },
+       {
+        "pre": "ANXXX462b_R",
+        "post": "DNge062_R",
+        "synapses": 27.0,
+        "sign": 1,
+        "normalised": 0.011668107173725151,
+        "post_total_input": 2314.0
+       },
+       {
+        "pre": "DNge062_R",
+        "post": "MN9_L",
+        "synapses": 464.0,
+        "sign": 1,
+        "normalised": 0.08210936117501327,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.6798643993030655e-05,
+      "hops": 3,
+      "net_sign": -1,
+      "cells": [
+       "LB3c_L",
+       "GNG215_L",
+       "DNge051_L",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       512551,
+       519441,
+       523679,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG215_L",
+        "synapses": 69.0,
+        "sign": 1,
+        "normalised": 0.06509433962264151,
+        "post_total_input": 1060.0
+       },
+       {
+        "pre": "GNG215_L",
+        "post": "DNge051_L",
+        "synapses": 54.0,
+        "sign": 1,
+        "normalised": 0.016383495145631068,
+        "post_total_input": 3296.0
+       },
+       {
+        "pre": "DNge051_L",
+        "post": "MN9_L",
+        "synapses": 142.0,
+        "sign": -1,
+        "normalised": 0.02512829587683596,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.3688270837004873e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3b_L",
+       "GNG197_L",
+       "GNG537_L",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       71254,
+       26027,
+       514967,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3b_L",
+        "post": "GNG197_L",
+        "synapses": 49.0,
+        "sign": 1,
+        "normalised": 0.03512544802867384,
+        "post_total_input": 1395.0
+       },
+       {
+        "pre": "GNG197_L",
+        "post": "GNG537_L",
+        "synapses": 73.0,
+        "sign": 1,
+        "normalised": 0.06570657065706571,
+        "post_total_input": 1111.0
+       },
+       {
+        "pre": "GNG537_L",
+        "post": "MN9_L",
+        "synapses": 58.0,
+        "sign": 1,
+        "normalised": 0.01026367014687666,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.356734673532806e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_R",
+       "GNG232_R",
+       "DNge080_R",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       72059,
+       31018,
+       12364,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_R",
+        "post": "GNG232_R",
+        "synapses": 87.0,
+        "sign": 1,
+        "normalised": 0.07644991212653779,
+        "post_total_input": 1138.0
+       },
+       {
+        "pre": "GNG232_R",
+        "post": "DNge080_R",
+        "synapses": 65.0,
+        "sign": 1,
+        "normalised": 0.018146286990508097,
+        "post_total_input": 3582.0
+       },
+       {
+        "pre": "DNge080_R",
+        "post": "MN9_L",
+        "synapses": 96.0,
+        "sign": 1,
+        "normalised": 0.016988143691382056,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.195629764245134e-05,
+      "hops": 3,
+      "net_sign": -1,
+      "cells": [
+       "LB3c_L",
+       "GNG132_L",
+       "GNG130_L",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       78240,
+       18474,
+       13754,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG132_L",
+        "synapses": 39.0,
+        "sign": 1,
+        "normalised": 0.01533621706645694,
+        "post_total_input": 2543.0
+       },
+       {
+        "pre": "GNG132_L",
+        "post": "GNG130_L",
+        "synapses": 71.0,
+        "sign": 1,
+        "normalised": 0.022661985317586977,
+        "post_total_input": 3133.0
+       },
+       {
+        "pre": "GNG130_L",
+        "post": "MN9_L",
+        "synapses": 357.0,
+        "sign": -1,
+        "normalised": 0.06317465935232702,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.0196079530979626e-05,
+      "hops": 3,
+      "net_sign": -1,
+      "cells": [
+       "LB3c_L",
+       "GNG215_L",
+       "DNge051_L",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       933317,
+       519441,
+       523679,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG215_L",
+        "synapses": 52.0,
+        "sign": 1,
+        "normalised": 0.04905660377358491,
+        "post_total_input": 1060.0
+       },
+       {
+        "pre": "GNG215_L",
+        "post": "DNge051_L",
+        "synapses": 54.0,
+        "sign": 1,
+        "normalised": 0.016383495145631068,
+        "post_total_input": 3296.0
+       },
+       {
+        "pre": "DNge051_L",
+        "post": "MN9_L",
+        "synapses": 142.0,
+        "sign": -1,
+        "normalised": 0.02512829587683596,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 1.998558983949596e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_L",
+       "GNG232_L",
+       "DNge080_L",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       933317,
+       89638,
+       12752,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG232_L",
+        "synapses": 77.0,
+        "sign": 1,
+        "normalised": 0.070902394106814,
+        "post_total_input": 1086.0
+       },
+       {
+        "pre": "GNG232_L",
+        "post": "DNge080_L",
+        "synapses": 54.0,
+        "sign": 1,
+        "normalised": 0.015771028037383176,
+        "post_total_input": 3424.0
+       },
+       {
+        "pre": "DNge080_L",
+        "post": "MN9_L",
+        "synapses": 101.0,
+        "sign": 1,
+        "normalised": 0.01787294284197487,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 1.982079804728979e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_L",
+       "GNG197_L",
+       "GNG537_L",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       933317,
+       26027,
+       514967,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG197_L",
+        "synapses": 41.0,
+        "sign": 1,
+        "normalised": 0.02939068100358423,
+        "post_total_input": 1395.0
+       },
+       {
+        "pre": "GNG197_L",
+        "post": "GNG537_L",
+        "synapses": 73.0,
+        "sign": 1,
+        "normalised": 0.06570657065706571,
+        "post_total_input": 1111.0
+       },
+       {
+        "pre": "GNG537_L",
+        "post": "MN9_L",
+        "synapses": 58.0,
+        "sign": 1,
+        "normalised": 0.01026367014687666,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 1.903092109650003e-05,
+      "hops": 3,
+      "net_sign": -1,
+      "cells": [
+       "LB3c_L",
+       "GNG215_L",
+       "DNge051_L",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       85806,
+       519441,
+       523679,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG215_L",
+        "synapses": 49.0,
+        "sign": 1,
+        "normalised": 0.04622641509433962,
+        "post_total_input": 1060.0
+       },
+       {
+        "pre": "GNG215_L",
+        "post": "DNge051_L",
+        "synapses": 54.0,
+        "sign": 1,
+        "normalised": 0.016383495145631068,
+        "post_total_input": 3296.0
+       },
+       {
+        "pre": "DNge051_L",
+        "post": "MN9_L",
+        "synapses": 142.0,
+        "sign": -1,
+        "normalised": 0.02512829587683596,
+        "post_total_input": 5651.0
+       }
+      ]
+     }
+    ],
+    "heap_pops": 4042
+   }
+  },
+  "MN9_R": {
+   "bodyId": 16949,
+   "total_signed_input": 364.0,
+   "shortest_hops_from_sugar": 3,
+   "layers": [
+    {
+     "hop": 1,
+     "cells": 25,
+     "cells_on_sugar_path": 25,
+     "sugar_cells_at_hop": 0,
+     "exc_all": 161.0,
+     "inh_all": 203.0,
+     "edges_all": 25,
+     "exc_on_sugar_path": 161.0,
+     "inh_on_sugar_path": 203.0,
+     "edges_on_sugar_path": 25
+    },
+    {
+     "hop": 2,
+     "cells": 1011,
+     "cells_on_sugar_path": 563,
+     "sugar_cells_at_hop": 0,
+     "exc_all": 43459.0,
+     "inh_all": 39652.0,
+     "edges_all": 2624,
+     "exc_on_sugar_path": 34177.0,
+     "inh_on_sugar_path": 33879.0,
+     "edges_on_sugar_path": 1913
+    },
+    {
+     "hop": 3,
+     "cells": 19747,
+     "cells_on_sugar_path": 116,
+     "sugar_cells_at_hop": 34,
+     "exc_all": 973825.0,
+     "inh_all": 556946.0,
+     "edges_all": 72788,
+     "exc_on_sugar_path": 22755.0,
+     "inh_on_sugar_path": 7735.0,
+     "edges_on_sugar_path": 1539
+    },
+    {
+     "hop": 4,
+     "cells": 89632,
+     "cells_on_sugar_path": 0,
+     "sugar_cells_at_hop": 0,
+     "exc_all": 6525835.0,
+     "inh_all": 3327200.0,
+     "edges_all": 666038,
+     "exc_on_sugar_path": 0.0,
+     "inh_on_sugar_path": 0.0,
+     "edges_on_sugar_path": 0
+    }
+   ],
+   "direct_input": {
+    "partners": 25,
+    "exc": 161.0,
+    "inh": 203.0,
+    "from_sugar_path_partners": {
+     "partners": 25,
+     "exc": 161.0,
+     "inh": 203.0
+    },
+    "from_sugar_cells": 0.0
+   },
+   "top_paths": {
+    "paths": [
+     {
+      "score": 4.717758113658733e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_L",
+       "GNG232_L",
+       "GNG108_L",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       933317,
+       89638,
+       523040,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG232_L",
+        "synapses": 77.0,
+        "sign": 1,
+        "normalised": 0.070902394106814,
+        "post_total_input": 1086.0
+       },
+       {
+        "pre": "GNG232_L",
+        "post": "GNG108_L",
+        "synapses": 50.0,
+        "sign": 1,
+        "normalised": 0.00968804495252858,
+        "post_total_input": 5161.0
+       },
+       {
+        "pre": "GNG108_L",
+        "post": "MN9_R",
+        "synapses": 25.0,
+        "sign": 1,
+        "normalised": 0.06868131868131869,
+        "post_total_input": 364.0
+       }
+      ]
+     },
+     {
+      "score": 3.9935844477719825e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_L",
+       "GNG232_L",
+       "DNge080_L",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       933317,
+       89638,
+       12752,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG232_L",
+        "synapses": 77.0,
+        "sign": 1,
+        "normalised": 0.070902394106814,
+        "post_total_input": 1086.0
+       },
+       {
+        "pre": "GNG232_L",
+        "post": "DNge080_L",
+        "synapses": 54.0,
+        "sign": 1,
+        "normalised": 0.015771028037383176,
+        "post_total_input": 3424.0
+       },
+       {
+        "pre": "DNge080_L",
+        "post": "MN9_R",
+        "synapses": 13.0,
+        "sign": 1,
+        "normalised": 0.03571428571428571,
+        "post_total_input": 364.0
+       }
+      ]
+     },
+     {
+      "score": 3.4300929705015156e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_R",
+       "GNG232_R",
+       "DNge080_R",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       72059,
+       31018,
+       12364,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_R",
+        "post": "GNG232_R",
+        "synapses": 87.0,
+        "sign": 1,
+        "normalised": 0.07644991212653779,
+        "post_total_input": 1138.0
+       },
+       {
+        "pre": "GNG232_R",
+        "post": "DNge080_R",
+        "synapses": 65.0,
+        "sign": 1,
+        "normalised": 0.018146286990508097,
+        "post_total_input": 3582.0
+       },
+       {
+        "pre": "DNge080_R",
+        "post": "MN9_R",
+        "synapses": 9.0,
+        "sign": 1,
+        "normalised": 0.024725274725274724,
+        "post_total_input": 364.0
+       }
+      ]
+     },
+     {
+      "score": 2.9186089054908377e-05,
+      "hops": 3,
+      "net_sign": -1,
+      "cells": [
+       "LB3c_R",
+       "GNG132_R",
+       "GNG130_R",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       142827,
+       15259,
+       511989,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_R",
+        "post": "GNG132_R",
+        "synapses": 51.0,
+        "sign": 1,
+        "normalised": 0.015892801495793082,
+        "post_total_input": 3209.0
+       },
+       {
+        "pre": "GNG132_R",
+        "post": "GNG130_R",
+        "synapses": 73.0,
+        "sign": 1,
+        "normalised": 0.01966065176407218,
+        "post_total_input": 3713.0
+       },
+       {
+        "pre": "GNG130_R",
+        "post": "MN9_R",
+        "synapses": 34.0,
+        "sign": -1,
+        "normalised": 0.09340659340659341,
+        "post_total_input": 364.0
+       }
+      ]
+     },
+     {
+      "score": 2.8586562249776563e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_L",
+       "GNG215_L",
+       "GNG108_L",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       512551,
+       519441,
+       523040,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG215_L",
+        "synapses": 69.0,
+        "sign": 1,
+        "normalised": 0.06509433962264151,
+        "post_total_input": 1060.0
+       },
+       {
+        "pre": "GNG215_L",
+        "post": "GNG108_L",
+        "synapses": 33.0,
+        "sign": 1,
+        "normalised": 0.006394109668668863,
+        "post_total_input": 5161.0
+       },
+       {
+        "pre": "GNG108_L",
+        "post": "MN9_R",
+        "synapses": 25.0,
+        "sign": 1,
+        "normalised": 0.06868131868131869,
+        "post_total_input": 364.0
+       }
+      ]
+     },
+     {
+      "score": 2.8041536542951186e-05,
+      "hops": 3,
+      "net_sign": -1,
+      "cells": [
+       "LB3c_R",
+       "GNG132_R",
+       "GNG130_R",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       120303,
+       15259,
+       511989,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_R",
+        "post": "GNG132_R",
+        "synapses": 49.0,
+        "sign": 1,
+        "normalised": 0.015269554378311,
+        "post_total_input": 3209.0
+       },
+       {
+        "pre": "GNG132_R",
+        "post": "GNG130_R",
+        "synapses": 73.0,
+        "sign": 1,
+        "normalised": 0.01966065176407218,
+        "post_total_input": 3713.0
+       },
+       {
+        "pre": "GNG130_R",
+        "post": "MN9_R",
+        "synapses": 34.0,
+        "sign": -1,
+        "normalised": 0.09340659340659341,
+        "post_total_input": 364.0
+       }
+      ]
+     },
+     {
+      "score": 2.5180155263058208e-05,
+      "hops": 3,
+      "net_sign": -1,
+      "cells": [
+       "LB3c_R",
+       "GNG132_R",
+       "GNG130_R",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       92440,
+       15259,
+       511989,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_R",
+        "post": "GNG132_R",
+        "synapses": 44.0,
+        "sign": 1,
+        "normalised": 0.013711436584605797,
+        "post_total_input": 3209.0
+       },
+       {
+        "pre": "GNG132_R",
+        "post": "GNG130_R",
+        "synapses": 73.0,
+        "sign": 1,
+        "normalised": 0.01966065176407218,
+        "post_total_input": 3713.0
+       },
+       {
+        "pre": "GNG130_R",
+        "post": "MN9_R",
+        "synapses": 34.0,
+        "sign": -1,
+        "normalised": 0.09340659340659341,
+        "post_total_input": 364.0
+       }
+      ]
+     },
+     {
+      "score": 2.203096193518607e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3b_L",
+       "ANXXX462b_L",
+       "DNge062_L",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       71254,
+       558926,
+       519839,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3b_L",
+        "post": "ANXXX462b_L",
+        "synapses": 54.0,
+        "sign": 1,
+        "normalised": 0.03137710633352702,
+        "post_total_input": 1721.0
+       },
+       {
+        "pre": "ANXXX462b_L",
+        "post": "DNge062_L",
+        "synapses": 17.0,
+        "sign": 1,
+        "normalised": 0.008244422890397672,
+        "post_total_input": 2062.0
+       },
+       {
+        "pre": "DNge062_L",
+        "post": "MN9_R",
+        "synapses": 31.0,
+        "sign": 1,
+        "normalised": 0.08516483516483517,
+        "post_total_input": 364.0
+       }
+      ]
+     },
+     {
+      "score": 2.1761297222014972e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3b_L",
+       "GNG197_L",
+       "DNge062_L",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       71254,
+       26027,
+       519839,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3b_L",
+        "post": "GNG197_L",
+        "synapses": 49.0,
+        "sign": 1,
+        "normalised": 0.03512544802867384,
+        "post_total_input": 1395.0
+       },
+       {
+        "pre": "GNG197_L",
+        "post": "DNge062_L",
+        "synapses": 15.0,
+        "sign": 1,
+        "normalised": 0.0072744907856450046,
+        "post_total_input": 2062.0
+       },
+       {
+        "pre": "DNge062_L",
+        "post": "MN9_R",
+        "synapses": 31.0,
+        "sign": 1,
+        "normalised": 0.08516483516483517,
+        "post_total_input": 364.0
+       }
+      ]
+     },
+     {
+      "score": 2.1746497727186636e-05,
+      "hops": 3,
+      "net_sign": -1,
+      "cells": [
+       "LB3c_R",
+       "GNG132_R",
+       "GNG130_R",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       101087,
+       15259,
+       511989,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_R",
+        "post": "GNG132_R",
+        "synapses": 38.0,
+        "sign": 1,
+        "normalised": 0.011841695232159551,
+        "post_total_input": 3209.0
+       },
+       {
+        "pre": "GNG132_R",
+        "post": "GNG130_R",
+        "synapses": 73.0,
+        "sign": 1,
+        "normalised": 0.01966065176407218,
+        "post_total_input": 3713.0
+       },
+       {
+        "pre": "GNG130_R",
+        "post": "MN9_R",
+        "synapses": 34.0,
+        "sign": -1,
+        "normalised": 0.09340659340659341,
+        "post_total_input": 364.0
+       }
+      ]
+     }
+    ],
+    "heap_pops": 2569
+   }
+  }
+ },
+ "mirror_log": {
+  "partners": 93.0,
+  "weight_in": 5651.0,
+  "kept": 3.0,
+  "kept_w": 71.0,
+  "split_partners": 5.0,
+  "below_floor_edges": 11.0,
+  "below_floor_w": 21.0,
+  "sign_mismatch_w": 0.0,
+  "no_signed_output_w": 2.5,
+  "mn9_swap": 1.0,
+  "opposite_not_in_network": 0.0,
+  "removed_partners": 25.0,
+  "removed_w": 364.0,
+  "new_partners": 100.0,
+  "weight_out": 5651.0,
+  "weight_out_exc": 2805.0,
+  "weight_out_inh": 2846.0,
+  "weight_in_exc": 2805.0,
+  "weight_in_inh": 2846.0,
+  "no_signed_output_cells": 1.0,
+  "placeholders": 0.0,
+  "placeholder_ids": [],
+  "cells_before": 170175.0,
+  "cells_after": 170175.0
+ },
+ "mirrored": {
+  "graph": {
+   "cells_in_graph": 170175,
+   "edges": 6127813,
+   "synapses": 88322094.0
+  },
+  "MN9_L": {
+   "bodyId": 10331,
+   "total_signed_input": 5651.0,
+   "shortest_hops_from_sugar": 2,
+   "layers": [
+    {
+     "hop": 1,
+     "cells": 93,
+     "cells_on_sugar_path": 93,
+     "sugar_cells_at_hop": 0,
+     "exc_all": 2805.0,
+     "inh_all": 2846.0,
+     "edges_all": 93,
+     "exc_on_sugar_path": 2805.0,
+     "inh_on_sugar_path": 2846.0,
+     "edges_on_sugar_path": 93
+    },
+    {
+     "hop": 2,
+     "cells": 2978,
+     "cells_on_sugar_path": 1156,
+     "sugar_cells_at_hop": 13,
+     "exc_all": 141854.0,
+     "inh_all": 113803.0,
+     "edges_all": 8931,
+     "exc_on_sugar_path": 85813.5,
+     "inh_on_sugar_path": 82889.5,
+     "edges_on_sugar_path": 5418
+    },
+    {
+     "hop": 3,
+     "cells": 36367,
+     "cells_on_sugar_path": 66,
+     "sugar_cells_at_hop": 21,
+     "exc_all": 2299286.0,
+     "inh_all": 1331309.0,
+     "edges_all": 196572,
+     "exc_on_sugar_path": 12368.0,
+     "inh_on_sugar_path": 9327.0,
+     "edges_on_sugar_path": 1140
+    },
+    {
+     "hop": 4,
+     "cells": 92479,
+     "cells_on_sugar_path": 0,
+     "sugar_cells_at_hop": 0,
+     "exc_all": 6889828.0,
+     "inh_all": 3052584.0,
+     "edges_all": 781584,
+     "exc_on_sugar_path": 0.0,
+     "inh_on_sugar_path": 0.0,
+     "edges_on_sugar_path": 0
+    }
+   ],
+   "direct_input": {
+    "partners": 93,
+    "exc": 2805.0,
+    "inh": 2846.0,
+    "from_sugar_path_partners": {
+     "partners": 93,
+     "exc": 2805.0,
+     "inh": 2846.0
+    },
+    "from_sugar_cells": 0.0
+   },
+   "top_paths": {
+    "paths": [
+     {
+      "score": 3.3534413736072964e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_R",
+       "GNG232_R",
+       "GNG108_R",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       72059,
+       31018,
+       26764,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_R",
+        "post": "GNG232_R",
+        "synapses": 87.0,
+        "sign": 1,
+        "normalised": 0.07644991212653779,
+        "post_total_input": 1138.0
+       },
+       {
+        "pre": "GNG232_R",
+        "post": "GNG108_R",
+        "synapses": 46.0,
+        "sign": 1,
+        "normalised": 0.00712294828120161,
+        "post_total_input": 6458.0
+       },
+       {
+        "pre": "GNG108_R",
+        "post": "MN9_L",
+        "synapses": 348.0,
+        "sign": 1,
+        "normalised": 0.061582020881259955,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.9174228528953267e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3b_R",
+       "ANXXX462b_R",
+       "DNge062_R",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       213650853,
+       526948,
+       10833,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3b_R",
+        "post": "ANXXX462b_R",
+        "synapses": 56.0,
+        "sign": 1,
+        "normalised": 0.030451332245785754,
+        "post_total_input": 1839.0
+       },
+       {
+        "pre": "ANXXX462b_R",
+        "post": "DNge062_R",
+        "synapses": 27.0,
+        "sign": 1,
+        "normalised": 0.011668107173725151,
+        "post_total_input": 2314.0
+       },
+       {
+        "pre": "DNge062_R",
+        "post": "MN9_L",
+        "synapses": 464.0,
+        "sign": 1,
+        "normalised": 0.08210936117501327,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.6798643993030655e-05,
+      "hops": 3,
+      "net_sign": -1,
+      "cells": [
+       "LB3c_L",
+       "GNG215_L",
+       "DNge051_L",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       512551,
+       519441,
+       523679,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG215_L",
+        "synapses": 69.0,
+        "sign": 1,
+        "normalised": 0.06509433962264151,
+        "post_total_input": 1060.0
+       },
+       {
+        "pre": "GNG215_L",
+        "post": "DNge051_L",
+        "synapses": 54.0,
+        "sign": 1,
+        "normalised": 0.016383495145631068,
+        "post_total_input": 3296.0
+       },
+       {
+        "pre": "DNge051_L",
+        "post": "MN9_L",
+        "synapses": 142.0,
+        "sign": -1,
+        "normalised": 0.02512829587683596,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.3688270837004873e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3b_L",
+       "GNG197_L",
+       "GNG537_L",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       71254,
+       26027,
+       514967,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3b_L",
+        "post": "GNG197_L",
+        "synapses": 49.0,
+        "sign": 1,
+        "normalised": 0.03512544802867384,
+        "post_total_input": 1395.0
+       },
+       {
+        "pre": "GNG197_L",
+        "post": "GNG537_L",
+        "synapses": 73.0,
+        "sign": 1,
+        "normalised": 0.06570657065706571,
+        "post_total_input": 1111.0
+       },
+       {
+        "pre": "GNG537_L",
+        "post": "MN9_L",
+        "synapses": 58.0,
+        "sign": 1,
+        "normalised": 0.01026367014687666,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.356734673532806e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_R",
+       "GNG232_R",
+       "DNge080_R",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       72059,
+       31018,
+       12364,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_R",
+        "post": "GNG232_R",
+        "synapses": 87.0,
+        "sign": 1,
+        "normalised": 0.07644991212653779,
+        "post_total_input": 1138.0
+       },
+       {
+        "pre": "GNG232_R",
+        "post": "DNge080_R",
+        "synapses": 65.0,
+        "sign": 1,
+        "normalised": 0.018146286990508097,
+        "post_total_input": 3582.0
+       },
+       {
+        "pre": "DNge080_R",
+        "post": "MN9_L",
+        "synapses": 96.0,
+        "sign": 1,
+        "normalised": 0.016988143691382056,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.195629764245134e-05,
+      "hops": 3,
+      "net_sign": -1,
+      "cells": [
+       "LB3c_L",
+       "GNG132_L",
+       "GNG130_L",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       78240,
+       18474,
+       13754,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG132_L",
+        "synapses": 39.0,
+        "sign": 1,
+        "normalised": 0.01533621706645694,
+        "post_total_input": 2543.0
+       },
+       {
+        "pre": "GNG132_L",
+        "post": "GNG130_L",
+        "synapses": 71.0,
+        "sign": 1,
+        "normalised": 0.022661985317586977,
+        "post_total_input": 3133.0
+       },
+       {
+        "pre": "GNG130_L",
+        "post": "MN9_L",
+        "synapses": 357.0,
+        "sign": -1,
+        "normalised": 0.06317465935232702,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.0196079530979626e-05,
+      "hops": 3,
+      "net_sign": -1,
+      "cells": [
+       "LB3c_L",
+       "GNG215_L",
+       "DNge051_L",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       933317,
+       519441,
+       523679,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG215_L",
+        "synapses": 52.0,
+        "sign": 1,
+        "normalised": 0.04905660377358491,
+        "post_total_input": 1060.0
+       },
+       {
+        "pre": "GNG215_L",
+        "post": "DNge051_L",
+        "synapses": 54.0,
+        "sign": 1,
+        "normalised": 0.016383495145631068,
+        "post_total_input": 3296.0
+       },
+       {
+        "pre": "DNge051_L",
+        "post": "MN9_L",
+        "synapses": 142.0,
+        "sign": -1,
+        "normalised": 0.02512829587683596,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 1.998558983949596e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_L",
+       "GNG232_L",
+       "DNge080_L",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       933317,
+       89638,
+       12752,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG232_L",
+        "synapses": 77.0,
+        "sign": 1,
+        "normalised": 0.070902394106814,
+        "post_total_input": 1086.0
+       },
+       {
+        "pre": "GNG232_L",
+        "post": "DNge080_L",
+        "synapses": 54.0,
+        "sign": 1,
+        "normalised": 0.015771028037383176,
+        "post_total_input": 3424.0
+       },
+       {
+        "pre": "DNge080_L",
+        "post": "MN9_L",
+        "synapses": 101.0,
+        "sign": 1,
+        "normalised": 0.01787294284197487,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 1.982079804728979e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_L",
+       "GNG197_L",
+       "GNG537_L",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       933317,
+       26027,
+       514967,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG197_L",
+        "synapses": 41.0,
+        "sign": 1,
+        "normalised": 0.02939068100358423,
+        "post_total_input": 1395.0
+       },
+       {
+        "pre": "GNG197_L",
+        "post": "GNG537_L",
+        "synapses": 73.0,
+        "sign": 1,
+        "normalised": 0.06570657065706571,
+        "post_total_input": 1111.0
+       },
+       {
+        "pre": "GNG537_L",
+        "post": "MN9_L",
+        "synapses": 58.0,
+        "sign": 1,
+        "normalised": 0.01026367014687666,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 1.903092109650003e-05,
+      "hops": 3,
+      "net_sign": -1,
+      "cells": [
+       "LB3c_L",
+       "GNG215_L",
+       "DNge051_L",
+       "MN9_L"
+      ],
+      "bodyIds": [
+       85806,
+       519441,
+       523679,
+       10331
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG215_L",
+        "synapses": 49.0,
+        "sign": 1,
+        "normalised": 0.04622641509433962,
+        "post_total_input": 1060.0
+       },
+       {
+        "pre": "GNG215_L",
+        "post": "DNge051_L",
+        "synapses": 54.0,
+        "sign": 1,
+        "normalised": 0.016383495145631068,
+        "post_total_input": 3296.0
+       },
+       {
+        "pre": "DNge051_L",
+        "post": "MN9_L",
+        "synapses": 142.0,
+        "sign": -1,
+        "normalised": 0.02512829587683596,
+        "post_total_input": 5651.0
+       }
+      ]
+     }
+    ],
+    "heap_pops": 4050
+   }
+  },
+  "MN9_R": {
+   "bodyId": 16949,
+   "total_signed_input": 5651.0,
+   "shortest_hops_from_sugar": 2,
+   "layers": [
+    {
+     "hop": 1,
+     "cells": 100,
+     "cells_on_sugar_path": 99,
+     "sugar_cells_at_hop": 0,
+     "exc_all": 2805.0,
+     "inh_all": 2846.0,
+     "edges_all": 100,
+     "exc_on_sugar_path": 2805.0,
+     "inh_on_sugar_path": 2838.5,
+     "edges_on_sugar_path": 99
+    },
+    {
+     "hop": 2,
+     "cells": 3032,
+     "cells_on_sugar_path": 1147,
+     "sugar_cells_at_hop": 17,
+     "exc_all": 148661.0,
+     "inh_all": 118830.0,
+     "edges_all": 9269,
+     "exc_on_sugar_path": 89059.0,
+     "inh_on_sugar_path": 85464.0,
+     "edges_on_sugar_path": 5587
+    },
+    {
+     "hop": 3,
+     "cells": 35952,
+     "cells_on_sugar_path": 60,
+     "sugar_cells_at_hop": 17,
+     "exc_all": 2242872.0,
+     "inh_all": 1292187.0,
+     "edges_all": 191279,
+     "exc_on_sugar_path": 13329.0,
+     "inh_on_sugar_path": 8317.0,
+     "edges_on_sugar_path": 1084
+    },
+    {
+     "hop": 4,
+     "cells": 91537,
+     "cells_on_sugar_path": 0,
+     "sugar_cells_at_hop": 0,
+     "exc_all": 6805591.0,
+     "inh_all": 3014963.0,
+     "edges_all": 771254,
+     "exc_on_sugar_path": 0.0,
+     "inh_on_sugar_path": 0.0,
+     "edges_on_sugar_path": 0
+    }
+   ],
+   "direct_input": {
+    "partners": 100,
+    "exc": 2805.0,
+    "inh": 2846.0,
+    "from_sugar_path_partners": {
+     "partners": 99,
+     "exc": 2805.0,
+     "inh": 2838.5
+    },
+    "from_sugar_cells": 0.0
+   },
+   "top_paths": {
+    "paths": [
+     {
+      "score": 4.230103385407036e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_L",
+       "GNG232_L",
+       "GNG108_L",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       933317,
+       89638,
+       523040,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG232_L",
+        "synapses": 77.0,
+        "sign": 1,
+        "normalised": 0.070902394106814,
+        "post_total_input": 1086.0
+       },
+       {
+        "pre": "GNG232_L",
+        "post": "GNG108_L",
+        "synapses": 50.0,
+        "sign": 1,
+        "normalised": 0.00968804495252858,
+        "post_total_input": 5161.0
+       },
+       {
+        "pre": "GNG108_L",
+        "post": "MN9_R",
+        "synapses": 348.0,
+        "sign": 1,
+        "normalised": 0.061582020881259955,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.563169006054643e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_L",
+       "GNG215_L",
+       "GNG108_L",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       512551,
+       519441,
+       523040,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG215_L",
+        "synapses": 69.0,
+        "sign": 1,
+        "normalised": 0.06509433962264151,
+        "post_total_input": 1060.0
+       },
+       {
+        "pre": "GNG215_L",
+        "post": "GNG108_L",
+        "synapses": 33.0,
+        "sign": 1,
+        "normalised": 0.006394109668668863,
+        "post_total_input": 5161.0
+       },
+       {
+        "pre": "GNG108_L",
+        "post": "MN9_R",
+        "synapses": 348.0,
+        "sign": 1,
+        "normalised": 0.061582020881259955,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.4794812711126394e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_R",
+       "GNG232_R",
+       "DNge080_R",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       72059,
+       31018,
+       12364,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_R",
+        "post": "GNG232_R",
+        "synapses": 87.0,
+        "sign": 1,
+        "normalised": 0.07644991212653779,
+        "post_total_input": 1138.0
+       },
+       {
+        "pre": "GNG232_R",
+        "post": "DNge080_R",
+        "synapses": 65.0,
+        "sign": 1,
+        "normalised": 0.018146286990508097,
+        "post_total_input": 3582.0
+       },
+       {
+        "pre": "DNge080_R",
+        "post": "MN9_R",
+        "synapses": 101.0,
+        "sign": 1,
+        "normalised": 0.01787294284197487,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.124055318216694e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3b_L",
+       "ANXXX462b_L",
+       "DNge062_L",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       71254,
+       558926,
+       519839,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3b_L",
+        "post": "ANXXX462b_L",
+        "synapses": 54.0,
+        "sign": 1,
+        "normalised": 0.03137710633352702,
+        "post_total_input": 1721.0
+       },
+       {
+        "pre": "ANXXX462b_L",
+        "post": "DNge062_L",
+        "synapses": 17.0,
+        "sign": 1,
+        "normalised": 0.008244422890397672,
+        "post_total_input": 2062.0
+       },
+       {
+        "pre": "DNge062_L",
+        "post": "MN9_R",
+        "synapses": 464.0,
+        "sign": 1,
+        "normalised": 0.08210936117501327,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 2.0980563278034952e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3b_L",
+       "GNG197_L",
+       "DNge062_L",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       71254,
+       26027,
+       519839,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3b_L",
+        "post": "GNG197_L",
+        "synapses": 49.0,
+        "sign": 1,
+        "normalised": 0.03512544802867384,
+        "post_total_input": 1395.0
+       },
+       {
+        "pre": "GNG197_L",
+        "post": "DNge062_L",
+        "synapses": 15.0,
+        "sign": 1,
+        "normalised": 0.0072744907856450046,
+        "post_total_input": 2062.0
+       },
+       {
+        "pre": "DNge062_L",
+        "post": "MN9_R",
+        "synapses": 464.0,
+        "sign": 1,
+        "normalised": 0.08210936117501327,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 1.973973320967259e-05,
+      "hops": 3,
+      "net_sign": -1,
+      "cells": [
+       "LB3c_R",
+       "GNG132_R",
+       "GNG130_R",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       142827,
+       15259,
+       511989,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_R",
+        "post": "GNG132_R",
+        "synapses": 51.0,
+        "sign": 1,
+        "normalised": 0.015892801495793082,
+        "post_total_input": 3209.0
+       },
+       {
+        "pre": "GNG132_R",
+        "post": "GNG130_R",
+        "synapses": 73.0,
+        "sign": 1,
+        "normalised": 0.01966065176407218,
+        "post_total_input": 3713.0
+       },
+       {
+        "pre": "GNG130_R",
+        "post": "MN9_R",
+        "synapses": 357.0,
+        "sign": -1,
+        "normalised": 0.06317465935232702,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 1.931663598765818e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_L",
+       "GNG215_L",
+       "GNG108_L",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       933317,
+       519441,
+       523040,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG215_L",
+        "synapses": 52.0,
+        "sign": 1,
+        "normalised": 0.04905660377358491,
+        "post_total_input": 1060.0
+       },
+       {
+        "pre": "GNG215_L",
+        "post": "GNG108_L",
+        "synapses": 33.0,
+        "sign": 1,
+        "normalised": 0.006394109668668863,
+        "post_total_input": 5161.0
+       },
+       {
+        "pre": "GNG108_L",
+        "post": "MN9_R",
+        "synapses": 348.0,
+        "sign": 1,
+        "normalised": 0.061582020881259955,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 1.899620420387735e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_L",
+       "GNG232_L",
+       "DNge080_L",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       933317,
+       89638,
+       12752,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_L",
+        "post": "GNG232_L",
+        "synapses": 77.0,
+        "sign": 1,
+        "normalised": 0.070902394106814,
+        "post_total_input": 1086.0
+       },
+       {
+        "pre": "GNG232_L",
+        "post": "DNge080_L",
+        "synapses": 54.0,
+        "sign": 1,
+        "normalised": 0.015771028037383176,
+        "post_total_input": 3424.0
+       },
+       {
+        "pre": "DNge080_L",
+        "post": "MN9_R",
+        "synapses": 96.0,
+        "sign": 1,
+        "normalised": 0.016988143691382056,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 1.896562602497955e-05,
+      "hops": 3,
+      "net_sign": -1,
+      "cells": [
+       "LB3c_R",
+       "GNG132_R",
+       "GNG130_R",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       120303,
+       15259,
+       511989,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_R",
+        "post": "GNG132_R",
+        "synapses": 49.0,
+        "sign": 1,
+        "normalised": 0.015269554378311,
+        "post_total_input": 3209.0
+       },
+       {
+        "pre": "GNG132_R",
+        "post": "GNG130_R",
+        "synapses": 73.0,
+        "sign": 1,
+        "normalised": 0.01966065176407218,
+        "post_total_input": 3713.0
+       },
+       {
+        "pre": "GNG130_R",
+        "post": "MN9_R",
+        "synapses": 357.0,
+        "sign": -1,
+        "normalised": 0.06317465935232702,
+        "post_total_input": 5651.0
+       }
+      ]
+     },
+     {
+      "score": 1.8678378584914187e-05,
+      "hops": 3,
+      "net_sign": 1,
+      "cells": [
+       "LB3c_R",
+       "GNG232_L",
+       "GNG108_L",
+       "MN9_R"
+      ],
+      "bodyIds": [
+       72059,
+       89638,
+       523040,
+       16949
+      ],
+      "steps": [
+       {
+        "pre": "LB3c_R",
+        "post": "GNG232_L",
+        "synapses": 34.0,
+        "sign": 1,
+        "normalised": 0.03130755064456722,
+        "post_total_input": 1086.0
+       },
+       {
+        "pre": "GNG232_L",
+        "post": "GNG108_L",
+        "synapses": 50.0,
+        "sign": 1,
+        "normalised": 0.00968804495252858,
+        "post_total_input": 5161.0
+       },
+       {
+        "pre": "GNG108_L",
+        "post": "MN9_R",
+        "synapses": 348.0,
+        "sign": 1,
+        "normalised": 0.061582020881259955,
+        "post_total_input": 5651.0
+       }
+      ]
+     }
+    ],
+    "heap_pops": 4010
+   }
+  }
+ }
+}

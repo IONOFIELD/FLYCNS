@@ -1,0 +1,526 @@
+{
+  "floor": 5,
+  "matched_types": 4688,
+  "malecns_types": 11751,
+  "flywire_types": 8846,
+  "all": {
+    "types": 4688,
+    "ratio_in": {
+      "n": 4682,
+      "median": 2.060374405000222,
+      "q25": 1.5229069113555647,
+      "q75": 3.062464782118708
+    },
+    "pooled_ratio_in": 1.8012052797845886,
+    "flywire_zero_in": 6,
+    "ratio_out": {
+      "n": 4651,
+      "median": 2.1224696356275303,
+      "q25": 1.6093360641144383,
+      "q75": 3.1177727119216483
+    },
+    "pooled_ratio_out": 1.883480059518298,
+    "flywire_zero_out": 37,
+    "cell_ratio": {
+      "n": 4688,
+      "median": 1.0,
+      "q25": 1.0,
+      "q75": 1.0
+    }
+  },
+  "all_count_consistent": {
+    "types": 4185,
+    "ratio_in": {
+      "n": 4180,
+      "median": 2.0413391507934966,
+      "q25": 1.5154406174231465,
+      "q75": 2.9961500905404996
+    },
+    "pooled_ratio_in": 1.8287518189675331,
+    "flywire_zero_in": 5,
+    "ratio_out": {
+      "n": 4153,
+      "median": 2.10311986863711,
+      "q25": 1.6067344345616263,
+      "q75": 3.0784666998011927
+    },
+    "pooled_ratio_out": 1.9154755750180237,
+    "flywire_zero_out": 32,
+    "cell_ratio": {
+      "n": 4185,
+      "median": 1.0,
+      "q25": 1.0,
+      "q75": 1.0
+    }
+  },
+  "by_group": {
+    "ORN": {
+      "types": 53,
+      "ratio_in": {
+        "n": 53,
+        "median": 3.2940653760710883,
+        "q25": 2.065096319791035,
+        "q75": 6.074406253131577
+      },
+      "pooled_ratio_in": 2.7003849790407104,
+      "flywire_zero_in": 0,
+      "ratio_out": {
+        "n": 53,
+        "median": 3.956814026029902,
+        "q25": 3.194175428887659,
+        "q75": 5.784608764288568
+      },
+      "pooled_ratio_out": 3.9949965997567745,
+      "flywire_zero_out": 0,
+      "cell_ratio": {
+        "n": 53,
+        "median": 1.1,
+        "q25": 1.0327868852459017,
+        "q75": 1.2777777777777777
+      }
+    },
+    "AL PN": {
+      "types": 161,
+      "ratio_in": {
+        "n": 161,
+        "median": 2.34267965077233,
+        "q25": 1.8255424493956605,
+        "q75": 3.4470664087685363
+      },
+      "pooled_ratio_in": 2.3711997614679436,
+      "flywire_zero_in": 0,
+      "ratio_out": {
+        "n": 161,
+        "median": 1.4153978388998036,
+        "q25": 1.2312492843238292,
+        "q75": 1.8307900983384198
+      },
+      "pooled_ratio_out": 1.477708146705826,
+      "flywire_zero_out": 0,
+      "cell_ratio": {
+        "n": 161,
+        "median": 1.0,
+        "q25": 1.0,
+        "q75": 1.0
+      }
+    },
+    "AL LN": {
+      "types": 60,
+      "ratio_in": {
+        "n": 60,
+        "median": 2.7449627396860583,
+        "q25": 2.2170474167006216,
+        "q75": 3.9984194037988945
+      },
+      "pooled_ratio_in": 2.672107257863736,
+      "flywire_zero_in": 0,
+      "ratio_out": {
+        "n": 60,
+        "median": 1.8464300076764912,
+        "q25": 1.3298648765934207,
+        "q75": 2.1312429961147816
+      },
+      "pooled_ratio_out": 1.9959038150278052,
+      "flywire_zero_out": 0,
+      "cell_ratio": {
+        "n": 60,
+        "median": 1.0,
+        "q25": 1.0,
+        "q75": 1.0
+      }
+    },
+    "Kenyon cell": {
+      "types": 7,
+      "ratio_in": {
+        "n": 7,
+        "median": 3.4400820715365454,
+        "q25": 3.1216024612092026,
+        "q75": 4.138652544369966
+      },
+      "pooled_ratio_in": 2.694351668866414,
+      "flywire_zero_in": 0,
+      "ratio_out": {
+        "n": 7,
+        "median": 4.03125,
+        "q25": 3.6390517922329906,
+        "q75": 4.814571048753702
+      },
+      "pooled_ratio_out": 5.005547456836255,
+      "flywire_zero_out": 0,
+      "cell_ratio": {
+        "n": 7,
+        "median": 1.0,
+        "q25": 0.8491525423728814,
+        "q75": 1.50390625
+      }
+    },
+    "LH": {
+      "types": 237,
+      "ratio_in": {
+        "n": 237,
+        "median": 1.6164955070603337,
+        "q25": 1.0968104682069106,
+        "q75": 2.221824686940966
+      },
+      "pooled_ratio_in": 1.4212589029894842,
+      "flywire_zero_in": 0,
+      "ratio_out": {
+        "n": 237,
+        "median": 2.0591497227356745,
+        "q25": 1.605316973415133,
+        "q75": 2.849673202614379
+      },
+      "pooled_ratio_out": 1.6899050684169734,
+      "flywire_zero_out": 0,
+      "cell_ratio": {
+        "n": 237,
+        "median": 1.0,
+        "q25": 1.0,
+        "q75": 1.0
+      }
+    },
+    "other brain": {
+      "types": 4170,
+      "ratio_in": {
+        "n": 4164,
+        "median": 2.0536674400983332,
+        "q25": 1.524941811435318,
+        "q75": 3.0629678143712575
+      },
+      "pooled_ratio_in": 1.7691152446128362,
+      "flywire_zero_in": 6,
+      "ratio_out": {
+        "n": 4133,
+        "median": 2.151987529228371,
+        "q25": 1.6440170459392265,
+        "q75": 3.1907059874888293
+      },
+      "pooled_ratio_out": 1.8645458493537437,
+      "flywire_zero_out": 37,
+      "cell_ratio": {
+        "n": 4170,
+        "median": 1.0,
+        "q25": 1.0,
+        "q75": 1.0
+      }
+    }
+  },
+  "by_group_count_consistent": {
+    "ORN": {
+      "types": 49,
+      "ratio_in": {
+        "n": 49,
+        "median": 3.2940653760710883,
+        "q25": 2.131695391267452,
+        "q75": 5.983216546112115
+      },
+      "pooled_ratio_in": 2.7234695978307784,
+      "flywire_zero_in": 0,
+      "ratio_out": {
+        "n": 49,
+        "median": 3.956814026029902,
+        "q25": 3.2235568257891756,
+        "q75": 5.784608764288568
+      },
+      "pooled_ratio_out": 3.898215171810608,
+      "flywire_zero_out": 0,
+      "cell_ratio": {
+        "n": 49,
+        "median": 1.096774193548387,
+        "q25": 1.0238095238095237,
+        "q75": 1.2388059701492538
+      }
+    },
+    "AL PN": {
+      "types": 151,
+      "ratio_in": {
+        "n": 151,
+        "median": 2.3421157156096917,
+        "q25": 1.8365490667574194,
+        "q75": 3.4391593321359823
+      },
+      "pooled_ratio_in": 2.385274518849357,
+      "flywire_zero_in": 0,
+      "ratio_out": {
+        "n": 151,
+        "median": 1.4153978388998036,
+        "q25": 1.2374699346335154,
+        "q75": 1.8231852152250738
+      },
+      "pooled_ratio_out": 1.4838483308265396,
+      "flywire_zero_out": 0,
+      "cell_ratio": {
+        "n": 151,
+        "median": 1.0,
+        "q25": 1.0,
+        "q75": 1.0
+      }
+    },
+    "AL LN": {
+      "types": 52,
+      "ratio_in": {
+        "n": 52,
+        "median": 2.734107162451636,
+        "q25": 2.2170474167006216,
+        "q75": 3.9984194037988945
+      },
+      "pooled_ratio_in": 2.6402711030341197,
+      "flywire_zero_in": 0,
+      "ratio_out": {
+        "n": 52,
+        "median": 1.8613440829944863,
+        "q25": 1.2733047529917974,
+        "q75": 2.1312429961147816
+      },
+      "pooled_ratio_out": 1.9409169682168461,
+      "flywire_zero_out": 0,
+      "cell_ratio": {
+        "n": 52,
+        "median": 1.0,
+        "q25": 1.0,
+        "q75": 1.0
+      }
+    },
+    "Kenyon cell": {
+      "types": 4,
+      "ratio_in": {
+        "n": 4,
+        "median": 3.693439342850104,
+        "q25": 3.331934212828439,
+        "q75": 4.042724579266815
+      },
+      "pooled_ratio_in": 3.8202393979763376,
+      "flywire_zero_in": 0,
+      "ratio_out": {
+        "n": 4,
+        "median": 4.185344270334128,
+        "q25": 3.1274308482808886,
+        "q75": 5.726569291066153
+      },
+      "pooled_ratio_out": 4.911772033532711,
+      "flywire_zero_out": 0,
+      "cell_ratio": {
+        "n": 4,
+        "median": 1.0,
+        "q25": 0.9245762711864407,
+        "q75": 1.001953125
+      }
+    },
+    "LH": {
+      "types": 213,
+      "ratio_in": {
+        "n": 213,
+        "median": 1.5974222896133434,
+        "q25": 1.0974291557113642,
+        "q75": 2.213349968808484
+      },
+      "pooled_ratio_in": 1.4643353384430189,
+      "flywire_zero_in": 0,
+      "ratio_out": {
+        "n": 213,
+        "median": 2.0502901353965184,
+        "q25": 1.605316973415133,
+        "q75": 2.868217054263566
+      },
+      "pooled_ratio_out": 1.7388851899163984,
+      "flywire_zero_out": 0,
+      "cell_ratio": {
+        "n": 213,
+        "median": 1.0,
+        "q25": 1.0,
+        "q75": 1.0
+      }
+    },
+    "other brain": {
+      "types": 3716,
+      "ratio_in": {
+        "n": 3711,
+        "median": 2.0318401219408924,
+        "q25": 1.5209252227768562,
+        "q75": 2.992751009055357
+      },
+      "pooled_ratio_in": 1.8093631806268229,
+      "flywire_zero_in": 5,
+      "ratio_out": {
+        "n": 3684,
+        "median": 2.1367232698502048,
+        "q25": 1.6423033085648553,
+        "q75": 3.1400925865206957
+      },
+      "pooled_ratio_out": 1.9240007929960583,
+      "flywire_zero_out": 32,
+      "cell_ratio": {
+        "n": 3716,
+        "median": 1.0,
+        "q25": 1.0,
+        "q75": 1.0
+      }
+    }
+  },
+  "al_types_listed": {
+    "ALPN": 180,
+    "ALLN": 79,
+    "Kenyon_Cell": 15
+  },
+  "al_types_matched": {
+    "ALPN": 161,
+    "ALLN": 60,
+    "Kenyon_Cell": 7
+  },
+  "al_types_unmatched": {
+    "ALPN": [
+      "CB1296_a",
+      "M_ilPNm90",
+      "M_l2PN10t19",
+      "M_lPNm12",
+      "M_lPNm13",
+      "M_lv2PN9t49_a",
+      "M_lv2PN9t49_b",
+      "M_lvPNm30",
+      "M_lvPNm32",
+      "M_lvPNm33",
+      "M_lvPNm38",
+      "M_vPNml68",
+      "M_vPNml73",
+      "M_vPNml76",
+      "M_vPNml78",
+      "M_vPNml88",
+      "VM6_lvPN",
+      "VP1m+VP2_lvPN2",
+      "VP2+Z_lvPN"
+    ],
+    "ALLN": [
+      "CB4083",
+      "LN60",
+      "lLN12A",
+      "lLN14",
+      "lLN15",
+      "lLN2R_a",
+      "lLN2T_a",
+      "v2LN34A",
+      "v2LN34B",
+      "v2LN34C",
+      "v2LN34D",
+      "v2LN34F",
+      "v2LN3A",
+      "v2LN41",
+      "v2LN42",
+      "v2LN46",
+      "v2LN50",
+      "vLN28",
+      "vLN29"
+    ],
+    "Kenyon_Cell": [
+      "KC",
+      "KCa'b'-ap2",
+      "KCa'b'-m",
+      "KCab-c",
+      "KCab-m",
+      "KCab-s",
+      "KCg",
+      "KCg-s4"
+    ]
+  },
+  "al_loop": {
+    "malecns": {
+      "cells": {
+        "PN": 613,
+        "LN": 290
+      },
+      "total_synapses": 1233400.0,
+      "per_cell": 1365.891472868217,
+      "PN->PN": {
+        "synapses": 96494.0,
+        "per_sender_cell": 157.4127243066884,
+        "per_cell": 106.859357696567
+      },
+      "PN->LN": {
+        "synapses": 334720.0,
+        "per_sender_cell": 546.0358890701468,
+        "per_cell": 370.67552602436325
+      },
+      "LN->PN": {
+        "synapses": 341884.0,
+        "per_sender_cell": 1178.9103448275862,
+        "per_cell": 378.60908084163896
+      },
+      "LN->LN": {
+        "synapses": 460302.0,
+        "per_sender_cell": 1587.248275862069,
+        "per_cell": 509.74750830564784
+      }
+    },
+    "flywire": {
+      "cells": {
+        "PN": 614,
+        "LN": 289
+      },
+      "total_synapses": 588268.0,
+      "per_cell": 651.4595791805094,
+      "PN->PN": {
+        "synapses": 39499.0,
+        "per_sender_cell": 64.33061889250814,
+        "per_cell": 43.74197120708749
+      },
+      "PN->LN": {
+        "synapses": 150444.0,
+        "per_sender_cell": 245.02280130293158,
+        "per_cell": 166.6046511627907
+      },
+      "LN->PN": {
+        "synapses": 178886.0,
+        "per_sender_cell": 618.9826989619377,
+        "per_cell": 198.10188261351053
+      },
+      "LN->LN": {
+        "synapses": 219439.0,
+        "per_sender_cell": 759.3044982698962,
+        "per_cell": 243.0110741971207
+      }
+    },
+    "flywire_in_AL_neuropil_only": {
+      "cells": {
+        "PN": 614,
+        "LN": 289
+      },
+      "total_synapses": 577394.0,
+      "per_cell": 639.4174972314507,
+      "PN->PN": {
+        "synapses": 29156.0,
+        "per_sender_cell": 47.48534201954397,
+        "per_cell": 32.287929125138426
+      },
+      "PN->LN": {
+        "synapses": 150359.0,
+        "per_sender_cell": 244.8843648208469,
+        "per_cell": 166.51052048726467
+      },
+      "LN->PN": {
+        "synapses": 178648.0,
+        "per_sender_cell": 618.159169550173,
+        "per_cell": 197.83831672203766
+      },
+      "LN->LN": {
+        "synapses": 219231.0,
+        "per_sender_cell": 758.5847750865051,
+        "per_cell": 242.78073089700996
+      }
+    },
+    "ratio_per_cell": 2.0966634255135412
+  },
+  "totals": {
+    "malecns_pairs": 6287789,
+    "malecns_synapses": 90297299.0,
+    "flywire_pairs_all": 15091983,
+    "flywire_pairs_floor": 2700513,
+    "flywire_synapses_floor": 34153566.0,
+    "flywire_synapses_all": 54492922.0,
+    "malecns_typed_cells": 164506,
+    "flywire_typed_cells": 137716
+  },
+  "data": {
+    "malecns_edges_sha256": "61f8c2edbb214111073701fa5c4bef835e52925ce742f24e4011ce98d92da958",
+    "malecns_neurons_sha256": "b60448d9e2f26bfc0389cada9bb08a1a4d5f4d2149163da3fdd3e48621ee9e21",
+    "celltypes_sha256": "ea8bad7dccde7e714efdb5a882f73fe5391659415130bde57e71f1d7e5585504"
+  }
+}

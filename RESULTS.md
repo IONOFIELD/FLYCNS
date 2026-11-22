@@ -158,6 +158,7 @@ The registered verdict, held, stands; (c) has no answer on this data.
     reading of `phaseA.json` (18:22 PT).
 - **Reproduction:** not claimed here. An earlier draft of this note said every arm was rerun on Windows; no
   committed record supports that, so the line was removed.
+- **Re-score:** the Windows re-score of 18 Nov 2026 (`fit/gen6_phaseA_score.py` on the committed arms) equals the committed record on 5,404 of 5,404 values ([docs/records/2026-11-18/rescore/report.md](docs/records/2026-11-18/rescore/report.md)).
 
 **What phase A does not show.**
 - **No electrical synapses in the AL.** The connectome annotates chemical synapses only: FlyWire and the

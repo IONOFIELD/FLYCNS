@@ -1,0 +1,43 @@
+{
+  "retrieved": "2026-10-19",
+  "login_needed": false,
+  "flywire": [
+    {
+      "file": "downloads/Supplemental_file1_neuron_annotations.tsv",
+      "what": "per-neuron FlyWire annotations (cell_type, super_class, ...), materialization 783",
+      "url": "https://raw.githubusercontent.com/flyconnectome/flywire_annotations/a83b2776d60d5764cef36b927f5f9679c16c47a2/supplemental_files/Supplemental_file1_neuron_annotations.tsv",
+      "repository": "https://github.com/flyconnectome/flywire_annotations",
+      "commit": "a83b2776d60d5764cef36b927f5f9679c16c47a2",
+      "commit_date": "2026-09-29T09:53:05Z",
+      "version": "main after v3.2.0 ('incorporate Tastekin et al. (2026) annotations'); v3.x types were revised against Janelia MaleCNS v0.9 (Berg et al. 2026)",
+      "bytes": 31720298,
+      "sha256": "b214970b55d2fbe0853bba536fdcb9e28730f4eb7ab06f600491df795da683cd"
+    },
+    {
+      "file": "downloads/proofread_connections_783.feather",
+      "what": "proofread neuron pairs x neuropil with syn_count (summed over neuropils per pair here)",
+      "url": "https://zenodo.org/records/10676866/files/proofread_connections_783.feather",
+      "record": "https://doi.org/10.5281/zenodo.10676866 (FlyWire Whole-brain Connectome Connectivity Data, version 783)",
+      "bytes": 852022274,
+      "md5_zenodo": "f48f972d262323a102aed49af1396b8a",
+      "md5_matches": true,
+      "sha256": "24f960ae3e7d4f8cd30db3b62e99fb5179cc3d1e76d8c155bfb441e9737d3faf"
+    },
+    {
+      "file": "downloads/proofread_root_ids_783.npy",
+      "what": "all proofread root ids, v783",
+      "url": "https://zenodo.org/records/10676866/files/proofread_root_ids_783.npy",
+      "record": "https://doi.org/10.5281/zenodo.10676866",
+      "bytes": 1114168,
+      "md5_zenodo": "e0e6c19732fd8c7a4e39a2d170105421",
+      "md5_matches": true,
+      "sha256": "7c7b7e818e9232e5ab64793d52ba20574dbe9da3a6509fbc74193b0f259a01be"
+    }
+  ],
+  "malecns": [
+    {"file": "data/edges.parquet", "sha256": "61f8c2edbb214111073701fa5c4bef835e52925ce742f24e4011ce98d92da958", "pinned_in": "data/MANIFEST.json"},
+    {"file": "data/neurons.parquet", "sha256": "b60448d9e2f26bfc0389cada9bb08a1a4d5f4d2149163da3fdd3e48621ee9e21", "pinned_in": "data/MANIFEST.json"},
+    {"file": "data/gen6_phaseA_celltypes.json", "sha256": "ea8bad7dccde7e714efdb5a882f73fe5391659415130bde57e71f1d7e5585504"}
+  ],
+  "not_used": "Codex (codex.flywire.ai) downloads need a sign-in; Zenodo has the same v783 tables without one"
+}
