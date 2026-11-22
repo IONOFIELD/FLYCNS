@@ -1,0 +1,216 @@
+{
+ "data_dir": "data",
+ "celltypes": {
+  "sha256": "ea8bad7dccde7e714efdb5a882f73fe5391659415130bde57e71f1d7e5585504",
+  "registered": "ea8bad7dccde7e714efdb5a882f73fe5391659415130bde57e71f1d7e5585504",
+  "counts": {
+   "ALPN": 180,
+   "ALLN": 79,
+   "Kenyon_Cell": 15
+  }
+ },
+ "fix": {
+  "without": {
+   "unclear": "dropped",
+   "edges": 6127738,
+   "synapses": 88316807.0,
+   "cells": 170175,
+   "dropped_unsigned": {
+    "edges": 160051,
+    "synapses": 1980492,
+    "silent_presynaptic": 8020
+   },
+   "resigned": {
+    "edges": null,
+    "synapses": null,
+    "cells": null
+   }
+  },
+  "with_fix": {
+   "unclear": "predicted",
+   "edges": 6148166,
+   "synapses": 88570540.0,
+   "cells": 170198,
+   "dropped_unsigned": {
+    "edges": 139623,
+    "synapses": 1726759,
+    "silent_presynaptic": 7305
+   },
+   "resigned": {
+    "edges": 20428,
+    "synapses": 253733,
+    "cells": 715
+   }
+  },
+  "cells_added": 23,
+  "cells_removed": 0,
+  "connections_added": 20428,
+  "connections_removed": 0,
+  "added_excitatory": {
+   "edges": 9219,
+   "synapses": 111043.0
+  },
+  "added_inhibitory": {
+   "edges": 11209,
+   "synapses": 142690.0
+  },
+  "added_by_transmitter": {
+   "acetylcholine": 111043.0,
+   "gaba": 58448.0,
+   "glutamate": 83081.0,
+   "histamine": 1161.0
+  }
+ },
+ "std_scopes": {
+  "in": {
+   "scope": "in",
+   "edges": 55527,
+   "synapses": 937946.0,
+   "of_edges": 6148166,
+   "of_synapses": 88570540.0,
+   "orn_to_pn": {
+    "edges": 16234,
+    "synapses": 469621.0
+   },
+   "orn_to_ln": {
+    "edges": 39293,
+    "synapses": 468325.0
+   },
+   "al_to_al": {
+    "edges": 50124,
+    "synapses": 1348948.0
+   },
+   "orn_types": 53,
+   "orn_cells_marked": 2634
+  },
+  "al": {
+   "scope": "al",
+   "edges": 105651,
+   "synapses": 2286894.0,
+   "of_edges": 6148166,
+   "of_synapses": 88570540.0,
+   "orn_to_pn": {
+    "edges": 16234,
+    "synapses": 469621.0
+   },
+   "orn_to_ln": {
+    "edges": 39293,
+    "synapses": 468325.0
+   },
+   "al_to_al": {
+    "edges": 50124,
+    "synapses": 1348948.0
+   },
+   "orn_types": 53,
+   "orn_cells_marked": 2634
+  }
+ },
+ "orn": {
+  "types": 53,
+  "cells": 2635,
+  "simulated": 2634
+ },
+ "v7a": {
+  "DM4": {
+   "orn_type": "ORN_DM4",
+   "orn_cells": 32,
+   "orn_with_output": 32,
+   "pn_type": "DM4_adPN",
+   "pn_cells": 2,
+   "pn_simulated": 2,
+   "orn_to_pn": {
+    "edges": 62,
+    "synapses": 4781.0
+   },
+   "pn_input_synapses": 11692.0,
+   "own_orn_share": 0.40891207663359563,
+   "pn_transmitters": [
+    "acetylcholine"
+   ]
+  },
+  "DL5": {
+   "orn_type": "ORN_DL5",
+   "orn_cells": 43,
+   "orn_with_output": 43,
+   "pn_type": "DL5_adPN",
+   "pn_cells": 2,
+   "pn_simulated": 2,
+   "orn_to_pn": {
+    "edges": 85,
+    "synapses": 6944.0
+   },
+   "pn_input_synapses": 12341.0,
+   "own_orn_share": 0.5626772546795236,
+   "pn_transmitters": [
+    "acetylcholine"
+   ]
+  },
+  "VM7d": {
+   "orn_type": "ORN_VM7d",
+   "orn_cells": 36,
+   "orn_with_output": 36,
+   "pn_type": "VM7d_adPN",
+   "pn_cells": 7,
+   "pn_simulated": 7,
+   "orn_to_pn": {
+    "edges": 252,
+    "synapses": 10251.0
+   },
+   "pn_input_synapses": 17180.0,
+   "own_orn_share": 0.5966821885913853,
+   "pn_transmitters": [
+    "acetylcholine"
+   ]
+  },
+  "DM1": {
+   "orn_type": "ORN_DM1",
+   "orn_cells": 74,
+   "orn_with_output": 74,
+   "pn_type": "DM1_lPN",
+   "pn_cells": 2,
+   "pn_simulated": 2,
+   "orn_to_pn": {
+    "edges": 145,
+    "synapses": 13384.0
+   },
+   "pn_input_synapses": 24161.0,
+   "own_orn_share": 0.5539505815156658,
+   "pn_transmitters": [
+    "acetylcholine"
+   ]
+  },
+  "VM7v": {
+   "orn_type": "ORN_VM7v",
+   "orn_cells": 25,
+   "orn_with_output": 25,
+   "pn_type": "VM7v_adPN",
+   "pn_cells": 3,
+   "pn_simulated": 3,
+   "orn_to_pn": {
+    "edges": 71,
+    "synapses": 5182.0
+   },
+   "pn_input_synapses": 8350.0,
+   "own_orn_share": 0.6205988023952096,
+   "pn_transmitters": [
+    "acetylcholine"
+   ]
+  }
+ },
+ "drives": {
+  "sugar_cells": 34,
+  "blind_pool": 15757,
+  "blind_driven": 1575,
+  "blind_source_types": 169,
+  "blind_source_cells": 26471,
+  "blind_driven_orn": 254,
+  "blind_source_orn_types": 51
+ },
+ "design": {
+  "sets": 17,
+  "sweep_arms": 170,
+  "v7a_arms": 30,
+  "parts": 63,
+  "conditional_parts": 40
+ }
+}
