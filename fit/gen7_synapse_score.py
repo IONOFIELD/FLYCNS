@@ -392,6 +392,30 @@ def orn_check(D, smoke=SMOKE):
                 rule="no ORN spike under sugar means no depressing synapse delivers: the arm must equal its reference")
 
 
+def v7a_predictions(arms):
+    """The three logged V7a predictions (CRITERIA validation.v7a.predictions), report-only. arms: the per-arm records
+    of v7a(). 'undetermined' while a registered V7a arm or a compared glomerulus is missing."""
+    P = G.CRITERIA["validation"]["v7a"]["predictions"]
+    want = [f"v7a_{s}_{G._w(w)}" for s in G.V7A_SETS for w in G.GRID_W]
+    complete = all(a in arms and not arms[a]["missing"] for a in want)
+    over = [bool(m > o) for a in want if a in arms and arms[a]["set"] in ("b", "c")
+            for g in arms[a]["glomeruli"].values() if g["compared"]
+            for r, m, o in zip(g["orn_hz"], g["pn_hz"], g["olsen_fit_hz"]) if r >= 20.0]
+    early = [bool(g["fit"]["sigma"] is not None and g["fit"]["sigma"] < g["olsen"]["sigma"] / 2.0)
+             for a in want if a in arms and arms[a]["set"] in ("sin", "csin")
+             for g in arms[a]["glomeruli"].values() if g["compared"]]
+    most = max((arms[a]["consistent"] for a in want if a in arms), default=None)
+    got = dict(P1=(most is not None and most < 3, dict(most_consistent_in_one_arm=most)),
+               P2=(bool(over) and sum(over) > len(over) / 2, dict(points=len(over), above=int(sum(over)))),
+               P3=(bool(early) and sum(early) > len(early) / 2, dict(fits=len(early), below_half=int(sum(early)))))
+    out = {}
+    for k, (held, detail) in got.items():
+        v = "undetermined" if not complete else ("held" if held else "not held")
+        out[k] = dict(text=P[k][0], predicted=P[k][1], confidence=P[k][2], verdict=v, **detail,
+                      prediction_correct=None if v == "undetermined" else bool(v == P[k][1]))
+    return out
+
+
 def v7a(D, smoke=SMOKE):
     """D7, report-only. Every compared glomerulus counts; one whose record is incomplete is 'missing' (a registered
     arm with an incomplete record refuses scoring), never dropped from the count."""
@@ -430,6 +454,7 @@ def v7a(D, smoke=SMOKE):
                               consistent=int(sum(v["consistent"] for v in per.values() if v["compared"])),
                               lowest_v_mV=rec_low)
     return dict(status=G.CRITERIA["validation"]["v7a"]["status"], arms=arms, numerics_low=sorted(low),
+                predictions=v7a_predictions(arms),
                 consistent_by_arm={k: f"{v['consistent']} of {v['compared']}" + (f" ({len(v['missing'])} missing)" if v["missing"] else "")
                                    for k, v in arms.items()})
 
@@ -568,6 +593,7 @@ def main():
     if report["hypotheses"]:
         print("hypotheses: " + ", ".join(f"{k} {v['verdict']}" for k, v in report["hypotheses"].items()))
     print("V7a consistent glomeruli: " + ", ".join(f"{k} {v}" for k, v in report["v7a"]["consistent_by_arm"].items()))
+    print("V7a predictions (report-only): " + ", ".join(f"{k} {v['verdict']}" for k, v in report["v7a"]["predictions"].items()))
     print(f"-> {out.relative_to(ROOT)}" + ("   (SMOKE: not a result)" if SMOKE else ""))
 
 

@@ -1607,15 +1607,32 @@ def t_gen7_scoring_rules():
              and hv(f_diff, s_diff)["H7c-in"] == "undetermined"
              and f_ok["final"] is True and s_ok["sin"] == V and hv(f_ok, s_ok)["H7c-in"] == "held"
              and hv(f_ok, s_ok)["overall"] == "not held" and f_c7["final"] is True and s_c7 == base)
+    # the three logged V7a predictions, on hand-made arm records
+    def varm(set_, consistent, pn, sigma):
+        g = {k: dict(compared=v["compared"], orn_hz=G.V7A_RATES, pn_hz=[pn] * 6, olsen_fit_hz=[50.0] * 6,
+                     fit=dict(sigma=sigma), olsen=dict(sigma=v["sigma"])) for k, v in G.V7A.items()}
+        return dict(set=set_, glomeruli=g, missing=[], consistent=consistent)
+    def varms(consistent=0, pn=100.0, sigma=1.0, drop=None):
+        a = {f"v7a_{s_}_{G._w(w_)}": varm(s_, consistent, pn, sigma) for s_ in G.V7A_SETS for w_ in G.GRID_W}
+        if drop:
+            a.pop(drop)
+        return a
+    pv = lambda a: {k: v["verdict"] for k, v in S.v7a_predictions(a).items()}                  # noqa: E731
+    one = varms()
+    one["v7a_c_w100"] = varm("c", 3, 100.0, 1.0)
+    v7 = (pv(varms()) == dict(P1="held", P2="held", P3="held") and pv(one)["P1"] == "not held"
+          and pv(varms(pn=10.0))["P2"] == "not held" and pv(varms(sigma=None))["P3"] == "not held"
+          and pv(varms(sigma=30.0))["P3"] == "not held"
+          and set(pv(varms(drop="v7a_b_w040")).values()) == {"undetermined"})
     ok = (order and prov and all_fail and mixed and not_where and undet and review and scored and states and num
-          and refused and naming and final)
+          and refused and naming and final and v7)
     return ok, ("outcome order R > F > S-in > C > CS-in > C7; a missing top-up makes it PROVISIONAL; hypothesis verdicts "
                 "held / not held / undetermined as written; the numerics guard fails below E_i - 1 mV and on a value "
                 "that is not a number, and refuses a missing record; top-ups are named only where they can change a "
                 "set's viability or decision w; a candidate is final only after its dt repeat agrees" if ok else
                 f"order {order}, provisional {prov}, all-fail {all_fail}, mixed {mixed}, not-where {not_where}, "
                 f"undetermined {undet}, review {review}, scored {scored}, states {states}, numerics {num}, refused {refused}, "
-                f"naming {naming}, final {final}")
+                f"naming {naming}, final {final}, v7a predictions {v7}")
 
 
 def t_gen7_parts_match_rerun_jobs():

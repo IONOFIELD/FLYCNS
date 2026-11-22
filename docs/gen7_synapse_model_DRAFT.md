@@ -495,3 +495,21 @@ its verdict without a repeat; its hypothesis is read with that limit.
   different fixes. Either the weight is simply too large here (a density correction), or FlyWire undercounted
   the ORN input and thereby hid an instability that the fly controls with mechanisms the model lacks
   (depression at ORN synapses, presynaptic inhibition). Generation 7's S-in arm tests the second directly.
+
+### D14. Decisions of 21 Nov and the V7a predictions
+Jayson approved, on 21 Nov 2026: the numerics guard as corrected (D6); top-ups for B and "undetermined" for a
+reported arm left UNRESOLVED (D3, D4); the changes after both code audits (D10, D12); and logging V7a
+predictions before any run.
+
+The V7a predictions (report-only; no outcome or hypothesis verdict depends on them; exact wording in the
+registered criteria, `validation.v7a.predictions`):
+
+| | Prediction | Predicted | Confidence |
+|---|---|---|---|
+| P1 | No V7a arm has 3 or more of its 4 compared glomeruli consistent. | held | moderate |
+| P2 | B and C overshoot: at ORN rates of 20 spikes/s and above, the model's PN rate is above Olsen's fitted curve in more than half of the points. | held | low |
+| P3 | S-in and CS-in saturate too early: the fitted sigma is below half of Olsen's in more than half of the fits. | held | low |
+
+Reason: the pinned data have about 1,500 to 6,700 ORN -> PN synapses per PN (D11), so without depression a PN is
+driven far past Olsen's R_max; with the measured depression the sustained drive levels off near 5
+spikes/s-equivalents, so the response saturates at much lower ORN rates than Olsen's sigma.

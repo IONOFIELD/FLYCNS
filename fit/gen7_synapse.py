@@ -297,6 +297,20 @@ CRITERIA = dict(
             consistent=(f"per compared glomerulus: R_max within +/-{V7A_RMAX_TOL:.0%} and sigma within a factor of "
                         f"{V7A_SIGMA_FACTOR:g} of Olsen et al. 2010's fit, and sigma not at an edge of the grid"),
             source="Olsen, Bhandawat & Wilson 2010, Methods (docs/lit/v7a_nagel_check_2026-10-18.md)",
+            predictions=dict(
+                note=("logged 21 Nov 2026, before any simulation on the pinned data (Claude A; approved by Jayson). "
+                      "Report-only, like V7a itself: no outcome or hypothesis verdict depends on them"),
+                P1=["no V7a arm has 3 or more of its 4 compared glomeruli consistent", "held", "moderate"],
+                P2=["B and C overshoot: over the B and C arms, the compared glomeruli and the ORN rates of 20 "
+                    "spikes/s and above, the model's PN rate is above Olsen's fitted curve in more than half of the "
+                    "points", "held", "low"],
+                P3=["S-in and CS-in saturate too early: over the S-in and CS-in arms and the compared glomeruli, the "
+                    "fitted sigma is below half of Olsen's in more than half of the fits (a fit with no PN spike, so "
+                    "no sigma, counts against)", "held", "low"],
+                reasons=("the pinned data have about 1,500 to 6,700 ORN -> PN synapses per PN, so without depression a PN "
+                         "is driven far past Olsen's R_max at moderate ORN rates; with the measured depression the "
+                         "sustained drive (rate x steady-state amplitude) levels off near 5 spikes/s-equivalents, so "
+                         "the response saturates at much lower ORN rates than Olsen's sigma of 12 to 45 spikes/s")),
             reported=("the fits, the model's rates beside Olsen's FITTED curve at the six rates (the paper's data points "
                       "are not tabulated), the RMS residual of the model's fit, whether the model's rates rise "
                       "monotonically, and for conductance arms the lowest v"),
