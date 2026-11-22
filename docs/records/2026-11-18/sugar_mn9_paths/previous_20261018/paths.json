@@ -1,0 +1,4344 @@
+{
+  "note": "Exploratory; read-only; goes into no score.",
+  "data": {
+    "edges_sha256": "61f8c2edbb214111073701fa5c4bef835e52925ce742f24e4011ce98d92da958",
+    "neurons_sha256": "b60448d9e2f26bfc0389cada9bb08a1a4d5f4d2149163da3fdd3e48621ee9e21"
+  },
+  "graph": {
+    "loader": "flycns.graph.load_graph('data')",
+    "min_weight": 5,
+    "loaded": {
+      "data_dir": "data",
+      "min_weight": 5,
+      "n_neurons": 176422,
+      "n_signed_edges": 6127738,
+      "n_signed_synapses": 88316807,
+      "n_dropped_unsigned_edges": 160051,
+      "n_dropped_unsigned_synapses": 1980492,
+      "n_silent_presynaptic": 8020,
+      "edges_nt_used": false,
+      "glu_vnc": "inhibitory",
+      "n_glu_vnc_flipped": 0,
+      "jon_mode": "electrical",
+      "jon_compound_mv": 3.0
+    }
+  },
+  "sources": {
+    "types": [
+      "LB3b",
+      "LB3c"
+    ],
+    "n": 34,
+    "by_type": {
+      "LB3c": 23,
+      "LB3b": 11
+    },
+    "by_side": {
+      "L": 17,
+      "R": 17
+    }
+  },
+  "definitions": {
+    "hop": "a cell is at hop h if its shortest directed path to the MN9 cell has h edges (h=1: direct partner)",
+    "on_sugar_path": "shortest hops from the nearest sugar cell + hops to MN9 <= 4",
+    "input_by_hop": "signed synapses (weight x sign) on edges from hop-h cells to hop-(h-1) cells (hop 0 = MN9); 'all' = every such cell, 'on_sugar_path' = both ends on a sugar path",
+    "norm_weight": "synapses / the postsynaptic cell's total signed input (at or above the floor)",
+    "path_score": "product of norm_weight along the path; sign = product of edge signs",
+    "top_paths": "exact top 10 simple paths of 1-4 hops from any sugar cell to the MN9 cell, by path_score",
+    "shortest_paths_top25": "the strongest 25 paths of exactly the shortest length (all of them if fewer)",
+    "direct_input_by_partner_sugar_distance": "MN9's direct partners grouped by their hops from the nearest sugar cell (0 = a sugar cell itself)"
+  },
+  "mirror_log": {
+    "partners": 93,
+    "weight_in": 5651.0,
+    "kept": 3,
+    "kept_w": 71.0,
+    "split_partners": 5,
+    "below_floor_edges": 11,
+    "below_floor_w": 21.0,
+    "sign_mismatch_w": 0.0,
+    "no_signed_output_w": 2.5,
+    "mn9_swap": 1,
+    "opposite_not_in_network": 0,
+    "removed_partners": 25,
+    "removed_w": 364.0,
+    "new_partners": 100,
+    "weight_out": 5651.0,
+    "weight_out_exc": 2805.0,
+    "weight_out_inh": 2846.0,
+    "weight_in_exc": 2805.0,
+    "weight_in_inh": 2846.0,
+    "no_signed_output_cells": 1,
+    "placeholders": 0,
+    "placeholder_ids": [],
+    "cells_before": 170175,
+    "cells_after": 170175
+  },
+  "results": [
+    {
+      "label": "MN9_L (10331)",
+      "target": 10331,
+      "sources_in_graph": 34,
+      "shortest_hops": 2,
+      "mn9_input_synapses": 5651.0,
+      "by_hop": [
+        {
+          "hop": 1,
+          "cells_upstream": 93,
+          "cells_on_sugar_path": 93,
+          "sugar_cells": 0,
+          "input_all": {
+            "excitatory": 2805.0,
+            "inhibitory": -2846.0,
+            "net": -41.0,
+            "edges": 93
+          },
+          "input_on_sugar_path": {
+            "excitatory": 2805.0,
+            "inhibitory": -2846.0,
+            "net": -41.0,
+            "edges": 93
+          }
+        },
+        {
+          "hop": 2,
+          "cells_upstream": 2970,
+          "cells_on_sugar_path": 1154,
+          "sugar_cells": 13,
+          "input_all": {
+            "excitatory": 141571.0,
+            "inhibitory": -113228.0,
+            "net": 28343.0,
+            "edges": 8881
+          },
+          "input_on_sugar_path": {
+            "excitatory": 85555.0,
+            "inhibitory": -82457.0,
+            "net": 3098.0,
+            "edges": 5389
+          }
+        },
+        {
+          "hop": 3,
+          "cells_upstream": 36361,
+          "cells_on_sugar_path": 66,
+          "sugar_cells": 21,
+          "input_all": {
+            "excitatory": 2297521.0,
+            "inhibitory": -1332125.0,
+            "net": 965396.0,
+            "edges": 196476
+          },
+          "input_on_sugar_path": {
+            "excitatory": 12368.0,
+            "inhibitory": -9327.0,
+            "net": 3041.0,
+            "edges": 1140
+          }
+        },
+        {
+          "hop": 4,
+          "cells_upstream": 92492,
+          "cells_on_sugar_path": 0,
+          "sugar_cells": 0,
+          "input_all": {
+            "excitatory": 6892392.0,
+            "inhibitory": -3053109.0,
+            "net": 3839283.0,
+            "edges": 781764
+          },
+          "input_on_sugar_path": {
+            "excitatory": 0.0,
+            "inhibitory": 0.0,
+            "net": 0.0,
+            "edges": 0
+          }
+        }
+      ],
+      "direct_input_by_partner_sugar_distance": {
+        "1": {
+          "partners": 4,
+          "excitatory": 7.0,
+          "inhibitory": -15.0,
+          "share_of_input": 0.003893116262608388
+        },
+        "2": {
+          "partners": 75,
+          "excitatory": 2634.0,
+          "inhibitory": -2698.0,
+          "share_of_input": 0.9435498141921784
+        },
+        "3": {
+          "partners": 14,
+          "excitatory": 164.0,
+          "inhibitory": -133.0,
+          "share_of_input": 0.052557069545213234
+        }
+      },
+      "top_paths": [
+        {
+          "score": 3.3534413736072964e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 72059,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 31018,
+              "type": "GNG232",
+              "side": "R"
+            },
+            {
+              "bodyId": 26764,
+              "type": "GNG108",
+              "side": "R"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 87.0,
+              "norm_weight": 0.07644991212653779,
+              "sign": 1
+            },
+            {
+              "weight": 46.0,
+              "norm_weight": 0.00712294828120161,
+              "sign": 1
+            },
+            {
+              "weight": 348.0,
+              "norm_weight": 0.061582020881259955,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.9174228528953267e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 213650853,
+              "type": "LB3b",
+              "side": "R"
+            },
+            {
+              "bodyId": 526948,
+              "type": "ANXXX462b",
+              "side": "R"
+            },
+            {
+              "bodyId": 10833,
+              "type": "DNge062",
+              "side": "R"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 56.0,
+              "norm_weight": 0.030451332245785754,
+              "sign": 1
+            },
+            {
+              "weight": 27.0,
+              "norm_weight": 0.011668107173725151,
+              "sign": 1
+            },
+            {
+              "weight": 464.0,
+              "norm_weight": 0.08210936117501327,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.6798643993030655e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 512551,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 519441,
+              "type": "GNG215",
+              "side": "L"
+            },
+            {
+              "bodyId": 523679,
+              "type": "DNge051",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 69.0,
+              "norm_weight": 0.06509433962264151,
+              "sign": 1
+            },
+            {
+              "weight": 54.0,
+              "norm_weight": 0.016383495145631068,
+              "sign": 1
+            },
+            {
+              "weight": 142.0,
+              "norm_weight": 0.02512829587683596,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.3688270837004873e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 71254,
+              "type": "LB3b",
+              "side": "L"
+            },
+            {
+              "bodyId": 26027,
+              "type": "GNG197",
+              "side": "L"
+            },
+            {
+              "bodyId": 514967,
+              "type": "GNG537",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 49.0,
+              "norm_weight": 0.03512544802867384,
+              "sign": 1
+            },
+            {
+              "weight": 73.0,
+              "norm_weight": 0.06570657065706571,
+              "sign": 1
+            },
+            {
+              "weight": 58.0,
+              "norm_weight": 0.01026367014687666,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.356734673532806e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 72059,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 31018,
+              "type": "GNG232",
+              "side": "R"
+            },
+            {
+              "bodyId": 12364,
+              "type": "DNge080",
+              "side": "R"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 87.0,
+              "norm_weight": 0.07644991212653779,
+              "sign": 1
+            },
+            {
+              "weight": 65.0,
+              "norm_weight": 0.018146286990508097,
+              "sign": 1
+            },
+            {
+              "weight": 96.0,
+              "norm_weight": 0.016988143691382056,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.195629764245134e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 78240,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 18474,
+              "type": "GNG132",
+              "side": "L"
+            },
+            {
+              "bodyId": 13754,
+              "type": "GNG130",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 39.0,
+              "norm_weight": 0.01533621706645694,
+              "sign": 1
+            },
+            {
+              "weight": 71.0,
+              "norm_weight": 0.022661985317586977,
+              "sign": 1
+            },
+            {
+              "weight": 357.0,
+              "norm_weight": 0.06317465935232702,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.0196079530979626e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 933317,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 519441,
+              "type": "GNG215",
+              "side": "L"
+            },
+            {
+              "bodyId": 523679,
+              "type": "DNge051",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 52.0,
+              "norm_weight": 0.04905660377358491,
+              "sign": 1
+            },
+            {
+              "weight": 54.0,
+              "norm_weight": 0.016383495145631068,
+              "sign": 1
+            },
+            {
+              "weight": 142.0,
+              "norm_weight": 0.02512829587683596,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 1.998558983949596e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 933317,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 89638,
+              "type": "GNG232",
+              "side": "L"
+            },
+            {
+              "bodyId": 12752,
+              "type": "DNge080",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 77.0,
+              "norm_weight": 0.070902394106814,
+              "sign": 1
+            },
+            {
+              "weight": 54.0,
+              "norm_weight": 0.015771028037383176,
+              "sign": 1
+            },
+            {
+              "weight": 101.0,
+              "norm_weight": 0.01787294284197487,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 1.982079804728979e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 933317,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 26027,
+              "type": "GNG197",
+              "side": "L"
+            },
+            {
+              "bodyId": 514967,
+              "type": "GNG537",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 41.0,
+              "norm_weight": 0.02939068100358423,
+              "sign": 1
+            },
+            {
+              "weight": 73.0,
+              "norm_weight": 0.06570657065706571,
+              "sign": 1
+            },
+            {
+              "weight": 58.0,
+              "norm_weight": 0.01026367014687666,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 1.903092109650003e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 85806,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 519441,
+              "type": "GNG215",
+              "side": "L"
+            },
+            {
+              "bodyId": 523679,
+              "type": "DNge051",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 49.0,
+              "norm_weight": 0.04622641509433962,
+              "sign": 1
+            },
+            {
+              "weight": 54.0,
+              "norm_weight": 0.016383495145631068,
+              "sign": 1
+            },
+            {
+              "weight": 142.0,
+              "norm_weight": 0.02512829587683596,
+              "sign": -1
+            }
+          ]
+        }
+      ],
+      "shortest_paths_top25": [
+        {
+          "score": 1.1709282291427307e-05,
+          "sign": 1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 71254,
+              "type": "LB3b",
+              "side": "L"
+            },
+            {
+              "bodyId": 512730,
+              "type": "GNG089",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 38.0,
+              "norm_weight": 0.00945273631840796,
+              "sign": 1
+            },
+            {
+              "weight": 7.0,
+              "norm_weight": 0.0012387188108299416,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 7.703475191728493e-06,
+          "sign": 1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 512551,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 512730,
+              "type": "GNG089",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 25.0,
+              "norm_weight": 0.006218905472636816,
+              "sign": 1
+            },
+            {
+              "weight": 7.0,
+              "norm_weight": 0.0012387188108299416,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 5.255286531598796e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 72059,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 11.0,
+              "norm_weight": 0.005939524838012959,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 4.437307675992053e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 512551,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 12230,
+              "type": "GNG043",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 10.0,
+              "norm_weight": 0.0050150451354062184,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 4.299779889489924e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 101087,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 9.0,
+              "norm_weight": 0.004859611231101512,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 4.299779889489924e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 213650853,
+              "type": "LB3b",
+              "side": "R"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 9.0,
+              "norm_weight": 0.004859611231101512,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 3.822026568435488e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 142827,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 8.0,
+              "norm_weight": 0.004319654427645789,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 3.344273247381052e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 92440,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 7.0,
+              "norm_weight": 0.003779697624190065,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 3.344273247381052e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 512551,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 7.0,
+              "norm_weight": 0.003779697624190065,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 3.1061153731944377e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 72059,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12230,
+              "type": "GNG043",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 7.0,
+              "norm_weight": 0.003510531594784353,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 3.1061153731944377e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 85806,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 12230,
+              "type": "GNG043",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 7.0,
+              "norm_weight": 0.003510531594784353,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.866519926326616e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 120303,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 6.0,
+              "norm_weight": 0.0032397408207343412,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.662384605595232e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 92440,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12230,
+              "type": "GNG043",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 6.0,
+              "norm_weight": 0.003009027081243731,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.662384605595232e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 101087,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12230,
+              "type": "GNG043",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 6.0,
+              "norm_weight": 0.003009027081243731,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.662384605595232e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 142827,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12230,
+              "type": "GNG043",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 6.0,
+              "norm_weight": 0.003009027081243731,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.4651120613531174e-06,
+          "sign": 1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 531237,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 512730,
+              "type": "GNG089",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 8.0,
+              "norm_weight": 0.001990049751243781,
+              "sign": 1
+            },
+            {
+              "weight": 7.0,
+              "norm_weight": 0.0012387188108299416,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.38876660527218e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 215556,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0026997840172786176,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.2186538379960267e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 78240,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 12230,
+              "type": "GNG043",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0025075225677031092,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 1.8488340460148381e-06,
+          "sign": 1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 933317,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 512730,
+              "type": "GNG089",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 6.0,
+              "norm_weight": 0.0014925373134328358,
+              "sign": 1
+            },
+            {
+              "weight": 7.0,
+              "norm_weight": 0.0012387188108299416,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 5.330757624971776e-07,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 512551,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 10135,
+              "type": "DNge031",
+              "side": "L"
+            },
+            {
+              "bodyId": 10331,
+              "type": "MN9",
+              "side": "L"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0006024822267743102,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "MN9_R (16949)",
+      "target": 16949,
+      "sources_in_graph": 34,
+      "shortest_hops": 3,
+      "mn9_input_synapses": 364.0,
+      "by_hop": [
+        {
+          "hop": 1,
+          "cells_upstream": 25,
+          "cells_on_sugar_path": 25,
+          "sugar_cells": 0,
+          "input_all": {
+            "excitatory": 161.0,
+            "inhibitory": -203.0,
+            "net": -42.0,
+            "edges": 25
+          },
+          "input_on_sugar_path": {
+            "excitatory": 161.0,
+            "inhibitory": -203.0,
+            "net": -42.0,
+            "edges": 25
+          }
+        },
+        {
+          "hop": 2,
+          "cells_upstream": 1011,
+          "cells_on_sugar_path": 563,
+          "sugar_cells": 0,
+          "input_all": {
+            "excitatory": 43459.0,
+            "inhibitory": -39652.0,
+            "net": 3807.0,
+            "edges": 2624
+          },
+          "input_on_sugar_path": {
+            "excitatory": 34177.0,
+            "inhibitory": -33879.0,
+            "net": 298.0,
+            "edges": 1913
+          }
+        },
+        {
+          "hop": 3,
+          "cells_upstream": 19747,
+          "cells_on_sugar_path": 116,
+          "sugar_cells": 34,
+          "input_all": {
+            "excitatory": 973825.0,
+            "inhibitory": -556946.0,
+            "net": 416879.0,
+            "edges": 72788
+          },
+          "input_on_sugar_path": {
+            "excitatory": 22755.0,
+            "inhibitory": -7735.0,
+            "net": 15020.0,
+            "edges": 1539
+          }
+        },
+        {
+          "hop": 4,
+          "cells_upstream": 89632,
+          "cells_on_sugar_path": 0,
+          "sugar_cells": 0,
+          "input_all": {
+            "excitatory": 6525835.0,
+            "inhibitory": -3327200.0,
+            "net": 3198635.0,
+            "edges": 666038
+          },
+          "input_on_sugar_path": {
+            "excitatory": 0.0,
+            "inhibitory": 0.0,
+            "net": 0.0,
+            "edges": 0
+          }
+        }
+      ],
+      "direct_input_by_partner_sugar_distance": {
+        "2": {
+          "partners": 23,
+          "excitatory": 154.0,
+          "inhibitory": -192.0,
+          "share_of_input": 0.9505494505494505
+        },
+        "3": {
+          "partners": 2,
+          "excitatory": 7.0,
+          "inhibitory": -11.0,
+          "share_of_input": 0.04945054945054945
+        }
+      },
+      "top_paths": [
+        {
+          "score": 4.717758113658733e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 933317,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 89638,
+              "type": "GNG232",
+              "side": "L"
+            },
+            {
+              "bodyId": 523040,
+              "type": "GNG108",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 77.0,
+              "norm_weight": 0.070902394106814,
+              "sign": 1
+            },
+            {
+              "weight": 50.0,
+              "norm_weight": 0.00968804495252858,
+              "sign": 1
+            },
+            {
+              "weight": 25.0,
+              "norm_weight": 0.06868131868131869,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 3.9935844477719825e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 933317,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 89638,
+              "type": "GNG232",
+              "side": "L"
+            },
+            {
+              "bodyId": 12752,
+              "type": "DNge080",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 77.0,
+              "norm_weight": 0.070902394106814,
+              "sign": 1
+            },
+            {
+              "weight": 54.0,
+              "norm_weight": 0.015771028037383176,
+              "sign": 1
+            },
+            {
+              "weight": 13.0,
+              "norm_weight": 0.03571428571428571,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 3.4300929705015156e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 72059,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 31018,
+              "type": "GNG232",
+              "side": "R"
+            },
+            {
+              "bodyId": 12364,
+              "type": "DNge080",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 87.0,
+              "norm_weight": 0.07644991212653779,
+              "sign": 1
+            },
+            {
+              "weight": 65.0,
+              "norm_weight": 0.018146286990508097,
+              "sign": 1
+            },
+            {
+              "weight": 9.0,
+              "norm_weight": 0.024725274725274724,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.9186089054908377e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 142827,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 15259,
+              "type": "GNG132",
+              "side": "R"
+            },
+            {
+              "bodyId": 511989,
+              "type": "GNG130",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 51.0,
+              "norm_weight": 0.015892801495793082,
+              "sign": 1
+            },
+            {
+              "weight": 73.0,
+              "norm_weight": 0.01966065176407218,
+              "sign": 1
+            },
+            {
+              "weight": 34.0,
+              "norm_weight": 0.09340659340659341,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.8586562249776563e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 512551,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 519441,
+              "type": "GNG215",
+              "side": "L"
+            },
+            {
+              "bodyId": 523040,
+              "type": "GNG108",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 69.0,
+              "norm_weight": 0.06509433962264151,
+              "sign": 1
+            },
+            {
+              "weight": 33.0,
+              "norm_weight": 0.006394109668668863,
+              "sign": 1
+            },
+            {
+              "weight": 25.0,
+              "norm_weight": 0.06868131868131869,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.8041536542951186e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 120303,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 15259,
+              "type": "GNG132",
+              "side": "R"
+            },
+            {
+              "bodyId": 511989,
+              "type": "GNG130",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 49.0,
+              "norm_weight": 0.015269554378311,
+              "sign": 1
+            },
+            {
+              "weight": 73.0,
+              "norm_weight": 0.01966065176407218,
+              "sign": 1
+            },
+            {
+              "weight": 34.0,
+              "norm_weight": 0.09340659340659341,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.5180155263058208e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 92440,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 15259,
+              "type": "GNG132",
+              "side": "R"
+            },
+            {
+              "bodyId": 511989,
+              "type": "GNG130",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 44.0,
+              "norm_weight": 0.013711436584605797,
+              "sign": 1
+            },
+            {
+              "weight": 73.0,
+              "norm_weight": 0.01966065176407218,
+              "sign": 1
+            },
+            {
+              "weight": 34.0,
+              "norm_weight": 0.09340659340659341,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.203096193518607e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 71254,
+              "type": "LB3b",
+              "side": "L"
+            },
+            {
+              "bodyId": 558926,
+              "type": "ANXXX462b",
+              "side": "L"
+            },
+            {
+              "bodyId": 519839,
+              "type": "DNge062",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 54.0,
+              "norm_weight": 0.03137710633352702,
+              "sign": 1
+            },
+            {
+              "weight": 17.0,
+              "norm_weight": 0.008244422890397672,
+              "sign": 1
+            },
+            {
+              "weight": 31.0,
+              "norm_weight": 0.08516483516483517,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.1761297222014972e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 71254,
+              "type": "LB3b",
+              "side": "L"
+            },
+            {
+              "bodyId": 26027,
+              "type": "GNG197",
+              "side": "L"
+            },
+            {
+              "bodyId": 519839,
+              "type": "DNge062",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 49.0,
+              "norm_weight": 0.03512544802867384,
+              "sign": 1
+            },
+            {
+              "weight": 15.0,
+              "norm_weight": 0.0072744907856450046,
+              "sign": 1
+            },
+            {
+              "weight": 31.0,
+              "norm_weight": 0.08516483516483517,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.1746497727186636e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 101087,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 15259,
+              "type": "GNG132",
+              "side": "R"
+            },
+            {
+              "bodyId": 511989,
+              "type": "GNG130",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 38.0,
+              "norm_weight": 0.011841695232159551,
+              "sign": 1
+            },
+            {
+              "weight": 73.0,
+              "norm_weight": 0.01966065176407218,
+              "sign": 1
+            },
+            {
+              "weight": 34.0,
+              "norm_weight": 0.09340659340659341,
+              "sign": -1
+            }
+          ]
+        }
+      ],
+      "shortest_paths_top25": [
+        {
+          "score": 4.717758113658733e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 933317,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 89638,
+              "type": "GNG232",
+              "side": "L"
+            },
+            {
+              "bodyId": 523040,
+              "type": "GNG108",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 77.0,
+              "norm_weight": 0.070902394106814,
+              "sign": 1
+            },
+            {
+              "weight": 50.0,
+              "norm_weight": 0.00968804495252858,
+              "sign": 1
+            },
+            {
+              "weight": 25.0,
+              "norm_weight": 0.06868131868131869,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 3.9935844477719825e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 933317,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 89638,
+              "type": "GNG232",
+              "side": "L"
+            },
+            {
+              "bodyId": 12752,
+              "type": "DNge080",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 77.0,
+              "norm_weight": 0.070902394106814,
+              "sign": 1
+            },
+            {
+              "weight": 54.0,
+              "norm_weight": 0.015771028037383176,
+              "sign": 1
+            },
+            {
+              "weight": 13.0,
+              "norm_weight": 0.03571428571428571,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 3.4300929705015156e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 72059,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 31018,
+              "type": "GNG232",
+              "side": "R"
+            },
+            {
+              "bodyId": 12364,
+              "type": "DNge080",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 87.0,
+              "norm_weight": 0.07644991212653779,
+              "sign": 1
+            },
+            {
+              "weight": 65.0,
+              "norm_weight": 0.018146286990508097,
+              "sign": 1
+            },
+            {
+              "weight": 9.0,
+              "norm_weight": 0.024725274725274724,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.9186089054908377e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 142827,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 15259,
+              "type": "GNG132",
+              "side": "R"
+            },
+            {
+              "bodyId": 511989,
+              "type": "GNG130",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 51.0,
+              "norm_weight": 0.015892801495793082,
+              "sign": 1
+            },
+            {
+              "weight": 73.0,
+              "norm_weight": 0.01966065176407218,
+              "sign": 1
+            },
+            {
+              "weight": 34.0,
+              "norm_weight": 0.09340659340659341,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.8586562249776563e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 512551,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 519441,
+              "type": "GNG215",
+              "side": "L"
+            },
+            {
+              "bodyId": 523040,
+              "type": "GNG108",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 69.0,
+              "norm_weight": 0.06509433962264151,
+              "sign": 1
+            },
+            {
+              "weight": 33.0,
+              "norm_weight": 0.006394109668668863,
+              "sign": 1
+            },
+            {
+              "weight": 25.0,
+              "norm_weight": 0.06868131868131869,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.8041536542951186e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 120303,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 15259,
+              "type": "GNG132",
+              "side": "R"
+            },
+            {
+              "bodyId": 511989,
+              "type": "GNG130",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 49.0,
+              "norm_weight": 0.015269554378311,
+              "sign": 1
+            },
+            {
+              "weight": 73.0,
+              "norm_weight": 0.01966065176407218,
+              "sign": 1
+            },
+            {
+              "weight": 34.0,
+              "norm_weight": 0.09340659340659341,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.5180155263058208e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 92440,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 15259,
+              "type": "GNG132",
+              "side": "R"
+            },
+            {
+              "bodyId": 511989,
+              "type": "GNG130",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 44.0,
+              "norm_weight": 0.013711436584605797,
+              "sign": 1
+            },
+            {
+              "weight": 73.0,
+              "norm_weight": 0.01966065176407218,
+              "sign": 1
+            },
+            {
+              "weight": 34.0,
+              "norm_weight": 0.09340659340659341,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.203096193518607e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 71254,
+              "type": "LB3b",
+              "side": "L"
+            },
+            {
+              "bodyId": 558926,
+              "type": "ANXXX462b",
+              "side": "L"
+            },
+            {
+              "bodyId": 519839,
+              "type": "DNge062",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 54.0,
+              "norm_weight": 0.03137710633352702,
+              "sign": 1
+            },
+            {
+              "weight": 17.0,
+              "norm_weight": 0.008244422890397672,
+              "sign": 1
+            },
+            {
+              "weight": 31.0,
+              "norm_weight": 0.08516483516483517,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.1761297222014972e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 71254,
+              "type": "LB3b",
+              "side": "L"
+            },
+            {
+              "bodyId": 26027,
+              "type": "GNG197",
+              "side": "L"
+            },
+            {
+              "bodyId": 519839,
+              "type": "DNge062",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 49.0,
+              "norm_weight": 0.03512544802867384,
+              "sign": 1
+            },
+            {
+              "weight": 15.0,
+              "norm_weight": 0.0072744907856450046,
+              "sign": 1
+            },
+            {
+              "weight": 31.0,
+              "norm_weight": 0.08516483516483517,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.1746497727186636e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 101087,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 15259,
+              "type": "GNG132",
+              "side": "R"
+            },
+            {
+              "bodyId": 511989,
+              "type": "GNG130",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 38.0,
+              "norm_weight": 0.011841695232159551,
+              "sign": 1
+            },
+            {
+              "weight": 73.0,
+              "norm_weight": 0.01966065176407218,
+              "sign": 1
+            },
+            {
+              "weight": 34.0,
+              "norm_weight": 0.09340659340659341,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.154349618823741e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 933317,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 519441,
+              "type": "GNG215",
+              "side": "L"
+            },
+            {
+              "bodyId": 523040,
+              "type": "GNG108",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 52.0,
+              "norm_weight": 0.04905660377358491,
+              "sign": 1
+            },
+            {
+              "weight": 33.0,
+              "norm_weight": 0.006394109668668863,
+              "sign": 1
+            },
+            {
+              "weight": 25.0,
+              "norm_weight": 0.06868131868131869,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.1174221471208042e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 215556,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 15259,
+              "type": "GNG132",
+              "side": "R"
+            },
+            {
+              "bodyId": 511989,
+              "type": "GNG130",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 37.0,
+              "norm_weight": 0.011530071673418511,
+              "sign": 1
+            },
+            {
+              "weight": 73.0,
+              "norm_weight": 0.01966065176407218,
+              "sign": 1
+            },
+            {
+              "weight": 34.0,
+              "norm_weight": 0.09340659340659341,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.0831659203168435e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 72059,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 89638,
+              "type": "GNG232",
+              "side": "L"
+            },
+            {
+              "bodyId": 523040,
+              "type": "GNG108",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 34.0,
+              "norm_weight": 0.03130755064456722,
+              "sign": 1
+            },
+            {
+              "weight": 50.0,
+              "norm_weight": 0.00968804495252858,
+              "sign": 1
+            },
+            {
+              "weight": 25.0,
+              "norm_weight": 0.06868131868131869,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.0831659203168435e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 512551,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 89638,
+              "type": "GNG232",
+              "side": "L"
+            },
+            {
+              "bodyId": 523040,
+              "type": "GNG108",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 34.0,
+              "norm_weight": 0.03130755064456722,
+              "sign": 1
+            },
+            {
+              "weight": 50.0,
+              "norm_weight": 0.00968804495252858,
+              "sign": 1
+            },
+            {
+              "weight": 25.0,
+              "norm_weight": 0.06868131868131869,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.0300602177377558e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 85806,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 519441,
+              "type": "GNG215",
+              "side": "L"
+            },
+            {
+              "bodyId": 523040,
+              "type": "GNG108",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 49.0,
+              "norm_weight": 0.04622641509433962,
+              "sign": 1
+            },
+            {
+              "weight": 33.0,
+              "norm_weight": 0.006394109668668863,
+              "sign": 1
+            },
+            {
+              "weight": 25.0,
+              "norm_weight": 0.06868131868131869,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 1.95924747727908e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 92440,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 21828,
+              "type": "GNG215",
+              "side": "R"
+            },
+            {
+              "bodyId": 11179,
+              "type": "DNge051",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 44.0,
+              "norm_weight": 0.03276247207743857,
+              "sign": 1
+            },
+            {
+              "weight": 61.0,
+              "norm_weight": 0.01674444139445512,
+              "sign": 1
+            },
+            {
+              "weight": 13.0,
+              "norm_weight": 0.03571428571428571,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 1.914719125522737e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 215556,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 21828,
+              "type": "GNG215",
+              "side": "R"
+            },
+            {
+              "bodyId": 11179,
+              "type": "DNge051",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 43.0,
+              "norm_weight": 0.03201787043931496,
+              "sign": 1
+            },
+            {
+              "weight": 61.0,
+              "norm_weight": 0.01674444139445512,
+              "sign": 1
+            },
+            {
+              "weight": 13.0,
+              "norm_weight": 0.03571428571428571,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 1.8701907737663945e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 72059,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 21828,
+              "type": "GNG215",
+              "side": "R"
+            },
+            {
+              "bodyId": 11179,
+              "type": "DNge051",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 42.0,
+              "norm_weight": 0.03127326880119136,
+              "sign": 1
+            },
+            {
+              "weight": 61.0,
+              "norm_weight": 0.01674444139445512,
+              "sign": 1
+            },
+            {
+              "weight": 13.0,
+              "norm_weight": 0.03571428571428571,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 1.845245015033754e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 933317,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 15321,
+              "type": "GNG042",
+              "side": "L"
+            },
+            {
+              "bodyId": 28181,
+              "type": "GNG015",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 87.0,
+              "norm_weight": 0.031868131868131866,
+              "sign": 1
+            },
+            {
+              "weight": 88.0,
+              "norm_weight": 0.011092903063153914,
+              "sign": -1
+            },
+            {
+              "weight": 19.0,
+              "norm_weight": 0.0521978021978022,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 1.82084323694411e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 933317,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 26027,
+              "type": "GNG197",
+              "side": "L"
+            },
+            {
+              "bodyId": 519839,
+              "type": "DNge062",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 41.0,
+              "norm_weight": 0.02939068100358423,
+              "sign": 1
+            },
+            {
+              "weight": 15.0,
+              "norm_weight": 0.0072744907856450046,
+              "sign": 1
+            },
+            {
+              "weight": 31.0,
+              "norm_weight": 0.08516483516483517,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 1.781134070253709e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 142827,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 21828,
+              "type": "GNG215",
+              "side": "R"
+            },
+            {
+              "bodyId": 11179,
+              "type": "DNge051",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 40.0,
+              "norm_weight": 0.029784065524944156,
+              "sign": 1
+            },
+            {
+              "weight": 61.0,
+              "norm_weight": 0.01674444139445512,
+              "sign": 1
+            },
+            {
+              "weight": 13.0,
+              "norm_weight": 0.03571428571428571,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 1.7634009249902264e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 72059,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 89638,
+              "type": "GNG232",
+              "side": "L"
+            },
+            {
+              "bodyId": 12752,
+              "type": "DNge080",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 34.0,
+              "norm_weight": 0.03130755064456722,
+              "sign": 1
+            },
+            {
+              "weight": 54.0,
+              "norm_weight": 0.015771028037383176,
+              "sign": 1
+            },
+            {
+              "weight": 13.0,
+              "norm_weight": 0.03571428571428571,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 1.7634009249902264e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 512551,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 89638,
+              "type": "GNG232",
+              "side": "L"
+            },
+            {
+              "bodyId": 12752,
+              "type": "DNge080",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 34.0,
+              "norm_weight": 0.03130755064456722,
+              "sign": 1
+            },
+            {
+              "weight": 54.0,
+              "norm_weight": 0.015771028037383176,
+              "sign": 1
+            },
+            {
+              "weight": 13.0,
+              "norm_weight": 0.03571428571428571,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 1.7579221932125393e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 512551,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 519441,
+              "type": "GNG215",
+              "side": "L"
+            },
+            {
+              "bodyId": 523679,
+              "type": "DNge051",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 69.0,
+              "norm_weight": 0.06509433962264151,
+              "sign": 1
+            },
+            {
+              "weight": 54.0,
+              "norm_weight": 0.016383495145631068,
+              "sign": 1
+            },
+            {
+              "weight": 6.0,
+              "norm_weight": 0.016483516483516484,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 1.6920773667410234e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 120303,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 21828,
+              "type": "GNG215",
+              "side": "R"
+            },
+            {
+              "bodyId": 11179,
+              "type": "DNge051",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 38.0,
+              "norm_weight": 0.028294862248696945,
+              "sign": 1
+            },
+            {
+              "weight": 61.0,
+              "norm_weight": 0.01674444139445512,
+              "sign": 1
+            },
+            {
+              "weight": 13.0,
+              "norm_weight": 0.03571428571428571,
+              "sign": -1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "MN9_R (16949), input mirrored from MN9_L (mirror_mn9)",
+      "target": 16949,
+      "sources_in_graph": 34,
+      "shortest_hops": 2,
+      "mn9_input_synapses": 5651.0,
+      "by_hop": [
+        {
+          "hop": 1,
+          "cells_upstream": 100,
+          "cells_on_sugar_path": 99,
+          "sugar_cells": 0,
+          "input_all": {
+            "excitatory": 2805.0,
+            "inhibitory": -2846.0,
+            "net": -41.0,
+            "edges": 100
+          },
+          "input_on_sugar_path": {
+            "excitatory": 2805.0,
+            "inhibitory": -2838.5,
+            "net": -33.5,
+            "edges": 99
+          }
+        },
+        {
+          "hop": 2,
+          "cells_upstream": 3032,
+          "cells_on_sugar_path": 1147,
+          "sugar_cells": 17,
+          "input_all": {
+            "excitatory": 148661.0,
+            "inhibitory": -118830.0,
+            "net": 29831.0,
+            "edges": 9269
+          },
+          "input_on_sugar_path": {
+            "excitatory": 89059.0,
+            "inhibitory": -85464.0,
+            "net": 3595.0,
+            "edges": 5587
+          }
+        },
+        {
+          "hop": 3,
+          "cells_upstream": 35952,
+          "cells_on_sugar_path": 60,
+          "sugar_cells": 17,
+          "input_all": {
+            "excitatory": 2242872.0,
+            "inhibitory": -1292187.0,
+            "net": 950685.0,
+            "edges": 191279
+          },
+          "input_on_sugar_path": {
+            "excitatory": 13329.0,
+            "inhibitory": -8317.0,
+            "net": 5012.0,
+            "edges": 1084
+          }
+        },
+        {
+          "hop": 4,
+          "cells_upstream": 91537,
+          "cells_on_sugar_path": 0,
+          "sugar_cells": 0,
+          "input_all": {
+            "excitatory": 6805591.0,
+            "inhibitory": -3014963.0,
+            "net": 3790628.0,
+            "edges": 771254
+          },
+          "input_on_sugar_path": {
+            "excitatory": 0.0,
+            "inhibitory": 0.0,
+            "net": 0.0,
+            "edges": 0
+          }
+        }
+      ],
+      "direct_input_by_partner_sugar_distance": {
+        "1": {
+          "partners": 4,
+          "excitatory": 7.0,
+          "inhibitory": -15.0,
+          "share_of_input": 0.003893116262608388
+        },
+        "2": {
+          "partners": 71,
+          "excitatory": 2629.5,
+          "inhibitory": -2633.5,
+          "share_of_input": 0.9313395859139976
+        },
+        "3": {
+          "partners": 24,
+          "excitatory": 168.5,
+          "inhibitory": -190.0,
+          "share_of_input": 0.06344009909750487
+        },
+        "4": {
+          "partners": 1,
+          "excitatory": 0.0,
+          "inhibitory": -7.5,
+          "share_of_input": 0.0013271987258892232
+        }
+      },
+      "top_paths": [
+        {
+          "score": 4.230103385407036e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 933317,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 89638,
+              "type": "GNG232",
+              "side": "L"
+            },
+            {
+              "bodyId": 523040,
+              "type": "GNG108",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 77.0,
+              "norm_weight": 0.070902394106814,
+              "sign": 1
+            },
+            {
+              "weight": 50.0,
+              "norm_weight": 0.00968804495252858,
+              "sign": 1
+            },
+            {
+              "weight": 348.0,
+              "norm_weight": 0.061582020881259955,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.563169006054643e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 512551,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 519441,
+              "type": "GNG215",
+              "side": "L"
+            },
+            {
+              "bodyId": 523040,
+              "type": "GNG108",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 69.0,
+              "norm_weight": 0.06509433962264151,
+              "sign": 1
+            },
+            {
+              "weight": 33.0,
+              "norm_weight": 0.006394109668668863,
+              "sign": 1
+            },
+            {
+              "weight": 348.0,
+              "norm_weight": 0.061582020881259955,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.4794812711126394e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 72059,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 31018,
+              "type": "GNG232",
+              "side": "R"
+            },
+            {
+              "bodyId": 12364,
+              "type": "DNge080",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 87.0,
+              "norm_weight": 0.07644991212653779,
+              "sign": 1
+            },
+            {
+              "weight": 65.0,
+              "norm_weight": 0.018146286990508097,
+              "sign": 1
+            },
+            {
+              "weight": 101.0,
+              "norm_weight": 0.01787294284197487,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.124055318216694e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 71254,
+              "type": "LB3b",
+              "side": "L"
+            },
+            {
+              "bodyId": 558926,
+              "type": "ANXXX462b",
+              "side": "L"
+            },
+            {
+              "bodyId": 519839,
+              "type": "DNge062",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 54.0,
+              "norm_weight": 0.03137710633352702,
+              "sign": 1
+            },
+            {
+              "weight": 17.0,
+              "norm_weight": 0.008244422890397672,
+              "sign": 1
+            },
+            {
+              "weight": 464.0,
+              "norm_weight": 0.08210936117501327,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.0980563278034952e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 71254,
+              "type": "LB3b",
+              "side": "L"
+            },
+            {
+              "bodyId": 26027,
+              "type": "GNG197",
+              "side": "L"
+            },
+            {
+              "bodyId": 519839,
+              "type": "DNge062",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 49.0,
+              "norm_weight": 0.03512544802867384,
+              "sign": 1
+            },
+            {
+              "weight": 15.0,
+              "norm_weight": 0.0072744907856450046,
+              "sign": 1
+            },
+            {
+              "weight": 464.0,
+              "norm_weight": 0.08210936117501327,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 1.973973320967259e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 142827,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 15259,
+              "type": "GNG132",
+              "side": "R"
+            },
+            {
+              "bodyId": 511989,
+              "type": "GNG130",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 51.0,
+              "norm_weight": 0.015892801495793082,
+              "sign": 1
+            },
+            {
+              "weight": 73.0,
+              "norm_weight": 0.01966065176407218,
+              "sign": 1
+            },
+            {
+              "weight": 357.0,
+              "norm_weight": 0.06317465935232702,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 1.931663598765818e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 933317,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 519441,
+              "type": "GNG215",
+              "side": "L"
+            },
+            {
+              "bodyId": 523040,
+              "type": "GNG108",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 52.0,
+              "norm_weight": 0.04905660377358491,
+              "sign": 1
+            },
+            {
+              "weight": 33.0,
+              "norm_weight": 0.006394109668668863,
+              "sign": 1
+            },
+            {
+              "weight": 348.0,
+              "norm_weight": 0.061582020881259955,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 1.899620420387735e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 933317,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 89638,
+              "type": "GNG232",
+              "side": "L"
+            },
+            {
+              "bodyId": 12752,
+              "type": "DNge080",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 77.0,
+              "norm_weight": 0.070902394106814,
+              "sign": 1
+            },
+            {
+              "weight": 54.0,
+              "norm_weight": 0.015771028037383176,
+              "sign": 1
+            },
+            {
+              "weight": 96.0,
+              "norm_weight": 0.016988143691382056,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 1.896562602497955e-05,
+          "sign": -1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 120303,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 15259,
+              "type": "GNG132",
+              "side": "R"
+            },
+            {
+              "bodyId": 511989,
+              "type": "GNG130",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 49.0,
+              "norm_weight": 0.015269554378311,
+              "sign": 1
+            },
+            {
+              "weight": 73.0,
+              "norm_weight": 0.01966065176407218,
+              "sign": 1
+            },
+            {
+              "weight": 357.0,
+              "norm_weight": 0.06317465935232702,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 1.8678378584914187e-05,
+          "sign": 1,
+          "hops": 3,
+          "cells": [
+            {
+              "bodyId": 72059,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 89638,
+              "type": "GNG232",
+              "side": "L"
+            },
+            {
+              "bodyId": 523040,
+              "type": "GNG108",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 34.0,
+              "norm_weight": 0.03130755064456722,
+              "sign": 1
+            },
+            {
+              "weight": 50.0,
+              "norm_weight": 0.00968804495252858,
+              "sign": 1
+            },
+            {
+              "weight": 348.0,
+              "norm_weight": 0.061582020881259955,
+              "sign": 1
+            }
+          ]
+        }
+      ],
+      "shortest_paths_top25": [
+        {
+          "score": 6.737801063091732e-06,
+          "sign": 1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 92440,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 556512,
+              "type": "GNG089",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 26.0,
+              "norm_weight": 0.005439330543933054,
+              "sign": 1
+            },
+            {
+              "weight": 7.0,
+              "norm_weight": 0.0012387188108299416,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 5.96036247888884e-06,
+          "sign": 1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 183084,
+              "type": "LB3b",
+              "side": "R"
+            },
+            {
+              "bodyId": 556512,
+              "type": "GNG089",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 23.0,
+              "norm_weight": 0.004811715481171548,
+              "sign": 1
+            },
+            {
+              "weight": 7.0,
+              "norm_weight": 0.0012387188108299416,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 5.255286531598796e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 72059,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 11.0,
+              "norm_weight": 0.005939524838012959,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 4.437307675992053e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 512551,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 12230,
+              "type": "GNG043",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 10.0,
+              "norm_weight": 0.0050150451354062184,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 4.299779889489924e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 101087,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 9.0,
+              "norm_weight": 0.004859611231101512,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 4.299779889489924e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 213650853,
+              "type": "LB3b",
+              "side": "R"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 9.0,
+              "norm_weight": 0.004859611231101512,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 3.822026568435488e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 142827,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 8.0,
+              "norm_weight": 0.004319654427645789,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 3.628046726280164e-06,
+          "sign": 1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 557646,
+              "type": "LB3b",
+              "side": "R"
+            },
+            {
+              "bodyId": 556512,
+              "type": "GNG089",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 14.0,
+              "norm_weight": 0.0029288702928870294,
+              "sign": 1
+            },
+            {
+              "weight": 7.0,
+              "norm_weight": 0.0012387188108299416,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 3.344273247381052e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 92440,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 7.0,
+              "norm_weight": 0.003779697624190065,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 3.344273247381052e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 512551,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 7.0,
+              "norm_weight": 0.003779697624190065,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 3.1061153731944377e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 72059,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12230,
+              "type": "GNG043",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 7.0,
+              "norm_weight": 0.003510531594784353,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 3.1061153731944377e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 85806,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 12230,
+              "type": "GNG043",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 7.0,
+              "norm_weight": 0.003510531594784353,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.866519926326616e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 120303,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 6.0,
+              "norm_weight": 0.0032397408207343412,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.662384605595232e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 92440,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12230,
+              "type": "GNG043",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 6.0,
+              "norm_weight": 0.003009027081243731,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.662384605595232e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 101087,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12230,
+              "type": "GNG043",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 6.0,
+              "norm_weight": 0.003009027081243731,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.662384605595232e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 142827,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12230,
+              "type": "GNG043",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 6.0,
+              "norm_weight": 0.003009027081243731,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.5914619473429736e-06,
+          "sign": 1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 72059,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 556512,
+              "type": "GNG089",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 10.0,
+              "norm_weight": 0.0020920502092050207,
+              "sign": 1
+            },
+            {
+              "weight": 7.0,
+              "norm_weight": 0.0012387188108299416,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.5914619473429736e-06,
+          "sign": 1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 202888,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 556512,
+              "type": "GNG089",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 10.0,
+              "norm_weight": 0.0020920502092050207,
+              "sign": 1
+            },
+            {
+              "weight": 7.0,
+              "norm_weight": 0.0012387188108299416,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.5914619473429736e-06,
+          "sign": 1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 209155,
+              "type": "LB3b",
+              "side": "R"
+            },
+            {
+              "bodyId": 556512,
+              "type": "GNG089",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 10.0,
+              "norm_weight": 0.0020920502092050207,
+              "sign": 1
+            },
+            {
+              "weight": 7.0,
+              "norm_weight": 0.0012387188108299416,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 2.38876660527218e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 215556,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 12808,
+              "type": "GNG043",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0026997840172786176,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.2186538379960267e-06,
+          "sign": -1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 78240,
+              "type": "LB3c",
+              "side": "L"
+            },
+            {
+              "bodyId": 12230,
+              "type": "GNG043",
+              "side": "L"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0025075225677031092,
+              "sign": 1
+            },
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0008847991505928155,
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "score": 2.073169557874379e-06,
+          "sign": 1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 163597,
+              "type": "LB3b",
+              "side": "R"
+            },
+            {
+              "bodyId": 556512,
+              "type": "GNG089",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 8.0,
+              "norm_weight": 0.0016736401673640166,
+              "sign": 1
+            },
+            {
+              "weight": 7.0,
+              "norm_weight": 0.0012387188108299416,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 1.814023363140082e-06,
+          "sign": 1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 187492,
+              "type": "LB3b",
+              "side": "R"
+            },
+            {
+              "bodyId": 556512,
+              "type": "GNG089",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 7.0,
+              "norm_weight": 0.0014644351464435147,
+              "sign": 1
+            },
+            {
+              "weight": 7.0,
+              "norm_weight": 0.0012387188108299416,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 1.5548771684057844e-06,
+          "sign": 1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 516217,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 556512,
+              "type": "GNG089",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 6.0,
+              "norm_weight": 0.0012552301255230125,
+              "sign": 1
+            },
+            {
+              "weight": 7.0,
+              "norm_weight": 0.0012387188108299416,
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "score": 1.2957309736714868e-06,
+          "sign": 1,
+          "hops": 2,
+          "cells": [
+            {
+              "bodyId": 120303,
+              "type": "LB3c",
+              "side": "R"
+            },
+            {
+              "bodyId": 556512,
+              "type": "GNG089",
+              "side": "R"
+            },
+            {
+              "bodyId": 16949,
+              "type": "MN9",
+              "side": "R"
+            }
+          ],
+          "edges": [
+            {
+              "weight": 5.0,
+              "norm_weight": 0.0010460251046025104,
+              "sign": 1
+            },
+            {
+              "weight": 7.0,
+              "norm_weight": 0.0012387188108299416,
+              "sign": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
